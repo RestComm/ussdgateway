@@ -1,0 +1,35 @@
+<assembly>
+	<id>pojo</id>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<files>
+		<file>
+			<source>src/main/config/USSDGateway.drl</source>
+			<destName>rules/USSDGateway.drl</destName>
+		</file>
+		<file>
+			<source>src/main/config/USSDGatewayChangeSet.xml</source>
+			<destName>config/USSDGatewayChangeSet.xml</destName>
+			<filtered>true</filtered>
+		</file>		
+	</files>
+	
+	<dependencySets>
+		<dependencySet>
+			<outputDirectory>/lib</outputDirectory>
+			<unpack>false</unpack>
+			<scope>runtime</scope>
+			<includes>
+				<include>org.mobicents.applications.ussd:ussdgateway-rules</include>
+				<include>org.mobicents.applications.ussd:ussdgateway-domain</include>		
+			</includes>
+		</dependencySet>
+	</dependencySets>
+	<componentDescriptors>
+		<componentDescriptor>
+			src/main/assembly/common.xml
+		</componentDescriptor>
+	</componentDescriptors>
+</assembly>

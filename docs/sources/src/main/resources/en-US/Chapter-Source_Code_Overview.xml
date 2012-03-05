@@ -1,0 +1,29 @@
+<?xml version='1.0'?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [<!ENTITY % BOOK_ENTITIES SYSTEM "Application_User_Guide.ent">%BOOK_ENTITIES;]>
+
+<chapter id="source_code_overview">
+
+	<title>Source Code Overview</title>
+	<important>
+		<para>
+			To obtain the application's complete source code please refer to
+			<xref linkend="source_code" />.
+		</para>
+	</important>
+	<para>This chapter explains how
+		components perform their tasks. For more
+		detailed explanation of
+		<acronym>JSLEE</acronym>
+		related source code
+		and xml descriptors,
+		please refer to
+		simple
+		examples, like
+		<literal>sip-wakeup</literal>. Also for detailed description of <literal>rules</literal> source code please refer to <literal>Drools</literal> documentation</para>
+
+	<xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="Section-Source_Rules.xml" /> 
+	<xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="Section-Source_JMX.xml" />
+	<xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="Section-Source_Slee.xml" />
+	 
+</chapter>
+

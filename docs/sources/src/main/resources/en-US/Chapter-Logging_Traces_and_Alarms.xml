@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Application_User_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<chapter id="logging_traces_and_alarms">
+
+	<title>Traces and Alarms</title>
+
+	<section id="tracers">
+		<title>Tracers</title>
+		<para>&THIS.APPLICATION; &THIS.APPLICATION; Application creates following tracers:</para>     
+		      
+		      <table frame="all" pgwide="1">
+			<title>&THIS.APPLICATION; Application
+				Tracer and Log Categories
+			</title>
+			<tgroup colsep="1" cols="3">
+				<colspec colnum="1" colname="c0" colwidth="1*"/>
+				<colspec colnum="2" colname="c1" colwidth="1*"/>
+				<colspec colnum="3" colname="c2" colwidth="2*"/>
+
+				<thead>
+					<row>
+						<entry>Sbb</entry>
+						<entry>Tracer name</entry>
+						<entry>LOG4J category</entry>
+					</row>
+				</thead>
+				<tbody>
+					<row>
+						<entry>ParentSbb</entry>
+						<entry>USSD-Parent</entry>
+						<entry>
+							javax.slee.SbbNotification[service=ServiceID[
+							name=mobicents-ussdgateway,vendor=org.mobicents,
+							version=1.0],sbb=SbbID[name=ParentSbb,
+							vendor=org.mobicents,version=1.0]].USSD-Parent
+						</entry>
+					</row>
+					<row>
+						<entry>SipSbb</entry>
+						<entry>USSD-CHILD-SipSbb</entry>
+						<entry>
+							javax.slee.SbbNotification[service=ServiceID[
+							name=mobicents-ussdgateway,vendor=org.mobicents,
+							version=1.0],sbb=SbbID[name=SipSbb,
+							vendor=org.mobicents,version=1.0]].USSD-CHILD-SipSbb
+						</entry>
+					</row>
+					<row>
+						<entry>HttpClientSbb</entry>
+						<entry>USSD-CHILD-HttpClientSbb</entry>
+						<entry>
+							javax.slee.SbbNotification[service=ServiceID[
+							name=mobicents-ussdgateway,vendor=org.mobicents,
+							version=1.0],sbb=SbbID[name=HttpClientSbb,
+							vendor=org.mobicents,version=1.0]].USSD-CHILD-HttpClientSbb
+						</entry>
+					</row>
+				</tbody>
+			</tgroup>
+		</table>
+		<important>
+       		<para>Spaces where introduced in <literal>LOG4J category</literal>  column values, to correctly render the table. Please remove them when using copy/paste.</para>
+		</important>
+	</section>	
+	
+	<section id="alarms">
+		<title>Alarms</title>
+		<para>&THIS.PLATFORM; &THIS.APPLICATION; Application does not rise any alarms.</para>
+	</section>
+	
+</chapter>

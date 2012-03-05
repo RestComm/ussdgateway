@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<deploy-config>
+  <ra-entity resource-adaptor-id="ResourceAdaptorID[name=MAPResourceAdaptor,vendor=org.mobicents,version=2.0]" entity-name="MAPRA">
+     <properties>
+    	<property name="ssn" value="5" type="java.lang.Integer"/>
+    </properties>
+    <ra-link name="MAPRA" />
+  </ra-entity>
+</deploy-config>

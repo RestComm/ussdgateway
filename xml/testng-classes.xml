@@ -1,0 +1,13 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<!-- on my machine with higher thread count tests fail due to race and MTP 
+	issues it seems -->
+<suite name="Classes" parallel="classes" thread-count="1" verbose="1">
+
+	<test name="mgmt">
+		<classes>
+			<class name="org.mobicents.ussdgateway.DialogTest"></class>
+		</classes>
+	</test>
+
+
+</suite>

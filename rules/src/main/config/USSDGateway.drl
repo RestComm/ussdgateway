@@ -1,0 +1,13 @@
+package org.mobicents.ussdgateway.rules
+
+import org.mobicents.ussdgateway.rules.Call;
+
+rule "USSDGateway2"
+	
+	when
+		$c : Call( ussdString == "*456#" )
+	then
+		$c.setHttp( true );
+		$c.setGenericUrl( "http://127.0.0.0:8080/mobicents" );
+end
+

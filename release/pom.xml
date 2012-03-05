@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<packaging>pom</packaging>
+
+	<parent>
+		<groupId>org.mobicents</groupId>
+		<artifactId>mobicents-parent</artifactId>
+		<version>2.19</version>
+	</parent>
+
+	<artifactId>sources-checkout</artifactId>
+	<groupId>org.mobicents.applications.ussd</groupId>
+	<version>1.0.0.BETA1</version>
+
+	<properties>
+
+		<checkout.basedir>${basedir}/checkout</checkout.basedir>
+		<checkout.username>ze carlos</checkout.username>
+		<checkout.password />
+
+		<ussdgateway.version>1.0.0.BETA1</ussdgateway.version>
+		<ss7.simulator.version>1.0.0.BETA1</ss7.simulator.version>
+		<sip11.version>2.5.0.FINAL</sip11.version>
+		<map.version>1.0.0.BETA10</map.version>
+		<http.servlet.version>2.4.0.FINAL</http.servlet.version>
+		<http.client.version>2.5.0.FINAL</http.client.version>
+		<example.ussd.version>1.0.0.BETA1</example.ussd.version>
+
+		<!-- TAGS 
+ 		 <ussd.gw.connectionURL>scm:svn:http://mobicents.googlecode.com/svn/tags/applications/ussdgateway/${ussdgateway.version}</ussd.gw.connectionURL>
+ 		 
+ 		 
+		<simulator.connectionURL>scm:svn:http://mobicents.googlecode.com/svn/tags/applications/ss7-simulator/${ss7.simulator.version}/release</simulator.connectionURL>
+		
+		
+		<ra.sip11.connectionURL>scm:svn:http://mobicents.googlecode.com/svn/tags/servers/jain-slee/2.x.y/resources/sip11/${sip11.version}</ra.sip11.connectionURL>
+		<ra.map.connectionURL>scm:svn:http://mobicents.googlecode.com/svn/tags/servers/jain-slee/2.x.y/resources/map/${map.version}</ra.map.connectionURL>
+		<ra.http.client.connectionURL>scm:svn:http://mobicents.googlecode.com/svn/tags/servers/jain-slee/2.x.y/resources/http-client/${http.client.version}</ra.http.client.connectionURL>
+		<ra.http.servlet.connectionURL>scm:svn:http://mobicents.googlecode.com/svn/tags/servers/jain-slee/2.x.y/resources/http-servlet/${http.servlet.version}</ra.http.servlet.connectionURL>
+		
+		
+		<example.ussd.connectionURL>scm:svn:http://mobicents.googlecode.com/svn/tags/servers/jain-slee/2.x.y/examples/ussd/${example.ussd.version}</example.ussd.connectionURL>
+		-->
+		
+		
+		
+		<!-- TRUNK -->
+		<ussd.gw.connectionURL>scm:svn:http://mobicents.googlecode.com/svn/trunk/applications/ussdgateway</ussd.gw.connectionURL>
+
+
+		<simulator.connectionURL>scm:svn:http://mobicents.googlecode.com/svn/trunk/applications/ss7-simulator/release</simulator.connectionURL>
+
+
+		<ra.sip11.connectionURL>scm:svn:http://mobicents.googlecode.com/svn/trunk/servers/jain-slee/resources/sip11</ra.sip11.connectionURL>
+		<ra.map.connectionURL>scm:svn:http://mobicents.googlecode.com/svn/trunk/servers/jain-slee/resources/map</ra.map.connectionURL>
+		<ra.http.client.connectionURL>scm:svn:http://mobicents.googlecode.com/svn/trunk/servers/jain-slee/resources/http-client</ra.http.client.connectionURL>
+		<ra.http.servlet.connectionURL>scm:svn:http://mobicents.googlecode.com/svn/trunk/servers/jain-slee/resources/http-servlet</ra.http.servlet.connectionURL>
+
+
+		<example.ussd.connectionURL>scm:svn:http://mobicents.googlecode.com/svn/trunk/servers/jain-slee/examples/ussd</example.ussd.connectionURL>
+	
+	</properties>
+
+	<profiles>
+
+		<profile>
+			<id>checkout</id>
+			<build>
+
+
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-scm-plugin</artifactId>
+						<version>1.5</version>
+						<inherited>false</inherited>
+						<executions>
+							<!-- USSD GW -->
+							<execution>
+								<id>ussdgateway-checkout</id>
+								<goals>
+									<goal>checkout</goal>
+								</goals>
+								<phase>validate</phase>
+								<configuration>
+									<scmVersion>HEAD</scmVersion>
+									<scmVersionType>revision</scmVersionType>
+									<skipCheckoutIfExists>true</skipCheckoutIfExists>
+									<checkoutDirectory>
+								${checkout.basedir}/ussdgateway
+							</checkoutDirectory>
+									<connectionUrl>
+								${ussd.gw.connectionURL}
+							</connectionUrl>
+									<username>${checkout.username}</username>
+									<password>${checkout.password}</password>
+								</configuration>
+							</execution>
+
+							<execution>
+								<id>ss7-simulator-checkout</id>
+								<goals>
+									<goal>checkout</goal>
+								</goals>
+								<phase>validate</phase>
+								<configuration>
+									<scmVersion>HEAD</scmVersion>
+									<scmVersionType>revision</scmVersionType>
+									<skipCheckoutIfExists>true</skipCheckoutIfExists>
+									<checkoutDirectory>
+								${checkout.basedir}/simulator
+							</checkoutDirectory>
+									<connectionUrl>
+								${simulator.connectionURL}
+							</connectionUrl>
+									<username>${checkout.username}</username>
+									<password>${checkout.password}</password>
+								</configuration>
+							</execution>
+
+							
+							<execution>
+								<id>sip11-checkout</id>
+								<goals>
+									<goal>checkout</goal>
+								</goals>
+								<phase>validate</phase>
+								<configuration>
+									<scmVersion>HEAD</scmVersion>
+									<scmVersionType>revision</scmVersionType>
+									<skipCheckoutIfExists>true</skipCheckoutIfExists>
+									<checkoutDirectory>
+    								${checkout.basedir}/jain-slee/resources/sip11
+    							</checkoutDirectory>
+									<connectionUrl>
+    								${ra.sip11.connectionURL}
+    							</connectionUrl>
+									<username>${checkout.username}</username>
+									<password>${checkout.password}</password>
+								</configuration>
+							</execution>
+							<execution>
+								<id>map-checkout</id>
+								<goals>
+									<goal>checkout</goal>
+								</goals>
+								<phase>validate</phase>
+								<configuration>
+									<scmVersion>HEAD</scmVersion>
+									<scmVersionType>revision</scmVersionType>
+									<skipCheckoutIfExists>true</skipCheckoutIfExists>
+									<checkoutDirectory>
+    								${checkout.basedir}/jain-slee/resources/map
+    							</checkoutDirectory>
+									<connectionUrl>
+    								${ra.map.connectionURL}
+    							</connectionUrl>
+									<username>${checkout.username}</username>
+									<password>${checkout.password}</password>
+								</configuration>
+							</execution>
+							<execution>
+								<id>http-client-checkout</id>
+								<goals>
+									<goal>checkout</goal>
+								</goals>
+								<phase>validate</phase>
+								<configuration>
+									<scmVersion>HEAD</scmVersion>
+									<scmVersionType>revision</scmVersionType>
+									<skipCheckoutIfExists>true</skipCheckoutIfExists>
+									<checkoutDirectory>
+    								${checkout.basedir}/jain-slee/resources/http-client
+    							</checkoutDirectory>
+									<connectionUrl>
+    								${ra.http.client.connectionURL}
+    							</connectionUrl>
+									<username>${checkout.username}</username>
+									<password>${checkout.password}</password>
+								</configuration>
+							</execution>
+							<execution>
+								<id>http-servlet-checkout</id>
+								<goals>
+									<goal>checkout</goal>
+								</goals>
+								<phase>validate</phase>
+								<configuration>
+									<scmVersion>HEAD</scmVersion>
+									<scmVersionType>revision</scmVersionType>
+									<skipCheckoutIfExists>true</skipCheckoutIfExists>
+									<checkoutDirectory>
+    								${checkout.basedir}/jain-slee/resources/http-servlet
+    							</checkoutDirectory>
+									<connectionUrl>
+    								${ra.http.servlet.connectionURL}
+    							</connectionUrl>
+									<username>${checkout.username}</username>
+									<password>${checkout.password}</password>
+								</configuration>
+							</execution>
+
+
+							<execution>
+								<id>ussd-example-checkout</id>
+								<goals>
+									<goal>checkout</goal>
+								</goals>
+			
+
+								<phase>validate</phase>
+								<configuration>
+									<scmVersion>HEAD</scmVersion>
+									<scmVersionType>revision</scmVersionType>
+									<skipCheckoutIfExists>true</skipCheckoutIfExists>
+									<checkoutDirectory>
+    								${checkout.basedir}/jain-slee/examples/ussd
+    							</checkoutDirectory>
+									<connectionUrl>
+    								${example.ussd.connectionURL}
+    							</connectionUrl>
+									<username>${checkout.username}</username>
+									<password>${checkout.password}</password>
+								</configuration>
+							</execution>
+					
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+	</profiles>
+
+	<!--  define repository so we dont have to checkout parent edit settings.xml -->
+	<repositories>
+		<repository>
+			<id>jboss-public-repository-group</id>
+			<name>JBoss Public Maven Repository Group</name>
+			<url>https://repository.jboss.org/nexus/content/groups/public</url>
+			<layout>default</layout>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</snapshots>
+		</repository>
+	</repositories>
+</project>
