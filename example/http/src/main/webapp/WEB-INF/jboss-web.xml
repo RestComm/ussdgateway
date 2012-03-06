@@ -1,0 +1,13 @@
+<jboss-web>
+
+	<class-loading>
+		<loader-repository>
+			org.jboss.ussddemo:loader=http
+			<loader-repository-config>java2ParentDelegation=false
+			</loader-repository-config>
+		</loader-repository>
+	</class-loading>
+
+	<context-root>ussddemo</context-root>
+
+</jboss-web>
