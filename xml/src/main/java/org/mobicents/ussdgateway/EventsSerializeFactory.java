@@ -2,6 +2,7 @@ package org.mobicents.ussdgateway;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 
 import javolution.xml.XMLBinding;
 import javolution.xml.XMLObjectReader;
@@ -54,6 +55,13 @@ public class EventsSerializeFactory {
 	public Dialog deserialize(byte[] data) throws XMLStreamException {
 		ByteArrayInputStream bais = new ByteArrayInputStream(data);
 		this.reader.setInput(bais);
+		Dialog dialog = this.reader.read("dialog", Dialog.class);
+		this.reader.reset();
+		return dialog;
+	}
+	
+	public Dialog deserialize(InputStream is) throws XMLStreamException {
+		this.reader.setInput(is);
 		Dialog dialog = this.reader.read("dialog", Dialog.class);
 		this.reader.reset();
 		return dialog;

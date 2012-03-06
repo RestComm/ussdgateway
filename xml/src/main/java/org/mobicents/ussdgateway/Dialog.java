@@ -183,4 +183,14 @@ public class Dialog implements Serializable {
 					UnstructuredSSNotifyRequestIndicationImpl.class);
 		}
 	};
+
+	@Override
+	public String toString() {
+		return "Dialog [destReference=" + destReference + ", origReference=" + origReference + ", type=" + type
+				+ ", id=" + id + ", processUnstructuredSSRequest=" + processUnstructuredSSRequest
+				+ ", unstructuredSSRequest=" + unstructuredSSRequest + ", processUnstructuredSSResponse="
+				+ processUnstructuredSSResponse + ", unstructuredSSResponse=" + unstructuredSSResponse
+				+ ", unstructuredSSNotifyRequest=" + unstructuredSSNotifyRequest + "]";
+	}
+
 }

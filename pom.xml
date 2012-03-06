@@ -13,7 +13,7 @@
 	<artifactId>ussdgateway</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 
-	<name>Mobicents USSD Gateway Parent</name>
+	<name>USSD Gateway Parent</name>
 
 
 
@@ -23,19 +23,18 @@
 			${release.name.prefix}${parent.version}${release.name.suffix}
 		</release.name>
 
-		<version.jboss.microcontainer>
-			2.2.0.M2
-		</version.jboss.microcontainer>
-
-		<version.javassist>3.9.0.GA</version.javassist>
-		<version.xerces>2.9.1</version.xerces>
+		<jboss.microcontainer.version>2.2.0.M2</jboss.microcontainer.version>
+		<compiler.plugin.version>2.0.2</compiler.plugin.version>
+		<compile.source>1.7</compile.source>
+		<testng.version>6.2</testng.version>
+		<javolution.version>5.5.1</javolution.version>
+		<javassist.version>3.9.0.GA</javassist.version>
+		<xerces.version>2.9.1</xerces.version>
 		<log4j.version>1.2.12</log4j.version>
 		<drools.version>5.0.1</drools.version>
-		<version.concurrent>1.3.4</version.concurrent>
+		<servlet.version>2.5</servlet.version>
+		<concurrent.version>1.3.4</concurrent.version>
 		<mvel.dep.version>2.0.10</mvel.dep.version>
-		<!-- 
-		<mobicents.resources.sip11.version>2.5.0.FINAL</mobicents.resources.sip11.version>
-		 -->
 		 
 		<mobicents.resources.http-client.version>2.5.0.FINAL</mobicents.resources.http-client.version>
 		<mobicents.core.ext.version>1.0.0.BETA2</mobicents.core.ext.version>
@@ -49,6 +48,7 @@
 		<module>rules</module>
 		<module>xml</module>
 		<module>slee</module>
+		<module>example</module>
 	</modules>
 	<dependencies>
 
@@ -133,7 +133,16 @@
 					</eclipseProjectName>
 				</configuration>
 			</plugin>
-
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${compiler.plugin.version}</version>
+				<configuration>
+					<source>${compile.source}</source>
+					<target>${compile.source}</target>
+					<debug>${compile.debug}</debug>
+				</configuration>
+			</plugin>
 
 		</plugins>
 	</build>

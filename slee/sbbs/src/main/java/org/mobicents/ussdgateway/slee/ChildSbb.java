@@ -101,10 +101,10 @@ public abstract class ChildSbb implements Sbb, ChildInterface {
 
 	public void onUnstructuredSSResponse(UnstructuredSSResponseIndication evt, ActivityContextInterface aci) {
 		try {
-			if (this.checkProtocolConnection()) {
+			if (!this.checkProtocolConnection()) {
 				if (this.logger.isFineEnabled()) {
 					this.logger.fine("Received UNSTRUCTURED_SS_RESPONSE_INDICATION for MAP Dialog Id "
-							+ evt.getMAPDialog().getDialogId() + ", with active session, terminating both.");
+							+ evt.getMAPDialog().getDialogId() + ", without active session, terminating both.");
 				}
 				MAPUserAbortChoice mapUsrAbrtCho = this.mapParameterFactory.createMAPUserAbortChoice();
 				mapUsrAbrtCho.setUserSpecificReason();

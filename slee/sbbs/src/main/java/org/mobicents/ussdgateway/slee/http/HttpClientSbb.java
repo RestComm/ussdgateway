@@ -127,7 +127,7 @@ public abstract class HttpClientSbb extends ChildSbb {
 
 		default:
 			// TODO Error condition, take care
-			logger.severe(String.format("Received non 2xx Response=%d", statusCode));
+			logger.severe(String.format("Received non 2xx Response=%s", response));
 			break;
 		}
 
@@ -169,6 +169,9 @@ public abstract class HttpClientSbb extends ChildSbb {
 		// NOTE: here we assume that its text/xml utf8 encoded... bum.
 		pushContent(uriRequest, ACCEPTED_CONTENT_TYPE, "utf-8", new ByteArrayInputStream(content));
 
+		if (logger.isFineEnabled()) {
+			logger.fine("Executing HttpPost=" + uriRequest);
+		}
 		httpClientActivity.execute(uriRequest, null);
 	}
 

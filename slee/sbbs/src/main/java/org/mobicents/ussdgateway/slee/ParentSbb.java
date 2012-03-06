@@ -92,15 +92,19 @@ public abstract class ParentSbb implements Sbb {
 			USSDString ussdStrObj = evt.getUSSDString();
 			String ussdStr = ussdStrObj.getString();
 
-			if (this.logger.isFineEnabled()) {
-				this.logger.fine("Received PROCESS_UNSTRUCTURED_SS_REQUEST_INDICATION event USSDString = " + ussdStr);
-			}
-
 			Call call = new Call(ussdStr);
+
+			if (this.logger.isFineEnabled()) {
+				this.logger.fine(String.format("Received PROCESS_UNSTRUCTURED_SS_REQUEST_INDICATION=%s", evt));
+			}
 
 			StatelessKnowledgeSession statelessksession = this.kbase.newStatelessKnowledgeSession();
 
 			statelessksession.execute(call);
+
+			if (this.logger.isFineEnabled()) {
+				this.logger.fine(String.format("Call=%s", call));
+			}
 
 			if (call.isHttp()) {
 				// Create child of Http SBB and call local method
@@ -118,8 +122,14 @@ public abstract class ParentSbb implements Sbb {
 
 				// Create child of SMPP SBB and call local method
 				// TODO :
+
+				this.abort(evt.getMAPDialog());
 			} else {
-				// TODO : Decline
+				// TODO : Decline? Or Read Database and give back answer
+				this.logger
+						.warning(String
+								.format("Received PROCESS_UNSTRUCTURED_SS_REQUEST_INDICATION=%s and rule for routing is Call=%s. Aborting Dialog",
+										evt, call));
 
 			}
 		} catch (Exception e) {

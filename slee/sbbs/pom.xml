@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>ussdgateway-sbbs</artifactId>
-	<name>USSD Gateway Sbbs</name>
+	<name>USSD Gateway SLEE Sbbs</name>
 	<dependencies>
 
 		<dependency>
