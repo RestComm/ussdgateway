@@ -39,6 +39,11 @@ import org.mobicents.ussdgateway.DialogType;
 import org.mobicents.ussdgateway.EventsSerializeFactory;
 import org.mobicents.ussdgateway.rules.Call;
 
+/**
+ * 
+ * @author amit bhayani
+ *
+ */
 public abstract class ChildSbb implements Sbb, ChildInterface {
 
 	protected SbbContextExt sbbContext;
@@ -140,20 +145,20 @@ public abstract class ChildSbb implements Sbb, ChildInterface {
 	 */
 
 	public void onDialogDelimiter(DialogDelimiter evt, ActivityContextInterface aci) {
-		if (logger.isInfoEnabled()) {
-			this.logger.info("Rx :  onDialogDelimiter" + evt);
+		if (logger.isFineEnabled()) {
+			this.logger.fine("Rx :  onDialogDelimiter" + evt);
 		}
 	}
 
 	public void onDialogAccept(DialogAccept evt, ActivityContextInterface aci) {
-		if (logger.isInfoEnabled()) {
-			this.logger.info("Rx :  onDialogAccept" + evt);
+		if (logger.isFineEnabled()) {
+			this.logger.fine("Rx :  onDialogAccept" + evt);
 		}
 	}
 
 	public void onDialogReject(DialogReject evt, ActivityContextInterface aci) {
-		if (logger.isInfoEnabled()) {
-			this.logger.info("Rx :  onDialogReject" + evt);
+		if (logger.isWarningEnabled()) {
+			this.logger.warning("DialogRejected " + evt);
 		}
 
 		// TODO : Should we add any xml content?
@@ -161,8 +166,8 @@ public abstract class ChildSbb implements Sbb, ChildInterface {
 	}
 
 	public void onDialogUserAbort(DialogUserAbort evt, ActivityContextInterface aci) {
-		if (logger.isInfoEnabled()) {
-			this.logger.info("Rx :  onDialogUserAbort" + evt);
+		if (logger.isWarningEnabled()) {
+			this.logger.warning("Rx : DialogUserAbort " + evt);
 		}
 
 		// TODO : Should we add any xml content?
@@ -170,8 +175,8 @@ public abstract class ChildSbb implements Sbb, ChildInterface {
 	}
 
 	public void onDialogProviderAbort(DialogProviderAbort evt, ActivityContextInterface aci) {
-		if (logger.isInfoEnabled()) {
-			this.logger.info("Rx :  onDialogProviderAbort" + evt);
+		if (logger.isWarningEnabled()) {
+			this.logger.warning("Rx : DialogProviderAbort " + evt);
 		}
 
 		// TODO : Should we add any xml content?
@@ -179,8 +184,8 @@ public abstract class ChildSbb implements Sbb, ChildInterface {
 	}
 
 	public void onDialogClose(DialogClose evt, ActivityContextInterface aci) {
-		if (logger.isInfoEnabled()) {
-			this.logger.info("Rx :  onDialogClose" + evt);
+		if (logger.isFineEnabled()) {
+			this.logger.fine("Rx : DialogClosed " + evt);
 		}
 
 		// TODO : Should we add any xml content?
@@ -188,42 +193,49 @@ public abstract class ChildSbb implements Sbb, ChildInterface {
 	}
 
 	public void onDialogNotice(DialogNotice evt, ActivityContextInterface aci) {
-		if (logger.isInfoEnabled()) {
-			this.logger.info("Rx :  onDialogNotice" + evt);
+		if (logger.isFineEnabled()) {
+			this.logger.fine("Rx : onDialogNotice" + evt);
 		}
 	}
 
 	public void onDialogTimeout(DialogTimeout evt, ActivityContextInterface aci) {
-		if (logger.isInfoEnabled()) {
-			this.logger.info("Rx :  DialogTimeout" + evt);
+		if (logger.isWarningEnabled()) {
+			this.logger.warning("Rx : DialogTimeout" + evt);
 		}
+		
+		//TODO : Should send any xml content?
+		this.terminateProtocolConnection();
 	}
 
 	/**
 	 * MAP Component Event Handler
 	 */
 	public void onInvokeTimeout(InvokeTimeout evt, ActivityContextInterface aci) {
-		if (logger.isInfoEnabled()) {
-			this.logger.info("Rx :  InvokeTimeout" + evt);
+		if (logger.isWarningEnabled()) {
+			this.logger.warning("Rx :  InvokeTimeout" + evt);
 		}
+		//TODO End both the activities?
 	}
 
 	public void onErrorComponent(ErrorComponent evt, ActivityContextInterface aci) {
-		if (logger.isInfoEnabled()) {
-			this.logger.info("Rx :  ErrorComponent" + evt);
+		if (logger.isWarningEnabled()) {
+			this.logger.warning("Rx :  ErrorComponent" + evt);
 		}
+		//TODO End both the activities?
 	}
 
 	public void onProviderErrorComponent(ProviderErrorComponent evt, ActivityContextInterface aci) {
-		if (logger.isInfoEnabled()) {
-			this.logger.info("Rx :  ProviderErrorComponent" + evt);
+		if (logger.isWarningEnabled()) {
+			this.logger.warning("Rx :  ProviderErrorComponent" + evt);
 		}
+		//TODO End both the activities?
 	}
 
 	public void onRejectComponent(RejectComponent evt, ActivityContextInterface aci) {
-		if (logger.isInfoEnabled()) {
-			this.logger.info("Rx :  RejectComponent" + evt);
+		if (logger.isWarningEnabled()) {
+			this.logger.warning("Rx :  RejectComponent" + evt);
 		}
+		//TODO End both the activities?
 	}
 
 	// //////////////////////////

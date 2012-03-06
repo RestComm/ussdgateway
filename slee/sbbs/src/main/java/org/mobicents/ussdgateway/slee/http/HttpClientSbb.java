@@ -67,7 +67,6 @@ public abstract class HttpClientSbb extends ChildSbb {
 
 		if (response == null) {
 			// Error condition
-			Exception exception = event.getException();
 			logger.severe("Exception received for HTTP request sent. See traces above");
 
 			// TODO Abort Dialog or Send response back?
@@ -91,8 +90,13 @@ public abstract class HttpClientSbb extends ChildSbb {
 				byte[] xmlContent = null;
 				if (response.getEntity() != null) {
 					xmlContent = getResultData(response.getEntity());
-					logger.info("Received answer content: \n" + new String(xmlContent));
-
+					if (logger.isFineEnabled()) {
+						logger.fine("Received answer content: \n" + new String(xmlContent));
+					}
+					if (xmlContent == null || xmlContent.length <= 0) {
+						// TODO Error Condition
+						logger.severe("Received invalid payload from http server");
+					}
 					EventsSerializeFactory factory = this.getEventsSerializeFactory();
 					Dialog dialog = factory.deserialize(xmlContent);
 
@@ -108,8 +112,6 @@ public abstract class HttpClientSbb extends ChildSbb {
 						this.addProcessUnstructuredSSResponse(dialog.getProcessUnstructuredSSResponse());
 						this.endHttpClientActivity(httpClientActivity);
 					} else {
-						// This should never happen unless some class mismatch
-						// between versions
 						// TODO : Error condition
 						logger.severe("Received Success Response but unidentified response body");
 					}
