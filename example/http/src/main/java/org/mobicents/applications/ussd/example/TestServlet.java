@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javolution.xml.stream.XMLStreamException;
 
 import org.apache.log4j.Logger;
+import org.mobicents.protocols.ss7.map.api.MAPMessage;
 import org.mobicents.protocols.ss7.map.api.primitives.USSDString;
 import org.mobicents.protocols.ss7.map.api.service.supplementary.ProcessUnstructuredSSRequestIndication;
 import org.mobicents.protocols.ss7.map.api.service.supplementary.UnstructuredSSRequestIndication;
@@ -18,6 +19,7 @@ import org.mobicents.protocols.ss7.map.api.service.supplementary.UnstructuredSSR
 import org.mobicents.protocols.ss7.map.primitives.USSDStringImpl;
 import org.mobicents.protocols.ss7.map.service.supplementary.ProcessUnstructuredSSResponseIndicationImpl;
 import org.mobicents.protocols.ss7.map.service.supplementary.UnstructuredSSRequestIndicationImpl;
+import org.mobicents.protocols.ss7.map.service.supplementary.UnstructuredSSResponseIndicationImpl;
 import org.mobicents.ussdgateway.Dialog;
 import org.mobicents.ussdgateway.DialogType;
 import org.mobicents.ussdgateway.EventsSerializeFactory;
@@ -62,45 +64,64 @@ public class TestServlet extends HttpServlet {
 
 			USSDString ussdStr = null;
 			byte[] data = null;
-
+			MAPMessage mapMessage = original.getMAPMessage();
 			switch (original.getType()) {
 			case BEGIN:
-				ProcessUnstructuredSSRequestIndication processUnstructuredSSRequest = original
-						.getProcessUnstructuredSSRequest();
+				switch (mapMessage.getMessageType()) {
+				case processUnstructuredSSRequest_Request:
+					ProcessUnstructuredSSRequestIndication processUnstructuredSSRequest = (ProcessUnstructuredSSRequestIndication) mapMessage;
+					logger.info("Received ProcessUnstructuredSSRequestIndication USSD String="
+							+ processUnstructuredSSRequest.getUSSDString().getString());
 
-				logger.info("Received ProcessUnstructuredSSRequestIndication USSD String="
-						+ processUnstructuredSSRequest.getUSSDString().getString());
+					ussdStr = new USSDStringImpl("USSD String : Hello World\n 1. Balance\n 2. Texts Remaining", null);
+					UnstructuredSSRequestIndication unstructuredSSRequestIndication = new UnstructuredSSRequestIndicationImpl(
+							(byte) 0x0f, ussdStr, null, null);
 
-				ussdStr = new USSDStringImpl("USSD String : Hello World\n 1. Balance\n 2. Texts Remaining", null);
-				UnstructuredSSRequestIndication unstructuredSSRequestIndication = new UnstructuredSSRequestIndicationImpl(
-						(byte) 0x0f, ussdStr, null, null);
+					Dialog copy = new Dialog(DialogType.CONTINUE, original.getId(), null, null,
+							unstructuredSSRequestIndication);
 
-				Dialog copy = new Dialog(DialogType.CONTINUE, original.getId(), null, null,
-						unstructuredSSRequestIndication);
+					data = factory.serialize(copy);
 
-				data = factory.serialize(copy);
+					response.getOutputStream().write(data);
+					response.flushBuffer();
 
-				response.getOutputStream().write(data);
-				response.flushBuffer();
+					break;
+				default:
+					// This is error. If its begin it should be only Process
+					// Unstructured SS Request
+					logger.error("Received Dialog BEGIN but message is not ProcessUnstructuredSSRequestIndication. Message="
+							+ mapMessage);
+					break;
+				}
+
 				break;
 			case CONTINUE:
+				switch (mapMessage.getMessageType()) {
+				case unstructuredSSRequest_Response:
+					UnstructuredSSResponseIndication unstructuredSSResponse = (UnstructuredSSResponseIndication) mapMessage;
 
-				UnstructuredSSResponseIndication unstructuredSSResponse = original.getUnstructuredSSResponse();
+					logger.info("Received UnstructuredSSResponse USSD String="
+							+ unstructuredSSResponse.getUSSDString().getString());
 
-				logger.info("Received UnstructuredSSResponse USSD String="
-						+ unstructuredSSResponse.getUSSDString().getString());
+					ussdStr = new USSDStringImpl("Thank You!", null);
+					ProcessUnstructuredSSResponseIndicationImpl processUnstructuredSSResponseIndication = new ProcessUnstructuredSSResponseIndicationImpl(
+							(byte) 0x0f, ussdStr);
+					processUnstructuredSSResponseIndication.setInvokeId(mapMessage.getInvokeId());
 
-				ussdStr = new USSDStringImpl("Thank You!", null);
-				ProcessUnstructuredSSResponseIndicationImpl processUnstructuredSSResponseIndication = new ProcessUnstructuredSSResponseIndicationImpl(
-						(byte) 0x0f, ussdStr);
-				processUnstructuredSSResponseIndication.setInvokeId(original.getUnstructuredSSResponse().getInvokeId());
+					Dialog copy1 = new Dialog(DialogType.END, original.getId(), processUnstructuredSSResponseIndication);
 
-				Dialog copy1 = new Dialog(DialogType.END, original.getId(), processUnstructuredSSResponseIndication);
+					data = factory.serialize(copy1);
 
-				data = factory.serialize(copy1);
-
-				response.getOutputStream().write(data);
-				response.flushBuffer();
+					response.getOutputStream().write(data);
+					response.flushBuffer();
+					break;
+				default:
+					// This is error. If its begin it should be only Process
+					// Unstructured SS Request
+					logger.error("Received Dialog CONTINUE but message is not UnstructuredSSResponseIndication. Message="
+							+ mapMessage);
+					break;
+				}
 
 				break;
 

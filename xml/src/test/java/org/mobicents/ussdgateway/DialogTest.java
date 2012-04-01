@@ -76,8 +76,9 @@ public class DialogTest {
 
 		assertEquals(copy.getType(), original.getType());
 		assertEquals(copy.getId(), original.getId());
-		ProcessUnstructuredSSRequestIndication copyUSSR = copy.getProcessUnstructuredSSRequest();
-		ProcessUnstructuredSSRequestIndication originalUSSR = original.getProcessUnstructuredSSRequest();
+		ProcessUnstructuredSSRequestIndication copyUSSR = (ProcessUnstructuredSSRequestIndication) copy.getMAPMessage();
+		ProcessUnstructuredSSRequestIndication originalUSSR = (ProcessUnstructuredSSRequestIndication) original
+				.getMAPMessage();
 		assertEquals(copyUSSR.getUSSDString(), originalUSSR.getUSSDString());
 
 	}
@@ -100,8 +101,10 @@ public class DialogTest {
 
 		assertEquals(copy.getType(), original.getType());
 		assertEquals(copy.getId(), original.getId());
-		ProcessUnstructuredSSResponseIndication copyUSSR = copy.getProcessUnstructuredSSResponse();
-		ProcessUnstructuredSSResponseIndication originalUSSR = original.getProcessUnstructuredSSResponse();
+		ProcessUnstructuredSSResponseIndication copyUSSR = (ProcessUnstructuredSSResponseIndication) copy
+				.getMAPMessage();
+		ProcessUnstructuredSSResponseIndication originalUSSR = (ProcessUnstructuredSSResponseIndication) original
+				.getMAPMessage();
 		assertEquals(copyUSSR.getUSSDString(), originalUSSR.getUSSDString());
 
 	}
@@ -144,8 +147,8 @@ public class DialogTest {
 
 		assertEquals(copy.getType(), original.getType());
 		assertEquals(copy.getId(), original.getId());
-		UnstructuredSSResponseIndication copyUSSR = copy.getUnstructuredSSResponse();
-		UnstructuredSSResponseIndication originalUSSR = original.getUnstructuredSSResponse();
+		UnstructuredSSResponseIndication copyUSSR = (UnstructuredSSResponseIndication) copy.getMAPMessage();
+		UnstructuredSSResponseIndication originalUSSR = (UnstructuredSSResponseIndication) original.getMAPMessage();
 		assertEquals(copyUSSR.getUSSDString(), originalUSSR.getUSSDString());
 
 	}
@@ -175,8 +178,9 @@ public class DialogTest {
 
 		assertEquals(copy.getType(), original.getType());
 		assertEquals(copy.getId(), original.getId());
-		UnstructuredSSNotifyRequestIndication copyUSSR = copy.getUnstructuredSSNotifyRequest();
-		UnstructuredSSNotifyRequestIndication originalUSSR = original.getUnstructuredSSNotifyRequest();
+		UnstructuredSSNotifyRequestIndication copyUSSR = (UnstructuredSSNotifyRequestIndication) copy.getMAPMessage();
+		UnstructuredSSNotifyRequestIndication originalUSSR = (UnstructuredSSNotifyRequestIndication) original
+				.getMAPMessage();
 		assertEquals(copyUSSR.getUSSDString(), originalUSSR.getUSSDString());
 
 	}
@@ -191,7 +195,7 @@ public class DialogTest {
 		Dialog copy = this.factory.deserialize(serializedEvent);
 
 		assertNotNull(copy);
-		
+
 		assertEquals(copy.getType(), original.getType());
 	}
 

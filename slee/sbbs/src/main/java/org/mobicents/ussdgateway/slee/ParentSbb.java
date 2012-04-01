@@ -135,7 +135,6 @@ public abstract class ParentSbb implements Sbb {
 		} catch (Exception e) {
 			logger.severe("Unexpected error: ", e);
 		}
-
 	}
 
 	private void forwardEvent(SbbLocalObject child, ActivityContextInterface aci) {

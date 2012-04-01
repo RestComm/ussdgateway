@@ -5,12 +5,8 @@ import java.io.Serializable;
 import javolution.xml.XMLFormat;
 import javolution.xml.stream.XMLStreamException;
 
+import org.mobicents.protocols.ss7.map.api.MAPMessage;
 import org.mobicents.protocols.ss7.map.api.primitives.AddressString;
-import org.mobicents.protocols.ss7.map.api.service.supplementary.ProcessUnstructuredSSRequestIndication;
-import org.mobicents.protocols.ss7.map.api.service.supplementary.ProcessUnstructuredSSResponseIndication;
-import org.mobicents.protocols.ss7.map.api.service.supplementary.UnstructuredSSNotifyRequestIndication;
-import org.mobicents.protocols.ss7.map.api.service.supplementary.UnstructuredSSRequestIndication;
-import org.mobicents.protocols.ss7.map.api.service.supplementary.UnstructuredSSResponseIndication;
 import org.mobicents.protocols.ss7.map.primitives.AddressStringImpl;
 import org.mobicents.protocols.ss7.map.service.supplementary.ProcessUnstructuredSSRequestIndicationImpl;
 import org.mobicents.protocols.ss7.map.service.supplementary.ProcessUnstructuredSSResponseIndicationImpl;
@@ -36,11 +32,7 @@ public class Dialog implements Serializable {
 	private AddressString destReference;
 	private AddressString origReference;
 
-	private ProcessUnstructuredSSRequestIndication processUnstructuredSSRequest = null;
-	private UnstructuredSSRequestIndication unstructuredSSRequest = null;
-	private ProcessUnstructuredSSResponseIndication processUnstructuredSSResponse = null;
-	private UnstructuredSSResponseIndication unstructuredSSResponse = null;
-	private UnstructuredSSNotifyRequestIndication unstructuredSSNotifyRequest = null;
+	private MAPMessage mapMessage = null;
 	private DialogType type = null;
 	private Long id;
 
@@ -56,31 +48,14 @@ public class Dialog implements Serializable {
 	}
 
 	public Dialog(DialogType dialogType, Long id, AddressString destReference, AddressString origReference,
-			UnstructuredSSNotifyRequestIndication unstructuredSSNotify) {
+			MAPMessage mapMessage) {
 		this(dialogType, id, destReference, origReference);
-		this.unstructuredSSNotifyRequest = unstructuredSSNotify;
+		this.mapMessage = mapMessage;
 	}
 
-	public Dialog(DialogType dialogType, Long id, AddressString destReference, AddressString origReference,
-			ProcessUnstructuredSSRequestIndication processUnstructuredSSRequest) {
-		this(dialogType, id, destReference, origReference);
-		this.processUnstructuredSSRequest = processUnstructuredSSRequest;
-	}
-
-	public Dialog(DialogType dialogType, Long id, ProcessUnstructuredSSResponseIndication processUnstructuredSSResponse) {
+	public Dialog(DialogType dialogType, Long id, MAPMessage mapMessage) {
 		this(dialogType, id, null, null);
-		this.processUnstructuredSSResponse = processUnstructuredSSResponse;
-	}
-
-	public Dialog(DialogType dialogType, Long id, AddressString destReference, AddressString origReference,
-			UnstructuredSSRequestIndication unstructuredSSRequest) {
-		this(dialogType, id, destReference, origReference);
-		this.unstructuredSSRequest = unstructuredSSRequest;
-	}
-
-	public Dialog(DialogType dialogType, Long id, UnstructuredSSResponseIndication unstructuredSSResponse) {
-		this(dialogType, id, null, null);
-		this.unstructuredSSResponse = unstructuredSSResponse;
+		this.mapMessage = mapMessage;
 	}
 
 	public AddressString getDestReference() {
@@ -91,44 +66,12 @@ public class Dialog implements Serializable {
 		return origReference;
 	}
 
-	public ProcessUnstructuredSSRequestIndication getProcessUnstructuredSSRequest() {
-		return processUnstructuredSSRequest;
+	public MAPMessage getMAPMessage() {
+		return this.mapMessage;
 	}
 
-	public void setProcessUnstructuredSSRequest(ProcessUnstructuredSSRequestIndication processUnstructuredSSRequest) {
-		this.processUnstructuredSSRequest = processUnstructuredSSRequest;
-	}
-
-	public ProcessUnstructuredSSResponseIndication getProcessUnstructuredSSResponse() {
-		return processUnstructuredSSResponse;
-	}
-
-	public void setProcessUnstructuredSSResponse(ProcessUnstructuredSSResponseIndication processUnstructuredSSResponse) {
-		this.processUnstructuredSSResponse = processUnstructuredSSResponse;
-	}
-
-	public UnstructuredSSRequestIndication getUnstructuredSSRequest() {
-		return unstructuredSSRequest;
-	}
-
-	public void setUnstructuredSSRequest(UnstructuredSSRequestIndication unstructuredSSRequest) {
-		this.unstructuredSSRequest = unstructuredSSRequest;
-	}
-
-	public UnstructuredSSResponseIndication getUnstructuredSSResponse() {
-		return unstructuredSSResponse;
-	}
-
-	public void setUnstructuredSSResponse(UnstructuredSSResponseIndication unstructuredSSResponse) {
-		this.unstructuredSSResponse = unstructuredSSResponse;
-	}
-
-	public UnstructuredSSNotifyRequestIndication getUnstructuredSSNotifyRequest() {
-		return unstructuredSSNotifyRequest;
-	}
-
-	public void setUnstructuredSSNotifyRequest(UnstructuredSSNotifyRequestIndication unstructuredSSNotifyRequest) {
-		this.unstructuredSSNotifyRequest = unstructuredSSNotifyRequest;
+	public void setMAPMessage(MAPMessage mapMessage) {
+		this.mapMessage = mapMessage;
 	}
 
 	public DialogType getType() {
@@ -146,20 +89,42 @@ public class Dialog implements Serializable {
 			xml.add((AddressStringImpl) dialog.destReference, DESTINATION_REFERENCE, AddressStringImpl.class);
 			xml.add((AddressStringImpl) dialog.origReference, ORIGINATION_REFERENCE, AddressStringImpl.class);
 
-			xml.add((ProcessUnstructuredSSRequestIndicationImpl) dialog.processUnstructuredSSRequest,
-					PROCESS_UNSTRUCTURED_SS_REQUEST, ProcessUnstructuredSSRequestIndicationImpl.class);
+			MAPMessage mapMessage = dialog.getMAPMessage();
 
-			xml.add((ProcessUnstructuredSSResponseIndicationImpl) dialog.processUnstructuredSSResponse,
-					PROCESS_UNSTRUCTURED_SS_RESPONSE, ProcessUnstructuredSSResponseIndicationImpl.class);
+			if (mapMessage == null) {
+				return;
+			}
 
-			xml.add((UnstructuredSSRequestIndicationImpl) dialog.unstructuredSSRequest, UNSTRUCTURED_SS_REQUEST,
-					UnstructuredSSRequestIndicationImpl.class);
+			switch (mapMessage.getMessageType()) {
+			case processUnstructuredSSRequest_Request:
+				xml.add((ProcessUnstructuredSSRequestIndicationImpl) mapMessage, PROCESS_UNSTRUCTURED_SS_REQUEST,
+						ProcessUnstructuredSSRequestIndicationImpl.class);
+				break;
+			case processUnstructuredSSRequest_Response:
+				xml.add((ProcessUnstructuredSSResponseIndicationImpl) mapMessage, PROCESS_UNSTRUCTURED_SS_RESPONSE,
+						ProcessUnstructuredSSResponseIndicationImpl.class);
+				break;
 
-			xml.add((UnstructuredSSResponseIndicationImpl) dialog.unstructuredSSResponse, UNSTRUCTURED_SS_RESPONSE,
-					UnstructuredSSResponseIndicationImpl.class);
+			case unstructuredSSRequest_Request:
 
-			xml.add((UnstructuredSSNotifyRequestIndicationImpl) dialog.unstructuredSSNotifyRequest,
-					UNSTRUCTURED_SS_NOTIFY_REQUEST, UnstructuredSSNotifyRequestIndicationImpl.class);
+				xml.add((UnstructuredSSRequestIndicationImpl) mapMessage, UNSTRUCTURED_SS_REQUEST,
+						UnstructuredSSRequestIndicationImpl.class);
+				break;
+
+			case unstructuredSSRequest_Response:
+
+				xml.add((UnstructuredSSResponseIndicationImpl) mapMessage, UNSTRUCTURED_SS_RESPONSE,
+						UnstructuredSSResponseIndicationImpl.class);
+				break;
+
+			case unstructuredSSNotify_Request:
+
+				xml.add((UnstructuredSSNotifyRequestIndicationImpl) mapMessage, UNSTRUCTURED_SS_NOTIFY_REQUEST,
+						UnstructuredSSNotifyRequestIndicationImpl.class);
+				break;
+			default:
+				break;
+			}
 
 		}
 
@@ -168,29 +133,35 @@ public class Dialog implements Serializable {
 			dialog.id = xml.getAttribute("id", 0l);
 			dialog.destReference = xml.get(DESTINATION_REFERENCE, AddressStringImpl.class);
 			dialog.origReference = xml.get(ORIGINATION_REFERENCE, AddressStringImpl.class);
-			dialog.processUnstructuredSSRequest = xml.get(PROCESS_UNSTRUCTURED_SS_REQUEST,
+
+			MAPMessage mapMessage = xml.get(PROCESS_UNSTRUCTURED_SS_REQUEST,
 					ProcessUnstructuredSSRequestIndicationImpl.class);
 
-			dialog.processUnstructuredSSResponse = xml.get(PROCESS_UNSTRUCTURED_SS_RESPONSE,
-					ProcessUnstructuredSSResponseIndicationImpl.class);
+			if (mapMessage == null) {
+				mapMessage = xml.get(PROCESS_UNSTRUCTURED_SS_RESPONSE,
+						ProcessUnstructuredSSResponseIndicationImpl.class);
+			}
 
-			dialog.unstructuredSSRequest = xml.get(UNSTRUCTURED_SS_REQUEST, UnstructuredSSRequestIndicationImpl.class);
+			if (mapMessage == null) {
+				mapMessage = xml.get(UNSTRUCTURED_SS_REQUEST, UnstructuredSSRequestIndicationImpl.class);
+			}
 
-			dialog.unstructuredSSResponse = xml.get(UNSTRUCTURED_SS_RESPONSE,
-					UnstructuredSSResponseIndicationImpl.class);
+			if (mapMessage == null) {
+				mapMessage = xml.get(UNSTRUCTURED_SS_RESPONSE, UnstructuredSSResponseIndicationImpl.class);
+			}
 
-			dialog.unstructuredSSNotifyRequest = xml.get(UNSTRUCTURED_SS_NOTIFY_REQUEST,
-					UnstructuredSSNotifyRequestIndicationImpl.class);
+			if (mapMessage == null) {
+				mapMessage = xml.get(UNSTRUCTURED_SS_NOTIFY_REQUEST, UnstructuredSSNotifyRequestIndicationImpl.class);
+			}
+
+			dialog.setMAPMessage(mapMessage);
 		}
 	};
 
 	@Override
 	public String toString() {
-		return "Dialog [destReference=" + destReference + ", origReference=" + origReference + ", type=" + type
-				+ ", id=" + id + ", processUnstructuredSSRequest=" + processUnstructuredSSRequest
-				+ ", unstructuredSSRequest=" + unstructuredSSRequest + ", processUnstructuredSSResponse="
-				+ processUnstructuredSSResponse + ", unstructuredSSResponse=" + unstructuredSSResponse
-				+ ", unstructuredSSNotifyRequest=" + unstructuredSSNotifyRequest + "]";
+		return "Dialog [destReference=" + destReference + ", origReference=" + origReference + ", mapMessage="
+				+ mapMessage + ", type=" + type + ", id=" + id + "]";
 	}
 
 }

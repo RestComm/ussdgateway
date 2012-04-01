@@ -92,7 +92,7 @@ public abstract class ChildSbb implements Sbb, ChildInterface {
 				}
 
 				Dialog dialog = this.getDialog();
-				dialog.setProcessUnstructuredSSRequest(evt);
+				dialog.setMAPMessage(evt);
 
 				byte[] data = this.getEventsSerializeFactory().serialize(dialog);
 				this.sendUssdData(data);
@@ -127,7 +127,7 @@ public abstract class ChildSbb implements Sbb, ChildInterface {
 				}
 
 				Dialog dialog = new Dialog(DialogType.CONTINUE, evt.getMAPDialog().getDialogId(), null, null);
-				dialog.setUnstructuredSSResponse(evt);
+				dialog.setMAPMessage(evt);
 
 				EventsSerializeFactory factory = this.getEventsSerializeFactory();
 				byte[] data = factory.serialize(dialog);

@@ -26,6 +26,9 @@ import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.mobicents.protocols.ss7.map.api.MAPException;
+import org.mobicents.protocols.ss7.map.api.MAPMessage;
+import org.mobicents.protocols.ss7.map.api.service.supplementary.ProcessUnstructuredSSResponseIndication;
+import org.mobicents.protocols.ss7.map.api.service.supplementary.UnstructuredSSRequestIndication;
 import org.mobicents.ussdgateway.Dialog;
 import org.mobicents.ussdgateway.EventsSerializeFactory;
 import org.mobicents.ussdgateway.rules.Call;
@@ -89,10 +92,12 @@ public abstract class HttpClientSbb extends ChildSbb {
 			try {
 				byte[] xmlContent = null;
 				if (response.getEntity() != null) {
+					
 					xmlContent = getResultData(response.getEntity());
 					if (logger.isFineEnabled()) {
 						logger.fine("Received answer content: \n" + new String(xmlContent));
 					}
+					
 					if (xmlContent == null || xmlContent.length <= 0) {
 						// TODO Error Condition
 						logger.severe("Received invalid payload from http server");
@@ -103,17 +108,23 @@ public abstract class HttpClientSbb extends ChildSbb {
 					if (dialog == null) {
 						// TODO Error Condition
 						logger.severe("Received Success Response but couldn't deserialize to Dialog. Dialog is null");
+						
 					}
 
-					if (dialog.getUnstructuredSSRequest() != null) {
-						this.addUnstructuredSSRequest(dialog.getUnstructuredSSRequest());
-					} else if (dialog.getProcessUnstructuredSSResponse() != null) {
+					MAPMessage mapMessage = dialog.getMAPMessage();
+
+					switch (mapMessage.getMessageType()) {
+					case unstructuredSSRequest_Request:
+						this.addUnstructuredSSRequest((UnstructuredSSRequestIndication) mapMessage);
+						break;
+					case processUnstructuredSSRequest_Response:
 						aci.detach(this.sbbContext.getSbbLocalObject());
-						this.addProcessUnstructuredSSResponse(dialog.getProcessUnstructuredSSResponse());
+						this.addProcessUnstructuredSSResponse((ProcessUnstructuredSSResponseIndication) mapMessage);
 						this.endHttpClientActivity(httpClientActivity);
-					} else {
-						// TODO : Error condition
+						break;
+					default:
 						logger.severe("Received Success Response but unidentified response body");
+						break;
 					}
 
 				} else {
