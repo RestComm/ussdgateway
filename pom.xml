@@ -10,7 +10,7 @@
 	</parent>
 
 	<groupId>org.mobicents.applications.ussd</groupId>
-	<artifactId>ussdgateway</artifactId>
+	<artifactId>parent</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 
 	<name>USSD Gateway Parent</name>
@@ -39,15 +39,20 @@
 		<mobicents.resources.http-client.version>2.5.0.FINAL</mobicents.resources.http-client.version>
 		<mobicents.core.ext.version>1.0.0.BETA2</mobicents.core.ext.version>
 		<mobicents.resources.map.version>1.0.0-SNAPSHOT</mobicents.resources.map.version>
-
+		<jslee.ext.version>1.0.0.BETA2</jslee.ext.version>
+		
+		<ss7.version>1.0.0-SNAPSHOT</ss7.version>
+		<!-- mobicents but not strictly ss7 -->
+		<asn.version>1.0.0.FINAL</asn.version>
+		<stream.version>1.0.0.CR1</stream.version>
+		<sctp.version>1.0.0.CR2</sctp.version>
+		<commons.version>1.0.0.CR1</commons.version>
+		
 		<application.name>mobicents-ussd-gateway</application.name>
 	</properties>
 
 	<modules>
-		<module>domain</module>
-		<module>rules</module>
-		<module>xml</module>
-		<module>slee</module>
+		<module>core</module>
 		<module>example</module>
 	</modules>
 	<dependencies>

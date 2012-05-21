@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+	targetNamespace="http://mobicents.org/ussd"
+	elementFormDefault="qualified"
+	xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://mobicents.org/ussd">
+
+	<element
+		name="request"
+		type="tns:USSDRequest"></element>
+
+	<complexType name="USSDRequest">
+		<complexContent>
+			<extension base="tns:USSDMessage">
+				<sequence>
+					<element name="result" type="boolean"></element>
+					<element name="lastResult" type="boolean"></element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="USSDResponse">
+		<complexContent>
+			<extension base="tns:USSDMessage">
+				<sequence>
+				</sequence>
+			</extension>
+
+		</complexContent>
+	</complexType>
+
+
+	<element
+		name="response"
+		type="tns:USSDResponse"></element>
+
+	<complexType name="USSDAbort">
+		<complexContent>
+			<extension base="tns:USSDDialogMessage">
+				<sequence>
+					<element
+						name="userSpecificReason"
+						type="tns:AbortReason" maxOccurs="1" minOccurs="1">
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<element
+		name="abort"
+		type="tns:USSDAbort"></element>
+
+
+
+	<complexType
+		name="AbortReason">
+		<choice
+			maxOccurs="1"
+			minOccurs="1">
+			<element
+				name="userSpecific"
+				type="string"></element>
+			<element
+				name="userResourceLimitation"
+				type="string"></element>
+			<element
+				name="resourceUnavailable">
+				<simpleType>
+					<restriction
+						base="string">
+						<enumeration
+							value="shortTermResourceLimitation">
+						</enumeration>
+						<enumeration
+							value="longTermResourceLimitation">
+						</enumeration>
+					</restriction>
+				</simpleType>
+			</element>
+			<element
+				name="applicationProcedureCancellation">
+				<simpleType>
+					<restriction
+						base="string">
+						<enumeration
+							value="handoverCancellation"></enumeration>
+						<enumeration
+							value="radioChannelRelease"></enumeration>
+						<enumeration
+							value="networkPathRelease"></enumeration>
+						<enumeration
+							value="callRelease"></enumeration>
+						<enumeration
+							value="associatedProcedureFailure">
+						</enumeration>
+						<enumeration
+							value="tandemDialogueRelease"></enumeration>
+						<enumeration
+							value="remoteOperationsFailure"></enumeration>
+					</restriction>
+				</simpleType>
+			</element>
+		</choice>
+
+	</complexType>
+
+	<complexType
+		name="USSDMessage">
+		<complexContent>
+			<extension
+				base="tns:USSDDialogMessage">
+				<sequence>
+					<element
+						name='ussdString'
+						type="string"
+						maxOccurs="1"
+						minOccurs="1">
+					</element>
+					<element
+						name="ussdCoding"
+						type="int"
+						maxOccurs="1"
+						minOccurs="1">
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType
+		name="USSDDialogMessage">
+		<sequence>
+			<element
+				name="invokeId"
+				maxOccurs="1"
+				minOccurs="1">
+				<simpleType>
+					<restriction base="int">
+						<minInclusive value="-128"></minInclusive>
+						<maxInclusive value="127"></maxInclusive>
+					</restriction>
+				</simpleType>
+			</element>
+			<element
+				name="dialogId"
+				type="long"
+				maxOccurs="1"
+				minOccurs="1">
+			</element>
+			<element
+				name="msisdn"
+				type="string"
+				maxOccurs="1"
+				minOccurs="0">
+			</element>
+			<element
+				name="imsi"
+				type="string"
+				maxOccurs="1"
+				minOccurs="0">
+			</element>
+			<element
+				name="orignatingAddress"
+				type="string"
+				maxOccurs="1"
+				minOccurs="0">
+			</element>
+			<element
+				name="destinationAddress"
+				type="string" maxOccurs="1" minOccurs="0">
+			</element>
+		</sequence>
+	</complexType>
+</schema>
