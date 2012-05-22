@@ -39,6 +39,8 @@
 		<mobicents.resources.http-client.version>2.5.0.FINAL</mobicents.resources.http-client.version>
 		<mobicents.core.ext.version>1.0.0.BETA2</mobicents.core.ext.version>
 		<mobicents.resources.map.version>1.0.0-SNAPSHOT</mobicents.resources.map.version>
+		<mobicents.resoruces.jdbc.version>1.0.0.FINAL</mobicents.resoruces.jdbc.version>
+		
 		<jslee.ext.version>1.0.0.BETA2</jslee.ext.version>
 		
 		<ss7.version>1.0.0-SNAPSHOT</ss7.version>

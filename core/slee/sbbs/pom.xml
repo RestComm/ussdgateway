@@ -37,6 +37,11 @@
 			<artifactId>http-client-ratype</artifactId>
 			<version>${mobicents.resources.http-client.version}</version>
 		</dependency>
+		<dependency>
+            <artifactId>mobicents-slee-ra-jdbc-ratype</artifactId>
+            <groupId>org.mobicents.resources</groupId>
+            <version>${mobicents.resoruces.jdbc.version}</version>
+        </dependency>
 	</dependencies>
 
 </project>

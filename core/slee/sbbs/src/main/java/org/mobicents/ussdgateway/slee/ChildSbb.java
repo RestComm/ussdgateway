@@ -5,8 +5,11 @@ import javax.slee.CreateException;
 import javax.slee.RolledBackContext;
 import javax.slee.Sbb;
 import javax.slee.SbbContext;
+import javax.slee.SbbLocalObject;
+import javax.slee.TransactionRequiredLocalException;
 import javax.slee.facilities.Tracer;
 import javax.slee.resource.ResourceAdaptorTypeID;
+import javax.slee.SLEEException;
 
 import javolution.xml.stream.XMLStreamException;
 
@@ -20,7 +23,9 @@ import org.mobicents.protocols.ss7.map.api.service.supplementary.ProcessUnstruct
 import org.mobicents.protocols.ss7.map.api.service.supplementary.ProcessUnstructuredSSResponseIndication;
 import org.mobicents.protocols.ss7.map.api.service.supplementary.UnstructuredSSRequestIndication;
 import org.mobicents.protocols.ss7.map.api.service.supplementary.UnstructuredSSResponseIndication;
+import org.mobicents.slee.ChildRelationExt;
 import org.mobicents.slee.SbbContextExt;
+import org.mobicents.slee.SbbLocalObjectExt;
 import org.mobicents.slee.resource.map.MAPContextInterfaceFactory;
 import org.mobicents.slee.resource.map.events.DialogAccept;
 import org.mobicents.slee.resource.map.events.DialogClose;
@@ -38,13 +43,18 @@ import org.mobicents.ussdgateway.Dialog;
 import org.mobicents.ussdgateway.DialogType;
 import org.mobicents.ussdgateway.EventsSerializeFactory;
 import org.mobicents.ussdgateway.rules.Call;
-
+import org.mobicents.ussdgateway.slee.cdr.AbortType;
+import org.mobicents.ussdgateway.slee.cdr.ChargeInterface;
+import org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent;
+import org.mobicents.ussdgateway.slee.cdr.TimeoutType;
+import org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent.RecordType;
+import org.mobicents.ussdgateway.slee.cdr.USSDCDRState;
 /**
  * 
  * @author amit bhayani
  *
  */
-public abstract class ChildSbb implements Sbb, ChildInterface {
+public abstract class ChildSbb implements Sbb, ChildInterface, ChargeInterfaceParent{
 
 	protected SbbContextExt sbbContext;
 
@@ -93,7 +103,22 @@ public abstract class ChildSbb implements Sbb, ChildInterface {
 
 				Dialog dialog = this.getDialog();
 				dialog.setMAPMessage(evt);
-
+				ChargeInterface cdrInterface = this.getCDRChargeInterface();
+				USSDCDRState state = cdrInterface.getState();
+                if(!state.isInitialized()){
+                    String serviceCode = evt.getUSSDString().getString();
+                    serviceCode = serviceCode.substring(serviceCode.indexOf("*")+1,serviceCode.indexOf("#"));
+                    state.init(dialog.getId(),serviceCode,dialog.getDestReference(), dialog.getOrigReference(),evt.getMSISDNAddressString(),evt.getMAPDialog().getLocalAddress()
+                             ,evt.getMAPDialog().getRemoteAddress());
+                    cdrInterface.setState(state);
+                    cdrInterface.createInitRecord();
+                    //attach, in case impl wants to use more of dialog.
+                    SbbLocalObject sbbLO = (SbbLocalObject) cdrInterface;
+                    aci.attach(sbbLO);
+                } else {
+                     //use this, since getDialog.type is not changed now
+                    cdrInterface.createContinueRecord();
+                }
 				byte[] data = this.getEventsSerializeFactory().serialize(dialog);
 				this.sendUssdData(data);
 			}
@@ -111,11 +136,8 @@ public abstract class ChildSbb implements Sbb, ChildInterface {
 					this.logger.fine("Received UNSTRUCTURED_SS_RESPONSE_INDICATION for MAP Dialog Id "
 							+ evt.getMAPDialog().getDialogId() + ", without active session, terminating both.");
 				}
-				MAPUserAbortChoice mapUsrAbrtCho = this.mapParameterFactory.createMAPUserAbortChoice();
-				mapUsrAbrtCho.setUserSpecificReason();
-
 				try {
-					evt.getMAPDialog().abort(mapUsrAbrtCho);
+				    this.abort(evt.getMAPDialog());
 				} catch (MAPException e) {
 					this.logger.severe("Error while aborting MAPDialog ", e);
 				}
@@ -128,7 +150,7 @@ public abstract class ChildSbb implements Sbb, ChildInterface {
 
 				Dialog dialog = new Dialog(DialogType.CONTINUE, evt.getMAPDialog().getDialogId(), null, null);
 				dialog.setMAPMessage(evt);
-
+				this.getCDRChargeInterface().createContinueRecord();
 				EventsSerializeFactory factory = this.getEventsSerializeFactory();
 				byte[] data = factory.serialize(dialog);
 
@@ -160,7 +182,7 @@ public abstract class ChildSbb implements Sbb, ChildInterface {
 		if (logger.isWarningEnabled()) {
 			this.logger.warning("DialogRejected " + evt);
 		}
-
+		// TODO: CDR, how this should be covered?
 		// TODO : Should we add any xml content?
 		this.terminateProtocolConnection();
 	}
@@ -169,7 +191,7 @@ public abstract class ChildSbb implements Sbb, ChildInterface {
 		if (logger.isWarningEnabled()) {
 			this.logger.warning("Rx : DialogUserAbort " + evt);
 		}
-
+		// TODO: CDR, how this should be covered?
 		// TODO : Should we add any xml content?
 		this.terminateProtocolConnection();
 	}
@@ -178,7 +200,7 @@ public abstract class ChildSbb implements Sbb, ChildInterface {
 		if (logger.isWarningEnabled()) {
 			this.logger.warning("Rx : DialogProviderAbort " + evt);
 		}
-
+		// TODO: CDR, how this should be covered?
 		// TODO : Should we add any xml content?
 		this.terminateProtocolConnection();
 	}
@@ -187,7 +209,7 @@ public abstract class ChildSbb implements Sbb, ChildInterface {
 		if (logger.isFineEnabled()) {
 			this.logger.fine("Rx : DialogClosed " + evt);
 		}
-
+		// TODO: CDR, how this should be covered?
 		// TODO : Should we add any xml content?
 		this.terminateProtocolConnection();
 	}
@@ -202,9 +224,12 @@ public abstract class ChildSbb implements Sbb, ChildInterface {
 		if (logger.isWarningEnabled()) {
 			this.logger.warning("Rx : DialogTimeout" + evt);
 		}
-		
-		//TODO : Should send any xml content?
-		this.terminateProtocolConnection();
+		try{
+		  //TODO : Should send any xml content?
+            this.terminateProtocolConnection();
+		}finally{
+		    getCDRChargeInterface().createTimeoutRecord(TimeoutType.DialogTimeout);
+		}
 	}
 
 	/**
@@ -261,7 +286,40 @@ public abstract class ChildSbb implements Sbb, ChildInterface {
 	 * @return
 	 */
 	protected abstract boolean checkProtocolConnection();
+	// ///////////////////
+    // Charge interface //
+    // ///////////////////
 
+    private static final String CHARGER = "CHARGER";
+
+    public abstract ChildRelationExt getCDRInterfaceChildRelation();
+
+    public ChargeInterface getCDRChargeInterface() {
+        ChildRelationExt childExt = getCDRInterfaceChildRelation();
+        ChargeInterface child = (ChargeInterface) childExt.get(CHARGER);
+        if (child == null) {
+            try {
+                child = (ChargeInterface) childExt.create(CHARGER);
+            } catch (TransactionRequiredLocalException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IllegalArgumentException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (NullPointerException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (SLEEException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (CreateException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+        return child;
+    }
 	// /////////////////
 	// Sbb callbacks //
 	// /////////////////
@@ -323,6 +381,10 @@ public abstract class ChildSbb implements Sbb, ChildInterface {
 	public abstract void setDialog(Dialog dialog);
 
 	public abstract Dialog getDialog();
+	
+	public abstract void setCDRState(USSDCDRState dialog);
+ 
+    public abstract USSDCDRState getCDRState();
 
 	// //////////////////
 	// SBB LO methods //
@@ -331,18 +393,67 @@ public abstract class ChildSbb implements Sbb, ChildInterface {
 	public void setCallFact(Call call) {
 		this.setCall(call);
 	}
+	/* (non-Javadoc)
+     * @see org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent#recordGenerationSucessed(org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent.RecordType)
+     */
+    @Override
+    public void recordGenerationSucessed(RecordType type) {
+        // TODO Auto-generated method stub
 
+    }
+
+    /* (non-Javadoc)
+     * @see org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent#recordGenerationFailed(org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent.RecordType, java.lang.String)
+     */
+    @Override
+    public void recordGenerationFailed(RecordType type, String message) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /* (non-Javadoc)
+     * @see org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent#recordGenerationFailed(org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent.RecordType, java.lang.String, java.lang.Throwable)
+     */
+    @Override
+    public void recordGenerationFailed(RecordType type, String message, Throwable t) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /* (non-Javadoc)
+     * @see org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent#initFailed(java.lang.String, java.lang.Throwable)
+     */
+    @Override
+    public void initFailed(String message, Throwable t) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /* (non-Javadoc)
+     * @see org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent#initSuccessed()
+     */
+    @Override
+    public void initSuccessed() {
+        // TODO Auto-generated method stub
+
+    }
 	// ///////////////////////////////////////////////
 	// protected child stuff, to be used in parent //
 	// ///////////////////////////////////////////////
 
-	protected void abort(MAPDialog mapDialog) throws MAPException {
-		// TODO get the reason
-		MAPUserAbortChoice mapUserAbortChoice = this.mapParameterFactory.createMAPUserAbortChoice();
-		// As of now hardcoded
-		mapUserAbortChoice.setUserSpecificReason();
-		mapDialog.abort(mapUserAbortChoice);
-	}
+    protected void abort(MAPDialog mapDialog) throws MAPException {
+        // TODO get the reason
+
+        MAPUserAbortChoice mapUserAbortChoice = this.mapParameterFactory.createMAPUserAbortChoice();
+        // As of now hardcoded
+        mapUserAbortChoice.setUserSpecificReason();
+        try {
+            mapDialog.abort(mapUserAbortChoice);
+        } finally {
+            this.getCDRChargeInterface().createAbortRecord(AbortType.UserSpecificReason);
+        }
+
+    }
 
 	protected MAPDialogSupplementary getMAPDialog() {
 		MAPDialogSupplementary mapDialog = null;
@@ -376,7 +487,11 @@ public abstract class ChildSbb implements Sbb, ChildInterface {
 
 		mapDialogSupplementary.addUnstructuredSSRequest(unstructuredSSRequestIndication.getUSSDDataCodingScheme(),
 				unstructuredSSRequestIndication.getUSSDString(), null, null);
-		mapDialogSupplementary.send();
+		try{
+		    mapDialogSupplementary.send();
+		}finally{
+		    this.getCDRChargeInterface().createContinueRecord();
+		}
 		// TODO : Check if the Dialog Type is CONTINUE or END?
 	}
 
@@ -391,7 +506,11 @@ public abstract class ChildSbb implements Sbb, ChildInterface {
 		mapDialogSupplementary.addProcessUnstructuredSSResponse(processUnstructuredSSResponseIndication.getInvokeId(),
 				processUnstructuredSSResponseIndication.getUSSDDataCodingScheme(),
 				processUnstructuredSSResponseIndication.getUSSDString());
-		mapDialogSupplementary.close(false);
+		try{
+		    mapDialogSupplementary.close(false);
+		}finally{
+		    this.getCDRChargeInterface().createTerminateRecord();
+		}
 		// TODO : Check if the Dialog Type is CONTINUE or END?
 	}
 }

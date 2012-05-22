@@ -3,6 +3,17 @@
                              "http://java.sun.com/dtd/slee-service-xml_1_1.dtd">
 <service-xml>
 	<service>
+		<service-name>mobicents-ussdgateway-cdr</service-name>
+		<service-vendor>org.mobicents</service-vendor>
+		<service-version>1.0</service-version>
+		<root-sbb>
+			<sbb-name>CDRSbb</sbb-name>
+			<sbb-vendor>org.mobicents</sbb-vendor>
+			<sbb-version>1.0</sbb-version>
+		</root-sbb>
+		<default-priority>51</default-priority>
+	</service>
+	<service>
 		<service-name>mobicents-ussdgateway</service-name>
 		<service-vendor>org.mobicents</service-vendor>
 		<service-version>1.0</service-version>
