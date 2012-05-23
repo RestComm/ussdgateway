@@ -22,7 +22,7 @@
 			<scope>runtime</scope>
 			<includes>
 				<!-- SLEE DU -->
-				<include>org.mobicents.applications.ussd:ussdgateway-services-DU</include>
+				<include>org.mobicents.ussd:ussdgateway-services-DU</include>
 			</includes>
 		</dependencySet>
 		<dependencySet>
@@ -31,13 +31,13 @@
 			<scope>runtime</scope>
 			<includes>
 				<!-- USSD libraries -->
-				<include>org.mobicents.applications.ussd:bootstrap</include>
-				<include>org.mobicents.applications.ussd:oam</include>
-				<include>org.mobicents.applications.ussd:xml</include>
+				<include>org.mobicents.ussd:bootstrap</include>
+				<include>org.mobicents.ussd:oam</include>
+				<include>org.mobicents.ussd:xml</include>
 				
 				<!-- rules and domain library -->
-				<include>org.mobicents.applications.ussd:ussdgateway-rules</include>
-				<include>org.mobicents.applications.ussd:ussdgateway-domain</include>
+				<include>org.mobicents.ussd:ussdgateway-rules</include>
+				<include>org.mobicents.ussd:ussdgateway-domain</include>
 
 				
 				<!-- Not strictly SS7, But needed by SS7 -->

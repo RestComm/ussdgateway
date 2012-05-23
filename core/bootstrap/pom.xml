@@ -5,7 +5,7 @@
 	<packaging>jar</packaging>
 
 	<parent>
-		<groupId>org.mobicents.applications.ussd</groupId>
+		<groupId>org.mobicents.ussd</groupId>
 		<artifactId>core</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
@@ -17,25 +17,25 @@
 		<!-- USSD Dependency -->
 		<!-- once some meat is added into oam, we will have to uncomment this out -->
 		<dependency>
-			<groupId>org.mobicents.applications.ussd</groupId>
+			<groupId>${pom.groupId}</groupId>
 			<artifactId>oam</artifactId>
 			<version>${pom.version}</version>
 		</dependency>
 		
 		<dependency>
-			<groupId>org.mobicents.applications.ussd</groupId>
+			<groupId>${pom.groupId}</groupId>
 			<artifactId>ussdgateway-domain</artifactId>
 			<version>${pom.version}</version>
 		</dependency>
 		
 		<dependency>
-			<groupId>org.mobicents.applications.ussd</groupId>
+			<groupId>${pom.groupId}</groupId>
 			<artifactId>ussdgateway-rules</artifactId>
 			<version>${pom.version}</version>
 		</dependency>
 		
 		<dependency>
-			<groupId>org.mobicents.applications.ussd</groupId>
+			<groupId>${pom.groupId}</groupId>
 			<artifactId>ussdgateway-xml</artifactId>
 			<version>${pom.version}</version>
 		</dependency>
