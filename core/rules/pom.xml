@@ -15,7 +15,7 @@
 
 
 	<artifactId>ussdgateway-rules</artifactId>
-	<name>USSD Gateway Rules Service</name>
+	<name>Core : Rules</name>
 	<description>USSD Gateway Rules Service</description>
 
 	<dependencies>

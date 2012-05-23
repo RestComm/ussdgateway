@@ -11,7 +11,7 @@
 	</parent>
 
 	<artifactId>oam</artifactId>
-	<name>Operations and Management</name>
+	<name>Core : OAM</name>
 
 	<dependencies>
 		<!-- javolution -->

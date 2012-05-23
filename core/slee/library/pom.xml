@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>ussdgateway-library</artifactId>
-	<name>USSD Gateway SLEE Library</name>
+	<name>Core : SLEE : Library</name>
 
 
 

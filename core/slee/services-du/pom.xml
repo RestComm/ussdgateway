@@ -8,7 +8,7 @@
 	</parent>
 
 	<artifactId>ussdgateway-services-DU</artifactId>
-	<name>USSD Gateway SLEE Service</name>
+	<name>Core : SLEE : Service</name>
 	<dependencies>
 		<dependency>
 			<artifactId>ussdgateway-library</artifactId>

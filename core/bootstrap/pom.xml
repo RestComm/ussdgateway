@@ -11,7 +11,7 @@
 	</parent>
 
 	<artifactId>bootstrap</artifactId>
-	<name>Bootstrap</name>
+	<name>Core : Bootstrap</name>
 
 	<dependencies>
 		<!-- USSD Dependency -->

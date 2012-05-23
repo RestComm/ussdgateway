@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>ussdgateway-example-http</artifactId>
-	<name>USSD Gateway Example HTTP</name>
+	<name>Example : HTTP</name>
 
 	<dependencies>
 		<dependency>

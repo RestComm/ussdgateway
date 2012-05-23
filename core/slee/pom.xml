@@ -8,7 +8,7 @@
 	</parent>
 
 	<artifactId>ussdgateway-slee</artifactId>
-	<name>USSD Gateway SLEE</name>
+	<name>Core : SLEE</name>
 	<packaging>pom</packaging>
 
 	<modules>

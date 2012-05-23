@@ -12,7 +12,7 @@
 	</parent>
 
 	<artifactId>ussdgateway-xml</artifactId>
-	<name>USSD Gateway Events Serializer</name>
+	<name>Core : XML</name>
 
 
 	<properties>

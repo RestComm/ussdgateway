@@ -15,7 +15,7 @@
 
 
 	<artifactId>ussdgateway-example</artifactId>
-	<name>USSD Gateway Example Parent</name>
+	<name>Example</name>
 
 	<modules>
 		<module>http</module>
