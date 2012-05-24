@@ -14,14 +14,14 @@
 	<packaging>jar</packaging>
 
 
-	<artifactId>ussdgateway-rules</artifactId>
+	<artifactId>rules</artifactId>
 	<name>Core : Rules</name>
 	<description>USSD Gateway Rules Service</description>
 
 	<dependencies>
 		<dependency>
 			<groupId>${pom.groupId}</groupId>
-			<artifactId>ussdgateway-domain</artifactId>
+			<artifactId>domain</artifactId>
 			<version>${pom.version}</version>
 			<scope>runtime</scope>
 		</dependency>

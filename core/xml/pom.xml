@@ -11,7 +11,7 @@
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>ussdgateway-xml</artifactId>
+	<artifactId>xml</artifactId>
 	<name>Core : XML</name>
 
 
@@ -35,17 +35,12 @@
 		<dependency>
 			<artifactId>map-api</artifactId>
 			<groupId>org.mobicents.protocols.ss7.map</groupId>
-			<version>1.0.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<artifactId>map-api</artifactId>
-			<groupId>org.mobicents.protocols.ss7.map</groupId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>${ss7.version}</version>
 		</dependency>
 		<dependency>
 			<artifactId>map-impl</artifactId>
 			<groupId>org.mobicents.protocols.ss7.map</groupId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>${ss7.version}</version>
 		</dependency>
 	</dependencies>
 

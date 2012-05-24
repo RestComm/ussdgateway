@@ -13,13 +13,13 @@ import javolution.xml.stream.XMLStreamException;
 import org.apache.log4j.Logger;
 import org.mobicents.protocols.ss7.map.api.MAPMessage;
 import org.mobicents.protocols.ss7.map.api.primitives.USSDString;
-import org.mobicents.protocols.ss7.map.api.service.supplementary.ProcessUnstructuredSSRequestIndication;
-import org.mobicents.protocols.ss7.map.api.service.supplementary.UnstructuredSSRequestIndication;
-import org.mobicents.protocols.ss7.map.api.service.supplementary.UnstructuredSSResponseIndication;
+import org.mobicents.protocols.ss7.map.api.service.supplementary.ProcessUnstructuredSSRequest;
+import org.mobicents.protocols.ss7.map.api.service.supplementary.UnstructuredSSRequest;
+import org.mobicents.protocols.ss7.map.api.service.supplementary.UnstructuredSSResponse;
 import org.mobicents.protocols.ss7.map.primitives.USSDStringImpl;
-import org.mobicents.protocols.ss7.map.service.supplementary.ProcessUnstructuredSSResponseIndicationImpl;
-import org.mobicents.protocols.ss7.map.service.supplementary.UnstructuredSSRequestIndicationImpl;
-import org.mobicents.protocols.ss7.map.service.supplementary.UnstructuredSSResponseIndicationImpl;
+import org.mobicents.protocols.ss7.map.service.supplementary.ProcessUnstructuredSSResponseImpl;
+import org.mobicents.protocols.ss7.map.service.supplementary.UnstructuredSSRequestImpl;
+import org.mobicents.protocols.ss7.map.service.supplementary.UnstructuredSSResponseImpl;
 import org.mobicents.ussdgateway.Dialog;
 import org.mobicents.ussdgateway.DialogType;
 import org.mobicents.ussdgateway.EventsSerializeFactory;
@@ -69,12 +69,12 @@ public class TestServlet extends HttpServlet {
 			case BEGIN:
 				switch (mapMessage.getMessageType()) {
 				case processUnstructuredSSRequest_Request:
-					ProcessUnstructuredSSRequestIndication processUnstructuredSSRequest = (ProcessUnstructuredSSRequestIndication) mapMessage;
+					ProcessUnstructuredSSRequest processUnstructuredSSRequest = (ProcessUnstructuredSSRequest) mapMessage;
 					logger.info("Received ProcessUnstructuredSSRequestIndication USSD String="
 							+ processUnstructuredSSRequest.getUSSDString().getString());
 
 					ussdStr = new USSDStringImpl("USSD String : Hello World\n 1. Balance\n 2. Texts Remaining", null);
-					UnstructuredSSRequestIndication unstructuredSSRequestIndication = new UnstructuredSSRequestIndicationImpl(
+					UnstructuredSSRequest unstructuredSSRequestIndication = new UnstructuredSSRequestImpl(
 							(byte) 0x0f, ussdStr, null, null);
 
 					Dialog copy = new Dialog(DialogType.CONTINUE, original.getId(), null, null,
@@ -98,13 +98,13 @@ public class TestServlet extends HttpServlet {
 			case CONTINUE:
 				switch (mapMessage.getMessageType()) {
 				case unstructuredSSRequest_Response:
-					UnstructuredSSResponseIndication unstructuredSSResponse = (UnstructuredSSResponseIndication) mapMessage;
+					UnstructuredSSResponse unstructuredSSResponse = (UnstructuredSSResponseImpl) mapMessage;
 
 					logger.info("Received UnstructuredSSResponse USSD String="
 							+ unstructuredSSResponse.getUSSDString().getString());
 
 					ussdStr = new USSDStringImpl("Thank You!", null);
-					ProcessUnstructuredSSResponseIndicationImpl processUnstructuredSSResponseIndication = new ProcessUnstructuredSSResponseIndicationImpl(
+					ProcessUnstructuredSSResponseImpl processUnstructuredSSResponseIndication = new ProcessUnstructuredSSResponseImpl(
 							(byte) 0x0f, ussdStr);
 					processUnstructuredSSResponseIndication.setInvokeId(mapMessage.getInvokeId());
 

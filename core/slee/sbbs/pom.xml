@@ -4,17 +4,17 @@
 
 	<parent>
 		<groupId>org.mobicents.ussd</groupId>
-		<artifactId>ussdgateway-slee</artifactId>
+		<artifactId>slee</artifactId>
 		<version>1.0.0-SNAPSHOT</version> 
 	</parent>
 
-	<artifactId>ussdgateway-sbbs</artifactId>
+	<artifactId>sbbs</artifactId>
 	<name>Core : SLEE : Sbbs</name>
 	<dependencies>
 
 		<dependency>
 			<groupId>${pom.groupId}</groupId>
-			<artifactId>ussdgateway-library</artifactId>
+			<artifactId>library</artifactId>
 			<version>${pom.version}</version>
 		</dependency>
 		<dependency>

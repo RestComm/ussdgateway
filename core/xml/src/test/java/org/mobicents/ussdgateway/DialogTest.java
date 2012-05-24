@@ -9,19 +9,12 @@ import org.mobicents.protocols.ss7.map.api.primitives.AddressString;
 import org.mobicents.protocols.ss7.map.api.primitives.AlertingCategory;
 import org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan;
 import org.mobicents.protocols.ss7.map.api.primitives.USSDString;
-import org.mobicents.protocols.ss7.map.api.service.supplementary.ProcessUnstructuredSSRequestIndication;
-import org.mobicents.protocols.ss7.map.api.service.supplementary.ProcessUnstructuredSSResponseIndication;
-import org.mobicents.protocols.ss7.map.api.service.supplementary.UnstructuredSSNotifyRequestIndication;
-import org.mobicents.protocols.ss7.map.api.service.supplementary.UnstructuredSSResponseIndication;
+import org.mobicents.protocols.ss7.map.api.service.supplementary.*;
 import org.mobicents.protocols.ss7.map.primitives.AddressStringImpl;
 import org.mobicents.protocols.ss7.map.primitives.AlertingPatternImpl;
 import org.mobicents.protocols.ss7.map.primitives.ISDNAddressStringImpl;
 import org.mobicents.protocols.ss7.map.primitives.USSDStringImpl;
-import org.mobicents.protocols.ss7.map.service.supplementary.ProcessUnstructuredSSRequestIndicationImpl;
-import org.mobicents.protocols.ss7.map.service.supplementary.ProcessUnstructuredSSResponseIndicationImpl;
-import org.mobicents.protocols.ss7.map.service.supplementary.UnstructuredSSNotifyRequestIndicationImpl;
-import org.mobicents.protocols.ss7.map.service.supplementary.UnstructuredSSRequestIndicationImpl;
-import org.mobicents.protocols.ss7.map.service.supplementary.UnstructuredSSResponseIndicationImpl;
+import org.mobicents.protocols.ss7.map.service.supplementary.*;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
@@ -61,7 +54,7 @@ public class DialogTest {
 				NumberingPlan.ISDN, "79273605819");
 		AlertingPatternImpl alertingPattern = new AlertingPatternImpl(AlertingCategory.Category3);
 		USSDString ussdStr = new USSDStringImpl("*234#", null);
-		ProcessUnstructuredSSRequestIndication processUnstructuredSSRequestIndication = new ProcessUnstructuredSSRequestIndicationImpl(
+		ProcessUnstructuredSSRequestImpl processUnstructuredSSRequestIndication = new ProcessUnstructuredSSRequestImpl(
 				(byte) 0x0f, ussdStr, alertingPattern, isdnAddress);
 
 		Dialog original = new Dialog(DialogType.BEGIN, 1234l, destReference, origReference,
@@ -76,8 +69,8 @@ public class DialogTest {
 
 		assertEquals(copy.getType(), original.getType());
 		assertEquals(copy.getId(), original.getId());
-		ProcessUnstructuredSSRequestIndication copyUSSR = (ProcessUnstructuredSSRequestIndication) copy.getMAPMessage();
-		ProcessUnstructuredSSRequestIndication originalUSSR = (ProcessUnstructuredSSRequestIndication) original
+		ProcessUnstructuredSSRequestImpl copyUSSR = (ProcessUnstructuredSSRequestImpl) copy.getMAPMessage();
+		ProcessUnstructuredSSRequestImpl originalUSSR = (ProcessUnstructuredSSRequestImpl) original
 				.getMAPMessage();
 		assertEquals(copyUSSR.getUSSDString(), originalUSSR.getUSSDString());
 
@@ -87,7 +80,7 @@ public class DialogTest {
 	public void testProcessUnstructuredSSResponseSerialization() throws XMLStreamException {
 
 		USSDString ussdStr = new USSDStringImpl("Thank You!", null);
-		ProcessUnstructuredSSResponseIndicationImpl processUnstructuredSSResponseIndication = new ProcessUnstructuredSSResponseIndicationImpl(
+		ProcessUnstructuredSSResponseImpl processUnstructuredSSResponseIndication = new ProcessUnstructuredSSResponseImpl(
 				(byte) 0x0f, ussdStr);
 
 		Dialog original = new Dialog(DialogType.END, 1234l, processUnstructuredSSResponseIndication);
@@ -101,9 +94,9 @@ public class DialogTest {
 
 		assertEquals(copy.getType(), original.getType());
 		assertEquals(copy.getId(), original.getId());
-		ProcessUnstructuredSSResponseIndication copyUSSR = (ProcessUnstructuredSSResponseIndication) copy
+		ProcessUnstructuredSSResponse copyUSSR = (ProcessUnstructuredSSResponse) copy
 				.getMAPMessage();
-		ProcessUnstructuredSSResponseIndication originalUSSR = (ProcessUnstructuredSSResponseIndication) original
+		ProcessUnstructuredSSResponse originalUSSR = (ProcessUnstructuredSSResponse) original
 				.getMAPMessage();
 		assertEquals(copyUSSR.getUSSDString(), originalUSSR.getUSSDString());
 
@@ -112,7 +105,7 @@ public class DialogTest {
 	@Test
 	public void testUnstructuredSSRequestSerialization() throws XMLStreamException {
 		USSDString ussdStr = new USSDStringImpl("USSD String : Hello World\n 1. Balance\n 2. Texts Remaining", null);
-		UnstructuredSSRequestIndicationImpl unstructuredSSRequestIndication = new UnstructuredSSRequestIndicationImpl(
+		UnstructuredSSRequestImpl unstructuredSSRequestIndication = new UnstructuredSSRequestImpl(
 				(byte) 0x0f, ussdStr, null, null);
 
 		Dialog original = new Dialog(DialogType.CONTINUE, 1234l, null, null, unstructuredSSRequestIndication);
@@ -133,7 +126,7 @@ public class DialogTest {
 	public void testUnstructuredSSResponseSerialization() throws XMLStreamException {
 
 		USSDString ussdStr = new USSDStringImpl("1", null);
-		UnstructuredSSResponseIndicationImpl unstructuredSSResponseIndication = new UnstructuredSSResponseIndicationImpl(
+		UnstructuredSSResponseImpl unstructuredSSResponseIndication = new UnstructuredSSResponseImpl(
 				(byte) 0x0f, ussdStr);
 
 		Dialog original = new Dialog(DialogType.CONTINUE, 1234l, unstructuredSSResponseIndication);
@@ -147,8 +140,8 @@ public class DialogTest {
 
 		assertEquals(copy.getType(), original.getType());
 		assertEquals(copy.getId(), original.getId());
-		UnstructuredSSResponseIndication copyUSSR = (UnstructuredSSResponseIndication) copy.getMAPMessage();
-		UnstructuredSSResponseIndication originalUSSR = (UnstructuredSSResponseIndication) original.getMAPMessage();
+		UnstructuredSSResponse copyUSSR = (UnstructuredSSResponse) copy.getMAPMessage();
+		UnstructuredSSResponse originalUSSR = (UnstructuredSSResponse) original.getMAPMessage();
 		assertEquals(copyUSSR.getUSSDString(), originalUSSR.getUSSDString());
 
 	}
@@ -163,7 +156,7 @@ public class DialogTest {
 
 		USSDString ussdStr = new USSDStringImpl(
 				"Your new balance is 34.38 AFN and expires on 30.07.2012. Cost of last event was 0.50 AFN.", null);
-		UnstructuredSSNotifyRequestIndicationImpl unstructuredSSNotifyRequestIndication = new UnstructuredSSNotifyRequestIndicationImpl(
+		UnstructuredSSNotifyRequestImpl unstructuredSSNotifyRequestIndication = new UnstructuredSSNotifyRequestImpl(
 				(byte) 0x0f, ussdStr, null, null);
 
 		Dialog original = new Dialog(DialogType.BEGIN, 1234l, destReference, origReference,
@@ -178,8 +171,8 @@ public class DialogTest {
 
 		assertEquals(copy.getType(), original.getType());
 		assertEquals(copy.getId(), original.getId());
-		UnstructuredSSNotifyRequestIndication copyUSSR = (UnstructuredSSNotifyRequestIndication) copy.getMAPMessage();
-		UnstructuredSSNotifyRequestIndication originalUSSR = (UnstructuredSSNotifyRequestIndication) original
+		UnstructuredSSNotifyRequest copyUSSR = (UnstructuredSSNotifyRequest) copy.getMAPMessage();
+		UnstructuredSSNotifyRequest originalUSSR = (UnstructuredSSNotifyRequest) original
 				.getMAPMessage();
 		assertEquals(copyUSSR.getUSSDString(), originalUSSR.getUSSDString());
 

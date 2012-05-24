@@ -27,8 +27,8 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.mobicents.protocols.ss7.map.api.MAPException;
 import org.mobicents.protocols.ss7.map.api.MAPMessage;
-import org.mobicents.protocols.ss7.map.api.service.supplementary.ProcessUnstructuredSSResponseIndication;
-import org.mobicents.protocols.ss7.map.api.service.supplementary.UnstructuredSSRequestIndication;
+import org.mobicents.protocols.ss7.map.api.service.supplementary.ProcessUnstructuredSSResponse;
+import org.mobicents.protocols.ss7.map.api.service.supplementary.UnstructuredSSRequest;
 import org.mobicents.ussdgateway.Dialog;
 import org.mobicents.ussdgateway.EventsSerializeFactory;
 import org.mobicents.ussdgateway.rules.Call;
@@ -112,11 +112,11 @@ public abstract class HttpClientSbb extends ChildSbb {
 
 					switch (mapMessage.getMessageType()) {
 					case unstructuredSSRequest_Request:
-						this.addUnstructuredSSRequest((UnstructuredSSRequestIndication) mapMessage);
+						this.addUnstructuredSSRequest((UnstructuredSSRequest) mapMessage);
 						break;
 					case processUnstructuredSSRequest_Response:
 						aci.detach(this.sbbContext.getSbbLocalObject());
-						this.addProcessUnstructuredSSResponse((ProcessUnstructuredSSResponseIndication) mapMessage);
+						this.addProcessUnstructuredSSResponse((ProcessUnstructuredSSResponse) mapMessage);
 						this.endHttpClientActivity(httpClientActivity);
 						break;
 					default:

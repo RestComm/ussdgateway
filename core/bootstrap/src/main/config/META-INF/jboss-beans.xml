@@ -21,6 +21,7 @@
 		<constructor>
 			<parameter>Mtp3UserPart</parameter>
 		</constructor>
+		<property name="maxSequenceNumber">256</property>
 		<property name="persistDir">${jboss.server.data.dir}</property>
 		<property name="transportManagement">
 			<inject bean="SCTPManagement" />
@@ -48,23 +49,54 @@
 	<!-- SCCP Service -->
 	<!-- ==================================================================== -->
 	<bean name="SccpStack" class="org.mobicents.protocols.ss7.sccp.impl.SccpStackImpl">
-                <constructor>
-                        <parameter>SccpStack</parameter>
-                </constructor>
-                <property name="localSpc">833</property>
-                <property name="ni">2</property>
-                <property name="persistDir">${jboss.server.data.dir}</property>
-                <property name="removeSpc">true</property>
-                <property name="mtp3UserPart">
-                        <inject bean="Mtp3UserPart" />
-                </property>
-    </bean>
+		<constructor>
+			<parameter>SccpStack</parameter>
+		</constructor>
+		<property name="persistDir">${jboss.server.data.dir}</property>
+		<property name="removeSpc">true</property>
+		<property name="mtp3UserParts">
+			<map keyClass="java.lang.Integer" valueClass="org.mobicents.protocols.ss7.mtp.Mtp3UserPart">
+				<entry>
+					<key>1</key>
+					<value>
+						<inject bean="Mtp3UserPart" />
+					</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
 
 	<bean name="SccpExecutor"
 		class="org.mobicents.protocols.ss7.sccp.impl.oam.SccpExecutor">
 		<property name="sccpStack">
 			<inject bean="SccpStack" />
 		</property>
+	</bean>
+
+	<!-- ==================================================================== -->
+	<!-- TCAP Service -->
+	<!-- ==================================================================== -->
+	<bean name="TcapStack" class="org.mobicents.protocols.ss7.tcap.TCAPStackImpl">
+		<constructor>
+			<parameter>
+				<inject bean="SccpStack" property="sccpProvider" />
+			</parameter>
+			<parameter>8</parameter>
+		</constructor>
+		<property name="dialogIdleTimeout">60000</property>
+		<property name="invokeTimeout">30000</property>
+		<property name="maxDialogs">25000</property>
+	</bean>
+
+	<!-- ==================================================================== -->
+	<!-- MAP Service -->
+	<!-- ==================================================================== -->
+	<bean name="MapStack" class="org.mobicents.protocols.ss7.map.MAPStackImpl">
+		<constructor>
+			<parameter>
+				<inject bean="TcapStack" property="provider" />
+			</parameter>
+		</constructor>
 	</bean>
 
 	<!-- ==================================================================== -->
@@ -82,18 +114,19 @@
 			<inject bean="M3UAShellExecutor" />
 		</property>
 	</bean>
+
 	<!-- ==================================================================== -->
 	<!-- Mobicents SS7 Service -->
 	<!-- ==================================================================== -->
 	<bean name="SS7Service" class="org.mobicents.applications.ussd.bootstrap.SS7Service">
 		<annotation>@org.jboss.aop.microcontainer.aspects.jmx.JMX(name="org.mobicents.ss7:service=SS7Service",exposedInterface=org.mobicents.applications.ussd.bootstrap.SS7ServiceMBean.class,registerDirectly=true)
 		</annotation>
-		<property name="jndiName">java:/mobicents/ss7/sccp</property>
+		<property name="jndiName">java:/mobicents/ss7/map</property>
 		<property name="stack">
-			<inject bean="SccpStack" property="sccpProvider" />
+			<inject bean="MapStack" property="MAPProvider" />
 		</property>
 	</bean>
-	
+
 	<!-- ==================================================================== -->
 	<!-- JBoss Rules Service -->
 	<!-- ==================================================================== -->

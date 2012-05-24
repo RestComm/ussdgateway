@@ -14,7 +14,7 @@
 	<packaging>pom</packaging>
 
 
-	<artifactId>ussdgateway-example</artifactId>
+	<artifactId>example</artifactId>
 	<name>Example</name>
 
 	<modules>

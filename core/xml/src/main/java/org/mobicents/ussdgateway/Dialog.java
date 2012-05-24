@@ -8,11 +8,7 @@ import javolution.xml.stream.XMLStreamException;
 import org.mobicents.protocols.ss7.map.api.MAPMessage;
 import org.mobicents.protocols.ss7.map.api.primitives.AddressString;
 import org.mobicents.protocols.ss7.map.primitives.AddressStringImpl;
-import org.mobicents.protocols.ss7.map.service.supplementary.ProcessUnstructuredSSRequestIndicationImpl;
-import org.mobicents.protocols.ss7.map.service.supplementary.ProcessUnstructuredSSResponseIndicationImpl;
-import org.mobicents.protocols.ss7.map.service.supplementary.UnstructuredSSNotifyRequestIndicationImpl;
-import org.mobicents.protocols.ss7.map.service.supplementary.UnstructuredSSRequestIndicationImpl;
-import org.mobicents.protocols.ss7.map.service.supplementary.UnstructuredSSResponseIndicationImpl;
+import org.mobicents.protocols.ss7.map.service.supplementary.*;
 
 /**
  * @author amit bhayani
@@ -97,30 +93,30 @@ public class Dialog implements Serializable {
 
 			switch (mapMessage.getMessageType()) {
 			case processUnstructuredSSRequest_Request:
-				xml.add((ProcessUnstructuredSSRequestIndicationImpl) mapMessage, PROCESS_UNSTRUCTURED_SS_REQUEST,
-						ProcessUnstructuredSSRequestIndicationImpl.class);
+				xml.add((ProcessUnstructuredSSRequestImpl) mapMessage, PROCESS_UNSTRUCTURED_SS_REQUEST,
+						ProcessUnstructuredSSRequestImpl.class);
 				break;
 			case processUnstructuredSSRequest_Response:
-				xml.add((ProcessUnstructuredSSResponseIndicationImpl) mapMessage, PROCESS_UNSTRUCTURED_SS_RESPONSE,
-						ProcessUnstructuredSSResponseIndicationImpl.class);
+				xml.add((ProcessUnstructuredSSResponseImpl) mapMessage, PROCESS_UNSTRUCTURED_SS_RESPONSE,
+						ProcessUnstructuredSSResponseImpl.class);
 				break;
 
 			case unstructuredSSRequest_Request:
 
-				xml.add((UnstructuredSSRequestIndicationImpl) mapMessage, UNSTRUCTURED_SS_REQUEST,
-						UnstructuredSSRequestIndicationImpl.class);
+				xml.add((UnstructuredSSRequestImpl) mapMessage, UNSTRUCTURED_SS_REQUEST,
+						UnstructuredSSRequestImpl.class);
 				break;
 
 			case unstructuredSSRequest_Response:
 
-				xml.add((UnstructuredSSResponseIndicationImpl) mapMessage, UNSTRUCTURED_SS_RESPONSE,
-						UnstructuredSSResponseIndicationImpl.class);
+				xml.add((UnstructuredSSResponseImpl) mapMessage, UNSTRUCTURED_SS_RESPONSE,
+						UnstructuredSSResponseImpl.class);
 				break;
 
 			case unstructuredSSNotify_Request:
 
-				xml.add((UnstructuredSSNotifyRequestIndicationImpl) mapMessage, UNSTRUCTURED_SS_NOTIFY_REQUEST,
-						UnstructuredSSNotifyRequestIndicationImpl.class);
+				xml.add((UnstructuredSSNotifyRequestImpl) mapMessage, UNSTRUCTURED_SS_NOTIFY_REQUEST,
+						UnstructuredSSNotifyRequestImpl.class);
 				break;
 			default:
 				break;
@@ -135,23 +131,23 @@ public class Dialog implements Serializable {
 			dialog.origReference = xml.get(ORIGINATION_REFERENCE, AddressStringImpl.class);
 
 			MAPMessage mapMessage = xml.get(PROCESS_UNSTRUCTURED_SS_REQUEST,
-					ProcessUnstructuredSSRequestIndicationImpl.class);
+					ProcessUnstructuredSSRequestImpl.class);
 
 			if (mapMessage == null) {
 				mapMessage = xml.get(PROCESS_UNSTRUCTURED_SS_RESPONSE,
-						ProcessUnstructuredSSResponseIndicationImpl.class);
+						ProcessUnstructuredSSResponseImpl.class);
 			}
 
 			if (mapMessage == null) {
-				mapMessage = xml.get(UNSTRUCTURED_SS_REQUEST, UnstructuredSSRequestIndicationImpl.class);
+				mapMessage = xml.get(UNSTRUCTURED_SS_REQUEST, UnstructuredSSRequestImpl.class);
 			}
 
 			if (mapMessage == null) {
-				mapMessage = xml.get(UNSTRUCTURED_SS_RESPONSE, UnstructuredSSResponseIndicationImpl.class);
+				mapMessage = xml.get(UNSTRUCTURED_SS_RESPONSE, UnstructuredSSResponseImpl.class);
 			}
 
 			if (mapMessage == null) {
-				mapMessage = xml.get(UNSTRUCTURED_SS_NOTIFY_REQUEST, UnstructuredSSNotifyRequestIndicationImpl.class);
+				mapMessage = xml.get(UNSTRUCTURED_SS_NOTIFY_REQUEST, UnstructuredSSNotifyRequestImpl.class);
 			}
 
 			dialog.setMAPMessage(mapMessage);
