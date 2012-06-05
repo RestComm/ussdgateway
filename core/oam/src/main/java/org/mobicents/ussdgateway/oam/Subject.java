@@ -46,10 +46,10 @@ public enum Subject {
 	SCTP("sctp"),
 	
 	/**
-	 * SMSC Subject. Any command to manage the SMSC should begin with smsc
+	 * USSD Subject. Any command to manage the USSD GW should begin with ussd
 	 * subject
 	 */
-	 SMSC("smsc");
+	 USSD("ussd");
 	
 	private String subject = null;
 
@@ -82,8 +82,8 @@ public enum Subject {
 			return SCCP;
 		} else if (subject.equals(SCTP.getSubject())) {
 			return SCTP;
-		}else if (subject.equals(SMSC.getSubject())) {
-			return SMSC;
+		}else if (subject.equals(USSD.getSubject())) {
+			return USSD;
 		}
 		return null;
 	}
