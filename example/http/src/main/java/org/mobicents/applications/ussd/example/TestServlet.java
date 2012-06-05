@@ -2,11 +2,13 @@ package org.mobicents.applications.ussd.example;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import javolution.xml.stream.XMLStreamException;
 
@@ -51,6 +53,20 @@ public class TestServlet extends HttpServlet {
 		out.println("<html>");
 		out.println("<body>");
 		out.println("<h1>Hello USSD Demo Get</h1>");
+
+		USSDStringImpl ussdStr = new USSDStringImpl("USSD String : Hello World\n 1. Balance\n 2. Texts Remaining", null);
+		UnstructuredSSRequest unstructuredSSRequestIndication = new UnstructuredSSRequestImpl((byte) 0x0f, ussdStr,
+				null, null);
+
+		Dialog copy = new Dialog(DialogType.CONTINUE, 1l, null, null, unstructuredSSRequestIndication);
+
+		try {
+			byte[] data = factory.serialize(copy);
+			System.out.println(Arrays.toString(data));
+		} catch (XMLStreamException e) {
+			e.printStackTrace();
+		}
+
 		out.println("</body>");
 		out.println("</html>");
 	}
@@ -60,7 +76,10 @@ public class TestServlet extends HttpServlet {
 		ServletInputStream is = request.getInputStream();
 		try {
 			Dialog original = factory.deserialize(is);
-			logger.info("Received Dialog = " + original);
+			HttpSession session = request.getSession(true);
+			if (logger.isInfoEnabled()) {
+				logger.info("doPost. HttpSession=" + session.getId() + " Dialog = " + original);
+			}
 
 			USSDString ussdStr = null;
 			byte[] data = null;
@@ -70,12 +89,16 @@ public class TestServlet extends HttpServlet {
 				switch (mapMessage.getMessageType()) {
 				case processUnstructuredSSRequest_Request:
 					ProcessUnstructuredSSRequest processUnstructuredSSRequest = (ProcessUnstructuredSSRequest) mapMessage;
-					logger.info("Received ProcessUnstructuredSSRequestIndication USSD String="
-							+ processUnstructuredSSRequest.getUSSDString().getString());
+					if (logger.isInfoEnabled()) {
+						logger.info("Received ProcessUnstructuredSSRequestIndication USSD String="
+								+ processUnstructuredSSRequest.getUSSDString().getString());
+						session.setAttribute("ProcessUnstructuredSSRequest_InvokeId",
+								processUnstructuredSSRequest.getInvokeId());
+					}
 
 					ussdStr = new USSDStringImpl("USSD String : Hello World\n 1. Balance\n 2. Texts Remaining", null);
-					UnstructuredSSRequest unstructuredSSRequestIndication = new UnstructuredSSRequestImpl(
-							(byte) 0x0f, ussdStr, null, null);
+					UnstructuredSSRequest unstructuredSSRequestIndication = new UnstructuredSSRequestImpl((byte) 0x0f,
+							ussdStr, null, null);
 
 					Dialog copy = new Dialog(DialogType.CONTINUE, original.getId(), null, null,
 							unstructuredSSRequestIndication);
@@ -100,13 +123,16 @@ public class TestServlet extends HttpServlet {
 				case unstructuredSSRequest_Response:
 					UnstructuredSSResponse unstructuredSSResponse = (UnstructuredSSResponseImpl) mapMessage;
 
+					long invokeId = (Long) session.getAttribute("ProcessUnstructuredSSRequest_InvokeId");
+
 					logger.info("Received UnstructuredSSResponse USSD String="
-							+ unstructuredSSResponse.getUSSDString().getString());
+							+ unstructuredSSResponse.getUSSDString().getString() + " HttpSession=" + session.getId()
+							+ " invokeId=" + invokeId);
 
 					ussdStr = new USSDStringImpl("Thank You!", null);
 					ProcessUnstructuredSSResponseImpl processUnstructuredSSResponseIndication = new ProcessUnstructuredSSResponseImpl(
 							(byte) 0x0f, ussdStr);
-					processUnstructuredSSResponseIndication.setInvokeId(mapMessage.getInvokeId());
+					processUnstructuredSSResponseIndication.setInvokeId(invokeId);
 
 					Dialog copy1 = new Dialog(DialogType.END, original.getId(), processUnstructuredSSResponseIndication);
 
@@ -114,6 +140,13 @@ public class TestServlet extends HttpServlet {
 
 					response.getOutputStream().write(data);
 					response.flushBuffer();
+
+					try {
+
+					} catch (Exception e) {
+						session.invalidate();
+						logger.error("Error while invalidating HttpSession=" + session.getId());
+					}
 					break;
 				default:
 					// This is error. If its begin it should be only Process
