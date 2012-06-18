@@ -21,9 +21,11 @@
 			<title>Software Prerequisites</title>
 			<para>The Application requires &THIS.PLATFORM; JAIN SLEE properly set, with:</para>
 			<itemizedlist>
+				<!--  
 				<listitem>
 					<para><acronym>SIP</acronym> </para>
 				</listitem>
+				-->
 				<listitem>
 					<para><acronym>HTTP</acronym> Client</para>
 				</listitem>				
@@ -37,7 +39,7 @@
 	</section>	
 	
 	<section id="source_code">
-		<title>&THIS.PLATFORM; JAIN SLEE &THIS.APPLICATION; Application Source Code</title>
+		<title>&THIS.PLATFORM; JAIN SLEE &THIS.APPLICATION; Source Code</title>
 		<para></para>
 		
 		<section id="release_source_building">
@@ -46,10 +48,16 @@
 				<step>
 				    <title>Downloading the source code</title>
 				    <important>
-				    	<para>Subversion is used to manage its source code. Instructions for using Subversion, including install, can be found at <ulink url="http://svnbook.red-bean.com" /></para>
+				    	<para>GIT is used to manage its source code. Instructions for using GIT, including install, can be found at <ulink url="http://git-scm.com/documentation" /></para>
 				    </important>
-				    <para>Use SVN to checkout a specific release source, the base URL is &THIS.RELEASE_SOURCE_CODE_URL;, then add the specific release version, lets consider &THIS.VERSION;.</para>
-				    <programlisting>[usr]$ svn co &THIS.RELEASE_SOURCE_CODE_URL;/&THIS.VERSION; slee-application-&THIS.APPLICATION.DIRNAME;-&THIS.VERSION;</programlisting>				    
+					<para>Use GIT to clone repository, the base URL is &THIS.TRUNK_SOURCE_CODE_URL;,
+						then to checkout specific release version(tag) use <command>git checkout tag_name</command>, lets consider release-&THIS.VERSION;.
+					</para>
+					<programlisting>
+[usr]$ git clone &THIS.TRUNK_SOURCE_CODE_URL;
+[usr]$ cd ussdgateway
+[usr]$ git checkout release-&THIS.VERSION;
+					</programlisting>	    
   				</step>
 				<step>
 				    <title>Building the source code</title>
@@ -58,18 +66,23 @@
 				    </important>
 				    <para>Use Maven to build the binary.</para>
 				    <programlisting>
-				    [usr]$ cd slee-application-&THIS.APPLICATION.DIRNAME;-&THIS.VERSION;
+				    [usr]$ cd &THIS.APPLICATION.DIRNAME;-&THIS.VERSION;
 				    [usr]$ mvn install
 				    </programlisting>
-				    <para>Once the process finishes you should have the <literal>deployable-unit</literal> jar file in the <filename>target</filename> directory, if &THIS.PLATFORM; JAIN SLEE is installed and environment variable JBOSS_HOME is pointing to its underlying &JEE.PLATFORM; directory, then the deployable unit jar will also be deployed in the container.</para>
+				    <para>Once the process finishes you should have the <literal>&THIS.APPLICATION.DIRNAME;-&THIS.VERSION;/core/bootstrap/target/mobicents-ussd-gateway</literal> directory, 
+				    if &THIS.PLATFORM; JAIN SLEE is installed and environment variable JBOSS_HOME is pointing to its underlying &JEE.PLATFORM; directory, then the  <literal>mobicents-ussd-gateway</literal> will also be 
+				    deployed in the container.</para>
   				</step>
 			</procedure>      
 		</section>	
 		
-		<section id="trunk_source_building">
+		<section
+			id="trunk_source_building">
 			<title>Development Trunk Source Building</title>
-			<para>Similar process as for <xref linkend="release_source_building"/>, the only change is the SVN source code URL, which is &THIS.TRUNK_SOURCE_CODE_URL;.</para>
-		</section>	
+			<para>
+				Similar process as for <xref linkend="release_source_building" />, the only change is don't switch to specific tag.
+			</para>
+		</section>
 		
 	</section>
 	<!--
@@ -92,7 +105,7 @@
 	</section>
 	-->
 	<section id="Strucure">
-				<title>Folder structure of &THIS.PLATFORM; JAIN SLEE &THIS.APPLICATION; Application</title>
+				<title>Folder structure of &THIS.PLATFORM; JAIN SLEE &THIS.APPLICATION;</title>
 				<para>
 					Installing Mobicents USSD Gateway creates a mobicents-ussd-gateway directory that contains gateway configuration, 
 					libraries required for boot and running, example rules definition file (.drl) etc. You need to know your way around 
@@ -117,8 +130,85 @@
 	<section id="setup_rule">
 		<title>Rule engine configuration</title>
 		<important>
-			<para>&THIS.APPLICATION; Application uses <literal>Drools</literal> as rule engine to perform decisions, it is important to understand <ulink url="&THIS.JBOSS.DROOLS.DOCUMENTATION;">JBoss Drools</ulink> </para>
+			<para>&THIS.APPLICATION; uses <literal>Drools</literal> as rule engine to perform decisions, it is important to understand <ulink url="&THIS.JBOSS.DROOLS.DOCUMENTATION;">JBoss Drools</ulink> </para>
 		</important>
+		<para>
+			Engine is fed with <literal>DRL</literal> files having reference to fact. <literal>DRL</literal> file contains set of rules which perform operations on facts passed into engine.
+			&THIS.APPLICATION; <literal>DRL</literal> file defines rules to match initial <acronym>USSD</acronym> string to set of values identifying protocol and address of peer to which messages should be forwarded.
+		</para>
+		<para>
+		 Fact is simple POJO class. &THIS.APPLICATION; fact looks like
+		</para>
+	<programlisting language="Java" role="JAVA"><![CDATA[
+package org.mobicents.ussdgateway.rules;
+
+import java.io.Serializable;
+
+/**
+ * Acts as Fact for Rules
+ * 
+ */
+public class Call implements Serializable {
+	// Initial string, its like #123*
+	private String ussdString;
+
+	private boolean isHttp;
+	private boolean isSmpp;
+
+	// to be used with other protocols
+	private String genericUrl;
+
+	public Call(String ussdString) {
+		this.ussdString = ussdString;
+	}
+
+	public String getUssdString() {
+		return ussdString;
+	}
+
+	public boolean isHttp() {
+		return isHttp;
+	}
+
+	public void setHttp(boolean isHttp) {
+		this.isHttp = isHttp;
+	}
+
+	public boolean isSmpp() {
+		return isSmpp;
+	}
+
+	public void setSmpp(boolean isSmpp) {
+		this.isSmpp = isSmpp;
+	}
+
+	/**
+	 * @return the genericUrl
+	 */
+	public String getGenericUrl() {
+		return genericUrl;
+	}
+
+	/**
+	 * @param genericUrl
+	 *            the genericUrl to set
+	 */
+	public void setGenericUrl(String genericUrl) {
+		this.genericUrl = genericUrl;
+	}
+
+	@Override
+	public String toString() {
+		return "Call [ussdString=" + ussdString + ", isHttp=" + isHttp + ", isSmpp=" + isSmpp + ", genericUrl="
+				+ genericUrl + "]";
+	}
+	
+}
+	]]>
+            	</programlisting>	
+        <para>
+        	Rule engine can be fed with static <literal>.drl</literal> file or use <literal>Guvnor</literal> to dynamically create and maintain <literal>.drl</literal>
+        </para>	
 		<para>
 			Rule engine (<literal>Drools</literal>) is configured with <filename>USSDGatewayChangeSet.xml</filename> file. Its content alters how rule set is loaded and maintained within engine.
 			There are two ways of maintaining rules:
@@ -127,7 +217,7 @@
 				<varlistentry>
 					<term>locally</term>
 					<listitem>
-						<para>rules are loaded from designated file. Configuration file should look as follows:</para>
+						<para>rules are loaded from designated file as explained in <xref linkend="setup_rule_local"/>. Configuration file should look as follows:</para>
 						<programlisting language="XML" role="XML"><![CDATA[
 <change-set xmlns='http://drools.org/drools-5.0/change-set'
 	xmlns:xs='http://www.w3.org/2001/XMLSchema-instance'
@@ -152,7 +242,8 @@
 				<varlistentry>
 					<term>remotely</term>
 					<listitem>
-						<para>rules are managed by <literal>Guvnor</literal> Configuration file should look as follows:</para>
+						<para>rules are managed by <literal>Guvnor</literal>. Guvnor configuration is explpained in <xref linkend="setup_rule_guvnor"/> 
+						Configuration file should look as follows:</para>
 						<programlisting language="XML" role="XML"><![CDATA[
 <change-set xmlns='http://drools.org/drools-5.0/change-set'
 	xmlns:xs='http://www.w3.org/2001/XMLSchema-instance'
@@ -178,6 +269,47 @@
 		
 		
 	</section>
+	<section id="setup_rule_local">
+		<title>Local file configuration</title>
+		<para>Rule file name is <filename>USSDGateway.drl</filename>. File content looks as follows:</para>
+		<!-- Dev: Its java? or what -->
+		<programlisting language="Java" role="JAVA"><![CDATA[
+package org.mobicents.ussdgateway.rules
+]]><co id="example.rules.rule.co1"/><![CDATA[
+import org.mobicents.ussdgateway.rules.Call;
+]]><co id="example.rules.rule.co2"/><![CDATA[
+rule "USSDGateway1"
+	]]><co id="example.rules.rule.co3"/><![CDATA[
+	when
+		$c : Call( ussdString == "*123#" )
+	then]]><co id="example.rules.rule.co4"/><![CDATA[
+		$c.setHttp( true );
+		$c.setGenericUrl( "http://localhost:8080/ussddemo/test" );
+]]><co id="example.rules.rule.co5"/><![CDATA[
+end
+	]]>
+	</programlisting>
+		<calloutlist>
+			<callout arearefs="example.rules.rule.co1">
+				<para>import of fact <acronym>POJO</acronym> </para>
+			</callout>
+			<callout arearefs="example.rules.rule.co2">
+				<para>definition of rule</para>
+			</callout>
+			<callout arearefs="example.rules.rule.co3">
+				<para>condition to enter rule clause. It accesses fact property <literal>ussdString</literal> and matches it against <literal>#123*</literal> value, if it matches engine jumps to <literal>then</literal> part</para>
+			</callout>
+			<callout arearefs="example.rules.rule.co4">
+				<para>rule part which sets defined <acronym>HTTP</acronym> peer as destination for messages</para>
+			</callout>
+			<callout arearefs="example.rules.rule.co5">
+				<para>end of rule <literal>USSDGateway1</literal> rule</para>
+			</callout>
+			
+		</calloutlist>	
+	<para>The folder <filename>rules</filename> is scanned every 60 seconds and if any changes made to <filename>USSDGateway.drl</filename> or new <literal>.drl</literal> file added, engine will automatically
+	deploy changed/new file and re-create the Knowledge Base </para>
+	</section>	
 	<section id="setup_rule_guvnor">
 		<title>Guvnor configuration</title>
 		<important>

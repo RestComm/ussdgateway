@@ -20,7 +20,8 @@
 		href="Chapter-Design_Overview.xml" />
 	<xi:include
 		xmlns:xi="http://www.w3.org/2001/XInclude"
-		href="Chapter-Source_Code_Overview.xml" />
+		href="Chapter-HTTP_Architecture.xml" />
+	 
 		<!-- Uncomment in case its needed. -->	
 		<!--  
 	<xi:include

@@ -57,8 +57,15 @@ For more information on mobile- (and network-) initiated USSD operations and the
 	<section id="ussd_gateway_desc">
 		<title>USSD Gateway</title>
 		<para>Existing MSC, VLR, and HLR network elements are proprietary and run on non-standard operating environments located in trusted operator's zones that make it difficult to build and deploy new applications. Also, these network elements do not provide the tools and interfaces needed to access and retrieve data from content providers over Internet. The USSD Gateway connects to the MSC, VLR, or HLR and enables the flow of USSD messages to be extended to an open, standards-based application server located in the IP network. The AS also provides the tools and interfaces to enable access to the content providers through the Internet.</para>
-		<para>&THIS.PLATFORM; implementation of USSD Gateway is first and only open source USSD Gateway available as of today. The &THIS.PLATFORM; USSD Gateway makes use of SIP and  HTTP protocol between gateway and Value Added Service Modules or third party applications. &THIS.PLATFORM; USSD Gateway receives the USSD request from subscriber handset/device via GSM Signaling network, these requests are translated to SIP or HTTP depending on the rules set by the user and then routed to corresponding Value Added Service (VAS) or 3rd party application.
-
-JBoss Drools is used to derive the protocol between Gateway and USSD Application and also the information of the server (for example IP, port etc) where these applications are deployed.</para>
+		<para>&THIS.PLATFORM; implementation of USSD Gateway is first and only open source USSD Gateway available as of today. The &THIS.PLATFORM; USSD Gateway makes use of 
+		HTTP and SMPP* protocol between gateway and Value Added Service Modules or third party applications. &THIS.PLATFORM; USSD Gateway receives the USSD request from subscriber handset/device via GSM Signaling network, 
+		these requests are translated to SIP or SMPP* depending on the rules set by the user and then routed to corresponding Value Added Service (VAS) or 3rd party application.
+		</para>
+		<para>
+			JBoss Drools is used to derive the protocol between Gateway and USSD Application and also the information of the server (for example IP, port etc) where these applications are deployed.</para>
+		<note>
+		<title>SMPP</title>
+		<para>SMPP protocol is in roadmap and will be implemented in next release</para>
+		</note>
 	</section>
 </chapter>

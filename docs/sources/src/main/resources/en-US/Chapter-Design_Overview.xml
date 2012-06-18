@@ -5,29 +5,8 @@
 
 	<title>Design Overview</title>
 
-	<para>&THIS.APPLICATION; Application is  JAIN SLEE 1.1 Application. It is capable of forwarding <acronym>USSD</acronym> messages to desired peer.
-	Application can be divided into logical modules:
-	</para>
-	<variablelist>
-		<varlistentry>
-			<term>rules</term>
-			<listitem>
-				<para>this module is responsible for configuration. Based on user defined rules file, it chooses peer and means of establishing session with it.</para>
-			</listitem>
-		</varlistentry>
-		<varlistentry>
-			<term>jmx</term>
-			<listitem>
-				<para>this module is responsible only for managing and exposing rules engine to <acronym>SLEE</acronym> Service</para>
-			</listitem>
-		</varlistentry>
-		<varlistentry>
-			<term><acronym>SLEE</acronym></term>
-			<listitem>
-				<para>this module is consumer of rules. Based on rules output, it is responsible for relying <acronym>USSD</acronym> messages between originator and consumer peer.</para>
-			</listitem>
-		</varlistentry>
-	</variablelist>
+	<para>&THIS.APPLICATION; is  JAIN SLEE 1.1 Application. It is capable of forwarding <acronym>USSD</acronym> messages to desired peer.</para>
+	
 	<para>Following diagram depicts top design overview:</para>
 	<mediaobject>
 		<imageobject>
@@ -40,41 +19,13 @@
 			</para>
 		</caption>
 	</mediaobject>
-	<para><acronym>SLEE</acronym> Service consists of two basic elements: parent and children <acronym>SBB</acronym>s. Parent <acronym>SBB</acronym> is root <acronym>SBB</acronym> in &THIS.APPLICATION; Application service.
-	Children serve logic to proxy <acronym>USSD</acronym> data to desired peer by means of specific protocol.
-	</para>
-	<para>Overview of relation is depicted on diagram below:</para>
-	<mediaobject>
-		<imageobject>
-			<imagedata width="300px" align="center"
-			fileref="images/ussd-application-design-service-relation.png" format="PNG" />
-		</imageobject>
-		<caption>
-			<para>&THIS.APPLICATION;
-				Design Service SBB relation overview
-			</para>
-		</caption>
-	</mediaobject>
+	
 	<para>
-	Parent receives initial <acronym>USSD</acronym> message within <acronym>MAP</acronym> message. It consults configured rules to make decision on fate of received message.
-	Subsequent messages are handled by children. Flow for both operations is depicted on diagram below:</para>
-	 <mediaobject>
-		<imageobject>
-			<imagedata width="300px" align="center"
-			fileref="images/ussd-application-design-service-flow.png" format="PNG" />
-		</imageobject>
-		<caption>
-			<para>&THIS.APPLICATION;
-				SBB Flow diagram
-			</para>
-		</caption>
-	</mediaobject>
+		&THIS.APPLICATION; provides Load Balancing and Fault Tolerance of applications. Two 3rd Party Application Servers can be paired to provide Fault-Tolerance on the Gateway and GSM Network level.
+	</para>
 	<important>
 		<para>Currently gateway supports following protocols for proxying:</para>
 		<itemizedlist>
-			<listitem>
-				<para><acronym>SIP</acronym></para>
-			</listitem>
 			<listitem>
 				<para><acronym>HTTP</acronym></para>
 			</listitem>

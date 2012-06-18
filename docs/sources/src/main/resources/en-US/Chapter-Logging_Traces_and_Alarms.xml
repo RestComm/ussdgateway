@@ -67,10 +67,10 @@
        		<para>Spaces where introduced in <literal>LOG4J category</literal>  column values, to correctly render the table. Please remove them when using copy/paste.</para>
 		</important>
 	</section>	
-	
+	<!-- 
 	<section id="alarms">
 		<title>Alarms</title>
 		<para>&THIS.PLATFORM; &THIS.APPLICATION; Application does not rise any alarms.</para>
 	</section>
-	
+	 -->
 </chapter>

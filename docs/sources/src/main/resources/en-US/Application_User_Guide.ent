@@ -11,11 +11,10 @@ If this final separator is missing, then the documentation will be wrong. -->
 <!ENTITY THIS.PLATFORM "${THIS.PLATFORM}">
 <!ENTITY JEE.PLATFORM "${JEE.PLATFORM}">
 <!ENTITY BOOK_ID "${docs.bookid}_Application_User_Guide">
-<!ENTITY YEAR "2010">
-<!ENTITY HOLDER "Red Hat Inc">
+<!ENTITY YEAR "2012">
+<!ENTITY HOLDER "TeleStax Inc">
 <!ENTITY AUTHOR.EMAIL.AMIT "${author.email.amit}">
 <!ENTITY AUTHOR.EMAIL.BARTOSZ "${author.email.bartosz}">
-<!ENTITY AUTHOR.EMAIL.OLEG "${author.email.oleg}">
 <!ENTITY THIS.JBOSS.DROOLS.DOCUMENTATION "${docs.drools.documentation}">
 <!ENTITY THIS.JBOSS.GUVNOR.DOCUMENTATION "${docs.guvnor.documentation}">
 <!ENTITY THIS.APPLICATION "${docs.application.name}">

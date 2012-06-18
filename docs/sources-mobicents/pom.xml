@@ -1,25 +1,23 @@
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	
 	<modelVersion>4.0.0</modelVersion>
 	
 	<parent>
-		<artifactId>mobicents-ussd-gateway-docs</artifactId>
 		<groupId>org.mobicents.ussd</groupId>
+		<artifactId>docs-parent</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 	
-	<artifactId>mobicents-ussd-gateway-docs-sources-mobicents</artifactId>	
+	<artifactId>docs-sources-mobicents</artifactId>	
 			
 	<properties>
 		<THIS.PLATFORM>Mobicents</THIS.PLATFORM>
 		<JEE.PLATFORM>JBoss Application Server</JEE.PLATFORM>
-		<THIS.ISSUE_TRACKER_URL>http://code.google.com/p/mobicents/issues/list</THIS.ISSUE_TRACKER_URL>
-		<THIS.RELEASE_SOURCE_CODE_URL>http://mobicents.googlecode.com/svn/tags/applications/${docs.application.dirname}</THIS.RELEASE_SOURCE_CODE_URL>
-		<THIS.TRUNK_SOURCE_CODE_URL>https://mobicents.googlecode.com/svn/trunk/applications/${docs.application.dirname}</THIS.TRUNK_SOURCE_CODE_URL>
-		<author.email.amit>abhayani (at) gmail.com</author.email.amit>
+		<THIS.ISSUE_TRACKER_URL>http://code.google.com/p/ussdgateway/issues/list</THIS.ISSUE_TRACKER_URL>
+		<THIS.RELEASE_SOURCE_CODE_URL>http://code.google.com/p/ussdgateway/source/browse/</THIS.RELEASE_SOURCE_CODE_URL>
+		<THIS.TRUNK_SOURCE_CODE_URL>https://code.google.com/p/ussdgateway/</THIS.TRUNK_SOURCE_CODE_URL>
+		<author.email.amit>amit.bhayani (at) gmail.com</author.email.amit>
 		<author.email.bartosz>baranowb (at) gmail.com</author.email.bartosz>
-		<author.email.oleg>oleg.kulikoff (at) gmail.com</author.email.oleg>	
 	</properties>
 	
 	<build>
@@ -44,7 +42,7 @@
 							<artifactItems>
 								<artifactItem>
 									<groupId>${pom.groupId}</groupId>
-									<artifactId>mobicents-ussd-gateway-docs-sources</artifactId>
+									<artifactId>docs-sources</artifactId>
 									<version>${pom.version}</version>
 									<type>jar</type>
 									<overWrite>true</overWrite>

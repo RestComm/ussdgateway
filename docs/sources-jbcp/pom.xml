@@ -1,15 +1,14 @@
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	
 	<modelVersion>4.0.0</modelVersion>
 	
 	<parent>
-		<artifactId>mobicents-ussd-gateway-docs</artifactId>
 		<groupId>org.mobicents.ussd</groupId>
+		<artifactId>docs-parent</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 	
-	<artifactId>mobicents-ussd-gateway-docs-sources-jbcp</artifactId>
+	<artifactId>docs-sources-jbcp</artifactId>
 			
 	<properties>
 		<THIS.PLATFORM>JBoss Communications</THIS.PLATFORM>
@@ -44,7 +43,7 @@
 							<artifactItems>
 								<artifactItem>
 									<groupId>${pom.groupId}</groupId>
-									<artifactId>mobicents-ussd-gateway-docs-sources</artifactId>
+									<artifactId>docs-sources</artifactId>
 									<version>${pom.version}</version>
 									<type>jar</type>
 									<overWrite>true</overWrite>

@@ -1,13 +1,12 @@
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	
 	<parent>
-		<artifactId>mobicents-ussd-gateway-docs</artifactId>
 		<groupId>org.mobicents.ussd</groupId>
+		<artifactId>docs-parent</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 	
-	<artifactId>mobicents-ussd-gateway-docs-jdocbook-jbcp</artifactId>
+	<artifactId>docs-jdocbook-jbcp</artifactId>
 		
 	<modelVersion>4.0.0</modelVersion>
 		
@@ -59,7 +58,7 @@
 							<artifactItems>								
 								<artifactItem>
 									<groupId>${pom.groupId}</groupId>
-									<artifactId>mobicents-ussd-gateway-docs-sources-jbcp</artifactId>
+									<artifactId>docs-sources-jbcp</artifactId>
 									<version>${pom.version}</version>
 									<type>jar</type>
 									<overWrite>true</overWrite>
@@ -73,19 +72,29 @@
 			<plugin>
 				<groupId>org.jboss.maven.plugins</groupId>
 				<artifactId>maven-jdocbook-plugin</artifactId>
-				<version>2.2.0</version>
+				<version>2.3.0</version>
 				<extensions>true</extensions>
 				<dependencies>
 					<dependency>
-						<groupId>org.jboss</groupId>
-						<artifactId>jbossorg-docbook-xslt</artifactId>
-						<version>1.1.0</version>
+						<groupId>org.mobicents.jdocbook</groupId>
+						<artifactId>telestax-xslt-ns</artifactId>
+						<version>1.0.0.FINAL</version>
 					</dependency>
 					<dependency>
-						<groupId>org.jboss</groupId>
-						<artifactId>jbossorg-jdocbook-style</artifactId>
-						<version>1.1.0</version>
+						<groupId>org.mobicents.jdocbook</groupId>
+						<artifactId>telestax-community-style</artifactId>
 						<type>jdocbook-style</type>
+						<version>1.0.0.FINAL</version>
+					</dependency>
+					<dependency>
+						<groupId>xml-resolver</groupId>
+						<artifactId>xml-resolver</artifactId>
+						<version>1.1</version>
+					</dependency>
+					<dependency>
+						<groupId>saxon</groupId>
+						<artifactId>saxon</artifactId>
+						<version>6.5.3</version>
 					</dependency>
 				</dependencies>
 				<configuration>					
