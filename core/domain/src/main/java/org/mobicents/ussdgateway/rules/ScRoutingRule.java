@@ -42,6 +42,10 @@ public class ScRoutingRule implements XMLSerializable {
 
 	// to be used with other protocols
 	private String ruleUrl;
+	
+	public ScRoutingRule(){
+		
+	}
 
 	public ScRoutingRule(String ussdString) {
 		this.shortCode = ussdString;
