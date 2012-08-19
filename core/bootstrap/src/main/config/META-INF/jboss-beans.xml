@@ -12,6 +12,12 @@
 		<property name="connectDelay">30000</property>
 	</bean>
 
+	<bean name="SCTPShellExecutor"
+		class="org.mobicents.protocols.ss7.m3ua.impl.oam.SCTPShellExecutor">
+		<property name="sctpManagement">
+			<inject bean="SCTPManagement" />
+		</property>
+	</bean>	
 	<!-- ==================================================================== -->
 	<!-- M3UA -->
 	<!-- M3UAManagement is managing the m3ua side commands -->
@@ -33,11 +39,22 @@
 		<property name="m3uaManagement">
 			<inject bean="Mtp3UserPart" />
 		</property>
-		<property name="sctpManagement">
-			<inject bean="SCTPManagement" />
-		</property>
+	</bean>
+	
+	<!-- ==================================================================== -->
+	<!-- Scheduler -->
+	<!-- Scheduler for ss7 stack -->
+	<!-- ==================================================================== -->
+	<!-- -->
+	<bean name="SS7Clock" class="org.mobicents.protocols.ss7.scheduler.DefaultClock">
 	</bean>
 
+	<bean name="SS7Scheduler" class="org.mobicents.protocols.ss7.scheduler.Scheduler">
+		<property name="clock">
+			<inject bean="SS7Clock" />
+		</property>
+	</bean>	
+	
 	<!-- ==================================================================== -->
 	<!-- Dialogic Mtp3UserPart -->
 	<!-- ==================================================================== -->
@@ -103,22 +120,28 @@
 	<!-- Shell Service -->
 	<!-- ==================================================================== -->
 	<!-- Define Shell Executor -->
-	<bean name="ShellExecutor" class="org.mobicents.ussdgateway.oam.ShellExecutor">
+	<bean name="ShellExecutor" class="org.mobicents.ss7.management.console.ShellServer">
+		<constructor>
+			<parameter>
+				<inject bean="SS7Scheduler" />
+			</parameter>
+			<parameter>
+				<list class="javolution.util.FastList" elementClass="org.mobicents.ss7.management.console.ShellExecutor">
+					<inject bean="SccpExecutor" />
+					<inject bean="M3UAShellExecutor" />
+					<inject bean="SCTPShellExecutor" />
+				</list>
+			</parameter>
+		</constructor>
+
 		<property name="address">${jboss.bind.address}</property>
 		<property name="port">3435</property>
-
-		<property name="sccpExecutor">
-			<inject bean="SccpExecutor" />
-		</property>
-		<property name="m3UAShellExecutor">
-			<inject bean="M3UAShellExecutor" />
-		</property>
 	</bean>
 
 	<!-- ==================================================================== -->
 	<!-- Mobicents SS7 Service -->
 	<!-- ==================================================================== -->
-	<bean name="SS7Service" class="org.mobicents.applications.ussd.bootstrap.SS7Service">
+	<bean name="MAPSS7Service" class="org.mobicents.applications.ussd.bootstrap.SS7Service">
 		<annotation>@org.jboss.aop.microcontainer.aspects.jmx.JMX(name="org.mobicents.ss7:service=SS7Service",exposedInterface=org.mobicents.applications.ussd.bootstrap.SS7ServiceMBean.class,registerDirectly=true)
 		</annotation>
 		<property name="jndiName">java:/mobicents/ss7/map</property>

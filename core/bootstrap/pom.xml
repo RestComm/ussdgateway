@@ -15,12 +15,11 @@
 
 	<dependencies>
 		<!-- USSD Dependency -->
-		<!-- once some meat is added into oam, we will have to uncomment this out -->
 		<dependency>
-			<groupId>${pom.groupId}</groupId>
-			<artifactId>oam</artifactId>
-			<version>${pom.version}</version>
-		</dependency>
+			<groupId>org.jboss.jbossas</groupId>
+			<artifactId>jboss-as-system-jmx</artifactId>
+			<scope>provided</scope>
+		</dependency>		
 		
 		<dependency>
 			<groupId>${pom.groupId}</groupId>
@@ -86,11 +85,10 @@
 			<version>${ss7.version}</version>
 		</dependency>
 
-		<!-- Clock -->
-		<!-- Not really sure if clock is required for ussd gateway -->
+		<!-- Scheduler -->
 		<dependency>
-			<groupId>org.mobicents.protocols.ss7.clock</groupId>
-			<artifactId>clock</artifactId>
+			<artifactId>scheduler</artifactId>
+			<groupId>org.mobicents.protocols.ss7.scheduler</groupId>
 			<version>${ss7.version}</version>
 		</dependency>
 		
@@ -105,7 +103,7 @@
 		<dependency>
 			<artifactId>linkset</artifactId>
 			<groupId>
-					org.mobicents.protocols.ss7.management
+					org.mobicents.protocols.ss7.hardware
 				</groupId>
 			<version>${ss7.version}</version>
 		</dependency>
