@@ -19,20 +19,14 @@
 			<groupId>org.jboss.jbossas</groupId>
 			<artifactId>jboss-as-system-jmx</artifactId>
 			<scope>provided</scope>
-		</dependency>		
-		
+		</dependency>
+
 		<dependency>
 			<groupId>${pom.groupId}</groupId>
 			<artifactId>domain</artifactId>
 			<version>${pom.version}</version>
 		</dependency>
-		
-		<dependency>
-			<groupId>${pom.groupId}</groupId>
-			<artifactId>rules</artifactId>
-			<version>${pom.version}</version>
-		</dependency>
-		
+
 		<dependency>
 			<groupId>${pom.groupId}</groupId>
 			<artifactId>xml</artifactId>
@@ -91,7 +85,7 @@
 			<groupId>org.mobicents.protocols.ss7.scheduler</groupId>
 			<version>${ss7.version}</version>
 		</dependency>
-		
+
 		<!-- Management Shell -->
 		<dependency>
 			<artifactId>shell</artifactId>
@@ -150,7 +144,7 @@
 			<groupId>org.mobicents.protocols.ss7.sccp</groupId>
 			<version>${ss7.version}</version>
 		</dependency>
-		
+
 		<!-- MAP -->
 		<dependency>
 			<artifactId>map-api</artifactId>
@@ -174,7 +168,7 @@
 			<groupId>org.mobicents.protocols.ss7.tcap</groupId>
 			<version>${ss7.version}</version>
 		</dependency>
-		
+
 		<!-- ISUP -->
 		<dependency>
 			<artifactId>isup-api</artifactId>
@@ -185,7 +179,7 @@
 			<artifactId>isup-impl</artifactId>
 			<groupId>org.mobicents.protocols.ss7.isup</groupId>
 			<version>${ss7.version}</version>
-		</dependency>				
+		</dependency>
 
 		<!-- SLEE DU -->
 		<dependency>
@@ -193,7 +187,7 @@
 			<groupId>${pom.groupId}</groupId>
 			<version>${pom.version}</version>
 		</dependency>
- 
+
 	</dependencies>
 
 	<!-- -->
@@ -247,11 +241,6 @@
 
 									</fileset>
 								</copy>
-								<copy file="${basedir}/src/main/config/USSDGateway.drl" tofile="${jboss.home}/server/${node}/conf/USSDGateway.drl">
-								</copy>
-								<copy file="${basedir}/src/main/config/USSDGatewayChangeSet.xml" tofile="${jboss.home}/server/${node}/conf/USSDGatewayChangeSet.xml">
-								</copy>
-								<unzip src="${basedir}/src/main/guvnor/drools-guvnor.war.zip" dest="${jboss.home}/server/${node}/deploy/${application.name}/" />
 							</tasks>
 						</configuration>
 					</execution>
@@ -267,8 +256,6 @@
 									<fileset
 										dir="${jboss.home}/server/${node}/deploy/mobicents-ussd-gateway" />
 								</delete>
-								<delete file="${jboss.home}/server/${node}/conf/USSDGateway.drl"/>
-								<delete file="${jboss.home}/server/${node}/conf/USSDGatewayChangeSet.xml"/>
 							</tasks>
 						</configuration>
 					</execution>

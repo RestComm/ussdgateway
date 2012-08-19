@@ -4,17 +4,6 @@
 	</formats>
 	<includeBaseDirectory>false</includeBaseDirectory>
 
-	<files>
-		<file>
-			<source>src/main/config/USSDGateway.drl</source>
-			<destName>rules/USSDGateway.drl</destName>
-		</file>
-		<file>
-			<source>src/main/config/USSDGatewayChangeSet.xml</source>
-			<destName>config/USSDGatewayChangeSet.xml</destName>
-			<filtered>true</filtered>
-		</file>		
-	</files>
 	<dependencySets>
 		<dependencySet>
 			<outputDirectory>/</outputDirectory>
@@ -33,12 +22,11 @@
 				<!-- USSD libraries -->
 				<include>org.mobicents.ussd:bootstrap</include>
 				<include>org.mobicents.ussd:xml</include>
-				
+
 				<!-- rules and domain library -->
-				<include>org.mobicents.ussd:rules</include>
 				<include>org.mobicents.ussd:domain</include>
 
-				
+
 				<!-- Not strictly SS7, But needed by SS7 -->
 				<include>javolution:javolution</include>
 				<include>org.mobicents.protocols.sctp:sctp-api</include>
@@ -56,15 +44,16 @@
 				<include>org.mobicents.protocols.ss7.tcap:tcap-api</include>
 				<include>org.mobicents.protocols.ss7.tcap:tcap-impl</include>
 				<include>org.mobicents.protocols.ss7.map:map-api</include>
-				<include>org.mobicents.protocols.ss7.map:map-impl</include>												
+				<include>org.mobicents.protocols.ss7.map:map-impl</include>
 				<include>org.mobicents.protocols.ss7.m3ua:m3ua-api</include>
 				<include>org.mobicents.protocols.ss7.m3ua:m3ua-impl</include>
 				<include>org.mobicents.protocols.ss7.mtp:mtp</include>
 				<include>org.mobicents.protocols.ss7.mtp:mtp-api</include>
 				<include>org.mobicents.protocols.ss7.management:shell</include>
-				<include>org.mobicents.protocols.ss7.management:linkset</include>
+				<include>org.mobicents.protocols.ss7.hardware:linkset</include>
 				<!-- <include>org.mobicents.protocols.ss7.hardware:mobicents-dahdi</include> -->
-				<include>org.mobicents.protocols.ss7.hardware:mobicents-dialogic</include>
+				<include>org.mobicents.protocols.ss7.hardware:mobicents-dialogic
+				</include>
 				<include>org.mobicents.protocols.ss7.congestion:congestion</include>
 
 			</includes>

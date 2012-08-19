@@ -14,7 +14,6 @@
 	<name>Core</name>
 
 	<modules>
-		<module>rules</module>
 		<module>domain</module>
 		<module>xml</module>
 		<module>oam/cli</module>

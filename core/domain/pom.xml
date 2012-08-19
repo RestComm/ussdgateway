@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<!-- Model Version -->
 	<modelVersion>4.0.0</modelVersion>
@@ -8,7 +9,7 @@
 	<parent>
 		<groupId>org.mobicents.ussd</groupId>
 		<artifactId>core</artifactId>
-		<version>1.0.0-SNAPSHOT</version> 
+		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
 	<packaging>jar</packaging>
@@ -18,6 +19,33 @@
 	<name>Core : Domain</name>
 	<description>USSD Gateway Domain Object</description>
 
+	<dependencies>
+		<!-- SS7 Shell -->
+		<dependency>
+			<artifactId>shell</artifactId>
+			<groupId>org.mobicents.protocols.ss7.management</groupId>
+			<version>${ss7.version}</version>
+		</dependency>
+		<!-- javolution -->
+		<dependency>
+			<groupId>javolution</groupId>
+			<artifactId>javolution</artifactId>
+			<version>${javolution.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+		<dependency>
+			<!-- This comes in container. -->
+			<groupId>org.jboss.jbossas</groupId>
+			<artifactId>jboss-as-system-jmx</artifactId>
+			<version>${jboss.version}</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<plugins>

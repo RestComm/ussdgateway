@@ -130,6 +130,7 @@
 					<inject bean="SccpExecutor" />
 					<inject bean="M3UAShellExecutor" />
 					<inject bean="SCTPShellExecutor" />
+					<inject bean="UssdShellExecutor" />
 				</list>
 			</parameter>
 		</constructor>
@@ -149,12 +150,21 @@
 			<inject bean="MapStack" property="MAPProvider" />
 		</property>
 	</bean>
-
+	
 	<!-- ==================================================================== -->
-	<!-- JBoss Rules Service -->
+	<!-- USSD -->
+	<!-- UssdManagement is managing the all ussd server commands -->
 	<!-- ==================================================================== -->
-	<bean name="RulesService" class="org.mobicents.ussdgateway.rules.RulesService">
-		<annotation>@org.jboss.aop.microcontainer.aspects.jmx.JMX(name="org.mobicents.ussdgateway:service=RulesService",exposedInterface=org.mobicents.ussdgateway.rules.RulesServiceMBean.class,registerDirectly=true)
-		</annotation>
+	<bean name="UssdManagement" class="org.mobicents.ussdgateway.UssdManagement">
+		<constructor>
+			<parameter>UssdManagement</parameter>
+		</constructor>
+		<property name="persistDir">${jboss.server.data.dir}</property>
 	</bean>
+
+	<bean name="UssdShellExecutor" class="org.mobicents.ussdgateway.UssdShellExecutor">
+		<property name="ussdManagement">
+			<inject bean="UssdManagement" />
+		</property>
+	</bean>	
 </deployment>

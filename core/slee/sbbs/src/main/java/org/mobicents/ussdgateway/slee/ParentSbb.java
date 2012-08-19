@@ -1,7 +1,26 @@
+/**
+ * TeleStax, Open Source Cloud Communications  Copyright 2012. 
+ * and individual contributors
+ * by the @authors tag. See the copyright.txt in the distribution for a
+ * full listing of individual contributors.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
 package org.mobicents.ussdgateway.slee;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
 import javax.slee.ActivityContextInterface;
 import javax.slee.ChildRelation;
 import javax.slee.CreateException;
@@ -12,21 +31,19 @@ import javax.slee.SbbLocalObject;
 import javax.slee.facilities.Tracer;
 import javax.slee.resource.ResourceAdaptorTypeID;
 
-import org.drools.KnowledgeBase;
-import org.drools.agent.KnowledgeAgent;
-import org.drools.runtime.StatelessKnowledgeSession;
-import org.mobicents.protocols.ss7.map.api.MAPDialog;
 import org.mobicents.protocols.ss7.map.api.MAPException;
 import org.mobicents.protocols.ss7.map.api.MAPParameterFactory;
 import org.mobicents.protocols.ss7.map.api.MAPProvider;
-import org.mobicents.protocols.ss7.map.api.dialog.MAPUserAbortChoice;
 import org.mobicents.protocols.ss7.map.api.primitives.USSDString;
+import org.mobicents.protocols.ss7.map.api.service.supplementary.MAPDialogSupplementary;
 import org.mobicents.protocols.ss7.map.api.service.supplementary.ProcessUnstructuredSSRequest;
 import org.mobicents.slee.SbbContextExt;
 import org.mobicents.slee.resource.map.MAPContextInterfaceFactory;
 import org.mobicents.ussdgateway.Dialog;
 import org.mobicents.ussdgateway.DialogType;
-import org.mobicents.ussdgateway.rules.Call;
+import org.mobicents.ussdgateway.ShortCodeRoutingRuleManagement;
+import org.mobicents.ussdgateway.UssdPropertiesManagement;
+import org.mobicents.ussdgateway.rules.ScRoutingRule;
 
 /**
  * 
@@ -38,9 +55,6 @@ public abstract class ParentSbb implements Sbb {
 
 	private Tracer logger;
 
-	private KnowledgeBase kbase;
-	private KnowledgeAgent kagent;
-
 	protected MAPContextInterfaceFactory mapAcif;
 	protected MAPProvider mapProvider;
 	protected MAPParameterFactory mapParameterFactory;
@@ -48,6 +62,11 @@ public abstract class ParentSbb implements Sbb {
 	protected static final ResourceAdaptorTypeID mapRATypeID = new ResourceAdaptorTypeID("MAPResourceAdaptorType",
 			"org.mobicents", "2.0");
 	protected static final String mapRaLink = "MAPRA";
+
+	private static final ShortCodeRoutingRuleManagement shortCodeRoutingRuleManagement = ShortCodeRoutingRuleManagement
+			.getInstance();
+
+	private static final UssdPropertiesManagement ussdPropertiesManagement = UssdPropertiesManagement.getInstance();
 
 	/** Creates a new instance of CallSbb */
 	public ParentSbb() {
@@ -57,9 +76,6 @@ public abstract class ParentSbb implements Sbb {
 		this.sbbContext = (SbbContextExt) sbbContext;
 		this.logger = sbbContext.getTracer("USSD-Parent");
 		try {
-			Context ctx = (Context) new InitialContext();
-			kagent = (KnowledgeAgent) ctx.lookup("java:/mobicents/ussdgateway/rulesservice");
-
 			this.mapAcif = (MAPContextInterfaceFactory) this.sbbContext.getActivityContextInterfaceFactory(mapRATypeID);
 			this.mapProvider = (MAPProvider) this.sbbContext.getResourceAdaptorInterface(mapRATypeID, mapRaLink);
 			this.mapParameterFactory = this.mapProvider.getMAPParameterFactory();
@@ -90,23 +106,21 @@ public abstract class ParentSbb implements Sbb {
 		try {
 
 			USSDString ussdStrObj = evt.getUSSDString();
-			String ussdStr = ussdStrObj.getString();
-
-			Call call = new Call(ussdStr);
+			String shortCode = ussdStrObj.getString();
 
 			if (this.logger.isFineEnabled()) {
 				this.logger.fine(String.format("Received PROCESS_UNSTRUCTURED_SS_REQUEST_INDICATION=%s", evt));
 			}
 
-			StatelessKnowledgeSession statelessksession = this.kbase.newStatelessKnowledgeSession();
+			ScRoutingRule call = shortCodeRoutingRuleManagement.getScRoutingRule(shortCode);
 
-			statelessksession.execute(call);
+			if (call == null) {
 
-			if (this.logger.isFineEnabled()) {
-				this.logger.fine(String.format("Call=%s", call));
-			}
-
-			if (call.isHttp()) {
+				if (this.logger.isWarningEnabled()) {
+					this.logger.warning(String.format("No routing rule configured for short code=%s", shortCode));
+				}
+				this.sendError(evt, ussdPropertiesManagement.getNoRoutingRuleConfiguredMessage());
+			} else {
 				// Create child of Http SBB and call local method
 
 				ChildRelation relation = this.getHttpClientSbb();
@@ -114,24 +128,8 @@ public abstract class ParentSbb implements Sbb {
 				child.setCallFact(call);
 				child.setDialog(this.getDialog());
 				forwardEvent(child, aci);
-			} else if (call.isSmpp()) {
-				this.logger
-						.warning(String
-								.format("Received PROCESS_UNSTRUCTURED_SS_REQUEST_INDICATION=%s and rule for routing is Call=%s. SMPP is not yet supported. Aborting MAP Dialog",
-										evt, call));
-
-				// Create child of SMPP SBB and call local method
-				// TODO :
-
-				this.abort(evt.getMAPDialog());
-			} else {
-				// TODO : Decline? Or Read Database and give back answer
-				this.logger
-						.warning(String
-								.format("Received PROCESS_UNSTRUCTURED_SS_REQUEST_INDICATION=%s and rule for routing is Call=%s. Aborting Dialog",
-										evt, call));
-
 			}
+
 		} catch (Exception e) {
 			logger.severe("Unexpected error: ", e);
 		}
@@ -147,12 +145,17 @@ public abstract class ParentSbb implements Sbb {
 		}
 	}
 
-	protected void abort(MAPDialog mapDialog) throws MAPException {
-		// TODO get the reason
-		MAPUserAbortChoice mapUserAbortChoice = this.mapParameterFactory.createMAPUserAbortChoice();
-		// As of now hardcoded
-		mapUserAbortChoice.setUserSpecificReason();
-		mapDialog.abort(mapUserAbortChoice);
+	protected void sendError(ProcessUnstructuredSSRequest request, String errorMssg) throws MAPException {
+		MAPDialogSupplementary mapDialogSupplementary = request.getMAPDialog();
+		USSDString ussdString = mapParameterFactory.createUSSDString(errorMssg);
+		mapDialogSupplementary.addProcessUnstructuredSSResponse(request.getInvokeId(),
+				request.getUSSDDataCodingScheme(), ussdString);
+		try {
+			mapDialogSupplementary.close(false);
+		} finally {
+			// this.getCDRChargeInterface().createTerminateRecord();
+			// TODO CDR?
+		}
 	}
 
 	public abstract ChildRelation getHttpClientSbb();
@@ -163,7 +166,6 @@ public abstract class ParentSbb implements Sbb {
 	}
 
 	public void sbbCreate() throws CreateException {
-		kbase = kagent.getKnowledgeBase();
 		if (this.logger.isFineEnabled()) {
 			this.logger.fine("Created KnowledgeBase");
 		}

@@ -26,9 +26,11 @@ To test USSD Gateway with mobicents ss7-simulator make sure you follow the below
 
 	5.7) sccp sap create 1 1 1 2
 
-	5.8) sccp rsp create 1 2 0 0
+	5.8) sccp dest create 1 1 2 2 0 255 255
 
-	5.9) sccp rss create 1 2 8 0
+	5.9) sccp rsp create 1 2 0 0
+
+	5.10) sccp rss create 1 2 8 0
 
 6) Assuming mobicents ss7-simulator is started already you should see on jboss console "10:21:28,046 WARN  [SccpStackImpl-SccpStack] Rx : MTP-RESUME: AffectedDpc=2" indicating that USSD Gateway M3UA layer is now connected with ss7-simulator
 

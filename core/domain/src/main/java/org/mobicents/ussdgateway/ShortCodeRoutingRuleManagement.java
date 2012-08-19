@@ -1,0 +1,225 @@
+/**
+ * TeleStax, Open Source Cloud Communications  Copyright 2012. 
+ * and individual contributors
+ * by the @authors tag. See the copyright.txt in the distribution for a
+ * full listing of individual contributors.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+package org.mobicents.ussdgateway;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.util.List;
+
+import javolution.text.TextBuilder;
+import javolution.util.FastList;
+import javolution.xml.XMLBinding;
+import javolution.xml.XMLObjectReader;
+import javolution.xml.XMLObjectWriter;
+import javolution.xml.stream.XMLStreamException;
+
+import org.apache.log4j.Logger;
+import org.mobicents.ussdgateway.rules.ScRoutingRule;
+
+/**
+ * @author amit bhayani
+ * 
+ */
+public class ShortCodeRoutingRuleManagement implements ShortCodeRoutingRuleManagementMBean {
+
+	private static final Logger logger = Logger.getLogger(ShortCodeRoutingRuleManagement.class);
+
+	private static final String SC_ROUTING_RULE_LIST = "scroutingrulelist";
+
+	private static final String TAB_INDENT = "\t";
+	private static final String CLASS_ATTRIBUTE = "type";
+	private static final XMLBinding binding = new XMLBinding();
+	private static final String PERSIST_FILE_NAME = "scroutingrule.xml";
+
+	private String name;
+
+	private String persistDir = null;
+
+	protected FastList<ScRoutingRule> scRoutingRuleList = new FastList<ScRoutingRule>();
+
+	private final TextBuilder persistFile = TextBuilder.newInstance();
+
+	private static ShortCodeRoutingRuleManagement instance;
+
+	private ShortCodeRoutingRuleManagement(String name) {
+		this.name = name;
+		binding.setClassAttribute(CLASS_ATTRIBUTE);
+		binding.setAlias(ScRoutingRule.class, "scroutingrule");
+	}
+
+	protected static ShortCodeRoutingRuleManagement getInstance(String name) {
+		if (instance == null) {
+			instance = new ShortCodeRoutingRuleManagement(name);
+		}
+		return instance;
+	}
+
+	public static ShortCodeRoutingRuleManagement getInstance() {
+		return instance;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getPersistDir() {
+		return persistDir;
+	}
+
+	public void setPersistDir(String persistDir) {
+		this.persistDir = persistDir;
+	}
+
+	@Override
+	public List<ScRoutingRule> getScRoutingRuleList() {
+		return this.scRoutingRuleList.unmodifiable();
+	}
+
+	@Override
+	public ScRoutingRule getScRoutingRule(String shortCode) {
+		for (FastList.Node<ScRoutingRule> n = this.scRoutingRuleList.head(), end = this.scRoutingRuleList.tail(); (n = n
+				.getNext()) != end;) {
+			ScRoutingRule rule = n.getValue();
+			if (rule.getShortCode().equals(shortCode)) {
+				return rule;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public ScRoutingRule createScRoutingRule(String shortCode, String url) throws Exception {
+		if (shortCode == null || shortCode.equals("")) {
+			throw new Exception(UssdOAMMessages.INVALID_SC);
+		}
+
+		if (url == null || url.equals("")) {
+			throw new Exception(UssdOAMMessages.INVALID_ROUTING_RULE_URL);
+		}
+
+		ScRoutingRule rule = this.getScRoutingRule(shortCode);
+		if (rule != null) {
+			throw new Exception(UssdOAMMessages.CREATE_SC_RULE_FAIL_ALREADY_EXIST);
+		}
+
+		rule = new ScRoutingRule(shortCode);
+		rule.setRuleUrl(url);
+
+		this.scRoutingRuleList.add(rule);
+
+		this.store();
+
+		return rule;
+	}
+
+	@Override
+	public ScRoutingRule deleteScRoutingRule(String shortCode) throws Exception {
+		if (shortCode == null || shortCode.equals("")) {
+			throw new Exception(UssdOAMMessages.INVALID_SC);
+		}
+
+		ScRoutingRule rule = this.getScRoutingRule(shortCode);
+		if (rule == null) {
+			throw new Exception(String.format(UssdOAMMessages.DELETE_ESME_FAILED_NO_ESME_FOUND, shortCode));
+		}
+
+		this.scRoutingRuleList.remove(rule);
+
+		this.store();
+
+		return rule;
+	}
+
+	public void start() throws Exception {
+
+		this.persistFile.clear();
+
+		if (persistDir != null) {
+			this.persistFile.append(persistDir).append(File.separator).append(this.name).append("_")
+					.append(PERSIST_FILE_NAME);
+		} else {
+			persistFile
+					.append(System.getProperty(UssdManagement.USSD_PERSIST_DIR_KEY,
+							System.getProperty(UssdManagement.USER_DIR_KEY))).append(File.separator).append(this.name)
+					.append("_").append(PERSIST_FILE_NAME);
+		}
+
+		logger.info(String.format("Loading short code routig rule configuration from %s", persistFile.toString()));
+
+		try {
+			this.load();
+		} catch (FileNotFoundException e) {
+			logger.warn(String.format("Failed to load the short code routig rule configuration file. \n%s",
+					e.getMessage()));
+		}
+
+	}
+
+	public void stop() throws Exception {
+		this.store();
+	}
+
+	/**
+	 * Persist
+	 */
+	public void store() {
+
+		// TODO : Should we keep reference to Objects rather than recreating
+		// everytime?
+		try {
+			XMLObjectWriter writer = XMLObjectWriter.newInstance(new FileOutputStream(persistFile.toString()));
+			writer.setBinding(binding);
+			// Enables cross-references.
+			// writer.setReferenceResolver(new XMLReferenceResolver());
+			writer.setIndentation(TAB_INDENT);
+			writer.write(this.scRoutingRuleList, SC_ROUTING_RULE_LIST, FastList.class);
+
+			writer.close();
+		} catch (Exception e) {
+			logger.error("Error while persisting the Rule state in file", e);
+		}
+	}
+
+	/**
+	 * Load and create LinkSets and Link from persisted file
+	 * 
+	 * @throws Exception
+	 */
+	public void load() throws FileNotFoundException {
+
+		XMLObjectReader reader = null;
+		try {
+			reader = XMLObjectReader.newInstance(new FileInputStream(persistFile.toString()));
+
+			reader.setBinding(binding);
+			this.scRoutingRuleList = reader.read(SC_ROUTING_RULE_LIST, FastList.class);
+
+			reader.close();
+		} catch (XMLStreamException ex) {
+			// this.logger.info(
+			// "Error while re-creating Linksets from persisted file", ex);
+		}
+	}
+
+}
