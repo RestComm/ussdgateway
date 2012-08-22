@@ -48,6 +48,8 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
 
 	protected static final String DIALOG_TIMEOUT_ERROR_MESSAGE = "dialogtimeouterrmssg";
 
+	protected static final String DIALOG_TIMEOUT = "dialogtimeout";
+
 	private static final String TAB_INDENT = "\t";
 	private static final String CLASS_ATTRIBUTE = "type";
 	private static final XMLBinding binding = new XMLBinding();
@@ -64,6 +66,12 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
 	private String noRoutingRuleConfiguredMessage;
 	private String serverErrorMessage;
 	private String dialogTimeoutErrorMessage;
+
+	/**
+	 * Dialog time out in milliseconds. Once HTTP request is sent, it expects
+	 * back response in dialogTimeout milli seconds.
+	 */
+	private long dialogTimeout = 25000;
 
 	private UssdPropertiesManagement(String name) {
 		this.name = name;
@@ -126,6 +134,17 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
 		this.store();
 	}
 
+	@Override
+	public long getDialogTimeout() {
+		return dialogTimeout;
+	}
+
+	@Override
+	public void setDialogTimeout(long dialogTimeout) {
+		this.dialogTimeout = dialogTimeout;
+		this.store();
+	}
+
 	public void start() throws Exception {
 
 		this.persistFile.clear();
@@ -171,6 +190,7 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
 			writer.write(this.noRoutingRuleConfiguredMessage, NO_ROUTING_RULE_CONFIGURED_ERROR_MESSAGE, String.class);
 			writer.write(this.serverErrorMessage, SERVER_ERROR_MESSAGE, String.class);
 			writer.write(this.dialogTimeoutErrorMessage, DIALOG_TIMEOUT_ERROR_MESSAGE, String.class);
+			writer.write(this.dialogTimeout, DIALOG_TIMEOUT, Long.class);
 
 			writer.close();
 		} catch (Exception e) {
@@ -193,6 +213,7 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
 			this.noRoutingRuleConfiguredMessage = reader.read(NO_ROUTING_RULE_CONFIGURED_ERROR_MESSAGE, String.class);
 			this.serverErrorMessage = reader.read(SERVER_ERROR_MESSAGE, String.class);
 			this.dialogTimeoutErrorMessage = reader.read(DIALOG_TIMEOUT_ERROR_MESSAGE, String.class);
+			this.dialogTimeout = reader.read(DIALOG_TIMEOUT, Long.class);
 
 			reader.close();
 		} catch (XMLStreamException ex) {

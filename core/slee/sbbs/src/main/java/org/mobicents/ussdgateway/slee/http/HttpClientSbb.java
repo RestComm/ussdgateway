@@ -86,6 +86,8 @@ public abstract class HttpClientSbb extends ChildSbb {
 
 	public void onResponseEvent(ResponseEvent event, ActivityContextInterface aci) {
 
+		this.cancelTimer();
+
 		HttpResponse response = event.getHttpResponse();
 		HttpClientActivity httpClientActivity = ((HttpClientActivity) aci.getActivity());
 

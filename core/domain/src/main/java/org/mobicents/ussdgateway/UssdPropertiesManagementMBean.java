@@ -39,4 +39,8 @@ public interface UssdPropertiesManagementMBean {
 
 	public void setDialogTimeoutErrorMessage(String dialogTimeoutErrorMessage);
 
+	public long getDialogTimeout();
+
+	public void setDialogTimeout(long dialogTimeout);
+
 }

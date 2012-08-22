@@ -179,6 +179,10 @@ public class UssdShellExecutor implements ShellExecutor {
 			ussdPropertiesManagement.setDialogTimeoutErrorMessage(this.formFullMessage(options, 3));
 		} else if (parName.equals(UssdPropertiesManagement.SERVER_ERROR_MESSAGE)) {
 			ussdPropertiesManagement.setServerErrorMessage(this.formFullMessage(options, 3));
+		} else if (parName.equals(UssdPropertiesManagement.DIALOG_TIMEOUT)) {
+			ussdPropertiesManagement.setDialogTimeout(Long.parseLong(options[3]));
+		} else {
+			return UssdOAMMessages.INVALID_COMMAND;
 		}
 
 		return UssdOAMMessages.PARAMETER_SUCCESSFULLY_SET;
@@ -208,6 +212,8 @@ public class UssdShellExecutor implements ShellExecutor {
 				sb.append(ussdPropertiesManagement.getDialogTimeoutErrorMessage());
 			} else if (parName.equals(UssdPropertiesManagement.SERVER_ERROR_MESSAGE)) {
 				sb.append(ussdPropertiesManagement.getServerErrorMessage());
+			} else if (parName.equals(UssdPropertiesManagement.DIALOG_TIMEOUT)) {
+				sb.append(ussdPropertiesManagement.getDialogTimeout());
 			} else {
 				return UssdOAMMessages.INVALID_COMMAND;
 			}
@@ -222,6 +228,10 @@ public class UssdShellExecutor implements ShellExecutor {
 			sb.append(UssdPropertiesManagement.DIALOG_TIMEOUT_ERROR_MESSAGE + " = ");
 			sb.append(ussdPropertiesManagement.getDialogTimeoutErrorMessage());
 			sb.append("\n");
+			
+			sb.append(UssdPropertiesManagement.DIALOG_TIMEOUT + " = ");
+			sb.append(ussdPropertiesManagement.getDialogTimeout());
+			sb.append("\n");			
 
 			sb.append(UssdPropertiesManagement.SERVER_ERROR_MESSAGE + " = ");
 			sb.append(ussdPropertiesManagement.getServerErrorMessage());
