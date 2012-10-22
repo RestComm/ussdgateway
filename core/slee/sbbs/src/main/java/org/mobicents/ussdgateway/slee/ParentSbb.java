@@ -106,7 +106,7 @@ public abstract class ParentSbb implements Sbb {
 		try {
 
 			USSDString ussdStrObj = evt.getUSSDString();
-			String shortCode = ussdStrObj.getString();
+			String shortCode = ussdStrObj.getString(null);
 
 			if (this.logger.isFineEnabled()) {
 				this.logger.fine(String.format("Received PROCESS_UNSTRUCTURED_SS_REQUEST_INDICATION=%s", evt));
@@ -149,7 +149,7 @@ public abstract class ParentSbb implements Sbb {
 		MAPDialogSupplementary mapDialogSupplementary = request.getMAPDialog();
 		USSDString ussdString = mapParameterFactory.createUSSDString(errorMssg);
 		mapDialogSupplementary.addProcessUnstructuredSSResponse(request.getInvokeId(),
-				request.getUSSDDataCodingScheme(), ussdString);
+				request.getDataCodingScheme(), ussdString);
 		try {
 			mapDialogSupplementary.close(false);
 		} finally {

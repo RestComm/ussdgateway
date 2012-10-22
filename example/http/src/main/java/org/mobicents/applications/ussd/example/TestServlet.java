@@ -13,11 +13,14 @@ import javax.servlet.http.HttpSession;
 import javolution.xml.stream.XMLStreamException;
 
 import org.apache.log4j.Logger;
+import org.mobicents.protocols.ss7.map.api.MAPException;
 import org.mobicents.protocols.ss7.map.api.MAPMessage;
+import org.mobicents.protocols.ss7.map.api.datacoding.CBSDataCodingScheme;
 import org.mobicents.protocols.ss7.map.api.primitives.USSDString;
 import org.mobicents.protocols.ss7.map.api.service.supplementary.ProcessUnstructuredSSRequest;
 import org.mobicents.protocols.ss7.map.api.service.supplementary.UnstructuredSSRequest;
 import org.mobicents.protocols.ss7.map.api.service.supplementary.UnstructuredSSResponse;
+import org.mobicents.protocols.ss7.map.datacoding.CBSDataCodingSchemeImpl;
 import org.mobicents.protocols.ss7.map.primitives.USSDStringImpl;
 import org.mobicents.protocols.ss7.map.service.supplementary.ProcessUnstructuredSSResponseImpl;
 import org.mobicents.protocols.ss7.map.service.supplementary.UnstructuredSSRequestImpl;
@@ -49,26 +52,36 @@ public class TestServlet extends HttpServlet {
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		PrintWriter out = response.getWriter();
-		out.println("<html>");
-		out.println("<body>");
-		out.println("<h1>Hello USSD Demo Get</h1>");
-
-		USSDStringImpl ussdStr = new USSDStringImpl("USSD String : Hello World\n 1. Balance\n 2. Texts Remaining", null);
-		UnstructuredSSRequest unstructuredSSRequestIndication = new UnstructuredSSRequestImpl((byte) 0x0f, ussdStr,
-				null, null);
-
-		Dialog copy = new Dialog(DialogType.CONTINUE, 1l, null, null, unstructuredSSRequestIndication);
 
 		try {
-			byte[] data = factory.serialize(copy);
-			System.out.println(Arrays.toString(data));
-		} catch (XMLStreamException e) {
-			e.printStackTrace();
+			PrintWriter out = response.getWriter();
+			out.println("<html>");
+			out.println("<body>");
+			out.println("<h1>Hello USSD Demo Get</h1>");
+			CBSDataCodingScheme cbsDataCodingScheme = new CBSDataCodingSchemeImpl(0x0f);
+			USSDStringImpl ussdStr;
+
+			ussdStr = new USSDStringImpl("USSD String : Hello World\n 1. Balance\n 2. Texts Remaining",
+					cbsDataCodingScheme, null);
+			UnstructuredSSRequest unstructuredSSRequestIndication = new UnstructuredSSRequestImpl(cbsDataCodingScheme,
+					ussdStr, null, null);
+
+			Dialog copy = new Dialog(DialogType.CONTINUE, 1l, null, null, unstructuredSSRequestIndication);
+
+			try {
+				byte[] data = factory.serialize(copy);
+				System.out.println(Arrays.toString(data));
+			} catch (XMLStreamException e) {
+				e.printStackTrace();
+			}
+
+			out.println("</body>");
+			out.println("</html>");
+		} catch (MAPException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 
-		out.println("</body>");
-		out.println("</html>");
 	}
 
 	@Override
@@ -89,16 +102,18 @@ public class TestServlet extends HttpServlet {
 				switch (mapMessage.getMessageType()) {
 				case processUnstructuredSSRequest_Request:
 					ProcessUnstructuredSSRequest processUnstructuredSSRequest = (ProcessUnstructuredSSRequest) mapMessage;
+					CBSDataCodingScheme cbsDataCodingScheme =  processUnstructuredSSRequest.getDataCodingScheme(); 
 					if (logger.isInfoEnabled()) {
 						logger.info("Received ProcessUnstructuredSSRequestIndication USSD String="
-								+ processUnstructuredSSRequest.getUSSDString().getString());
+								+ processUnstructuredSSRequest.getUSSDString().getString(null));
 						session.setAttribute("ProcessUnstructuredSSRequest_InvokeId",
 								processUnstructuredSSRequest.getInvokeId());
 					}
-
-					ussdStr = new USSDStringImpl("USSD String : Hello World\n 1. Balance\n 2. Texts Remaining", null);
-					UnstructuredSSRequest unstructuredSSRequestIndication = new UnstructuredSSRequestImpl((byte) 0x0f,
-							ussdStr, null, null);
+					
+					ussdStr = new USSDStringImpl("USSD String : Hello World\n 1. Balance\n 2. Texts Remaining",
+							cbsDataCodingScheme, null);
+					UnstructuredSSRequest unstructuredSSRequestIndication = new UnstructuredSSRequestImpl(
+							cbsDataCodingScheme, ussdStr, null, null);
 
 					Dialog copy = new Dialog(DialogType.CONTINUE, original.getId(), null, null,
 							unstructuredSSRequestIndication);
@@ -122,16 +137,16 @@ public class TestServlet extends HttpServlet {
 				switch (mapMessage.getMessageType()) {
 				case unstructuredSSRequest_Response:
 					UnstructuredSSResponse unstructuredSSResponse = (UnstructuredSSResponseImpl) mapMessage;
-
+					CBSDataCodingScheme cbsDataCodingScheme =  unstructuredSSResponse.getDataCodingScheme(); 
 					long invokeId = (Long) session.getAttribute("ProcessUnstructuredSSRequest_InvokeId");
 
 					logger.info("Received UnstructuredSSResponse USSD String="
-							+ unstructuredSSResponse.getUSSDString().getString() + " HttpSession=" + session.getId()
+							+ unstructuredSSResponse.getUSSDString().getString(null) + " HttpSession=" + session.getId()
 							+ " invokeId=" + invokeId);
 
-					ussdStr = new USSDStringImpl("Thank You!", null);
+					ussdStr = new USSDStringImpl("Thank You!", cbsDataCodingScheme, null);
 					ProcessUnstructuredSSResponseImpl processUnstructuredSSResponseIndication = new ProcessUnstructuredSSResponseImpl(
-							(byte) 0x0f, ussdStr);
+							cbsDataCodingScheme, ussdStr);
 					processUnstructuredSSResponseIndication.setInvokeId(invokeId);
 
 					Dialog copy1 = new Dialog(DialogType.END, original.getId(), processUnstructuredSSResponseIndication);
@@ -162,7 +177,10 @@ public class TestServlet extends HttpServlet {
 
 		} catch (XMLStreamException e) {
 			logger.error("Error while processing received XML", e);
-		}
+		} catch (MAPException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 
 	}
 }

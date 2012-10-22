@@ -42,6 +42,7 @@ import org.mobicents.protocols.ss7.map.api.MAPDialog;
 import org.mobicents.protocols.ss7.map.api.MAPException;
 import org.mobicents.protocols.ss7.map.api.MAPParameterFactory;
 import org.mobicents.protocols.ss7.map.api.MAPProvider;
+import org.mobicents.protocols.ss7.map.api.datacoding.CBSDataCodingScheme;
 import org.mobicents.protocols.ss7.map.api.dialog.MAPUserAbortChoice;
 import org.mobicents.protocols.ss7.map.api.primitives.USSDString;
 import org.mobicents.protocols.ss7.map.api.service.supplementary.MAPDialogSupplementary;
@@ -49,6 +50,7 @@ import org.mobicents.protocols.ss7.map.api.service.supplementary.ProcessUnstruct
 import org.mobicents.protocols.ss7.map.api.service.supplementary.ProcessUnstructuredSSResponse;
 import org.mobicents.protocols.ss7.map.api.service.supplementary.UnstructuredSSRequest;
 import org.mobicents.protocols.ss7.map.api.service.supplementary.UnstructuredSSResponse;
+import org.mobicents.protocols.ss7.map.datacoding.CBSDataCodingSchemeImpl;
 import org.mobicents.slee.ChildRelationExt;
 import org.mobicents.slee.SbbContextExt;
 import org.mobicents.slee.resource.map.MAPContextInterfaceFactory;
@@ -154,7 +156,7 @@ public abstract class ChildSbb implements Sbb, ChildInterface, ChargeInterfacePa
 			ChargeInterface cdrInterface = this.getCDRChargeInterface();
 			USSDCDRState state = cdrInterface.getState();
 			if (!state.isInitialized()) {
-				String serviceCode = evt.getUSSDString().getString();
+				String serviceCode = evt.getUSSDString().getString(null);
 				serviceCode = serviceCode.substring(serviceCode.indexOf("*") + 1, serviceCode.indexOf("#"));
 				state.init(dialog.getId(), serviceCode, dialog.getDestReference(), dialog.getOrigReference(), evt
 						.getMSISDNAddressString(), evt.getMAPDialog().getLocalAddress(), evt.getMAPDialog()
@@ -329,8 +331,9 @@ public abstract class ChildSbb implements Sbb, ChildInterface, ChargeInterfacePa
 	protected void sendErrorMessage(MAPDialogSupplementary mapDialogSupplementary, String errorMssg)
 			throws MAPException {
 		USSDString ussdString = mapParameterFactory.createUSSDString(errorMssg);
+		CBSDataCodingScheme cbsDataCodingScheme = new CBSDataCodingSchemeImpl(0x0f);
 		mapDialogSupplementary.addProcessUnstructuredSSResponse(this.getProcessUnstructuredSSRequestInvokeId(),
-				(byte) 0x00, ussdString);
+				cbsDataCodingScheme, ussdString);
 		mapDialogSupplementary.close(false);
 
 	}
@@ -570,7 +573,7 @@ public abstract class ChildSbb implements Sbb, ChildInterface, ChargeInterfacePa
 			return;
 		}
 
-		mapDialogSupplementary.addUnstructuredSSRequest(unstructuredSSRequestIndication.getUSSDDataCodingScheme(),
+		mapDialogSupplementary.addUnstructuredSSRequest(unstructuredSSRequestIndication.getDataCodingScheme(),
 				unstructuredSSRequestIndication.getUSSDString(), null, null);
 		try {
 			mapDialogSupplementary.send();
@@ -589,7 +592,7 @@ public abstract class ChildSbb implements Sbb, ChildInterface, ChargeInterfacePa
 		}
 
 		mapDialogSupplementary.addProcessUnstructuredSSResponse(processUnstructuredSSResponseIndication.getInvokeId(),
-				processUnstructuredSSResponseIndication.getUSSDDataCodingScheme(),
+				processUnstructuredSSResponseIndication.getDataCodingScheme(),
 				processUnstructuredSSResponseIndication.getUSSDString());
 		try {
 			mapDialogSupplementary.close(false);
