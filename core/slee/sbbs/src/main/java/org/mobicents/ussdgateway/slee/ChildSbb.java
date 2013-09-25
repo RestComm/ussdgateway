@@ -65,7 +65,6 @@ import org.mobicents.slee.resource.map.events.DialogUserAbort;
 import org.mobicents.slee.resource.map.events.ErrorComponent;
 import org.mobicents.slee.resource.map.events.InvokeTimeout;
 import org.mobicents.slee.resource.map.events.MAPEvent;
-import org.mobicents.slee.resource.map.events.ProviderErrorComponent;
 import org.mobicents.slee.resource.map.events.RejectComponent;
 import org.mobicents.ussdgateway.Dialog;
 import org.mobicents.ussdgateway.DialogType;
@@ -145,7 +144,7 @@ public abstract class ChildSbb implements Sbb, ChildInterface, ChargeInterfacePa
 
 			if (this.logger.isFineEnabled()) {
 				this.logger.fine("Received PROCESS_UNSTRUCTURED_SS_REQUEST_INDICATION for MAP Dialog Id "
-						+ evt.getMAPDialog().getDialogId());
+						+ evt.getMAPDialog().getLocalDialogId());
 			}
 
 			this.setProcessUnstructuredSSRequestInvokeId(evt.getInvokeId());
@@ -184,12 +183,12 @@ public abstract class ChildSbb implements Sbb, ChildInterface, ChargeInterfacePa
 
 			if (this.logger.isFineEnabled()) {
 				this.logger.fine("Received UNSTRUCTURED_SS_RESPONSE_INDICATION for MAP Dialog Id "
-						+ evt.getMAPDialog().getDialogId());
+						+ evt.getMAPDialog().getLocalDialogId());
 			}
 
 			this.setTimer(aci);
 
-			Dialog dialog = new Dialog(DialogType.CONTINUE, evt.getMAPDialog().getDialogId(), null, null);
+			Dialog dialog = new Dialog(DialogType.CONTINUE, evt.getMAPDialog().getLocalDialogId(), null, null);
 			dialog.setMAPMessage(((MAPEvent) evt).getWrappedEvent());
 			this.getCDRChargeInterface().createContinueRecord();
 			EventsSerializeFactory factory = this.getEventsSerializeFactory();
@@ -290,12 +289,13 @@ public abstract class ChildSbb implements Sbb, ChildInterface, ChargeInterfacePa
 		// TODO End both the activities?
 	}
 
-	public void onProviderErrorComponent(ProviderErrorComponent evt, ActivityContextInterface aci) {
-		if (logger.isWarningEnabled()) {
-			this.logger.warning("Rx :  ProviderErrorComponent" + evt);
-		}
-		// TODO End both the activities?
-	}
+//	public void onProviderErrorComponent(ProviderErrorComponent evt, ActivityContextInterface aci) {
+//		if (logger.isWarningEnabled()) {
+//			this.logger.warning("Rx :  ProviderErrorComponent" + evt);
+//		}
+//		
+//		// TODO End both the activities?
+//	}
 
 	public void onRejectComponent(RejectComponent evt, ActivityContextInterface aci) {
 		if (logger.isWarningEnabled()) {

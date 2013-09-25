@@ -89,7 +89,7 @@ public abstract class ParentSbb implements Sbb {
 			this.logger.fine("New MAP Dialog. Received event MAPOpenInfo " + evt);
 		}
 
-		Dialog dialog = new Dialog(DialogType.BEGIN, evt.getMAPDialog().getDialogId(), evt.getDestReference(),
+		Dialog dialog = new Dialog(DialogType.BEGIN, evt.getMAPDialog().getLocalDialogId(), evt.getDestReference(),
 				evt.getOrigReference());
 
 		this.setDialog(dialog);
