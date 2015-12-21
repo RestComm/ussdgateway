@@ -1,0 +1,20 @@
+<?xml version='1.0'?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "${ent.filename}">
+%BOOK_ENTITIES;
+]>
+
+<chapter
+	id="setup_configuration">
+	<title>Post Installation Configuration</title>
+	<para>
+		You must perform post-installation configuration of the Gateway according to instructions in the &THIS.PLATFORM; &THIS.APPLICATION; Admin Guide. Before using in Production, you must remember to fine-tune Memory and Database settings for better performance. 
+	</para>
+	<para>
+Once you have installed &THIS.PLATFORM; &THIS.APPLICATION; to suit your needs, you can go ahead and configure the SS7 Stack and the Gateway to meet your requirements.  The &THIS.PLATFORM; jSS7 Stack User Guide in the <filename>mobicents-ussdgateway-&lt;version&gt;/docs/jss7/</filename> folder will assist you in configuring and managing the SS7 Stack. Only when you have completely configured the SS7 Stack to meet your requirements, you must go ahead with configuring the USSD Gateway. The &THIS.PLATFORM; &THIS.APPLICATION; Admin Guide in the <filename>mobicents-ussdgateway-&lt;version&gt;/docs/ussd/</filename> folder will assist you in configuring and managing the USSD Gateway. To configure and manage both the Stack and the Gateway you can make use of the Command Line Interface (CLI) tool or the GUI that comes with the platform.
+	</para>	
+	<warning>
+			<para>Failure to configure memory, database, logging and other settings as per the instructions in the Admin Guide may result in poor performance of the Gateway.</para>
+		</warning>
+</chapter>
+

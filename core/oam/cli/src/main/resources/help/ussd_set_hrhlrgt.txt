@@ -1,0 +1,18 @@
+Name
+	ussd set hrhlrgt
+
+SYNOPSIS
+	ussd set hrhlrgt <HLR GT>
+
+DESCRIPTION
+	This command is used to set the GT value for HLR, used when Home 
+	Routing is enabled. All the MAP SRI queries will be sent to this 
+	Global Title instead of using MSISDN as GT for Called Party Address.
+	To disable/remove already existing HLR Gt pass null. For example
+	ussd set hrhlrgt null
+	
+SEE ALSO
+	ussd get scgt, ussd set scgt, ussd set scssn, ussd get hlrssn,
+	ussd set hrhlrgt, ussd set hlrssn, ussd get mscssn, ussd set mscssn,  
+	ussd get maxmapv, ussd set maxmapv	
+

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "${ent.filename}">
+%BOOK_ENTITIES;
+]>
+
+<chapter id="notes">
+	<title>Important Notes</title>
+   <!-- <section id="jss7_overview">
+    	<title>Overview</title>-->
+	<section id="notes_download">
+		<title>Download</title>
+		<para>
+		The binary release is available for download from the TeleStax Customer Support Portal at <ulink url="&THIS.RELEASE_BINARY_URL;" />.
+		</para>
+	</section>
+	<section id="notes_whats_included">
+		<title>What's Included?</title>
+		<para>
+		This binary release includes: 
+		<itemizedlist>
+			<listitem><para>docs: Contains all relevant documentation.</para></listitem>
+			<listitem><para>jboss-5.1.0.GA: The core server with two profiles "default" and "simulator". The "default" profile is a clean profile where you will have to start from scratch and configure the entire SS7 Stack and USSD Gateway. The "simulator" profile is a pre-configured profile to work with jss7-simulator.</para></listitem>
+			<listitem><para>resources: Contains SLEE MAP, JDBC, http-client, http-servlet and SIP RA jars.</para></listitem>
+			<listitem><para>tools: Contains SLEE tools and jss7-simulator.</para></listitem>
+		</itemizedlist>
+		</para>
+	</section>
+
+	<section id="notes_whats_new">
+		<title>What's New?</title>
+        <formalpara>
+        <title>Multitenancy support</title>
+        <para>&THIS.PLATFORM; &THIS.APPLICATION; &THIS.VERSION; is able to work in multi-tenant mode by connecting to a set of different SS7 operators.
+        The procedure is based on dividing of USSD routing rules area into several areas ("subnetworks").
+        </para>
+        </formalpara>
+        <formalpara>
+        <title>CLI and GUI updates</title>
+        <para>Some minor CLI and GUI updates was made in &THIS.PLATFORM; &THIS.APPLICATION; &THIS.VERSION;.
+        </para>
+        </formalpara>
+        <formalpara>
+        <title>Last license library</title>
+        <para>&THIS.PLATFORM; &THIS.APPLICATION; &THIS.VERSION; is supplied now with the license library 2.2.3.Final.
+        </para>
+        </formalpara>
+
+	</section>
+
+	<section id="notes_whats_fixed">
+		<title>What's Fixed?</title>
+
+		<formalpara>
+		<title>JIRA Issue USSDGW-118</title>
+		<para>Routing rule deletion not working in Mozilla Firefox. For more details refer to: <ulink url="https://telestax.atlassian.net/browse/USSDGW-118" />.
+		</para>
+		</formalpara>
+
+	</section>
+	<section id="notes_Improvements">
+		<title>Improvements</title>
+		
+		<formalpara>
+		<title>JIRA Issue USSDGW-109</title>
+		<para>Multitenancy support for USSD GW. For more details refer to <ulink url="https://telestax.atlassian.net/browse/USSDGW-109" />.
+		</para>
+		</formalpara>
+		
+		<formalpara>
+		<title>JIRA Issue USSDGW-110</title>
+		<para>Adding logging templates for debug, default and production levels. For more details refer to <ulink url="https://telestax.atlassian.net/browse/USSDGW-110" />.
+		</para>
+		</formalpara>
+		
+		<formalpara>
+		<title>JIRA Issue USSDGW-111</title>
+		<para>Switching to a license library 2.2.3.Final. For more details refer to <ulink url="https://telestax.atlassian.net/browse/USSDGW-111" />.
+		</para>
+		</formalpara>
+		
+		<formalpara>
+		<title>JIRA Issue USSDGW-113</title>
+		<para>USSD CLI only allows create, delete and show. Add modify. For more details refer to <ulink url="https://telestax.atlassian.net/browse/USSDGW-113" />.
+		</para>
+		</formalpara>
+		
+		<formalpara>
+		<title>JIRA Issue USSDGW-115</title>
+		<para>UI : Improve UI to set GT for each networkId. For more details refer to <ulink url="https://telestax.atlassian.net/browse/USSDGW-115" />.
+		</para>
+		</formalpara>
+		
+		<formalpara>
+		<title>JIRA Issue USSDGW-119</title>
+		<para>Remove maxBackupIndex and maxFileSize for DailyRollingFileAppender. For more details refer to <ulink url="https://telestax.atlassian.net/browse/USSDGW-119" />.
+		</para>
+		</formalpara>
+		
+		<formalpara>
+		<title>JIRA Issue USSDGW-120</title>
+		<para>UI : Adding GUI for multi-tenancy. For more details refer to <ulink url="https://telestax.atlassian.net/browse/USSDGW-120" />.
+		</para>
+		</formalpara>
+		
+		<formalpara>
+		<title>JIRA Issue USSDGW-125</title>
+		<para>Print stats in different log file. For more details refer to <ulink url="https://telestax.atlassian.net/browse/USSDGW-125" />.
+		</para>
+		</formalpara>
+		
+		<formalpara>
+		<title>JIRA Issue USSDGW-127</title>
+		<para>Adding "scrule show" for only one selected rule. For more details refer to <ulink url="https://telestax.atlassian.net/browse/USSDGW-127" />.
+		</para>
+		</formalpara>
+		
+		<formalpara>
+		<title>JIRA Issue USSDGW-107</title>
+		<para>Docs: Table 9.1. - some data in this tables is not shown well. For more details refer to <ulink url="https://telestax.atlassian.net/browse/USSDGW-107" />.
+		</para>
+		</formalpara>
+		
+		<formalpara>
+		<title>JIRA Issue USSDGW-108</title>
+		<para>Docs: adding "SCTP libraries" and "Firewall Access " into "USSD GW installation Guide". For more details refer to <ulink url="https://telestax.atlassian.net/browse/USSDGW-108" />.
+		</para>
+		</formalpara>
+		
+		<formalpara>
+		<title>JIRA Issue USSDGW-112</title>
+		<para>Docs : Explain multi tenancy in USSD Gw. For more details refer to <ulink url="https://telestax.atlassian.net/browse/USSDGW-112" />.
+		</para>
+		</formalpara>
+		
+		<formalpara>
+		<title>JIRA Issue USSDGW-114</title>
+		<para>Docs : explain "ussd scrule modify" command. For more details refer to <ulink url="https://telestax.atlassian.net/browse/USSDGW-114" />.
+		</para>
+		</formalpara>
+		
+		<formalpara>
+		<title>JIRA Issue USSDGW-126</title>
+		<para>Docs : Explain printing of stats in different log file. For more details refer to <ulink url="https://telestax.atlassian.net/browse/USSDGW-126" />.
+		</para>
+		</formalpara>
+		
+		<formalpara>
+		<title>JIRA Issue USSDGW-128</title>
+		<para>Docs: update manual for scrule add, show, modify after last code changing. For more details refer to <ulink url="https://telestax.atlassian.net/browse/USSDGW-128" />.
+		</para>
+		</formalpara>
+		
+		<formalpara>
+		<title>JIRA Issue USSDGW-129</title>
+		<para>Docs: explain adding of networkId into "ussd set ussdgt" command. For more details refer to <ulink url="https://telestax.atlassian.net/browse/USSDGW-129" />.
+		</para>
+		</formalpara>
+		
+	</section>	
+	<section id="Config_settings">
+		<title>Configuration Settings</title>
+		<para>You must perform post-installation configuration of the Gateway according to instructions in the &THIS.PLATFORM; &THIS.APPLICATION; Admin Guide. Before using in Production, you must remember to fine-tune Memory, Database and logging settings for better performance. </para>
+<warning><para>Failure to configure memory, database, logging and other settings as per the instructions in the Admin Guide may result in poor performance of the Gateway.</para></warning>
+	</section>
+	<section id="notes_doc">
+		<title>Documentation</title>
+		<para>
+		When you download the binary release and extract the contents of the zip file, you will notice that the top level directory is named <literal>mobicents-ussdgateway-&lt;version&gt;</literal> and within the <literal>mobicents-ussdgateway-&lt;version&gt;/docs</literal> folder you will find the &THIS.PLATFORM; &THIS.APPLICATION; Installation Guide and User Guide. For installation and usage guidance, please refer to these guides that will help you to install and configure the Gateway.
+		</para>
+	</section>
+	<section id="notes_support">
+		<title>Support</title>
+		<para>
+			&THIS.PLATFORM; &THIS.APPLICATION; &THIS.VERSION; is fully supported by TeleStax. For help with the software or to raise bugs please login to your account at <ulink url="https://telestax.zendesk.com/home" /> and follow the instructions.
+		</para>
+	</section>
+	
+<!--	<section id="notes_whats_new">
+		<title>What's New?</title>
+		<para>
+		This release is packed with important features, major fixes and performance improvements.
+		<itemizedlist>
+			<listitem><para></para></listitem>
+			<listitem><para></para></listitem>
+			<listitem><para></para></listitem>
+		</itemizedlist>
+		</para>
+	</section>
+-->
+
+		
+</chapter>

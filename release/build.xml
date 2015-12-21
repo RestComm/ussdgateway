@@ -1,416 +1,596 @@
 <?xml version="1.0"?>
-<project name="ussd.gw.release.sf" default="package" basedir=".">
-
-	<property name="release.version" value="1.0.0.BETA1" />
-
-
-
-
-
-	<property name="checkout.basedir" value="${basedir}/checkout" />
-	<property name="config.dir" value="${basedir}/config" />
-	<property name="release.name" value="point" />
-	<property name="release.dir" value="${basedir}/${release.name}" />
-	<property name="zip.dir" value="${release.dir}" />
-	<property name="zip.file.destination.dir" value="${basedir}/upload" />
-	<property name="zip.file.name" value="ussd-gateway-${release.version}" />
-	<property name="failoncopy" value="true" />
-	<property name="test.skip" value="true" />
-	<property name="ussdgw.deploy.dir" value="mobicents-ussd-gateway" />
-	<property name="ussdgw.dir" value="ussdgateway" />
-
-	<!-- JBOSS -->
-	<property name="jboss.version" value="5.1.0.GA" />
-	<property name="jboss.dir" value="jboss-${jboss.version}" />
-	<property name="jboss.distro.zip.path" value="jboss-${jboss.version}.zip" />
-	<property name="jboss.home.relative.path" value="jboss-${jboss.version}/" />
-	<property name="jboss.home" value="${release.dir}/${jboss.home.relative.path}" />
-	<property name="jboss.config" value="default" />
-
-	<!-- profile names -->
-	<property name="profile.examples" value="examples" />
-	<property name="profile.ussd" value="ussd" />
-
-	<!-- SS7 -->
-	<property name="ss7.version" value="1.0.0.CR1" />
-	<property name="ss7.short.version" value="1.0.0.CR1" />
-	<property name="ss7.download.url" value="http://downloads.sourceforge.net/project/mobicents/Mobicents%20Protocols%20Suite/${ss7.short.version}/mobicents-ss7-${ss7.version}.zip" />
-	<property name="ss7.distro.zip" value="mobicents-ss7.zip" />
-	<property name="ss7.distro.zip.path" value="${basedir}" />
-	<property name="ss7.service.dir" value="mobicents-ss7-service" />
-
-
-	<!-- JSLEE -->
-	<property name="jslee.version" value="2.5.0.FINAL" />
-	<property name="jslee.download.url" value="http://downloads.sourceforge.net/project/mobicents/Mobicents%20JAIN%20SLEE%20Server/${jslee.version}/mobicents-jainslee-${jslee.version}-jboss-5.1.0.GA.zip" />
-	<property name="jslee.distro.zip" value="mobicents-jslee.zip" />
-	<property name="jslee.distro.zip.path" value="${basedir}" />
-
-	<!-- SS7 Simulator -->
-	<property name="ss7.simulator.version" value="1.0.0.BETA1" />
-	
-	<!-- Examples -->
-	<property name="example.version" value="1.0.0.BETA1"/>
-	<!-- DOCS -->
-	<property name="docs.profile" value="mobicents" />
-
-	<!-- JSLEE DIRS for src build, required for trunk snapshot builds -->
-	<property name="ra.dirs" value="http-servlet,map,sip11,http-client" />
-	<!--
-	<property name="example.dirs" value="ussd" />
-	-->
+<project name="mobicents.ussdgw.release" default="release" basedir=".">
 	<property environment="sys" />
+	<property name="release.dir" location="${ant.file.mobicents.ussdgw.release}/../target" />
+	<property name="base.dir" location="${ant.file.mobicents.ussdgw.release}/.." />
+	<property name="docs.dir" location="${release.dir}/docs" />
+	<property name="bundle.docs.dir" location="${base.dir}/docs-bundle" />
+	<property name="checkout.dir" value="${base.dir}/checkout" />
+	<property name="checkout.mobicents-slee.dir" value="${checkout.dir}/mobicents-slee" />
+	<property name="checkout.mobicents-jss7.dir" value="${checkout.dir}/mobicents-jss7" />
+	<property name="checkout.map.dir" value="${base.dir}/checkout/map" />
+	<property name="checkout.jdbc.dir" value="${base.dir}/checkout/jdbc" />
+	<property name="checkout.http.dir" value="${base.dir}/checkout/http" />
+	<property name="release.map.dir" value="${base.dir}/checkout/map-release" />
+	<property name="release.jdbc.dir" value="${base.dir}/checkout/jdbc-release" />
+	<property name="release.http-client.dir" value="${base.dir}/checkout/http-client-release" />
+	<property name="release.http-servlet.dir" value="${base.dir}/checkout/http-servlet-release" />
+	<property name="mobicents.ussd.dir" value="${base.dir}/.." />
+	<property name="mobicents.ussd.release.version" value="1.0.1-Mobicents-SNAPSHOT" />
+	<property name="mobicents-slee.version" value="2.8.9.29" />
+	<property name="mobicents-slee.ss7.map.ra.tag" value="ts113ga" />
+	<property name="mobicents-slee.http.ra.tag" value="ts115ga" />
+	<property name="mobicents-slee.jdbc.ra.tag" value="ts111ga" />
+
+	<!--GET Mobicents-Slee & Mobicents-jss7 - properties-->
+	<property name="mobicents-slee.download.distro.name" value="mobicents-slee-${mobicents-slee.version}" />
+	<property name="mobicents-slee.download.distro.file" value="${mobicents-slee.download.distro.name}.zip" />
+	<property name="mobicents-slee.download.url" value="https://mobicents.ci.cloudbees.com/job/Mobicents-JAIN-SLEE-Release/lastSuccessfulBuild/artifact/release/${mobicents-slee.download.distro.file}" />
+	<property name="mobicents-slee.distro.zip.path" value="${checkout.dir}/${mobicents-slee.download.distro.file}" />
+
+	<property name="mobicents-jss7.version" value="3.0.0-SNAPSHOT" />
+	<property name="mobicents-jss7.timestamp" value="1510060913" />
+	<property name="mobicents-jss7.download.distro.file" value="Mobicents-jss7-${mobicents-jss7.version}-${mobicents-jss7.timestamp}.zip" />
+	<property name="mobicents-jss7.download.url" value="" />
+	<property name="mobicents-jss7.distro.zip.path" value="${checkout.dir}/${mobicents-jss7.download.distro.file}" />
+	
+	<property name="mobicents-management-hq.version" value="3.0.0-SNAPSHOT" />
+	<property name="mobicents-management-hq.download.distro.file" value="management-hq-${mobicents-management-hq.version}.zip" />
+	<property name="mobicents-management-hq.distro.zip.path" value="${checkout.dir}/${mobicents-management-hq.download.distro.file}" />
+	<property name="mobicents-management-hq.download.url" value="${mobicents-management-hq.download.distro.file}" />
+	<property name="checkout.mobicents-management-hq.dir" value="${checkout.dir}/mobicents-management-hq" />
+	
+
+	<property name="release.build.goals" value="clean install" />
+	<property name="release.ts.deploy.goals" value="clean deploy" />
+
+
+
 	<condition property="mvn.executable" value="${sys.M2_HOME}\bin\mvn.bat" else="mvn">
 		<os family="windows" />
 	</condition>
 
 	<taskdef onerror="fail" resource="net/sf/antcontrib/antlib.xml">
 		<classpath>
-			<pathelement location="${sussd.gw.release.sf}/../ant-contrib-1.0b3.jar" />
+			<pathelement location="${ant.file.mobicents.ussdgw.release}/../ant-contrib-1.0b3.jar" />
 		</classpath>
 	</taskdef>
 
-	<target name="init"  description="Initilizes some properties and performs checks to ensure build will complete.">
-		<echo message="Java Version: ${java.version}" />
-		<echo message="Java home: ${java.home}" />
-		<echo message="JBoss home: ${jboss.home}" />
-		<fail message="Unsupported Java version: ${java.version}. Make sure that the version of the Java compiler is 1.7 (7.0) or greater.">
-			<condition>
-				<not>
-					<or>
-						<contains string="${java.version}" substring="1.7" casesensitive="false" />
-					</or>
-				</not>
-			</condition>
-		</fail>
+	<target name="release" depends="clean,get-deps,extract-deps,clean-up-mobicents-slee,build-ussd,copy-ussd,build-docs,copy-docs,make-final-zip,bundle-documentation" />
+	<target name="release-no-clean" depends="get-deps,extract-deps,clean-up-mobicents-slee, build-ussd,copy-ussd,build-docs,copy-docs,make-final-zip,bundle-documentation" />
+
+	<target name="deploy">
+		<ant antfile="${ant.file.mobicents.ussdgw.release}" target="release">
+			<property name="release.build.goals" value="${release.ts.deploy.goals}" />
+		</ant>
 	</target>
 
-	<target name="package" depends="clean,init,checkout,get-binary-releases,build,deploy,notes,zip" description="Default target, performs all required steps to create zip files with source code and binary release."/>
 
-	<target name="clean" description="Default clean target. Removes all compiled, checked out or localy created resources.">
-		<delete dir="${checkout.basedir}" />
-		<delete dir="${release.dir}" />
-		<delete dir="${zip.file.destination.dir}" />
+	<!--GET Map & Mobicents-Slee & Mobicents-jss7 - downloads-->
+
+	<target name="get-map" depends="checkout-ss7-map,build-ss7-map" />
+	<target name="get-deps" depends="get-mobicents-slee,get-mobicents-jss7,get-mobicents-management-hq,checkout-ss7-map,build-ss7-map,checkout-http,build-http-client,build-http-servlet,checkout-jdbc,build-jdbc" />
+	<target name="extract-deps" depends="extract-mobicents-slee,extract-mobicents-jss7,extract-mobicents-management-hq" />
+
+	<available file="${mobicents-slee.distro.zip.path}" property="got.mobicents-slee" />
+	<target name="get-mobicents-slee" unless="got.mobicents-slee">
+		<echo>Is Mobicents Slee : ${mobicents-slee.distro.zip.path} present ${got.mobicents-slee}</echo>
+		<echo>Downloading Mobicents Slee version: ${mobicents-slee.version}</echo>
+		<exec failonerror="true" executable="wget">
+			<arg value="${mobicents-slee.download.url}" />
+		</exec>
+		<move file="${base.dir}/${mobicents-slee.download.distro.file}" todir="${checkout.dir}" />
 	</target>
 
-	<target name="clean-downloads" description="Removes binary downloads which are used to build this release. By default zip files are not removed, to save time.">
-		<delete file="${ss7.distro.zip.path}/${ss7.distro.zip}" />
-		<delete file="${jslee.distro.zip.path}/${jslee.distro.zip}" />
+	<target name="extract-mobicents-slee" depends="get-mobicents-slee">
+		<delete dir="${checkout.mobicents-slee.dir}" failonerror="false" />
+		<unzip src="${mobicents-slee.distro.zip.path}" dest="${release.dir}"/>
+        <copy todir="${release.dir}" failonerror="true">
+                <fileset dir="${release.dir}/mobicents-slee-${mobicents-slee.version}__slim">
+                        <include name="**/*" />
+                </fileset>
+        </copy>
+		<delete dir="${release.dir}/mobicents-slee-${mobicents-slee.version}__slim" includeemptydirs="true" failonerror="false" verbose="false"/>
+		<delete dir="${checkout.mobicents-slee.dir}/jboss-5.1.0.GA/server/all" includeemptydirs="true" failonerror="false" verbose="false"/>
 	</target>
 
-	<target name="get-binary-releases" depends="get-jslee,get-ss7,unzip-jslee,unzip-ss7" description="Fetches binary release. Essetnailly downloads them from sourceforge."/>
+	<target name="checkout-ss7-map">
+		<echo>Checking out Map resource</echo>
+		<exec failonerror="true" executable="git">
+			<arg value="clone" />
+			<arg value="https://github.com/Mobicents/jain-slee.ss7.git" />
+			<arg value="${checkout.map.dir}" />
+		</exec>
 
-	<!-- CHEOCKOUT -->
-
-	<target name="checkout"  depends="checkout-sources" description="Performs initialization and checks out source from svn - tag or trunk version, depending on pom.xml content."/>
-
-	<target name="checkout-sources">
-		<echo>Checking out sources</echo>
-		<exec executable="${mvn.executable}" dir="${ant.file.mobicents.release}/../">
-			<arg line="validate -Pcheckout -Dcheckout.dir=${checkout.basedir}" />
+		<exec executable="git" dir="${checkout.map.dir}">
+			<arg value="checkout" />
+			<arg value="${mobicents-slee.ss7.map.ra.tag}" />
 		</exec>
 	</target>
 
-	<!-- GETs for binary parts -->
-	<available file="${ss7.distro.zip}" filepath="${ss7.distro.zip.path}" property="got.ss7" />
-	<target name="get-ss7" unless="got.ss7">
-		<echo>Downloading Mobicents SS7: {ss7.distro.zip.path}/{ss7.distro.zip}</echo>
-		<get dest="${ss7.distro.zip.path}/${ss7.distro.zip}" src="${ss7.download.url}" />
+	<target name="build-ss7-map">
+		<echo>Building Map resource</echo>
+		<exec failonerror="true" executable="${mvn.executable}" dir="${checkout.map.dir}/resources/map">
+			<arg line="clean install -Prelease -Drelease.dir=${release.map.dir} -Dmaven.test.skip=true" />
+		</exec>
 	</target>
 
-	<target name="unzip-ss7">
-		<delete dir="${checkout.basedir}/ss7" failonerror="false" />
-		<unzip src="${ss7.distro.zip.path}/${ss7.distro.zip}" dest="${checkout.basedir}/ss7" />
+	<target name="checkout-jdbc">
+		<echo>Checking out JDBC resource</echo>
+		<exec failonerror="true" executable="git">
+			<arg value="clone" />
+			<arg value="https://github.com/Mobicents/jain-slee.jdbc.git" />
+			<arg value="${checkout.jdbc.dir}" />
+		</exec>
+
+		<exec executable="git" dir="${checkout.jdbc.dir}">
+			<arg value="checkout" />
+			<arg value="${mobicents-slee.jdbc.ra.tag}" />
+		</exec>
 	</target>
 
-	<available file="${jslee.distro.zip}" filepath="${jslee.distro.zip.path}" property="got.jslee" />
-	<target name="get-jslee" unless="got.jslee">
-		<echo>Downloading Mobicents JSLEE: ${jslee.distro.zip.path}/${jslee.distro.zip}</echo>
-		<get dest="${jslee.distro.zip.path}/${jslee.distro.zip}" src="${jslee.download.url}" />
+	<target name="build-jdbc">
+		<echo>Building JDBC resource</echo>
+		<exec failonerror="true" executable="${mvn.executable}" dir="${checkout.jdbc.dir}/resources/jdbc">
+			<arg line="clean install -Prelease -Drelease.dir=${release.jdbc.dir} -Dmaven.test.skip=true" />
+		</exec>
 	</target>
 
-	<target name="unzip-jslee">
-		<delete dir="${checkout.basedir}/jslee" failonerror="false" />
-		<unzip src="${jslee.distro.zip.path}/${jslee.distro.zip}" dest="${checkout.basedir}/jslee" />
+	<target name="checkout-http">
+		<echo>Checking out Http resource</echo>
+		<exec failonerror="true" executable="git">
+			<arg value="clone" />
+			<arg value="https://github.com/Mobicents/jain-slee.http.git" />
+			<arg value="${checkout.http.dir}" />
+		</exec>
+
+		<exec executable="git" dir="${checkout.http.dir}">
+			<arg value="checkout" />
+			<arg value="${mobicents-slee.http.ra.tag}" />
+		</exec>
 	</target>
 
+	<target name="build-http-client">
+		<echo>Building HTTP Client resource</echo>
 
-	<!-- BUILD -->
-	<target name="build" description="Builds components sources and everything associated." depends="build-sources" />
-
-	<target name="build-sources" depends="build-simulator,build-ras,build-examples,build-gw">
-
+		<exec failonerror="true" executable="${mvn.executable}" dir="${checkout.http.dir}/resources/http-client">
+			<arg line="clean install -Prelease -Drelease.dir=${release.http-client.dir} -Dmaven.test.skip=true" />
+		</exec>
 	</target>
-	<target name="build-simulator">
-
-		<ant antfile="build.xml" inheritall="false" dir="${checkout.basedir}/simulator">
-			<property name="release.name" value="${release.name}" />
-			<property name="release.dir" value="${release.dir}/tmp/simulator" />
-			<property name="docs.profile" value="${docs.profile}" />
-		</ant>
-		<move todir="${release.dir}/user-guide/simulator">
-			<fileset dir="${release.dir}/tmp/simulator/user-guide" />
-		</move>
-		<move todir="${release.dir}/simulator">
-			<fileset dir="${release.dir}/tmp/simulator/simulator" />
-		</move>
-		<move todir="${release.dir}/simulator">
-			<fileset file="${release.dir}/tmp/simulator/README.TXT" />
-		</move>
-		<delete dir="${release.dir}/tmp" />
-		<!-- -Dassemble.dir=${assemble.dir} -->
-	</target>
-
-	<target name="build-ras" depends="build-ras-configuration" description="Resource adaptors.">
-		<!-- this will build RAs and move them to dir, later on we will deploy -->
-		<for delimiter="," param="dir.name" list="${ra.dirs}">
-			<sequential>
-				<echo>Packaging RA for release from DIR[${checkout.basedir}/jain-slee/resources/@{dir.name}]</echo>
-				<exec failonerror="true" executable="${mvn.executable}" dir="${checkout.basedir}/jain-slee/resources/@{dir.name}">
-					<arg line="install  -Prelease,${docs.profile},set-svn-revision -Drelease.name=${release.name} -Ddocs.profile=${docs.profile} -Djboss.home=${release.dir}/tmp -Djboss.path=../../${jboss.home.relative.path} -Dnode=${jboss.config}" />
-				</exec>
-
-				<copy failonerror="true" toDir="${release.dir}/resources/@{dir.name}" overwrite="true">
-					<fileset dir="${checkout.basedir}/jain-slee/release/${release.name}/resources/@{dir.name}" />
-				</copy>
-
-				<!--
-				<move toDir="${checkout.basedir}/jain-slee/release/${release.name}/resources/@{dir.name}/user-guide" overwrite="true">
-					<fileset dir="${checkout.basedir}/jain-slee/release/${release.name}/resources/@{dir.name}/docs" />
-				</move>
-				-->
-			</sequential>
-		</for>
-		<delete dir="${release.dir}/tmp" />
-
-	</target>
-	<target name="build-ras-configuration">
-		<!-- this is easier, we put new conf before builiding DU.... its easier than unzip, copy and zip again ... -->
-		<echo>Altering RA configoration 'map'</echo>
-		<copy file="${config.dir}/deploy-config.xml" todir="${checkout.basedir}/jain-slee/resources/map/du/src/main/resources/META-INF" overwrite="true" verbose="true"/>
 	
-	
-	</target>
-	<target name="build-examples">
-		<!--
-		<for delimiter="," param="dir.name" list="${example.dirs}">
-			<sequential>
-				<echo>Packaging Example for release from DIR[${checkout.basedir}/jain-slee/examples/@{dir.name}]</echo>
-				<exec failonerror="true" executable="${mvn.executable}" dir="${checkout.basedir}/jain-slee/examples/@{dir.name}">
-					<arg line="install -Prelease,${docs.profile},set-svn-revision -Drelease.name=${release.name} -Djboss.home=${release.dir}/tmp -Djboss.path=../../${jboss.home.relative.path} -Dnode=${jboss.config}" />
-				</exec>
-				<move toDir="${checkout.basedir}/jain-slee/release/${release.name}/@{dir.name}/user-guide/@{dir.name}" overwrite="true">
-					<fileset dir="${checkout.basedir}/jain-slee/release/${release.name}/examples/@{dir.name}/docs" />
-				</move>
-				<copy failonerror="true" toDir="${release.dir}/examples/@{dir.name}" overwrite="true">
-					<fileset dir="${checkout.basedir}/jain-slee/release/${release.name}/examples/@{dir.name}" />
-				</copy>
-			</sequential>
-		</for>
-		-->
-		<echo>Packaging Example for release from DIR[${checkout.basedir}/jain-slee/examples/ussd]</echo>
-		<exec failonerror="true" executable="${mvn.executable}" dir="${checkout.basedir}/jain-slee/examples/ussd">
-			<arg line="install -Prelease,${docs.profile},set-svn-revision -Drelease.name=${release.name} -Djboss.home=${release.dir}/tmp -Djboss.path=../../${jboss.home.relative.path} -Dnode=${jboss.config}" />
-		</exec>
-		<move toDir="${checkout.basedir}/jain-slee/release/${release.name}/ussd/user-guide/ussd" overwrite="true">
-			<fileset dir="${checkout.basedir}/jain-slee/release/${release.name}/examples/ussd/docs" />
-		</move>
-		<copy failonerror="true" toDir="${release.dir}/examples/ussd" overwrite="true">
-			<fileset dir="${checkout.basedir}/jain-slee/release/${release.name}/examples/ussd" />
-		</copy>
+	<target name="build-http-servlet">
+		<echo>Building HTTP Servlet resource</echo>
 
-		<!-- copy local script for example, since... we predeploy RAs.... -->
-		<copy verbose="true" failonerror="true" file="${config.dir}/example-build.xml" tofile="${release.dir}/examples/ussd/build.xml" overwrite="true">
-			<filterchain>
-				<replacetokens>
-					<token key="NODE" value="${profile.examples}" />
-					<token key="JBOSS_HOME" value="../../${jboss.home.relative.path}" />
-					<token key="EXAMPLE_VERSION" value="${example.version}" />
-				</replacetokens>
-			</filterchain>
-		</copy>
-		<delete dir="${release.dir}/tmp" />
-
-	</target>
-	<target name="build-gw">
-		<!-- TODO: check this, ${node} seems not set properly -->
-		<exec failonerror="true" executable="${mvn.executable}" dir="${checkout.basedir}/ussdgateway">
-			<arg line="install -Prelease,${docs.profile},set-svn-revision -Drelease.name=${release.name} -Djboss.home=${release.dir}/tmp_gw -Djboss.path=../../${jboss.home.relative.path} -Dnode=${jboss.config}" />
+		<exec failonerror="true" executable="${mvn.executable}" dir="${checkout.http.dir}/resources/http-servlet">
+			<arg line="clean install -Prelease -Drelease.dir=${release.http-servlet.dir} -Dmaven.test.skip=true" />
 		</exec>
 	</target>
 
-	<target name="deploy" description="Copies and deploys everything that is in binary form to proper directories in ${release.name} directory.">
-		<echo>Deploying RAs and services</echo>
-		<antcall target="copy-jslee" />
-		<antcall target="deploy-ss7" />
-		<antcall target="deploy-ras" />
-		<antcall target="deploy-gw" />
-		<antcall target="deploy-config" />
-	</target>
 
-	<target name="copy-jslee">
-		<echo>JSLEE resource beeing copied</echo>
-		<delete dir="${release.dir}/${jboss.dir}" failonerror="false" />
-		<!-- we dont fail -->
-		<!-- copy deployed JSLEE, rename not needed nodes create those we need :D -->
-		<copy failonerror="true" toDir="${release.dir}/${jboss.dir}" overwrite="true">
-			<fileset dir="${checkout.basedir}/jslee/${jboss.dir}" />
-		</copy>
-
-		<copy failonerror="true" toDir="${release.dir}/${jboss.dir}/server/${profile.examples}" overwrite="true">
-			<fileset dir="${release.dir}/${jboss.dir}/server/default" />
-		</copy>
-		<copy failonerror="true" toDir="${release.dir}/${jboss.dir}/server/${profile.ussd}" overwrite="true">
-			<fileset dir="${release.dir}/${jboss.dir}/server/default" />
-		</copy>
-
-		<delete dir="${release.dir}/${jboss.dir}/server/all" />
-		<delete dir="${release.dir}/${jboss.dir}/server/default" />
-	</target>
-	<target name="deploy-ss7">
-		<echo>Deploying SS7 binary release.
-			</echo>
-		<ant dir="${checkout.basedir}/ss7/ss7" target="deploy">
-			<property name="jboss.home" value="${release.dir}/${jboss.dir}" />
-			<property name="node" value="${profile.ussd}" />
-		</ant>
-
-		<move todir="${release.dir}/${jboss.dir}/server/${profile.ussd}/deploy/a${ss7.service.dir}">
-			<fileset dir="${release.dir}/${jboss.dir}/server/${profile.ussd}/deploy/${ss7.service.dir}" />
-		</move>
-		<echo>Deploying SS7 defualt configuration.
-				</echo>
-		<!-- add conf deploy -->
-	</target>
-	<target name="deploy-ras">
-		<echo>Deploying JSLEE RAs
-			</echo>
-		<!-- GW RAs -->
-		<ant dir="${release.dir}/resources/sip11" target="deploy">
-			<property name="jboss.home" value="${release.dir}/${jboss.dir}" />
-			<property name="node" value="${profile.ussd}" />
-			<property name="jboss.config" value="${profile.ussd}" />
-
-		</ant>
-		<ant dir="${release.dir}/resources/http-client" target="deploy">
-			<property name="jboss.home" value="${release.dir}/${jboss.dir}" />
-			<property name="node" value="${profile.ussd}" />
-			<property name="jboss.config" value="${profile.ussd}" />
-		</ant>
-		<ant dir="${release.dir}/resources/map" target="deploy">
-			<property name="jboss.home" value="${release.dir}/${jboss.dir}" />
-			<property name="node" value="${profile.ussd}" />
-			<property name="jboss.config" value="${profile.ussd}" />
-		</ant>
-
-		<!-- exmaples -->
-		<ant dir="${release.dir}/resources/sip11" target="deploy">
-			<property name="jboss.home" value="${release.dir}/${jboss.dir}" />
-			<property name="node" value="${profile.examples}" />
-			<property name="jboss.config" value="${profile.examples}" />
-		</ant>
-		<!-- -->
-		<ant dir="${release.dir}/resources/http-servlet" target="deploy">
-			<property name="jboss.home" value="${release.dir}/${jboss.dir}" />
-			<property name="node" value="${profile.examples}" />
-			<property name="jboss.config" value="${profile.examples}" />
-		</ant>
-
-		<delete dir="${release.dir}/resources" />
-	</target>
-	<target name="deploy-gw">
-		<move todir="${release.dir}/${jboss.dir}/server/${profile.ussd}/deploy/${ussdgw.deploy.dir}">
-			<fileset dir="${release.dir}/tmp_gw/server/default/deploy/${ussdgw.deploy.dir}" />
-		</move>
-
-		<delete dir="${release.dir}/tmp_gw" />
-	</target>
-	<target name="deploy-config">
-		<echo>Deploying default config</echo>
-		<copy verbose="true" overwrite="true" failonerror="true" todir="${release.dir}/${jboss.dir}/server/${profile.ussd}/data">
-			<fileset dir="${config.dir}">
-				<include name="*.xml" />
-				<exclude name="jboss-beans.xml" />
-				<exclude name="example-build.xml" />
-				<exclude name="deploy-config.xml" />
+	<target name="clean-up-mobicents-slee">
+		<mkdir dir="${release.dir}/jboss-5.1.0.GA/server/simulator" />
+		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator" failonerror="true">
+			<fileset dir="${release.dir}/jboss-5.1.0.GA/server/default">
+				<include name="**" />
 			</fileset>
 		</copy>
-		<copy verbose="true" overwrite="true" failonerror="true" todir="${release.dir}/${jboss.dir}/server/${profile.ussd}/deploy/a${ss7.service.dir}/META-INF">
-			<fileset dir="${config.dir}">
+		<delete dir="${release.dir}/jboss-5.1.0.GA/server/all" includeemptydirs="true" failonerror="true" />
+		<delete includeemptydirs="true" failonerror="true">
+			<fileset dir="${release.dir}/docs/resources">
+				<include name="**" />
+				<exclude name="**/map/*" />
+				<exclude name="**/sip11/*"/>
+			</fileset>
+		</delete>
+		<delete dir="${release.dir}/docs/enablers" includeemptydirs="true" failonerror="true" />
+		<delete dir="${release.dir}/docs/examples" includeemptydirs="true" failonerror="true" />
+		<delete includeemptydirs="true" failonerror="true">
+			<fileset dir="${release.dir}/resources">
+				<include name="**" />
+				<exclude name="**/sip11/*"/>
+			</fileset>
+		</delete>
+		<delete failonerror="true">
+			<fileset dir="${release.dir}/jboss-5.1.0.GA/server/simulator/lib">
+				<include name="**" />
+			</fileset>
+		</delete>
+		<delete dir="${release.dir}/extra" includeemptydirs="true" failonerror="true" />
+		<delete dir="${release.dir}/enablers" includeemptydirs="true" failonerror="true" />
+		<delete dir="${release.dir}/examples" includeemptydirs="true" failonerror="true" />
+		<delete file="${release.dir}/readme.txt" failonerror="true" />
+		<delete file="${release.dir}/sources.zip" failonerror="true" />
+		<delete dir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy/cluster" includeemptydirs="true" failonerror="true" />
+		<delete dir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy/deploy.last" includeemptydirs="true" failonerror="true" />
+		<delete dir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy/snmp-adaptor.sar" includeemptydirs="true" failonerror="true" />
+		<delete dir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy/juddi-service.sar" includeemptydirs="true" failonerror="true" />
+		<delete file="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy/mobicents-slee/profiles-external-ds.xml" failonerror="true" />
+		<delete file="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy/mobicents-slee/META-INF/jboss-cache-config.xml" failonerror="true" />
+		<delete file="${release.dir}/jboss-5.1.0.GA/server/simulator/iiop-service.xml" failonerror="true" />
+		<delete file="${release.dir}/jboss-5.1.0.GA/server/simulator/conf/jacorb.properties" failonerror="true" />
+		<delete file="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy/iiop-service.xml" failonerror="true" />
+		<delete dir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy-hasingleton/" includeemptydirs="true" failonerror="true" />
+		<delete dir="${release.dir}/jboss-5.1.0.GA/server/simulator/farm/" includeemptydirs="true" failonerror="true" />
+	</target>
+
+	<target name="build-ussd">
+		<exec failonerror="true" executable="${mvn.executable}" dir="${base.dir}/../">
+			<arg line="${release.build.goals} -Dmaven.test.skip=true" />
+		</exec>
+	</target>
+
+<!--
+	<target name="build-ussd-txtcdr">
+		<echo>Building USSD Service for Text CDR</echo>
+
+		<copy file="${mobicents.ussd.dir}/core/slee/services-du/target/services-DU-${mobicents.ussd.release.version}.jar" todir="${release.dir}/textcdr-service" failonerror="true" />
+
+		<tstamp>
+			<format property="touch.time" pattern="MM/dd/yyyy hh:mm aa" />
+		</tstamp>
+		<touch datetime="${touch.time}">
+			<fileset dir="${mobicents.ussd.dir}/core/bootstrap/src/main/config/txtcdr" />
+		</touch>
+
+		<copy file="${mobicents.ussd.dir}/core/slee/sbbs/target/sbbs-${mobicents.ussd.release.version}.jar" todir="${release.dir}/textcdr-service/sbb" failonerror="true" />
+		<jar destfile="${release.dir}/textcdr-service/sbb/sbbs-${mobicents.ussd.release.version}.jar" update="true">
+			<zipfileset dir="${mobicents.ussd.dir}/core/bootstrap/src/main/config/txtcdr/sbb" prefix="META-INF" />
+		</jar>
+
+
+		<jar destfile="${release.dir}/textcdr-service/services-DU-${mobicents.ussd.release.version}.jar" update="true">
+			<zipfileset dir="${mobicents.ussd.dir}/core/bootstrap/src/main/config/txtcdr/service" prefix="services" />
+			<zipfileset dir="${release.dir}/textcdr-service/sbb" prefix="jars" />
+		</jar>
+
+		<delete dir="${release.dir}/textcdr-service/sbb" />
+	</target>
+-->
+
+	<target name="copy-ussd">
+		<echo>Copy Mobicents Map RA</echo>
+		<copy todir="${release.dir}/resources" failonerror="true">
+			<fileset dir="${release.map.dir}/resources">
+				<include name="**" />
+			</fileset>
+		</copy>
+
+		<echo>Copy Mobicents http-client RA</echo>
+		<copy todir="${release.dir}/resources" failonerror="true">
+			<fileset dir="${release.http-client.dir}/resources">
+				<include name="**" />
+			</fileset>
+		</copy>
+
+		<echo>Copy Mobicents http-servlet RA</echo>
+		<copy todir="${release.dir}/resources" failonerror="true">
+			<fileset dir="${release.http-servlet.dir}/resources">
+				<include name="**" />
+			</fileset>
+		</copy>
+
+		<echo>Copy Mobicents JDBC RA</echo>
+		<copy todir="${release.dir}/resources" failonerror="true">
+			<fileset dir="${release.jdbc.dir}/resources">
+				<include name="**" />
+			</fileset>
+		</copy>
+
+		<echo>Copy USSD GW server</echo>
+		<!--default-->
+		<copy todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy/mobicents-ussd-gateway" failonerror="true">
+			<fileset dir="${mobicents.ussd.dir}/core/bootstrap/target/mobicents-ussd-gateway">
+				<include name="**" />
+			</fileset>
+		</copy>
+		
+		<copy file="${mobicents.ussd.dir}/core/slee/services-du/target/services-DU-${mobicents.ussd.release.version}.jar" todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true" />
+		<copy file="${mobicents.ussd.dir}/management/ussd-management/target/ussd-management.war" todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true" />
+
+
+		<copy todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true">
+			<fileset dir="${release.dir}/resources/map">
 				<exclude name="*.xml" />
-				<exclude name="*.drl" />
-				<include name="jboss-beans.xml" />
 			</fileset>
 		</copy>
-		<copy verbose="true" overwrite="true" failonerror="true" todir="${release.dir}/${jboss.dir}/server/${profile.ussd}/deploy/${ussdgw.deploy.dir}/rules">
-			<fileset dir="${config.dir}">
-				<include name="USSDGateway.drl" />
+		
+		<copy todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true">
+			<fileset dir="${release.dir}/resources/sip11">
+				<exclude name="*.xml" />
 			</fileset>
 		</copy>
-	</target>
 
-
-	<target name="notes" description="Creates README.txt from template.">
-		<copy verbose="true" failonerror="true" file="README.TXT" todir="${release.dir}">
-			<filterchain>
-				<replacetokens>
-					<token key="SIMULATOR_VERSION" value="${ss7.simulator.version}" />
-					<token key="VERSION" value="${release.version}" />
-					<token key="SS7_VERSION" value="${ss7.version}" />
-					<token key="JSLEE_VERSION" value="${jslee.version}" />
-				</replacetokens>
-			</filterchain>
+		<copy todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true">
+			<fileset dir="${release.dir}/resources/http-client">
+				<exclude name="*.xml" />
+			</fileset>
 		</copy>
+
+		<copy todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true">
+			<fileset dir="${release.dir}/resources/http-servlet">
+				<exclude name="*.xml" />
+			</fileset>
+		</copy>
+
+		<copy todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true">
+			<fileset dir="${release.dir}/resources/jdbc">
+				<exclude name="*.xml" />
+			</fileset>
+		</copy>
+
+		<mkdir dir="${release.dir}/jboss-5.1.0.GA/server/default/data" />
+		
+		<copy todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true">
+			<fileset dir="${checkout.mobicents-jss7.dir}/Mobicents-jss7-${mobicents-jss7.version}/oam/new-ui">
+				<include name="**" />
+			</fileset>
+		</copy>		
+		
+		<!--simulator-->
+		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy/mobicents-ussd-gateway" failonerror="true">
+			<fileset dir="${mobicents.ussd.dir}/core/bootstrap/target/mobicents-ussd-gateway">
+				<include name="**" />
+			</fileset>
+		</copy>
+		
+		<copy file="${mobicents.ussd.dir}/core/slee/services-du/target/services-DU-${mobicents.ussd.release.version}.jar" todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true" />
+		<copy file="${mobicents.ussd.dir}/management/ussd-management/target/ussd-management.war" todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true" />
+		
+		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true">
+			<fileset dir="${release.dir}/resources/map">
+				<exclude name="*.xml" />
+			</fileset>
+		</copy>
+
+		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true">
+			<fileset dir="${release.dir}/resources/sip11">
+				<exclude name="*.xml" />
+			</fileset>
+		</copy>
+		
+		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true">
+			<fileset dir="${release.dir}/resources/http-client">
+				<exclude name="*.xml" />
+			</fileset>
+		</copy>
+
+		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true">
+			<fileset dir="${release.dir}/resources/http-servlet">
+				<exclude name="*.xml" />
+			</fileset>
+		</copy>
+
+		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true">
+			<fileset dir="${release.dir}/resources/jdbc">
+				<exclude name="*.xml" />
+			</fileset>
+		</copy>
+		
+		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator/data" failonerror="true">
+			<fileset dir="${mobicents.ussd.dir}/core/bootstrap/src/main/config/data">
+				<include name="**" />
+			</fileset>
+		</copy>
+		
+		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true">
+			<fileset dir="${checkout.mobicents-jss7.dir}/Mobicents-jss7-${mobicents-jss7.version}/oam/new-ui">
+				<include name="**" />
+			</fileset>
+		</copy>
+
+		<!--tools-->
+		<copy todir="${release.dir}/tools/Mobicents-jss7-simulator" failonerror="true">
+			<fileset dir="${checkout.mobicents-jss7.dir}/Mobicents-jss7-${mobicents-jss7.version}/ss7/Mobicents-ss7-simulator">
+				<include name="**" />
+			</fileset>
+		</copy>
+        <copy file="${mobicents.ussd.dir}/core/bootstrap/src/main/config/ss7-simulator/main_simulator2.xml" todir="${release.dir}/tools/Mobicents-jss7-simulator/data" failonerror="true" />
+        <copy file="${mobicents.ussd.dir}/core/bootstrap/src/main/config/ss7-simulator/win_simulator2.xml" todir="${release.dir}/tools/Mobicents-jss7-simulator/data" failonerror="true" />
+		
+		<copy todir="${release.dir}/tools/Mobicents-ussd-simulator" failonerror="true">
+			<fileset dir="${mobicents.ussd.dir}/test/bootstrap/target/ussd-server">
+				<include name="**" />
+			</fileset>
+		</copy>
+		<!--CLI-->
+		<copy file="${mobicents.ussd.dir}/core/oam/cli/target/ussd-cli-${mobicents.ussd.release.version}.jar" todir="${release.dir}/jboss-5.1.0.GA/lib" failonerror="true" />
+		<copy todir="${release.dir}/jboss-5.1.0.GA/" failonerror="true">
+			<fileset dir="${checkout.mobicents-jss7.dir}/Mobicents-jss7-${mobicents-jss7.version}/ss7/shell">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+
+    	<!--logs-->
+		<echo>Copy jboss-log4j*.xml</echo>
+		<copy todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy/mobicents-ussd-gateway/log4j-templates" failonerror="true">
+		        <fileset dir="${mobicents.ussd.dir}/core/bootstrap/src/main/config/log4j">
+		                <include name="**/*" />
+		        </fileset>
+		</copy>
+		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy/mobicents-ussd-gateway/log4j-templates" failonerror="true">
+		        <fileset dir="${mobicents.ussd.dir}/core/bootstrap/src/main/config/log4j">
+		                <include name="**/*" />
+		        </fileset>
+		</copy>
+
+    	<copy file="${mobicents.ussd.dir}/core/bootstrap/src/main/config/log4j/jboss-log4j-default.xml" tofile="${release.dir}/jboss-5.1.0.GA/server/default/conf/jboss-log4j.xml" overwrite="true"></copy>
+    	<copy file="${mobicents.ussd.dir}/core/bootstrap/src/main/config/log4j/jboss-log4j-default.xml" tofile="${release.dir}/jboss-5.1.0.GA/server/simulator/conf/jboss-log4j.xml" overwrite="true"></copy>
+
+<!--		
+		<echo>Copy jboss-log4j.xml to default</echo>
+		<copy file="${mobicents.ussd.dir}/core/bootstrap/src/main/config/conf/jboss-log4j.xml" todir="${release.dir}/jboss-5.1.0.GA/server/default/conf" failonerror="true" overwrite="true"/>
+		<copy file="${mobicents.ussd.dir}/core/bootstrap/src/main/config/conf/jboss-log4j.xml" todir="${release.dir}/jboss-5.1.0.GA/server/simulator/conf" failonerror="true" overwrite="true"/>
+-->
+
+		<!-- Mobicents Management HQ -->
+		<echo>Mobicents Management Hq</echo>
+		<copy file="${checkout.mobicents-management-hq.dir}/mobicents-management.war" todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true" />
+		<copy file="${checkout.mobicents-management-hq.dir}/mobicents-management.war" todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true" />
+		
+		<!-- Coppy http pull and push example to simulator-->
+		<echo>Copy http-push-example to simulator/deploy</echo>
+		<copy todir="${release.dir}/jboss-5.1.0.GA//server/simulator/deploy/http-push-example" failonerror="true">
+			<fileset dir="${mobicents.ussd.dir}/examples/http-push/target/http-push-example">
+				<include name="**" />
+			</fileset>
+		</copy>	
+		
+		<echo>Copy ussdhttpdemo.war to simulator/deploy</echo>
+		<copy file="${mobicents.ussd.dir}/examples/http/target/ussdhttpdemo.war" todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true" />
+
+
 	</target>
 
-	<!-- ZIP targets -->
-
-	<target name="zip" depends="zip-src,zip-gw" description="Create zip source and binary zip files."/>
-
-	<target name="set-src-excludes">
-		<defaultexcludes add="**/target/**" />
-		<defaultexcludes add="**/docs/**" />
-		<defaultexcludes add="**/legacy/**" />
-		<defaultexcludes add="**/release/**" />
-		<defaultexcludes add="**/logs/**" />
-		<defaultexcludes add="**/tests/**" />
-		<defaultexcludes add="**/${*}/**" />
-		<defaultexcludes add="**/*JBOSS_HOME*/**" />
-		<defaultexcludes add="**/*CATALINA_HOME*/**" />
-		<defaultexcludes add="**/.gwt-cache/**" />
-		<defaultexcludes add="**/.settings/**" />
-		<defaultexcludes add="**/.project" />
-		<defaultexcludes add="**/.classpath" />
-		<defaultexcludes add="**/*.class" echo="true" />
+	<target name="build-docs">
+		<exec failonerror="true" executable="${mvn.executable}" dir="${base.dir}/../docs">
+			<arg line="${release.build.goals} -Dmaven.test.skip=true" />
+		</exec>
 	</target>
 
-	<target name="zip-gw" description="">
-		<fixcrlf srcdir="${jboss.home}/bin" includes="*.sh" eol="lf" eof="remove" />
-		<zip destfile="${zip.file.destination.dir}/${zip.file.name}.zip" filesonly="false">
-			<zipfileset dir="${release.dir}" filemode="755" includes="**/*.sh" />
-			<zipfileset dir="${release.dir}" prefix="" excludes=" **/server/*/log/** **/server/*/tmp/** **/server/*/work/** **/server/tmp/**" />
+	<target name="copy-docs">
+		<!--docs-->
+		<mkdir dir="${bundle.docs.dir}" />
+		<delete dir="${docs.dir}/resources/map" />
+		<copy todir="${docs.dir}/resources/map" failonerror="true" flatten="true">
+			<fileset dir="${release.map.dir}/docs/">
+				<include name="**/*User_Guide.pdf" />
+			</fileset>
+		</copy>
+
+		<delete dir="${docs.dir}/resources/http-client" />
+		<copy todir="${docs.dir}/resources/http-client" failonerror="true" flatten="true">
+			<fileset dir="${release.http-client.dir}/docs/">
+				<include name="**/*User_Guide.pdf" />
+			</fileset>
+		</copy>
+
+		<delete dir="${docs.dir}/resources/http-servlet" />
+		<copy todir="${docs.dir}/resources/http-servlet" failonerror="true" flatten="true">
+			<fileset dir="${release.http-servlet.dir}/docs/">
+				<include name="**/*User_Guide.pdf" />
+			</fileset>
+		</copy>
+
+		<delete dir="${docs.dir}/resources/jdbc" />
+		<copy todir="${docs.dir}/resources/jdbc" failonerror="true" flatten="true">
+			<fileset dir="${release.jdbc.dir}/docs/">
+				<include name="**/*User_Guide.pdf" />
+			</fileset>
+		</copy>
+
+		<move toDir="${bundle.docs.dir}/slee" overwrite="true">
+			<fileset dir="${docs.dir}">
+				<include name="**" />
+			</fileset>
+		</move>
+		<copy toDir="${docs.dir}/slee" overwrite="true" flatten="true">
+			<fileset dir="${bundle.docs.dir}/slee">
+				<include name="**/*.pdf" />
+			</fileset>
+		</copy>
+
+		<mkdir dir="${docs.dir}/jss7" />
+		<mkdir dir="${docs.dir}/ussd" />
+		<copy todir="${docs.dir}/jss7" failonerror="true">
+			<fileset dir="${checkout.mobicents-jss7.dir}/Mobicents-jss7-${mobicents-jss7.version}/_docs/">
+				<include name="*.pdf" />
+			</fileset>
+		</copy>
+		<copy todir="${docs.dir}/ussd" failonerror="true" flatten="true">
+			<fileset dir="${mobicents.ussd.dir}/docs/">
+				<include name="**/*.pdf" />
+			</fileset>
+		</copy>
+		
+		<mkdir dir="${docs.dir}/management-hq" />
+		<copy todir="${docs.dir}/management-hq" failonerror="true" flatten="true">
+			<fileset dir="${checkout.mobicents-management-hq.dir}/docs/">
+				<include name="**/*.pdf" />
+			</fileset>			
+		</copy>		
+	</target>
+
+
+	<target name="make-final-zip" depends="set-time-stamp">
+		<zip destfile="${base.dir}/Mobicents-ussd-${mobicents.ussd.release.version}-${time.stamp}.zip" filesonly="false">
+			<zipfileset dir="${release.dir}" prefix="Mobicents-ussd-${mobicents.ussd.release.version}">
+				<include name="**" />
+			</zipfileset>
 		</zip>
-		<antcall target="checksum">
-			<param name="source.file" value="${zip.file.destination.dir}/${zip.file.name}.zip" />
-			<param name="algorithm" value="sha1" />
-		</antcall>
 	</target>
 
-	<target name="zip-src" depends="set-src-excludes">
-
-
-		<zip destfile="${zip.file.destination.dir}/${zip.file.name}.src.zip" basedir="${checkout.basedir}/${ussdgw.dir}" />
-
-		<antcall target="checksum">
-			<param name="source.file" value="${zip.file.destination.dir}/${zip.file.name}.src.zip" />
-			<param name="algorithm" value="sha1" />
-		</antcall>
-
-
-		<defaultexcludes default="true" />
+	<target name="set-time-stamp" unless="skip.timestamp">
+		<tstamp>
+			<format property="time.stamp" pattern="yyMMddHHmm" />
+		</tstamp>
 	</target>
 
-	<target name="checksum">
-		<checksum file="${source.file}" algorithm="${algorithm}" fileext=".${algorithm}" forceOverwrite="yes" />
+	<target name="bundle-documentation">
+		<echo>bundling documentation</echo>
+
+		<delete dir="${bundle.docs.dir}/slee/resources/map" />
+		<copy todir="${bundle.docs.dir}/slee/resources/map" failonerror="true">
+			<fileset dir="${release.map.dir}/docs/">
+				<include name="**" />
+			</fileset>
+		</copy>
+
+		<delete dir="${bundle.docs.dir}/slee/resources/http-client" />
+		<copy todir="${bundle.docs.dir}/slee/resources/http-client" failonerror="true">
+			<fileset dir="${release.http-client.dir}/docs/">
+				<include name="**" />
+			</fileset>
+		</copy>
+
+		<delete dir="${bundle.docs.dir}/slee/resources/http-servlet" />
+		<copy todir="${bundle.docs.dir}/slee/resources/http-servlet" failonerror="true">
+			<fileset dir="${release.http-servlet.dir}/docs/">
+				<include name="**" />
+			</fileset>
+		</copy>
+
+		<delete dir="${bundle.docs.dir}/slee/resources/jdbc" />
+		<copy todir="${bundle.docs.dir}/slee/resources/jdbc" failonerror="true">
+			<fileset dir="${release.jdbc.dir}/docs/">
+				<include name="**" />
+			</fileset>
+		</copy>
+
+		<delete dir="${bundle.docs.dir}/slee/tools/slee-management-console" />
+		<mkdir dir="${bundle.docs.dir}/jss7" />
+		<mkdir dir="${bundle.docs.dir}/ussd" />
+		<copy todir="${bundle.docs.dir}/jss7" failonerror="true">
+			<fileset dir="${checkout.mobicents-jss7.dir}/Mobicents-jss7-${mobicents-jss7.version}/_docs/">
+				<include name="**" />
+			</fileset>
+		</copy>
+		<copy todir="${bundle.docs.dir}/ussd/adminguide" failonerror="true">
+			<fileset dir="${mobicents.ussd.dir}/docs/adminguide/jdocbook-mobicents/target/docbook/publish/">
+				<include name="**" />
+			</fileset>
+		</copy>
+		<copy todir="${bundle.docs.dir}/ussd/installationguide" failonerror="true">
+			<fileset dir="${mobicents.ussd.dir}/docs/installationguide/jdocbook-mobicents/target/docbook/publish/">
+				<include name="**" />
+			</fileset>
+		</copy>
+		<copy todir="${bundle.docs.dir}/ussd/releasenotes" failonerror="true">
+			<fileset dir="${mobicents.ussd.dir}/docs/releasenotes/jdocbook-mobicents/target/docbook/publish/">
+				<include name="**" />
+			</fileset>
+		</copy>
+
+		<zip destfile="${base.dir}/Mobicents-ussd-${mobicents.ussd.release.version}-docs-${time.stamp}.zip" filesonly="false">
+			<zipfileset dir="${bundle.docs.dir}" prefix="Mobicents-ussd-${mobicents.ussd.release.version}/docs">
+				<include name="**/*" />
+			</zipfileset>
+		</zip>
 	</target>
+
+
+	<target name="clean">
+		<delete dir="${release.dir}" />
+		<!--delete dir="${base.dir}/checkout" /-->
+	</target>
+
 </project>

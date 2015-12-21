@@ -1,0 +1,25 @@
+Name
+	ussd set mscssn
+
+SYNOPSIS
+	ussd set mscssn <mscSubSystemNumber>
+
+DESCRIPTION
+	This command is used to set the value for MSC Sub System Number (SSN). 
+
+EXAMPLES
+	ussd set mscssn 8
+
+	The above command will set the value for the parameter 'mscSubSystemNumber' to 
+	'8'and the terminal will display the message 
+	"Parameter has been successfully set". 
+
+	You can verify this by issuing the 'ussd get mscssn' command.
+
+	ussd get mscssn
+	mscssn = 8
+
+SEE ALSO
+	ussd set, ussd set noroutingruleconfigerrmssg, ussd set dialogtimeout, 
+	ussd set dialogtimeouterrmssg, ussd set servererrmssg, ussd set ussdgt,
+	ussd set ussdssn, ussd set hlrssn, ussd set maxmapv, ussd get

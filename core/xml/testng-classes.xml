@@ -5,7 +5,7 @@
 
 	<test name="mgmt">
 		<classes>
-			<class name="org.mobicents.ussdgateway.DialogTest"></class>
+			<class name="org.mobicents.ussdgateway.XmlMAPDialogTest"></class>
 		</classes>
 	</test>
 

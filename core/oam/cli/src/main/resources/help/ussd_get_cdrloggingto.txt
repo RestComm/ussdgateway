@@ -1,0 +1,13 @@
+Name
+	ussd get cdrloggingto
+
+SYNOPSIS
+	ussd get cdrloggingto
+
+DESCRIPTION
+	This command is used to determine if the CDR is logged to Database or Text Files. 
+	
+SEE ALSO
+	ussd set cdrloggingto	
+
+

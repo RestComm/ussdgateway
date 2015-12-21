@@ -28,15 +28,12 @@ package org.mobicents.ussdgateway.slee.cdr;
  */
 public interface ChargeInterfaceParent {
 
-    public enum RecordType {
-        INIT, CONTINUE, TERMINATE, TIMEOUT, ABORT;
-    }
 
-    public void recordGenerationSucessed(RecordType type);
+    public void recordGenerationSucessed();
 
-    public void recordGenerationFailed(RecordType type, String message);
+    public void recordGenerationFailed( String message);
 
-    public void recordGenerationFailed(RecordType type, String message, Throwable t);
+    public void recordGenerationFailed( String message, Throwable t);
 
     /**
      * @param message

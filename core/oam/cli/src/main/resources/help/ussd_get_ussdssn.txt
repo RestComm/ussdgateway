@@ -1,0 +1,14 @@
+Name
+	ussd get scssn
+
+SYNOPSIS
+	ussd get scssn 
+
+DESCRIPTION
+	This command is used to obtain the value of ussd Sub System Number (SSN).
+
+SEE ALSO
+	ussd get scgt, ussd set scgt, ussd set scssn, ussd get hlrssn,
+	ussd set hlrssn, ussd get mscssn, ussd set mscssn, ussd get maxmapv, 
+	ussd set maxmapv
+

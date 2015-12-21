@@ -21,7 +21,7 @@
  */
 package org.mobicents.ussdgateway.slee;
 
-import org.mobicents.ussdgateway.Dialog;
+import org.mobicents.ussdgateway.XmlMAPDialog;
 import org.mobicents.ussdgateway.rules.ScRoutingRule;
 
 /**
@@ -32,5 +32,5 @@ import org.mobicents.ussdgateway.rules.ScRoutingRule;
 public interface ChildInterface {
 	public void setCallFact(ScRoutingRule call);
 	
-	public void setDialog(Dialog dialog);
+	public void setXmlMAPDialog(XmlMAPDialog dialog);
 }

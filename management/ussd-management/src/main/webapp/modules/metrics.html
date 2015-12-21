@@ -1,0 +1,461 @@
+				<h3 style="margin: 0px;"><i class="icon-bar-chart"></i> USSD Metrics</h3>
+				<hr style="margin: 10 0px;"/>
+				
+				<span class="span5 offset7">
+					<span class="input-prepend" data-toggle="tooltip" data-placement="bottom" title="select the refresh rate at which page will be refreshed">
+					<span class="add-on">Refresh Rate</span>
+					<select id="refresh-rate-select" onchange="refreshRate()">
+						<option value="5000">5 Sec</option>
+						<option value="10000">10 Sec</option>
+						<option value="15000">15 Sec</option>
+						<option value="20000">20 Sec</option>
+						<option value="30000">30 Sec</option>
+						<option selected="selected" value="60000">60 Sec</option>
+						<option value="300000">5 Min</option>
+						<option value="600000">10 Min</option>
+						<option value="900000">15 Min</option>
+						<option value="1200000">20 Min</option>
+						<option value="1800000">30 Min</option>
+						<option value="3600000">60 Min</option>
+					</select>
+					</span>					
+					<button id="refresh" style="float: right; margin-right: 20px; margin-left: 20px; height: 30px;" class="btn btn-medium btn-success" data-toggle="tooltip" data-placement="left" onclick="updateGraphs();" data-original-title="Refresh Graph"><i class="icon-refresh"></i></button>
+				</span>
+				
+				<span id="ras-table-wrapper">
+					<table id="no-campaigns-table" class="table" style="display: none;">
+						<tr>
+							<td>
+								<div class="alert alert-info fade in">
+									<strong>No Campaigns defined yet!</strong> 
+								</div>
+							</td>
+						</tr>
+					</table>	
+					
+					<div id="campaigns-div" class="control-group">
+						<span class="input-prepend" data-toggle="tooltip" data-placement="bottom" title="select the campaign to display the metrics graph">
+							<span class="add-on">Campaigns</span>
+							<select id="campaigns-list-select" onchange="createGraphs()">
+								<option value="Select">Select</option>
+							</select>
+						</span>
+					</div>
+					
+					<input type="hidden" value="-1" id="timerIdValue"/>
+					
+					<div id="chart_div_dialogsAllEstPullPush" style="width: 900px; height: 500px;"></div>				
+					<div id="chart_div_dialogsAllEstHttpSip" style="width: 900px; height: 500px;"></div>
+					<div id="chart_div_dialogsAllFailPullPush" style="width: 900px; height: 500px;"></div>
+					<div id="chart_div_dialogsAllFailHttpSip" style="width: 900px; height: 500px;"></div>
+					
+					<div id="chart_div_dialogsAllEstFailCum" style="width: 900px; height: 500px;"></div>
+					<div id="chart_div_dialogsAllEstFailPerSec" style="width: 900px; height: 500px;"></div>
+					
+					<div id="chart_div_operationsAll" style="width: 900px; height: 500px;"></div>
+					<div id="chart_div_operationsAllCum" style="width: 900px; height: 500px;"></div>
+					
+				</span>
+				
+				
+				<script type='text/javascript'>
+					//@ sourceURL=loadGoogleCharts.js
+					//dialogsAllEstPullPush
+					var dialogsAllEstPullPush = new google.visualization.DataTable();
+					dialogsAllEstPullPush.addColumn('datetime', 'Time');
+					dialogsAllEstPullPush.addColumn('number', 'DialogsAllEstablished');
+					dialogsAllEstPullPush.addColumn('number', 'DialogsPullEstablished');
+					dialogsAllEstPullPush.addColumn('number', 'DialogsPushEstablished');
+					
+					 var dialogsAllEstPullPushOptions = {
+					          title: 'Pull/Push Dialogs Established',
+					          curveType: 'function',
+					          pointSize: 5,
+					          width: 1200,
+					      	  height: 400,
+					      	  hAxis: {title: 'Time',  titleTextStyle: {color: '#333'}},
+					          vAxis: {minValue: 0},
+					 };
+				 
+			        var dialogsAllEstPullPushChart = new google.visualization.LineChart(document.getElementById('chart_div_dialogsAllEstPullPush'));					
+					
+			       	
+			        
+			      //dialogsAllEstHttpSip
+					var dialogsAllEstHttpSip = new google.visualization.DataTable();
+					dialogsAllEstHttpSip.addColumn('datetime', 'Time');
+					dialogsAllEstHttpSip.addColumn('number', 'DialogsAllEstablished');
+					dialogsAllEstHttpSip.addColumn('number', 'DialogsHttpEstablished');
+					dialogsAllEstHttpSip.addColumn('number', 'DialogsSipEstablished');		
+				        
+					 var dialogsAllEstHttpSipOptions = {
+					          title: 'HTTP/SIP Dialogs Established',
+					          curveType: 'function',
+					          pointSize: 5,
+					          width: 1200,
+					      	  height: 400,
+					      	  hAxis: {title: 'Time',  titleTextStyle: {color: '#333'}},
+					          vAxis: {minValue: 0},
+					 };
+				 
+			        var dialogsAllEstHttpSipChart = new google.visualization.LineChart(document.getElementById('chart_div_dialogsAllEstHttpSip'));	
+			        
+			        
+			        
+			        
+			      //dialogsAllFailPullPush
+					var dialogsAllFailPullPush = new google.visualization.DataTable();
+					dialogsAllFailPullPush.addColumn('datetime', 'Time');
+					dialogsAllFailPullPush.addColumn('number', 'DialogsAllFailed');
+					dialogsAllFailPullPush.addColumn('number', 'DialogsPullFailed');
+					dialogsAllFailPullPush.addColumn('number', 'DialogsPushFailed');
+					
+					 var dialogsAllFailPullPushOptions = {
+					          title: 'Pull/Push Dialogs Failed',
+					          curveType: 'function',
+					          pointSize: 5,
+					          width: 1200,
+					      	  height: 400,
+					      	  hAxis: {title: 'Time',  titleTextStyle: {color: '#333'}},
+					          vAxis: {minValue: 0},
+					 };
+				 
+			        var dialogsAllFailPullPushChart = new google.visualization.LineChart(document.getElementById('chart_div_dialogsAllFailPullPush'));					
+					
+			       	
+			        
+			      //dialogsAllEstHttpSip
+					var dialogsAllFailHttpSip = new google.visualization.DataTable();
+					dialogsAllFailHttpSip.addColumn('datetime', 'Time');
+					dialogsAllFailHttpSip.addColumn('number', 'DialogsAllFailed');
+					dialogsAllFailHttpSip.addColumn('number', 'DialogsHttpFailed');
+					dialogsAllFailHttpSip.addColumn('number', 'DialogsSipFailed');		
+				        
+					 var dialogsAllFailHttpSipOptions = {
+					          title: 'HTTP/SIP Dialogs Failed',
+					          curveType: 'function',
+					          pointSize: 5,
+					          width: 1200,
+					      	  height: 400,
+					      	  hAxis: {title: 'Time',  titleTextStyle: {color: '#333'}},
+					          vAxis: {minValue: 0},
+					 };
+				 
+			        var dialogsAllFailHttpSipChart = new google.visualization.LineChart(document.getElementById('chart_div_dialogsAllFailHttpSip'));		
+			        
+			      //dialogsAllEstFailCum
+					var dialogsAllEstFailCum = new google.visualization.DataTable();
+					dialogsAllEstFailCum.addColumn('datetime', 'Time');
+					dialogsAllEstFailCum.addColumn('number', 'DialogsAllEstablishedCumulative');
+					dialogsAllEstFailCum.addColumn('number', 'DialogsAllFailedCumulative');
+					
+					 var dialogsAllEstFailCumOptions = {
+					          title: 'Dialogs Established/Failed Cumulative Count',
+					          curveType: 'function',
+					          pointSize: 5,
+					          width: 1200,
+					      	  height: 400,
+					      	  hAxis: {title: 'Time',  titleTextStyle: {color: '#333'}},
+					          vAxis: {minValue: 0},
+					 };
+				 
+			        var dialogsAllEstFailCumChart = new google.visualization.LineChart(document.getElementById('chart_div_dialogsAllEstFailCum'));	
+			        
+					
+			      //dialogsAllEstFailPerSec
+					var dialogsAllEstFailPerSec = new google.visualization.DataTable();
+					dialogsAllEstFailPerSec.addColumn('datetime', 'Time');
+					dialogsAllEstFailPerSec.addColumn('number', 'DialogsAllEstablishedPerSec');
+					dialogsAllEstFailPerSec.addColumn('number', 'DialogsAllFailedPerSec');
+					
+					 var dialogsAllEstFailPerSecOptions = {
+					          title: 'Dialogs Established/Failed Per Sec',
+					          curveType: 'function',
+					          pointSize: 5,
+					          width: 1200,
+					      	  height: 400,
+					      	  hAxis: {title: 'Time',  titleTextStyle: {color: '#333'}},
+					          vAxis: {minValue: 0},
+					 };
+				 
+			        var dialogsAllEstFailPerSecChart = new google.visualization.LineChart(document.getElementById('chart_div_dialogsAllEstFailPerSec'));
+			        
+			        
+			      //operationsAll
+					var operationsAll = new google.visualization.DataTable();
+					operationsAll.addColumn('datetime', 'Time');
+					operationsAll.addColumn('number', 'ProcessUssdRequestOperations');
+					operationsAll.addColumn('number', 'UssdRequestOperations');
+					operationsAll.addColumn('number', 'UssdNotifyOperations');
+					operationsAll.addColumn('number', 'UssdPullNoRoutingRule');
+					
+					 var operationsAllOptions = {
+					          title: 'Various USSD Requests',
+					          curveType: 'function',
+					          pointSize: 5,
+					          width: 1200,
+					      	  height: 400,
+					      	  hAxis: {title: 'Time',  titleTextStyle: {color: '#333'}},
+					          vAxis: {minValue: 0},
+					 };
+				 
+			        var operationsAllChart = new google.visualization.LineChart(document.getElementById('chart_div_operationsAll'));
+			        
+			      //operationsAllCum
+					var operationsAllCum = new google.visualization.DataTable();
+					operationsAllCum.addColumn('datetime', 'Time');
+					operationsAllCum.addColumn('number', 'ProcessUssdRequestOperationsCumulative');
+					operationsAllCum.addColumn('number', 'UssdRequestOperationsCumulative');
+					operationsAllCum.addColumn('number', 'UssdNotifyOperationsCumulative');
+					operationsAllCum.addColumn('number', 'UssdPullNoRoutingRuleCumulative');
+					
+					 var operationsAllCumOptions = {
+					          title: 'Various USSD Request Cumulative',
+					          curveType: 'function',
+					          pointSize: 5,
+					          width: 1200,
+					      	  height: 400,
+					      	  hAxis: {title: 'Time',  titleTextStyle: {color: '#333'}},
+					          vAxis: {minValue: 0},
+					 };
+				 
+			        var operationsAllCumChart = new google.visualization.LineChart(document.getElementById('chart_div_operationsAllCum'));			        
+					
+					function drawCharts() {
+						dialogsAllEstPullPushChart.draw(dialogsAllEstPullPush, dialogsAllEstPullPushOptions);
+						dialogsAllEstHttpSipChart.draw(dialogsAllEstHttpSip, dialogsAllEstHttpSipOptions);
+						dialogsAllFailPullPushChart.draw(dialogsAllFailPullPush, dialogsAllFailPullPushOptions);
+						dialogsAllFailHttpSipChart.draw(dialogsAllFailHttpSip, dialogsAllFailHttpSipOptions);
+						dialogsAllEstFailCumChart.draw(dialogsAllEstFailCum, dialogsAllEstFailCumOptions);
+						dialogsAllEstFailPerSecChart.draw(dialogsAllEstFailPerSec, dialogsAllEstFailPerSecOptions);
+						operationsAllChart.draw(operationsAll, operationsAllOptions);
+						operationsAllCumChart.draw(operationsAllCum, operationsAllCumOptions);
+					}
+					
+					function refreshCampaignsList(){
+						
+						jolokia.request(
+								[
+									{ type: "read", mbean: "org.mobicents.ss7:layer=COUNTER,name=CounterHost,type=Management"}
+								],
+								{ success: 
+									function(response) {
+										var noOfCampaigns = 0 ;
+										var campaignsList = response.value.CampaignsList;
+										
+										jQuery.each(campaignsList, function() {
+											noOfCampaigns = noOfCampaigns + 1;
+											$('#campaigns-list-select').append('<option value='+this+'>'+this+'</option>')										
+										});	
+									
+										if(noOfCampaigns == 0){
+											$('#no-campaigns-table').show();
+											$('#campaigns-div').hide();
+										}else {
+											$('#no-campaigns-table').hide();
+											$('#campaigns-div').show();
+										}	
+
+									},
+									error: function(value) {
+										errorUID = ("st" + new Date().getTime()).hashCode();
+										createStackTrace(errorUID, value.stacktrace);
+										logToConsole("ERROR", value.error + ". (<a href=\"#" + errorUID + "-modal\" data-toggle=\"modal\">Full Stack Trace</a>)");
+									} 
+								}
+							);
+					}
+					
+				function refreshRate() {
+					var timerIdValue = document.getElementById("timerIdValue").value;
+					clearInterval(timerIdValue);
+					
+					var e = document.getElementById("refresh-rate-select");
+					var refreshRate = e.options[e.selectedIndex].value;
+					var timerId = setAutoCancellableInterval(refreshRate, "updateGraphs", "USSD Metrics");
+					
+					$("#timerIdValue").val(timerId);
+				}
+					
+				function createGraphs() {
+					//Remove all rows
+					var numRowsdialogsAllEstPullPush = dialogsAllEstPullPush.getNumberOfRows();
+					if(numRowsdialogsAllEstPullPush != 0){
+						dialogsAllEstPullPush.removeRows(0, numRowsdialogsAllEstPullPush)
+					}
+					
+					var numRowsdialogsAllEstHttpSip = dialogsAllEstHttpSip.getNumberOfRows();
+					if(numRowsdialogsAllEstHttpSip != 0){
+						dialogsAllEstHttpSip.removeRows(0, numRowsdialogsAllEstHttpSip)
+					}
+					
+					
+					var numRowsdialogsAllFailPullPush = dialogsAllFailPullPush.getNumberOfRows();
+					if(numRowsdialogsAllFailPullPush != 0){
+						dialogsAllFailPullPush.removeRows(0, numRowsdialogsAllFailPullPush)
+					}
+					
+					var numRowsdialogsAllFailHttpSip = dialogsAllFailHttpSip.getNumberOfRows();
+					if(numRowsdialogsAllFailHttpSip != 0){
+						dialogsAllFailHttpSip.removeRows(0, numRowsdialogsAllFailHttpSip)
+					}
+					
+					var numRowsdialogsAllEstFailCum = dialogsAllEstFailCum.getNumberOfRows();
+					if(numRowsdialogsAllEstFailCum != 0){
+						dialogsAllEstFailCum.removeRows(0, numRowsdialogsAllEstFailCum)
+					}
+					
+					var numRowsdialogsAllEstFailPerSec = dialogsAllEstFailPerSec.getNumberOfRows();
+					if(numRowsdialogsAllEstFailPerSec != 0){
+						dialogsAllEstFailPerSec.removeRows(0, numRowsdialogsAllEstFailPerSec)
+					}
+					
+					var numRowsoperationsAll = operationsAll.getNumberOfRows();
+					if(numRowsoperationsAll != 0){
+						operationsAll.removeRows(0, numRowsoperationsAll)
+					}
+					
+					var numRowsoperationsAllCum = operationsAllCum.getNumberOfRows();
+					if(numRowsoperationsAllCum != 0){
+						operationsAllCum.removeRows(0, numRowsoperationsAllCum)
+					}
+					
+					updateGraphs();
+					var timerIdValue = document.getElementById("timerIdValue").value;
+					
+					if(timerIdValue == "-1"){
+						var timerId = setAutoCancellableInterval(60000, "updateGraphs", "USSD Metrics");
+						$("#timerIdValue").val(timerId);
+					}
+				}
+				
+				function updateGraphs() {
+					
+					var e = document.getElementById("campaigns-list-select");
+					var value = e.options[e.selectedIndex].text;
+					
+					if(value=="Select"){						
+						return;
+					}
+					
+					
+					jolokia.request(
+						[ 
+							{ type: "exec", mbean: "org.mobicents.ss7:layer=COUNTER,name=CounterHost,type=Management", operation: "getLastCounterValues", arguments: [value]},
+						],
+						{ success: [ 
+							function(response) {
+								if(response.value == null){
+									logToConsole("ERROR", "Last CounterValueSet Does not exist");
+									return;
+								}
+								var counterValues = response.value.counterValues;
+								
+								var dialogsAllEstablished = 0;
+								var dialogsPullEstablished = 0;
+								var dialogsPushEstablished = 0;
+								
+								var dialogsHttpEstablished = 0;
+								var dialogsSipEstablished = 0;
+								
+								var dialogsAllFailed = 0;
+								var dialogsPullFailed = 0;
+								var dialogsPushFailed = 0;
+								var dialogsHttpFailed = 0;
+								var dialogsSipFailed = 0;
+								var dialogsAllEstablishedCumulative = 0;
+								var dialogsAllFailedCumulative = 0;
+								
+								var dialogsAllEstablishedPerSec = 0.0;
+								var dialogsAllFailedPerSec = 0.0;
+								
+								
+								var processUssdRequestOperations = 0;
+								var ussdRequestOperations = 0;
+								var ussdNotifyOperations = 0;
+								var ussdPullNoRoutingRule = 0;
+								var processUssdRequestOperationsCumulative = 0;
+								var ussdRequestOperationsCumulative = 0;
+								var ussdNotifyOperationsCumulative = 0;
+								var ussdPullNoRoutingRuleCumulative = 0;
+								
+								
+								
+								jQuery.each(counterValues, function() {
+									if(this.counterDef.counterName == "DialogsAllEstablished"){
+										dialogsAllEstablished = this.longValue;
+									} else if(this.counterDef.counterName == "DialogsPullEstablished"){
+										dialogsPullEstablished = this.longValue;
+									} else if(this.counterDef.counterName == "DialogsPushEstablished"){
+										dialogsPushEstablished = this.longValue;
+									} else if(this.counterDef.counterName == "DialogsHttpEstablished"){
+										dialogsHttpEstablished = this.longValue;
+									} else if(this.counterDef.counterName == "DialogsSipEstablished"){
+										dialogsSipEstablished = this.longValue;
+									} else if(this.counterDef.counterName == "DialogsAllFailed"){
+										dialogsAllFailed = this.longValue;
+									} else if(this.counterDef.counterName == "DialogsPullFailed"){
+										dialogsPullFailed = this.longValue;
+									} else if(this.counterDef.counterName == "DialogsPushFailed"){
+										dialogsPushFailed = this.longValue;
+									} else if(this.counterDef.counterName == "DialogsHttpFailed"){
+										dialogsHttpFailed = this.longValue;
+									} else if(this.counterDef.counterName == "DialogsSipFailed"){
+										dialogsSipFailed = this.longValue;
+									} else if(this.counterDef.counterName == "DialogsAllEstablishedCumulative"){
+										dialogsAllEstablishedCumulative = this.longValue;
+									} else if(this.counterDef.counterName == "DialogsAllFailedCumulative"){
+										dialogsAllFailedCumulative = this.longValue;
+									} else if(this.counterDef.counterName == "DialogsAllEstablishedPerSec"){
+										dialogsAllEstablishedPerSec = this.doubleValue;
+									} else if(this.counterDef.counterName == "DialogsAllFailedPerSec"){
+										dialogsAllFailedPerSec = this.doubleValue;
+									} else if(this.counterDef.counterName == "ProcessUssdRequestOperations"){
+										processUssdRequestOperations = this.longValue;
+									} else if(this.counterDef.counterName == "UssdRequestOperations"){
+										ussdRequestOperations = this.longValue;
+									} else if(this.counterDef.counterName == "UssdNotifyOperations"){
+										ussdNotifyOperations = this.longValue;
+									} else if(this.counterDef.counterName == "UssdPullNoRoutingRule"){
+										ussdPullNoRoutingRule = this.longValue;
+									} else if(this.counterDef.counterName == "ProcessUssdRequestOperationsCumulative"){
+										processUssdRequestOperationsCumulative = this.longValue;
+									} else if(this.counterDef.counterName == "UssdRequestOperationsCumulative"){
+										ussdRequestOperationsCumulative = this.longValue;
+									} else if(this.counterDef.counterName == "UssdNotifyOperationsCumulative"){
+										ussdNotifyOperationsCumulative = this.longValue;
+									} else if(this.counterDef.counterName == "UssdPullNoRoutingRuleCumulative"){
+										ussdPullNoRoutingRuleCumulative = this.longValue;
+									} 
+								});
+								
+								var dateNow = new Date();
+								dialogsAllEstPullPush.addRow([(dateNow), dialogsAllEstablished, dialogsPullEstablished, dialogsPushEstablished ]);
+								dialogsAllEstHttpSip.addRow([(dateNow), dialogsAllEstablished, dialogsHttpEstablished, dialogsSipEstablished]);
+								
+								dialogsAllFailPullPush.addRow([(dateNow), dialogsAllFailed, dialogsPullFailed, dialogsPushFailed]);
+								dialogsAllFailHttpSip.addRow([(dateNow), dialogsAllFailed, dialogsHttpFailed, dialogsSipFailed]);
+								
+								dialogsAllEstFailCum.addRow([(dateNow), dialogsAllEstablishedCumulative, dialogsAllFailedCumulative]);
+								
+								dialogsAllEstFailPerSec.addRow([(dateNow), dialogsAllEstablishedPerSec, dialogsAllFailedPerSec]);
+								
+								operationsAll.addRow([(dateNow), processUssdRequestOperations, ussdRequestOperations, ussdNotifyOperations, ussdPullNoRoutingRule]);
+								operationsAllCum.addRow([(dateNow), processUssdRequestOperationsCumulative, ussdRequestOperationsCumulative, ussdNotifyOperationsCumulative, ussdPullNoRoutingRuleCumulative]);
+								
+								drawCharts();
+							}
+							],
+							error: function(response) {
+								alert("Jolokia request failed: " + response.error);
+							} 
+						}
+					);
+					
+					
+				}
+				$(document).ready(function () {
+					refreshCampaignsList();
+					//setAutoCancellableInterval(1000, "updateState", "SS7 Metrics");
+				});
+			</script>				

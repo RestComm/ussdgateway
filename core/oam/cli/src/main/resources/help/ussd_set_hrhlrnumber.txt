@@ -1,0 +1,25 @@
+Name
+	ussd set hrhlrnumber
+
+SYNOPSIS
+	ussd set hrhlrnumber <hlr GT digits>
+
+DESCRIPTION
+	This command is used to set the HLR address to be used, instead of MSISDN, to
+	be included in the 'calledPartyAddress' field of the SCCP address in the
+	'SendRoutingInfo' message (PUSH mode). This parameter is required in scenarios 
+	when the SMSC GW is also configured, specifically in Home Routing mode. 
+	If this parameter is not set the default value is '-1' implying MSISDN address 
+	will be used. 
+	
+EXAMPLES
+	ussd set hrhlrnumber 9823232322
+
+	The above command will set the value of the parameter 'hrhlrnumber' to
+	9823232322. You can verify this by issuing the 'ussd get hrhlrnumber' command.
+
+SEE ALSO
+	ussd set, ussd set noroutingruleconfigerrmssg, ussd set dialogtimeouterrmssg, 
+	ussd set servererrmssg, ussd get
+
+

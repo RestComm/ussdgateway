@@ -19,13 +19,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+
 package org.mobicents.ussdgateway.slee;
 
 import javax.slee.ActivityContextInterface;
 import javax.slee.CreateException;
-import javax.slee.RolledBackContext;
 import javax.slee.SLEEException;
-import javax.slee.Sbb;
 import javax.slee.SbbContext;
 import javax.slee.SbbLocalObject;
 import javax.slee.TransactionRequiredLocalException;
@@ -33,26 +32,23 @@ import javax.slee.facilities.TimerEvent;
 import javax.slee.facilities.TimerFacility;
 import javax.slee.facilities.TimerID;
 import javax.slee.facilities.TimerOptions;
-import javax.slee.facilities.Tracer;
-import javax.slee.resource.ResourceAdaptorTypeID;
 
 import javolution.xml.stream.XMLStreamException;
 
-import org.mobicents.protocols.ss7.map.api.MAPDialog;
 import org.mobicents.protocols.ss7.map.api.MAPException;
-import org.mobicents.protocols.ss7.map.api.MAPParameterFactory;
 import org.mobicents.protocols.ss7.map.api.MAPProvider;
 import org.mobicents.protocols.ss7.map.api.datacoding.CBSDataCodingScheme;
+import org.mobicents.protocols.ss7.map.api.dialog.MAPDialogState;
 import org.mobicents.protocols.ss7.map.api.dialog.MAPUserAbortChoice;
+import org.mobicents.protocols.ss7.map.api.dialog.ProcedureCancellationReason;
 import org.mobicents.protocols.ss7.map.api.primitives.USSDString;
 import org.mobicents.protocols.ss7.map.api.service.supplementary.MAPDialogSupplementary;
 import org.mobicents.protocols.ss7.map.api.service.supplementary.ProcessUnstructuredSSRequest;
-import org.mobicents.protocols.ss7.map.api.service.supplementary.ProcessUnstructuredSSResponse;
-import org.mobicents.protocols.ss7.map.api.service.supplementary.UnstructuredSSRequest;
 import org.mobicents.protocols.ss7.map.api.service.supplementary.UnstructuredSSResponse;
 import org.mobicents.protocols.ss7.map.datacoding.CBSDataCodingSchemeImpl;
+import org.mobicents.protocols.ss7.map.dialog.MAPUserAbortChoiceImpl;
+import org.mobicents.protocols.ss7.tcap.api.MessageType;
 import org.mobicents.slee.ChildRelationExt;
-import org.mobicents.slee.SbbContextExt;
 import org.mobicents.slee.resource.map.MAPContextInterfaceFactory;
 import org.mobicents.slee.resource.map.events.DialogAccept;
 import org.mobicents.slee.resource.map.events.DialogClose;
@@ -60,75 +56,65 @@ import org.mobicents.slee.resource.map.events.DialogDelimiter;
 import org.mobicents.slee.resource.map.events.DialogNotice;
 import org.mobicents.slee.resource.map.events.DialogProviderAbort;
 import org.mobicents.slee.resource.map.events.DialogReject;
+import org.mobicents.slee.resource.map.events.DialogRelease;
 import org.mobicents.slee.resource.map.events.DialogTimeout;
 import org.mobicents.slee.resource.map.events.DialogUserAbort;
 import org.mobicents.slee.resource.map.events.ErrorComponent;
 import org.mobicents.slee.resource.map.events.InvokeTimeout;
 import org.mobicents.slee.resource.map.events.MAPEvent;
 import org.mobicents.slee.resource.map.events.RejectComponent;
-import org.mobicents.ussdgateway.Dialog;
-import org.mobicents.ussdgateway.DialogType;
 import org.mobicents.ussdgateway.EventsSerializeFactory;
 import org.mobicents.ussdgateway.UssdPropertiesManagement;
+import org.mobicents.ussdgateway.UssdStatAggregator;
+import org.mobicents.ussdgateway.XmlMAPDialog;
 import org.mobicents.ussdgateway.rules.ScRoutingRule;
-import org.mobicents.ussdgateway.slee.cdr.AbortType;
 import org.mobicents.ussdgateway.slee.cdr.ChargeInterface;
 import org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent;
-import org.mobicents.ussdgateway.slee.cdr.TimeoutType;
+import org.mobicents.ussdgateway.slee.cdr.RecordStatus;
 import org.mobicents.ussdgateway.slee.cdr.USSDCDRState;
 
 /**
  * 
  * @author amit bhayani
- * 
+ * @author baranowb
  */
-public abstract class ChildSbb implements Sbb, ChildInterface, ChargeInterfaceParent {
-
-	protected SbbContextExt sbbContext;
-
-	// /////////////////
-	// MAP RA Stuff //
-	// /////////////////
-
-	protected static final ResourceAdaptorTypeID mapRATypeID = new ResourceAdaptorTypeID("MAPResourceAdaptorType",
-			"org.mobicents", "2.0");
-	protected static final String mapRaLink = "MAPRA";
-
-	protected MAPContextInterfaceFactory mapAcif;
-	protected MAPProvider mapProvider;
-	protected MAPParameterFactory mapParameterFactory;
-
-	protected Tracer logger;
+public abstract class ChildSbb extends USSDBaseSbb implements ChildInterface, ChargeInterfaceParent {
 
 	private EventsSerializeFactory eventsSerializeFactory = null;
 
 	private TimerFacility timerFacility = null;
 
-	private static final UssdPropertiesManagement ussdPropertiesManagement = UssdPropertiesManagement.getInstance();
+	protected static final UssdPropertiesManagement ussdPropertiesManagement = UssdPropertiesManagement.getInstance();
+
+	public ChildSbb(String loggerName) {
+		super(loggerName);
+	}
 
 	/**
 	 * Timer event
 	 */
 	public void onTimerEvent(TimerEvent event, ActivityContextInterface aci) {
 
-		if (this.logger.isWarningEnabled()) {
-			this.logger.warning(String.format(
-					"Application didn't revert in %d milliseconds. Sending back dialogtimeouterrmssg",
-					ussdPropertiesManagement.getDialogTimeout()));
+		if (super.logger.isWarningEnabled()) {
+			super.logger.warning(String.format(
+					"Application didn't revert in %d milliseconds. Sending back dialogtimeouterrmssg for MAPDialog %s",
+					ussdPropertiesManagement.getDialogTimeout(), this.getMAPDialog()));
 		}
 
-		try {
-			MAPDialogSupplementary mapDialogSupplementary = (MAPDialogSupplementary) aci.getActivity();
-			String errorMssg = ussdPropertiesManagement.getDialogTimeoutErrorMessage();
-			this.sendErrorMessage(mapDialogSupplementary, errorMssg);
-		} catch (Exception e) {
-			logger.severe("Error while trying to send Dialog timeout error message to user", e);
-		} finally {
-			// this.getCDRChargeInterface().createTerminateRecord();
-			// TODO CDR?
-		}
+        // try {
 
-		this.terminateProtocolConnection();
+        String errorMssg = ussdPropertiesManagement.getDialogTimeoutErrorMessage();
+        this.sendErrorMessage(errorMssg);
+
+        // } finally {
+        this.terminateProtocolConnection();
+
+        this.ussdStatAggregator.updateAppTimeouts();
+        this.updateDialogFailureStat();
+
+        this.createCDRRecord(RecordStatus.FAILED_APP_TIMEOUT);
+
+        // }
 	}
 
 	// //////////////////////
@@ -143,38 +129,48 @@ public abstract class ChildSbb implements Sbb, ChildInterface, ChargeInterfacePa
 		try {
 
 			if (this.logger.isFineEnabled()) {
-				this.logger.fine("Received PROCESS_UNSTRUCTURED_SS_REQUEST_INDICATION for MAP Dialog Id "
-						+ evt.getMAPDialog().getLocalDialogId());
+				this.logger.fine("Received PROCESS_UNSTRUCTURED_SS_REQUEST_INDICATION for MAPDialog "
+						+ evt.getMAPDialog());
 			}
 
 			this.setProcessUnstructuredSSRequestInvokeId(evt.getInvokeId());
-			this.setTimer(aci);
 
-			Dialog dialog = this.getDialog();
-			dialog.setMAPMessage(((MAPEvent) evt).getWrappedEvent());
+			XmlMAPDialog dialog = this.getXmlMAPDialog();
+			dialog.addMAPMessage(((MAPEvent) evt).getWrappedEvent());
 			ChargeInterface cdrInterface = this.getCDRChargeInterface();
 			USSDCDRState state = cdrInterface.getState();
 			if (!state.isInitialized()) {
 				String serviceCode = evt.getUSSDString().getString(null);
-				serviceCode = serviceCode.substring(serviceCode.indexOf("*") + 1, serviceCode.indexOf("#"));
-				state.init(dialog.getId(), serviceCode, dialog.getDestReference(), dialog.getOrigReference(), evt
-						.getMSISDNAddressString(), evt.getMAPDialog().getLocalAddress(), evt.getMAPDialog()
-						.getRemoteAddress());
+				// serviceCode = serviceCode.substring(serviceCode.indexOf("*")
+				// + 1, serviceCode.indexOf("#"));
+				state.init(dialog.getLocalDialogId(), serviceCode, dialog.getReceivedDestReference(), dialog
+						.getReceivedOrigReference(), evt.getMSISDNAddressString(),
+						evt.getMAPDialog().getLocalAddress(), evt.getMAPDialog().getRemoteAddress());
+				state.setRemoteDialogId(evt.getMAPDialog().getRemoteDialogId());
 				cdrInterface.setState(state);
-				cdrInterface.createInitRecord();
+
 				// attach, in case impl wants to use more of dialog.
 				SbbLocalObject sbbLO = (SbbLocalObject) cdrInterface;
 				aci.attach(sbbLO);
-			} else {
-				// use this, since getDialog.type is not changed now
-				cdrInterface.createContinueRecord();
 			}
-			byte[] data = this.getEventsSerializeFactory().serialize(dialog);
-			this.sendUssdData(data);
+			this.sendUssdData(dialog);
+
+			// Set timer last
+			this.setTimer(aci);
 		} catch (Exception e) {
-			logger.severe(
-					String.format("Exception while processing PROCESS_UNSTRUCTURED_SS_REQUEST_INDICATION = %s", evt), e);
-			// TODO Abort DIalog?
+			// TODO remove MAPDialog from logger once actual event in MAP stack
+			// has it embedded
+			logger.severe(String.format(
+					"Exception while processing PROCESS_UNSTRUCTURED_SS_REQUEST_INDICATION = %s MAPDialog = %s", evt,
+					evt.getMAPDialog()), e);
+
+			this.sendServerErrorMessage();
+
+            this.terminateProtocolConnection();
+
+			this.updateDialogFailureStat();
+
+			this.createCDRRecord(RecordStatus.FAILED_SYSTEM_FAILURE);
 		}
 	}
 
@@ -182,22 +178,35 @@ public abstract class ChildSbb implements Sbb, ChildInterface, ChargeInterfacePa
 		try {
 
 			if (this.logger.isFineEnabled()) {
-				this.logger.fine("Received UNSTRUCTURED_SS_RESPONSE_INDICATION for MAP Dialog Id "
-						+ evt.getMAPDialog().getLocalDialogId());
+				this.logger.fine("Received UNSTRUCTURED_SS_RESPONSE_INDICATION for MAPDialog " + evt.getMAPDialog());
 			}
 
-			this.setTimer(aci);
-
-			Dialog dialog = new Dialog(DialogType.CONTINUE, evt.getMAPDialog().getLocalDialogId(), null, null);
-			dialog.setMAPMessage(((MAPEvent) evt).getWrappedEvent());
-			this.getCDRChargeInterface().createContinueRecord();
+			XmlMAPDialog dialog = this.getXmlMAPDialog();
+			dialog.reset();
+			String userObject = this.getUserObject();
+			if(userObject!=null){
+				dialog.setUserObject(userObject);
+			}
+			dialog.setTCAPMessageType(evt.getMAPDialog().getTCAPMessageType());
+			dialog.addMAPMessage(((MAPEvent) evt).getWrappedEvent());
 			EventsSerializeFactory factory = this.getEventsSerializeFactory();
-			byte[] data = factory.serialize(dialog);
 
-			this.sendUssdData(data);
+			this.sendUssdData(dialog);
+
+			// Set timer last
+			this.setTimer(aci);
 		} catch (Exception e) {
-			logger.severe(String.format("Exception while processing UNSTRUCTURED_SS_RESPONSE_INDICATION = %s", evt), e);
-			// TODO Abort DIalog?
+			logger.severe(String.format(
+					"Exception while processing UNSTRUCTURED_SS_RESPONSE_INDICATION = %s MAPDialog = %s", evt,
+					evt.getMAPDialog()), e);
+
+            this.sendServerErrorMessage();
+
+			this.terminateProtocolConnection();
+
+            this.updateDialogFailureStat();
+
+			this.createCDRRecord(RecordStatus.FAILED_SYSTEM_FAILURE);
 		}
 	}
 
@@ -221,28 +230,71 @@ public abstract class ChildSbb implements Sbb, ChildInterface, ChargeInterfacePa
 		if (logger.isWarningEnabled()) {
 			this.logger.warning("DialogRejected " + evt);
 		}
-		// TODO: CDR, how this should be covered?
-		// TODO : Should we add any xml content?
+
+		try {
+			XmlMAPDialog xmlMAPDialog = this.getXmlMAPDialog();
+			xmlMAPDialog.reset();
+			xmlMAPDialog.setMapRefuseReason(evt.getRefuseReason());
+			xmlMAPDialog.setTCAPMessageType(evt.getMAPDialog().getTCAPMessageType());
+
+			this.sendUssdData(xmlMAPDialog);
+		} catch (Exception e) {
+			logger.severe("Error while trying to send DialogReject to App", e);
+		}
+
 		this.terminateProtocolConnection();
+
+        this.updateDialogFailureStat();
+
+		this.createCDRRecord(RecordStatus.FAILED_DIALOG_REJECTED);
 	}
 
 	public void onDialogUserAbort(DialogUserAbort evt, ActivityContextInterface aci) {
-		if (logger.isWarningEnabled()) {
-			this.logger.warning("Rx : DialogUserAbort " + evt);
+		if (logger.isInfoEnabled()) {
+			this.logger.info("Rx : DialogUserAbort " + evt);
 		}
 
-		// TODO: CDR, how this should be covered?
-		// TODO : Should we add any xml content?
-		this.terminateProtocolConnection();
+		try {
+			XmlMAPDialog xmlMAPDialog = this.getXmlMAPDialog();
+			xmlMAPDialog.reset();
+			xmlMAPDialog.abort(evt.getUserReason());
+			xmlMAPDialog.setTCAPMessageType(evt.getMAPDialog().getTCAPMessageType());
+
+			this.sendUssdData(xmlMAPDialog);
+		} catch (Exception e) {
+			logger.severe("Error while trying to send DialogUserAbort to App", e);
+		}
+
+        this.terminateProtocolConnection();
+
+        this.updateDialogFailureStat();
+
+		this.createCDRRecord(RecordStatus.FAILED_DIALOG_USER_ABORT);
 	}
 
 	public void onDialogProviderAbort(DialogProviderAbort evt, ActivityContextInterface aci) {
 		if (logger.isWarningEnabled()) {
 			this.logger.warning("Rx : DialogProviderAbort " + evt);
 		}
+
+		try {
+			XmlMAPDialog xmlMAPDialog = this.getXmlMAPDialog();
+			xmlMAPDialog.reset();
+			xmlMAPDialog.setMapAbortProviderReason(evt.getAbortProviderReason());
+			xmlMAPDialog.setTCAPMessageType(evt.getMAPDialog().getTCAPMessageType());
+
+			this.sendUssdData(xmlMAPDialog);
+		} catch (Exception e) {
+			logger.severe("Error while trying to send DialogProviderAbort to App", e);
+		}
+
+		this.terminateProtocolConnection();
+
+        this.updateDialogFailureStat();
+
 		// TODO: CDR, how this should be covered?
 		// TODO : Should we add any xml content?
-		this.terminateProtocolConnection();
+		this.createCDRRecord(RecordStatus.FAILED_PROVIDER_ABORT);
 	}
 
 	public void onDialogClose(DialogClose evt, ActivityContextInterface aci) {
@@ -252,24 +304,42 @@ public abstract class ChildSbb implements Sbb, ChildInterface, ChargeInterfacePa
 		// TODO: CDR, how this should be covered?
 		// TODO : Should we add any xml content?
 		this.terminateProtocolConnection();
+
+        this.updateDialogFailureStat();
+
+        this.createCDRRecord(RecordStatus.FAILED_SYSTEM_FAILURE);
 	}
 
 	public void onDialogNotice(DialogNotice evt, ActivityContextInterface aci) {
 		if (logger.isFineEnabled()) {
-			this.logger.fine("Rx : onDialogNotice" + evt);
+			this.logger.fine("Rx : onDialogNotice " + evt);
 		}
 	}
 
 	public void onDialogTimeout(DialogTimeout evt, ActivityContextInterface aci) {
 		if (logger.isWarningEnabled()) {
-			this.logger.warning("Rx : DialogTimeout" + evt);
+			this.logger.warning("Rx : onDialogTimeout " + evt);
 		}
+
 		try {
-			// TODO : Should send any xml content?
-			this.terminateProtocolConnection();
-		} finally {
-			getCDRChargeInterface().createTimeoutRecord(TimeoutType.DialogTimeout);
+			XmlMAPDialog xmlMAPDialog = this.getXmlMAPDialog();
+			xmlMAPDialog.reset();
+			xmlMAPDialog.setDialogTimedOut(true);
+			
+			//TODO : Hardcoding MessageType to Abort
+			xmlMAPDialog.setTCAPMessageType(MessageType.Abort);
+
+			this.sendUssdData(xmlMAPDialog);
+		} catch (Exception e) {
+			logger.severe("Error while trying to send DialogTimeout to App", e);
 		}
+
+		// TODO : Should send any xml content?
+		this.terminateProtocolConnection();
+
+        this.ussdStatAggregator.updateMapDialogTimeouts();
+        this.updateDialogFailureStat();
+		this.createCDRRecord(RecordStatus.FAILED_DIALOG_TIMEOUT);
 	}
 
 	/**
@@ -279,38 +349,115 @@ public abstract class ChildSbb implements Sbb, ChildInterface, ChargeInterfacePa
 		if (logger.isWarningEnabled()) {
 			this.logger.warning("Rx :  InvokeTimeout" + evt);
 		}
-		// TODO End both the activities?
-	}
 
-	public void onErrorComponent(ErrorComponent evt, ActivityContextInterface aci) {
-		if (logger.isWarningEnabled()) {
-			this.logger.warning("Rx :  ErrorComponent" + evt);
+		try {
+			//If User is taking too long to respond, lets Abort the Dialog
+            MAPUserAbortChoice abortChoice = new MAPUserAbortChoiceImpl();
+            abortChoice.setProcedureCancellationReason(ProcedureCancellationReason.associatedProcedureFailure);
+            this.abortMapDialog(abortChoice);
+
+			try {
+				XmlMAPDialog xmlMAPDialog = this.getXmlMAPDialog();
+				xmlMAPDialog.reset();
+				xmlMAPDialog.setInvokeTimedOut(evt.getInvokeId());
+				xmlMAPDialog.setTCAPMessageType(MessageType.Abort);
+
+				this.sendUssdData(xmlMAPDialog);
+			} catch (Exception e) {
+				logger.severe("Error while trying to send DialogTimeout to App", e);
+			}
+		} catch (MAPException e1) {
+			logger.severe("Error while trying to send Abort MAP Dialog", e1);
 		}
-		// TODO End both the activities?
+
+        this.terminateProtocolConnection();
+
+        this.ussdStatAggregator.updateMapInvokeTimeouts();
+        this.updateDialogFailureStat();
+
+		this.createCDRRecord(RecordStatus.FAILED_INVOKE_TIMEOUT);
 	}
 
-//	public void onProviderErrorComponent(ProviderErrorComponent evt, ActivityContextInterface aci) {
-//		if (logger.isWarningEnabled()) {
-//			this.logger.warning("Rx :  ProviderErrorComponent" + evt);
-//		}
-//		
-//		// TODO End both the activities?
-//	}
-
-	public void onRejectComponent(RejectComponent evt, ActivityContextInterface aci) {
+	public void onErrorComponent(ErrorComponent event, ActivityContextInterface aci) {
 		if (logger.isWarningEnabled()) {
-			this.logger.warning("Rx :  RejectComponent" + evt);
+			this.logger.warning("Rx :  ErrorComponent" + event);
 		}
-		// TODO End both the activities?
+
+        try {
+            MAPUserAbortChoiceImpl abortChoice = new MAPUserAbortChoiceImpl();
+            abortChoice.setProcedureCancellationReason(ProcedureCancellationReason.associatedProcedureFailure);
+            this.abortMapDialog(abortChoice);
+        } catch (MAPException e1) {
+            logger.severe("Error while trying to send Abort MAP Dialog", e1);
+        }
+
+        try {
+            XmlMAPDialog xmlMAPDialog = this.getXmlMAPDialog();
+            xmlMAPDialog.reset();
+            xmlMAPDialog.sendErrorComponent(event.getInvokeId(), event.getMAPErrorMessage());
+            xmlMAPDialog.setTCAPMessageType(event.getMAPDialog().getTCAPMessageType());
+
+            this.sendUssdData(xmlMAPDialog);
+        } catch (Exception e) {
+            logger.severe("Error while trying to send ErrorComponent to HTTP App", e);
+        }
+
+        this.terminateProtocolConnection();
+
+        if (event.getMAPDialog().getTCAPMessageType() != MessageType.End)
+            this.updateDialogFailureStat();
+        super.ussdStatAggregator.updateMapErrorComponentOther();
+
+        this.createCDRRecord(RecordStatus.FAILED_MAP_ERROR_COMPONENT);
 	}
+
+	public void onRejectComponent(RejectComponent event, ActivityContextInterface aci) {
+		if (logger.isWarningEnabled()) {
+			this.logger.warning("Rx :  RejectComponent" + event);
+		}
+
+        try {
+            MAPUserAbortChoiceImpl abortChoice = new MAPUserAbortChoiceImpl();
+            abortChoice.setProcedureCancellationReason(ProcedureCancellationReason.associatedProcedureFailure);
+            this.abortMapDialog(abortChoice);
+        } catch (MAPException e1) {
+            logger.severe("Error while trying to send Abort MAP Dialog", e1);
+        }
+
+        try {
+            XmlMAPDialog xmlMAPDialog = this.getXmlMAPDialog();
+            xmlMAPDialog.reset();
+            xmlMAPDialog.sendRejectComponent(event.getInvokeId(), event.getProblem());
+            xmlMAPDialog.setTCAPMessageType(event.getMAPDialog().getTCAPMessageType());
+
+            this.sendUssdData(xmlMAPDialog);
+        } catch (Exception e) {
+            logger.severe("Error while trying to send ErrorComponent to HTTP App", e);
+        }
+        
+        this.createCDRRecord(RecordStatus.FAILED_MAP_REJECT_COMPONENT);
+
+        super.ussdStatAggregator.updateDialogsAllFailed();
+        super.ussdStatAggregator.updateDialogsPushFailed();
+        super.ussdStatAggregator.updateDialogsHttpFailed();
+	}
+
+    public void onDialogRelease(DialogRelease evt, ActivityContextInterface aci) {
+        super.ussdStatAggregator.removeDialogsInProcess();
+    }
 
 	// //////////////////////////
 	// Abstract child methods //
 	// //////////////////////////
-	/**
-	 * Termiantes specific protocol connection if any exists.
-	 */
-	protected abstract void terminateProtocolConnection();
+    /**
+     * Termiantes specific protocol connection if any exists.
+     */
+    protected abstract void terminateProtocolConnection();
+
+    /**
+     * Termiantes specific protocol connection if any exists.
+     */
+    protected abstract void updateDialogFailureStat();
 
 	/**
 	 * Creates connection to other side via specific protocol if one does not
@@ -319,7 +466,7 @@ public abstract class ChildSbb implements Sbb, ChildInterface, ChargeInterfacePa
 	 * @param xmlRequest
 	 * @throws Exception
 	 */
-	protected abstract void sendUssdData(byte[] data) throws Exception;
+	protected abstract void sendUssdData(XmlMAPDialog xmlMAPDialog /* byte[] data*/ ) throws Exception;
 
 	/**
 	 * Checks if there is specific protocol connection alive.
@@ -328,14 +475,53 @@ public abstract class ChildSbb implements Sbb, ChildInterface, ChargeInterfacePa
 	 */
 	protected abstract boolean checkProtocolConnection();
 
-	protected void sendErrorMessage(MAPDialogSupplementary mapDialogSupplementary, String errorMssg)
-			throws MAPException {
-		USSDString ussdString = mapParameterFactory.createUSSDString(errorMssg);
-		CBSDataCodingScheme cbsDataCodingScheme = new CBSDataCodingSchemeImpl(0x0f);
-		mapDialogSupplementary.addProcessUnstructuredSSResponse(this.getProcessUnstructuredSSRequestInvokeId(),
-				cbsDataCodingScheme, ussdString);
-		mapDialogSupplementary.close(false);
+	protected void sendErrorMessage(MAPDialogSupplementary mapDialogSupplementary, String errorMssg) {
+        if (errorMssg != null) {
+            if (errorMssg.length() > 160)
+                errorMssg = errorMssg.substring(0, 160);
+        } else {
+            errorMssg = "sendError";
+        }
 
+		try {
+			USSDString ussdString = mapParameterFactory.createUSSDString(errorMssg);
+
+			// TODO this is in-correct. The CBSDataCodingScheme must be
+			// configurable or from original request?
+			CBSDataCodingScheme cbsDataCodingScheme = new CBSDataCodingSchemeImpl(0x0f);
+			mapDialogSupplementary.addProcessUnstructuredSSResponse(this.getProcessUnstructuredSSRequestInvokeId(),
+					cbsDataCodingScheme, ussdString);
+			mapDialogSupplementary.close(false);
+		} catch (Exception e) {
+			logger.severe("Exception while trying to send MAP ErrorMessage", e);
+		}
+
+	}
+
+    private void abortMapDialog(MAPUserAbortChoice abortChoice) throws MAPException {
+        MAPDialogSupplementary mapDialogSupplementary = (MAPDialogSupplementary) this.getMAPDialog();
+        if (mapDialogSupplementary != null
+                && (mapDialogSupplementary.getState() == MAPDialogState.ACTIVE || mapDialogSupplementary.getState() == MAPDialogState.INITIAL_RECEIVED)) {
+            mapDialogSupplementary.abort(abortChoice);
+        }
+    }
+
+	protected void sendErrorMessage(String errorMssg) {
+		MAPDialogSupplementary mapDialogSupplementary = (MAPDialogSupplementary) this.getMAPDialog();
+		this.sendErrorMessage(mapDialogSupplementary, errorMssg);
+	}
+
+	protected void sendServerErrorMessage() {
+		String errorMssg = ussdPropertiesManagement.getServerErrorMessage();
+		this.sendErrorMessage(errorMssg);
+	}
+
+	protected void createCDRRecord(RecordStatus recordStatus) {
+		try {
+			this.getCDRChargeInterface().createRecord(recordStatus);
+		} catch (Exception e) {
+			logger.severe("Error while trying to create CDR Record", e);
+		}
 	}
 
 	// ///////////////////
@@ -346,27 +532,31 @@ public abstract class ChildSbb implements Sbb, ChildInterface, ChargeInterfacePa
 
 	public abstract ChildRelationExt getCDRInterfaceChildRelation();
 
+    public abstract ChildRelationExt getCDRPlainInterfaceChildRelation();
+
 	public ChargeInterface getCDRChargeInterface() {
-		ChildRelationExt childExt = getCDRInterfaceChildRelation();
+        UssdPropertiesManagement ussdPropertiesManagement = UssdPropertiesManagement.getInstance();
+        ChildRelationExt childExt;
+        if (ussdPropertiesManagement.getCdrLoggingTo() == UssdPropertiesManagement.CdrLoggedType.Textfile) {
+            childExt = getCDRPlainInterfaceChildRelation();
+        } else {
+            childExt = getCDRInterfaceChildRelation();
+        }
+
 		ChargeInterface child = (ChargeInterface) childExt.get(CHARGER);
 		if (child == null) {
 			try {
 				child = (ChargeInterface) childExt.create(CHARGER);
 			} catch (TransactionRequiredLocalException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.severe("TransactionRequiredLocalException when creating CDR child", e);
 			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.severe("IllegalArgumentException when creating CDR child", e);
 			} catch (NullPointerException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.severe("NullPointerException when creating CDR child", e);
 			} catch (SLEEException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.severe("SLEEException when creating CDR child", e);
 			} catch (CreateException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.severe("CreateException when creating CDR child", e);
 			}
 		}
 
@@ -377,52 +567,22 @@ public abstract class ChildSbb implements Sbb, ChildInterface, ChargeInterfacePa
 	// Sbb callbacks //
 	// /////////////////
 	public void setSbbContext(SbbContext sbbContext) {
-		this.sbbContext = (SbbContextExt) sbbContext;
-		this.logger = sbbContext.getTracer("USSD-CHILD-" + getClass().getName());
+		super.setSbbContext(sbbContext);
+		this.logger = sbbContext.getTracer("USSD-Child-" + getClass().getName());
 
 		try {
 
-			this.mapAcif = (MAPContextInterfaceFactory) this.sbbContext.getActivityContextInterfaceFactory(mapRATypeID);
-			this.mapProvider = (MAPProvider) this.sbbContext.getResourceAdaptorInterface(mapRATypeID, mapRaLink);
-			this.mapParameterFactory = this.mapProvider.getMAPParameterFactory();
+			super.mapAcif = (MAPContextInterfaceFactory) this.sbbContext
+					.getActivityContextInterfaceFactory(mapRATypeID);
+			super.mapProvider = (MAPProvider) this.sbbContext.getResourceAdaptorInterface(mapRATypeID, mapRaLink);
+			super.mapParameterFactory = this.mapProvider.getMAPParameterFactory();
+			super.ussdStatAggregator = UssdStatAggregator.getInstance();
 
 			this.timerFacility = this.sbbContext.getTimerFacility();
 
 		} catch (Exception ne) {
 			logger.severe("Could not set SBB context:", ne);
 		}
-	}
-
-	public void unsetSbbContext() {
-		this.sbbContext = null;
-		this.logger = null;
-	}
-
-	public void sbbCreate() throws CreateException {
-	}
-
-	public void sbbPostCreate() throws CreateException {
-	}
-
-	public void sbbActivate() {
-	}
-
-	public void sbbPassivate() {
-	}
-
-	public void sbbLoad() {
-	}
-
-	public void sbbStore() {
-	}
-
-	public void sbbRemove() {
-	}
-
-	public void sbbExceptionThrown(Exception exception, Object object, ActivityContextInterface activityContextInterface) {
-	}
-
-	public void sbbRolledBack(RolledBackContext rolledBackContext) {
 	}
 
 	// ///////
@@ -433,9 +593,9 @@ public abstract class ChildSbb implements Sbb, ChildInterface, ChargeInterfacePa
 
 	public abstract ScRoutingRule getCall();
 
-	public abstract void setDialog(Dialog dialog);
+	public abstract void setXmlMAPDialog(XmlMAPDialog dialog);
 
-	public abstract Dialog getDialog();
+	public abstract XmlMAPDialog getXmlMAPDialog();
 
 	public abstract void setCDRState(USSDCDRState dialog);
 
@@ -451,6 +611,11 @@ public abstract class ChildSbb implements Sbb, ChildInterface, ChargeInterfacePa
 
 	// 'timerID' CMP field getter
 	public abstract long getProcessUnstructuredSSRequestInvokeId();
+
+	// userObject
+	public abstract void setUserObject(String userObject);
+
+	public abstract String getUserObject();
 
 	// //////////////////
 	// SBB LO methods //
@@ -468,8 +633,10 @@ public abstract class ChildSbb implements Sbb, ChildInterface, ChargeInterfacePa
 	 * (org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent.RecordType)
 	 */
 	@Override
-	public void recordGenerationSucessed(RecordType type) {
-		// TODO Auto-generated method stub
+	public void recordGenerationSucessed() {
+		if (this.logger.isFineEnabled()) {
+			this.logger.fine("Generated CDR for Status: " + getCDRChargeInterface().getState());
+		}
 
 	}
 
@@ -477,28 +644,28 @@ public abstract class ChildSbb implements Sbb, ChildInterface, ChargeInterfacePa
 	 * (non-Javadoc)
 	 * 
 	 * @see org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent#
-	 * recordGenerationFailed
-	 * (org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent.RecordType,
-	 * java.lang.String)
+	 * recordGenerationFailed(java.lang.String)
 	 */
 	@Override
-	public void recordGenerationFailed(RecordType type, String message) {
-		// TODO Auto-generated method stub
-
+	public void recordGenerationFailed(String message) {
+		if (this.logger.isSevereEnabled()) {
+			this.logger.severe("Failed to generate CDR! Message: '" + message + "'");
+			this.logger.severe("Status: " + getCDRChargeInterface().getState());
+		}
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent#
-	 * recordGenerationFailed
-	 * (org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent.RecordType,
-	 * java.lang.String, java.lang.Throwable)
+	 * recordGenerationFailed(java.lang.String, java.lang.Throwable)
 	 */
 	@Override
-	public void recordGenerationFailed(RecordType type, String message, Throwable t) {
-		// TODO Auto-generated method stub
-
+	public void recordGenerationFailed(String message, Throwable t) {
+		if (this.logger.isSevereEnabled()) {
+			this.logger.severe("Failed to generate CDR! Message: '" + message + "'", t);
+			this.logger.severe("Status: " + getCDRChargeInterface().getState());
+		}
 	}
 
 	/*
@@ -510,7 +677,9 @@ public abstract class ChildSbb implements Sbb, ChildInterface, ChargeInterfacePa
 	 */
 	@Override
 	public void initFailed(String message, Throwable t) {
-		// TODO Auto-generated method stub
+		if (this.logger.isSevereEnabled()) {
+			this.logger.severe("Failed to initializee CDR Database! Message: '" + message + "'", t);
+		}
 
 	}
 
@@ -522,7 +691,9 @@ public abstract class ChildSbb implements Sbb, ChildInterface, ChargeInterfacePa
 	 */
 	@Override
 	public void initSuccessed() {
-		// TODO Auto-generated method stub
+		if (this.logger.isFineEnabled()) {
+			this.logger.fine("CDR Database has been initialized!");
+		}
 
 	}
 
@@ -530,76 +701,11 @@ public abstract class ChildSbb implements Sbb, ChildInterface, ChargeInterfacePa
 	// protected child stuff, to be used in parent //
 	// ///////////////////////////////////////////////
 
-	protected void abort(MAPDialog mapDialog) throws MAPException {
-		// TODO get the reason
-
-		MAPUserAbortChoice mapUserAbortChoice = this.mapParameterFactory.createMAPUserAbortChoice();
-		// As of now hardcoded
-		mapUserAbortChoice.setUserSpecificReason();
-		try {
-			mapDialog.abort(mapUserAbortChoice);
-		} finally {
-			this.getCDRChargeInterface().createAbortRecord(AbortType.UserSpecificReason);
-		}
-
-	}
-
-	protected MAPDialogSupplementary getMAPDialog() {
-		MAPDialogSupplementary mapDialog = null;
-
-		ActivityContextInterface[] acis = this.sbbContext.getActivities();
-		for (ActivityContextInterface aci : acis) {
-			Object activity = aci.getActivity();
-			if (activity instanceof MAPDialogSupplementary) {
-				return (MAPDialogSupplementary) activity;
-			}
-		}
-
-		return mapDialog;
-	}
-
 	protected EventsSerializeFactory getEventsSerializeFactory() throws XMLStreamException {
 		if (this.eventsSerializeFactory == null) {
 			this.eventsSerializeFactory = new EventsSerializeFactory();
 		}
 		return this.eventsSerializeFactory;
-	}
-
-	protected void addUnstructuredSSRequest(UnstructuredSSRequest unstructuredSSRequestIndication) throws MAPException {
-		MAPDialogSupplementary mapDialogSupplementary = (MAPDialogSupplementary) this.getMAPDialog();
-
-		if (mapDialogSupplementary == null) {
-			// TODO:
-			return;
-		}
-
-		mapDialogSupplementary.addUnstructuredSSRequest(unstructuredSSRequestIndication.getDataCodingScheme(),
-				unstructuredSSRequestIndication.getUSSDString(), null, null);
-		try {
-			mapDialogSupplementary.send();
-		} finally {
-			this.getCDRChargeInterface().createContinueRecord();
-		}
-		// TODO : Check if the Dialog Type is CONTINUE or END?
-	}
-
-	protected void addProcessUnstructuredSSResponse(
-			ProcessUnstructuredSSResponse processUnstructuredSSResponseIndication) throws MAPException {
-		MAPDialogSupplementary mapDialogSupplementary = this.getMAPDialog();
-		if (mapDialogSupplementary == null) {
-			// TODO:
-			return;
-		}
-
-		mapDialogSupplementary.addProcessUnstructuredSSResponse(processUnstructuredSSResponseIndication.getInvokeId(),
-				processUnstructuredSSResponseIndication.getDataCodingScheme(),
-				processUnstructuredSSResponseIndication.getUSSDString());
-		try {
-			mapDialogSupplementary.close(false);
-		} finally {
-			this.getCDRChargeInterface().createTerminateRecord();
-		}
-		// TODO : Check if the Dialog Type is CONTINUE or END?
 	}
 
 	protected void cancelTimer() {

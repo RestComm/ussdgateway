@@ -43,7 +43,7 @@ final class Schema {
     //   | DE_NATURE | DE_PLAN | DE_DIGITS 
     //   | ISDN_NATURE | ISDN_PLAN | ISDN_DIGITS 
     //   | VLR_NATURE | VLR_PLAN | VLR_DIGITS 
-    //   | IMSI | DIALOG_ID | TSTAMP | TERMINATE_REASON
+    //   | IMSI | DIALOG_ID | TSTAMP | STATUS
     // lets define some statics for table and queries in one place.
     
     public static final String _TABLE_NAME = "USSD_GW_CDRS";
@@ -72,9 +72,12 @@ final class Schema {
     public static final String _COLUMN_VLR_PLAN = "VLR_PLAN";
     public static final String _COLUMN_VLR_DIGITS = "VLR_DIGITS";
     public static final String _COLUMN_IMSI = "IMSI";
-    public static final String _COLUMN_DIALOG_ID = "DIALOG_ID";
+    public static final String _COLUMN_LOCAL_DIALOG_ID = "LOCAL_DIALOG_ID";
+    public static final String _COLUMN_REMOTE_DIALOG_ID = "REMOTE_DIALOG_ID";
     public static final String _COLUMN_TSTAMP = "TSTAMP";
-    public static final String _COLUMN_TERMINATE_REASON = "TERMINATE_REASON";
+    public static final String _COLUMN_STATUS = "STATUS";
+    public static final String _COLUMN_TYPE = "TYPE";
+
 
     
 
@@ -90,7 +93,7 @@ final class Schema {
     public static final String _TYPE_COLUMN_R_RI = "SMALLINT";
     public static final String _TYPE_COLUMN_R_GT_I = "SMALLINT";
     public static final String _TYPE_COLUMN_R_GT_DIGITS = "VARCHAR(18)";
-    public static final String _TYPE_COLUMN_SERVICE_CODE = "VARCHAR(10)";
+    public static final String _TYPE_COLUMN_SERVICE_CODE = "VARCHAR(50)";
     public static final String _TYPE_COLUMN_OR_NATURE = "SMALLINT";
     public static final String _TYPE_COLUMN_OR_PLAN = "SMALLINT";
     public static final String _TYPE_COLUMN_OR_DIGITS = "VARCHAR(18)";
@@ -105,9 +108,11 @@ final class Schema {
     public static final String _TYPE_COLUMN_VLR_DIGITS = "VARCHAR(18)";
     public static final String _TYPE_COLUMN_IMSI = "VARCHAR(100)";
     //THIS should be ENUM ?
-    public static final String _TYPE_COLUMN_TERMINATE_REASON = "VARCHAR(60)";    
+    public static final String _TYPE_COLUMN_STATUS = "VARCHAR(30)";
+    public static final String _TYPE_COLUMN_TYPE = "VARCHAR(30)";
     public static final String _TYPE_COLUMN_TSTAMP = "TIMESTAMP";
-    public static final String _TYPE_COLUMN_DIALOG_ID = "BIGINT";
+    public static final String _TYPE_COLUMN_LOCAL_DIALOG_ID = "BIGINT";
+    public static final String _TYPE_COLUMN_REMOTE_DIALOG_ID = "BIGINT";
     
 
     // SQL queries.
@@ -116,7 +121,7 @@ final class Schema {
     
     //NOTE: should TSTAMP be also managed by DB ?
     // create table, declare DB managed ID, since caller_id+callee_id+dialog_id may repeate itself.
-    public static final String _QUERY_CREATE = "CREATE TABLE " + _TABLE_NAME
+    public static final String _QUERY_CREATE = "CREATE TABLE  " + _TABLE_NAME
             + " (" + _COLUMN_ID     + " "+_TYPE_COLUMN_ID+" NOT NULL, "
             + _COLUMN_L_SPC         + " "+_TYPE_COLUMN_L_SPC+", "
             + _COLUMN_L_SSN         + " "+_TYPE_COLUMN_L_SSN+", "
@@ -142,9 +147,11 @@ final class Schema {
             + _COLUMN_VLR_PLAN + " "+_TYPE_COLUMN_VLR_PLAN+", "
             + _COLUMN_VLR_DIGITS + " "+_TYPE_COLUMN_VLR_DIGITS+", "
             + _COLUMN_IMSI + " "+_TYPE_COLUMN_IMSI+", "
-            + _COLUMN_TERMINATE_REASON + " "+_TYPE_COLUMN_TERMINATE_REASON+", "
+            + _COLUMN_STATUS + " "+_TYPE_COLUMN_STATUS+"  NOT NULL , "
+            + _COLUMN_TYPE + " "+_TYPE_COLUMN_TYPE+"  NOT NULL , "
             + _COLUMN_TSTAMP + " "+_TYPE_COLUMN_TSTAMP+"  NOT NULL , "
-            + _COLUMN_DIALOG_ID + " "+_TYPE_COLUMN_DIALOG_ID            
+            + _COLUMN_LOCAL_DIALOG_ID + " "+_TYPE_COLUMN_LOCAL_DIALOG_ID +", " 
+            + _COLUMN_REMOTE_DIALOG_ID + " "+_TYPE_COLUMN_REMOTE_DIALOG_ID  
              + ", PRIMARY KEY(" + _COLUMN_ID + ","+_COLUMN_TSTAMP+")" + ");";
     
     public static final String _QUERY_INSERT ="INSERT INTO "+_TABLE_NAME
@@ -173,11 +180,24 @@ final class Schema {
                 _COLUMN_VLR_PLAN+","+
                 _COLUMN_VLR_DIGITS+","+
                 _COLUMN_IMSI+","+
-                _COLUMN_DIALOG_ID+","+
+                _COLUMN_LOCAL_DIALOG_ID+","+
+                _COLUMN_REMOTE_DIALOG_ID+","+
                 _COLUMN_TSTAMP+","+
-                _COLUMN_TERMINATE_REASON+","+
+                _COLUMN_STATUS+","+
+                _COLUMN_TYPE+","+
                 _COLUMN_ID+
              ") " +
                 //ehhhh....
-             "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+             "VALUES (?,?,?,?," +
+                     "?,?,?,?," +
+                     "?,?,?,?," +
+                     "?,?,?,?," +
+                     "?,?,?,?," +
+                     "?,?,?,?," +
+                     "?,?,?,?," +
+                     "?,?);";
+    
+    public static void main(String[] args){
+    	System.out.println(_QUERY_CREATE);
+    }
 }

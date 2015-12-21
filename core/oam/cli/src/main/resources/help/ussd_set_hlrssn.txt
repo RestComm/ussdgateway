@@ -1,0 +1,25 @@
+Name
+	ussd set hlrssn
+
+SYNOPSIS
+	ussd set hlrssn <hlrSubSystemNumber>
+
+DESCRIPTION
+	This command is used to set the value for HLR Sub System Number (SSN). 
+
+EXAMPLES
+	ussd set hlrssn 7
+
+	The above command will set the value for the parameter 'hlrSubSystemNumber' to 
+	'7'and the terminal will display the message 
+	"Parameter has been successfully set". 
+
+	You can verify this by issuing the 'ussd get hlrssn' command.
+
+	ussd get hlrssn
+	hlrssn = 7
+
+SEE ALSO
+	ussd set, ussd set noroutingruleconfigerrmssg, ussd set dialogtimeout, 
+	ussd set dialogtimeouterrmssg, ussd set servererrmssg, ussd set ussdgt,
+	ussd set ussdssn, ussd set mscssn, ussd set maxmapv, ussd get

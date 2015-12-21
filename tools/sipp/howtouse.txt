@@ -1,0 +1,22 @@
+This folder contains scripts for testing of SIP connector if USSD GW.
+For testing you need:
+1) download and install SIPP library from: http://sipp.sourceforge.net/
+2) copy there *.xml files with SIP scripts into the folder where you have installed SIPP library
+3) you can run test cases with commands like:
+sipp 127.0.0.1:5060 -sf serv_notify.xml -m 1 -i 127.0.0.1
+options:
+- 127.0.0.1:5060 : IP address and port at USSD GW side
+- -sf serv_notify.xml : specify a name of a scenario file
+- -m 1 : specify a number of SIP calls (a simple case - only one SIP request)
+- -i 127.0.0.1 : host IP address of the host with SIP library
+
+Scenarios examples:
+a) PULL case
+- clt_resp.xml: return ProcessUnstructuredSSRequest response
+- clt_ussdreq_resp.xml: after ProcessUnstructuredSSRequest script sends UnstructuredSSRequest and then after a mobile station response sends ProcessUnstructuredSSRequest response 
+
+b) PUSH case
+- serv_notify.xml: sends UnstructuredSSNotifyRequest and after a mobile station response it will close dialog
+- serv_unstrreq.xml: sends UnstructuredSSRequest, a mobile station response, sends one more UnstructuredSSRequest, a mobile station response, close dialog  
+
+Possibly not all SIP tags are properly set in these scripts. These scripts contains a minimal tags set for for testing of SIP message flow.

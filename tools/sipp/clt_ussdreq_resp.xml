@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<scenario name="PUSH Notify">
+
+  <recv request="INVITE" rrs="true">
+     <action>
+          <ereg regexp="(;tag=.*)"
+              header="From:"
+              search_in="hdr"
+              check_it="true"
+              assign_to="remote_tag"/>
+     </action>
+  </recv>
+
+  <send> 
+<![CDATA[
+SIP/2.0 200 OK
+[last_Via:]
+[last_From:]
+[last_To:];tag=[call_number]
+[last_Call-ID:]
+[last_CSeq:]
+Contact: <sip:[local_ip]:[local_port];transport=[transport]>
+Content-Type: application/sdp
+Content-Length: 0
+]]>
+  </send>
+
+  <recv request="ACK">>
+  </recv>
+
+
+  <send>
+    <![CDATA[
+INFO sip:[service]@[remote_ip]:[remote_port] SIP/2.0
+[last_Via:]
+From: sipp <sip:*124%23@[local_ip]:[local_port]>;tag=[call_number]
+To: sipp <sip:11111@[remote_ip]:[remote_port]>[$remote_tag]
+[last_Call-ID:]
+CSeq: 2 INFO
+Contact: <sip:[local_ip]:[local_port];transport=[transport]>
+Content-Type: application/sdp
+Content-Length: [len]
+
+<ussd-data>
+	<language value="en"/>
+	<ussd-string value="Press 5 or 6"/>
+	<anyExt>
+		<message-type>unstructuredSSRequest_Request</message-type>
+	</anyExt>
+</ussd-data>
+    ]]>
+  </send>
+
+  <recv response="200" crlf="true">
+  </recv>
+
+
+  <recv request="INFO">
+  </recv>
+
+  <send> 
+<![CDATA[
+SIP/2.0 200 OK
+[last_Via:]
+[last_From:]
+[last_To:];tag=[call_number]
+[last_Call-ID:]
+[last_CSeq:]
+Contact: <sip:[local_ip]:[local_port];transport=[transport]>
+Content-Type: application/sdp
+Content-Length: 0
+]]>
+  </send>
+
+
+  <send>
+    <![CDATA[
+BYE sip:[service]@[remote_ip]:[remote_port] SIP/2.0
+[last_Via:]
+From: sipp <sip:*124%23@[local_ip]:[local_port]>;tag=[call_number]
+To: sipp <sip:11111@[remote_ip]:[remote_port]>[$remote_tag]
+[last_Call-ID:]
+CSeq: 2 BYE
+Contact: <sip:[local_ip]:[local_port];transport=[transport]>
+Content-Type: application/sdp
+Content-Length: [len]
+
+<ussd-data>
+	<language value="en"/>
+	<ussd-string value="Response balance=001"/>
+	<anyExt>
+		<message-type>processUnstructuredSSRequest_Response</message-type>
+	</anyExt>
+</ussd-data>
+    ]]>
+  </send>
+
+  <recv response="200" crlf="true">
+  </recv>
+
+
+
+  <!-- definition of the response time repartition table (unit is ms)   -->
+  <ResponseTimeRepartition value="10, 20, 30, 40, 50, 100, 150, 200"/>
+
+  <!-- definition of the call length repartition table (unit is ms)     -->
+  <CallLengthRepartition value="10, 50, 100, 500, 1000, 5000, 10000"/>
+
+</scenario>
+
+

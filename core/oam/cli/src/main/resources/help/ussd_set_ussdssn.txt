@@ -1,0 +1,29 @@
+Name
+	ussd set ussdssn
+
+SYNOPSIS
+	ussd set ussdssn <ussdSubSystemNumber>
+
+DESCRIPTION
+	This command is used to set the value for USSD Sub System Number (SSN). Issuing 
+	this command in CLI will set the SSN value but you must ensure that the SSN value
+	is properly configured in the TCAP Stack in the xml descriptor file
+	'mobicents-ussdgateway-version/jboss-5.1.0.GA/server/default/deploy/
+	 mobicents-ussd-gateway/META-INF/jboss-beans.xml'
+
+EXAMPLES
+	ussd set ussdssn 6
+
+	The above command will set the value for the parameter 'ussdSubSystemNumber' to 
+	'6'and the terminal will display the message 
+	"Parameter has been successfully set". 
+
+	You can verify this by issuing the 'ussd get ussdssn' command.
+
+	ussd get ussdssn
+	ussdssn = 6
+
+SEE ALSO
+	ussd set, ussd set noroutingruleconfigerrmssg, ussd set dialogtimeout, 
+	ussd set dialogtimeouterrmssg, ussd set servererrmssg, ussd set ussdgt,
+	ussd set hlrssn, ussd set mscssn, ussd set maxmapv, ussd get

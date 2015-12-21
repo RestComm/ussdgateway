@@ -1,6 +1,6 @@
 /**
- * TeleStax, Open Source Cloud Communications  Copyright 2012. 
- * and individual contributors
+ * TeleStax, Open Source Cloud Communications  
+ * Copyright 2012, Telestax Inc and individual contributors
  * by the @authors tag. See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
@@ -27,6 +27,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.mobicents.ss7.management.console.ShellExecutor;
 import org.mobicents.ussdgateway.rules.ScRoutingRule;
+import org.mobicents.ussdgateway.rules.ScRoutingRuleType;
 
 /**
  * @author amit bhayani
@@ -102,51 +103,185 @@ public class UssdShellExecutor implements ShellExecutor {
 		String command = commands[2];
 		if (command.equals("create")) {
 			return this.createScRule(commands);
+		} else if (command.equals("modify")) {
+			return this.modifyScRule(commands);
 		} else if (command.equals("delete")) {
 			return this.deleteScRule(commands);
 		} else if (command.equals("show")) {
-			return this.showScRule();
+			return this.showScRule(commands);
 		}
 		return UssdOAMMessages.INVALID_COMMAND;
 	}
 
 	/**
-	 * Command is ussd scrule create <short-code> <url>
+	 * <p>
+	 * Command is ussd scrule create <short-code> <url> <true/false> <HTTP/SIP> <networkId>
+	 * </p>
+	 * <p>
+	 * By default its assumed that routing rule is HTTP. However if you want to
+	 * set SIP user below command using SIP. If its HTTP, the second parameter
+	 * will be considered as http-url. networkId is not mandatory and by default 
+	 * is 0. Exact match is not mandatory and by default is true.
+	 * </p>
+	 * <p>
+	 * ussd scrule create <short-code> <sip-proxy> <true/false> <SIP|HTTP> <networkId>
+	 * </p>
 	 * 
 	 * @param commands
 	 * @return
 	 * @throws Exception
 	 */
 	private String createScRule(String[] commands) throws Exception {
-		if (commands.length < 5) {
+		if (commands.length < 5 || commands.length > 8) {
 			return UssdOAMMessages.INVALID_COMMAND;
 		}
 
 		String shortCode = commands[3];
 		String url = commands[4];
 
-		shortCodeRoutingRuleManagement.createScRoutingRule(shortCode, url);
+		ScRoutingRuleType ruleType = ScRoutingRuleType.HTTP;
+		boolean exactmatch = true;
+		int networkId = 0;
 
-		return String.format(UssdOAMMessages.CREATE_SC_RULE_SUCCESSFULL, shortCode);
+		if (commands.length > 5) {
+			String args6 = commands[5];
+			if (args6.equals("true") || args6.equals("false")) {
+				exactmatch = Boolean.parseBoolean(args6);
+			} else if (args6.equals("HTTP") || args6.equals("SIP")) {
+				ruleType = ScRoutingRuleType.valueOf(args6);
+			} else {
+				networkId = Integer.parseInt(args6);
+			}
+		}
+
+		if (commands.length > 6) {
+			String args7 = commands[6];
+			if (args7.equals("true") || args7.equals("false")) {
+				exactmatch = Boolean.parseBoolean(args7);
+			} else if (args7.equals("HTTP") || args7.equals("SIP")) {
+				ruleType = ScRoutingRuleType.valueOf(args7);
+			} else {
+				networkId = Integer.parseInt(args7);
+			}
+		}
+		
+		if (commands.length > 7) {
+			String args8 = commands[7];
+			if (args8.equals("true") || args8.equals("false")) {
+				exactmatch = Boolean.parseBoolean(args8);
+			} else if (args8.equals("HTTP") || args8.equals("SIP")) {
+				ruleType = ScRoutingRuleType.valueOf(args8);
+			} else {
+				networkId = Integer.parseInt(args8);
+			}
+		}
+
+		if (ruleType == null) {
+			return UssdOAMMessages.INVALID_COMMAND;
+		}
+
+		shortCodeRoutingRuleManagement.createScRoutingRule(shortCode, ruleType, url, exactmatch, networkId);
+
+		return String.format(UssdOAMMessages.CREATE_SC_RULE_SUCCESSFULL, shortCode, networkId);
 	}
 
 	/**
-	 * Command is ussd scrule delete <short-code>
+	 * <p>
+	 * Command is ussd scrule modify <short-code> <url> <true/false> <HTTP/SIP> <networkId>
+	 * </p>
+	 * <p>
+	 * By default its assumed that routing rule is HTTP. However if you want to
+	 * set SIP user below command using SIP. If its HTTP, the second parameter
+	 * will be considered as http-url. networkId is not mandatory and by default 
+	 * is 0. Exact match is not mandatory and by default is true.
+	 * </p>
+	 * <p>
+	 * ussd scrule modify <short-code> <sip-proxy> <true/false> <SIP|HTTP> <networkId>
+	 * </p>
+	 * 
+	 * @param commands
+	 * @return
+	 * @throws Exception
+	 */
+	private String modifyScRule(String[] commands) throws Exception {
+		if (commands.length < 5 || commands.length > 8) {
+			return UssdOAMMessages.INVALID_COMMAND;
+		}
+
+		String shortCode = commands[3];
+		String url = commands[4];
+
+		ScRoutingRuleType ruleType = ScRoutingRuleType.HTTP;
+		boolean exactmatch = true;
+		int networkId = 0;
+
+		if (commands.length > 5) {
+			String args6 = commands[5];
+			if (args6.equals("true") || args6.equals("false")) {
+				exactmatch = Boolean.parseBoolean(args6);
+			} else if (args6.equals("HTTP") || args6.equals("SIP")) {
+				ruleType = ScRoutingRuleType.valueOf(args6);
+			} else {
+				networkId = Integer.parseInt(args6);
+			}
+		}
+
+		if (commands.length > 6) {
+			String args7 = commands[6];
+			if (args7.equals("true") || args7.equals("false")) {
+				exactmatch = Boolean.parseBoolean(args7);
+			} else if (args7.equals("HTTP") || args7.equals("SIP")) {
+				ruleType = ScRoutingRuleType.valueOf(args7);
+			} else {
+				networkId = Integer.parseInt(args7);
+			}
+		}
+		
+		if (commands.length > 7) {
+			String args8 = commands[7];
+			if (args8.equals("true") || args8.equals("false")) {
+				exactmatch = Boolean.parseBoolean(args8);
+			} else if (args8.equals("HTTP") || args8.equals("SIP")) {
+				ruleType = ScRoutingRuleType.valueOf(args8);
+			} else {
+				networkId = Integer.parseInt(args8);
+			}
+		}
+
+		if (ruleType == null) {
+			return UssdOAMMessages.INVALID_COMMAND;
+		}
+
+		shortCodeRoutingRuleManagement.modifyScRoutingRule(shortCode, ruleType, url, exactmatch, networkId);
+
+		return String.format(UssdOAMMessages.MODIFY_SC_RULE_SUCCESSFULL, shortCode, networkId);
+	}	
+	
+	
+
+	/**
+	 * Command is ussd scrule delete <short-code> <networkId>
 	 * 
 	 * @param commands
 	 * @return
 	 * @throws Exception
 	 */
 	private String deleteScRule(String[] commands) throws Exception {
-		if (commands.length != 4) {
+		if (commands.length < 4 || commands.length > 5) {
 			return UssdOAMMessages.INVALID_COMMAND;
 		}
 
 		String shortCode = commands[3];
+		int networkId = 0;
+		
+		if (commands.length > 4) {
+			String args6 = commands[4];
+			networkId = Integer.parseInt(args6);
+		}
+		
+		shortCodeRoutingRuleManagement.deleteScRoutingRule(shortCode, networkId);
 
-		shortCodeRoutingRuleManagement.deleteScRoutingRule(shortCode);
-
-		return String.format(UssdOAMMessages.DELETE_SC_RULE_SUCCESSFUL, shortCode);
+		return String.format(UssdOAMMessages.DELETE_SC_RULE_SUCCESSFUL, shortCode, networkId);
 	}
 
 	/**
@@ -154,17 +289,36 @@ public class UssdShellExecutor implements ShellExecutor {
 	 * 
 	 * @return
 	 */
-	private String showScRule() {
-		List<ScRoutingRule> esmes = this.shortCodeRoutingRuleManagement.getScRoutingRuleList();
-		if (esmes.size() == 0) {
-			return UssdOAMMessages.NO_SC_RULE_DEFINED_YET;
-		}
-		StringBuffer sb = new StringBuffer();
-		for (ScRoutingRule scRule : esmes) {
-			sb.append(UssdOAMMessages.NEW_LINE);
-			scRule.show(sb);
-		}
-		return sb.toString();
+	private String showScRule(String[] commands) {
+        List<ScRoutingRule> rules = this.shortCodeRoutingRuleManagement.getScRoutingRuleList();
+        if (rules.size() == 0) {
+            return UssdOAMMessages.NO_SC_RULE_DEFINED_YET;
+        }
+
+        StringBuffer sb = new StringBuffer();
+        if (commands.length >= 4) {
+            String shortCode = commands[3];
+            int networkId = 0;
+            
+            if (commands.length > 4) {
+                String args6 = commands[4];
+                networkId = Integer.parseInt(args6);
+            }
+
+            ScRoutingRule scRule = shortCodeRoutingRuleManagement.getScRoutingRule(shortCode, networkId);
+            if (scRule == null) {
+                return UssdOAMMessages.INVALID_SC;
+            } else {
+                sb.append(UssdOAMMessages.NEW_LINE);
+                scRule.show(sb);
+            }
+        } else {
+            for (ScRoutingRule scRule : rules) {
+                sb.append(UssdOAMMessages.NEW_LINE);
+                scRule.show(sb);
+            }
+        }
+        return sb.toString();
 	}
 
 	private String manageSet(String[] options) throws Exception {
@@ -181,6 +335,34 @@ public class UssdShellExecutor implements ShellExecutor {
 			ussdPropertiesManagement.setServerErrorMessage(this.formFullMessage(options, 3));
 		} else if (parName.equals(UssdPropertiesManagement.DIALOG_TIMEOUT)) {
 			ussdPropertiesManagement.setDialogTimeout(Long.parseLong(options[3]));
+		} else if (parName.equals(UssdPropertiesManagement.USSD_GT)) {
+		    String gt = options[3];
+            if (options.length >= 6 && options[4].equals("networkid")) {
+                int val = Integer.parseInt(options[5]);
+                ussdPropertiesManagement.setUssdGt(val, gt);
+            } else {
+                ussdPropertiesManagement.setUssdGt(gt);
+            }
+		} else if (parName.equals(UssdPropertiesManagement.USSD_SSN)) {
+			ussdPropertiesManagement.setUssdSsn(Integer.parseInt(options[3]));
+		} else if (parName.equals(UssdPropertiesManagement.HLR_SSN)) {
+			ussdPropertiesManagement.setHlrSsn(Integer.parseInt(options[3]));
+		} else if (parName.equals(UssdPropertiesManagement.MSC_SSN)) {
+			ussdPropertiesManagement.setMscSsn(Integer.parseInt(options[3]));
+		} else if (parName.equals(UssdPropertiesManagement.MAX_MAP_VERSION)) {
+			ussdPropertiesManagement.setMaxMapVersion(Integer.parseInt(options[3]));
+		} else if (parName.equals(UssdPropertiesManagement.HR_HLR_GT)) {
+			if (options[3].equals("null")) {
+				System.err.println("setting null");
+				ussdPropertiesManagement.setHrHlrGt(null);
+			} else {
+				System.err.println("its not null");
+				ussdPropertiesManagement.setHrHlrGt(options[3]);
+			}
+		} else if (parName.equals(UssdPropertiesManagement.CDR_LOGGING_TO)) {
+			UssdPropertiesManagement.CdrLoggedType cdrLoggedType = Enum.valueOf(
+					UssdPropertiesManagement.CdrLoggedType.class, options[3]);
+			ussdPropertiesManagement.setCdrLoggingTo(cdrLoggedType);
 		} else {
 			return UssdOAMMessages.INVALID_COMMAND;
 		}
@@ -214,6 +396,27 @@ public class UssdShellExecutor implements ShellExecutor {
 				sb.append(ussdPropertiesManagement.getServerErrorMessage());
 			} else if (parName.equals(UssdPropertiesManagement.DIALOG_TIMEOUT)) {
 				sb.append(ussdPropertiesManagement.getDialogTimeout());
+			} else if (parName.equals(UssdPropertiesManagement.USSD_GT)) {
+			    sb.append("networkId=0 - GT=");
+                sb.append(ussdPropertiesManagement.getUssdGt());
+                for (Integer key : ussdPropertiesManagement.getNetworkIdVsUssdGwGt().keySet()) {
+                    sb.append("\nnetworkId=");
+                    sb.append(key);
+                    sb.append(" - GT=");
+                    sb.append(ussdPropertiesManagement.getNetworkIdVsUssdGwGt().get(key));
+                }
+			} else if (parName.equals(UssdPropertiesManagement.USSD_SSN)) {
+				sb.append(ussdPropertiesManagement.getUssdSsn());
+			} else if (parName.equals(UssdPropertiesManagement.HLR_SSN)) {
+				sb.append(ussdPropertiesManagement.getHlrSsn());
+			} else if (parName.equals(UssdPropertiesManagement.MSC_SSN)) {
+				sb.append(ussdPropertiesManagement.getMscSsn());
+			} else if (parName.equals(UssdPropertiesManagement.MAX_MAP_VERSION)) {
+				sb.append(ussdPropertiesManagement.getMaxMapVersion());
+			} else if (parName.equals(UssdPropertiesManagement.HR_HLR_GT)) {
+				sb.append(ussdPropertiesManagement.getHrHlrGt());
+			} else if (parName.equals(UssdPropertiesManagement.CDR_LOGGING_TO)) {
+				sb.append(ussdPropertiesManagement.getCdrLoggingTo());
 			} else {
 				return UssdOAMMessages.INVALID_COMMAND;
 			}
@@ -228,13 +431,47 @@ public class UssdShellExecutor implements ShellExecutor {
 			sb.append(UssdPropertiesManagement.DIALOG_TIMEOUT_ERROR_MESSAGE + " = ");
 			sb.append(ussdPropertiesManagement.getDialogTimeoutErrorMessage());
 			sb.append("\n");
-			
+
 			sb.append(UssdPropertiesManagement.DIALOG_TIMEOUT + " = ");
 			sb.append(ussdPropertiesManagement.getDialogTimeout());
-			sb.append("\n");			
+			sb.append("\n");
 
 			sb.append(UssdPropertiesManagement.SERVER_ERROR_MESSAGE + " = ");
 			sb.append(ussdPropertiesManagement.getServerErrorMessage());
+			sb.append("\n");
+
+			sb.append("networkId=0 - GT=");
+            sb.append(ussdPropertiesManagement.getUssdGt());
+            for (Integer key : ussdPropertiesManagement.getNetworkIdVsUssdGwGt().keySet()) {
+                sb.append("\nnetworkId=");
+                sb.append(key);
+                sb.append(" - GT=");
+                sb.append(ussdPropertiesManagement.getNetworkIdVsUssdGwGt().get(key));
+            }
+			sb.append("\n");
+
+			sb.append(UssdPropertiesManagement.USSD_SSN + " = ");
+			sb.append(ussdPropertiesManagement.getUssdSsn());
+			sb.append("\n");
+
+			sb.append(UssdPropertiesManagement.HLR_SSN + " = ");
+			sb.append(ussdPropertiesManagement.getHlrSsn());
+			sb.append("\n");
+
+			sb.append(UssdPropertiesManagement.MSC_SSN + " = ");
+			sb.append(ussdPropertiesManagement.getMscSsn());
+			sb.append("\n");
+
+			sb.append(UssdPropertiesManagement.MAX_MAP_VERSION + " = ");
+			sb.append(ussdPropertiesManagement.getMaxMapVersion());
+			sb.append("\n");
+
+			sb.append(UssdPropertiesManagement.HR_HLR_GT + " = ");
+			sb.append(ussdPropertiesManagement.getHrHlrGt());
+			sb.append("\n");
+
+			sb.append(UssdPropertiesManagement.CDR_LOGGING_TO + " = ");
+			sb.append(ussdPropertiesManagement.getCdrLoggingTo());
 			sb.append("\n");
 
 			return sb.toString();
