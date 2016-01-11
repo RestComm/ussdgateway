@@ -16,7 +16,7 @@
 	<property name="release.http-client.dir" value="${base.dir}/checkout/http-client-release" />
 	<property name="release.http-servlet.dir" value="${base.dir}/checkout/http-servlet-release" />
 	<property name="mobicents.ussd.dir" value="${base.dir}/.." />
-	<property name="mobicents.ussd.release.version" value="1.0.1-Mobicents-SNAPSHOT" />
+	<property name="mobicents.ussd.release.version" value="1.0.1-SNAPSHOT" />
 	<property name="mobicents-slee.version" value="2.8.9.29" />
 	<property name="mobicents-slee.ss7.map.ra.tag" value="master" />
 	<property name="mobicents-slee.http.ra.tag" value="master" />
@@ -33,7 +33,7 @@
 	<property name="mobicents-jss7.version" value="3.0.1321" />
 	<property name="mobicents-jss7.timestamp" value="1601081355" />
 	<property name="mobicents-jss7.build-number" value="1321" />
-	<property name="mobicents-jss7.download.distro.file" value="Mobicents-jss7-${mobicents-jss7.version}-${mobicents-jss7.timestamp}.zip" />
+	<property name="mobicents-jss7.download.distro.file" value="mobicents-jss7-${mobicents-jss7.version}-${mobicents-jss7.timestamp}.zip" />
 	<property name="mobicents-jss7.download.url" value="${cloudbees.url}/job/Mobicents-jSS7/${mobicents-jss7.build-number}/artifact/release/${mobicents-jss7.download.distro.file}" />
 	<property name="mobicents-jss7.distro.zip.path" value="${checkout.dir}/${mobicents-jss7.download.distro.file}" />
 
@@ -70,7 +70,6 @@
 	<target name="extract-deps" depends="extract-mobicents-slee,extract-mobicents-jss7" />
 
 	<available file="${mobicents-slee.distro.zip.path}" property="got.mobicents-slee" />
-	<available file="${mobicents-jss7.download.distro.file}" property="got.mobicents-jss7" />
 	<target name="get-mobicents-slee" unless="got.mobicents-slee">
 		<echo>Is Mobicents Slee : ${mobicents-slee.distro.zip.path} present ${got.mobicents-slee}</echo>
 		<echo>Downloading Mobicents Slee version: ${mobicents-slee.version}</echo>
@@ -92,6 +91,7 @@
 		<delete dir="${checkout.mobicents-slee.dir}/jboss-5.1.0.GA/server/all" includeemptydirs="true" failonerror="false" verbose="false"/>
 	</target>
 
+	<available file="${mobicents-jss7.download.distro.file}" property="got.mobicents-jss7" />
 	<target name="get-mobicents-jss7" unless="got.mobicents-jss7">
 		<echo>Is Mobicents jss7 : ${mobicents-jss7.distro.zip.path} present ${got.mobicents-jss7}</echo>
 		<echo>Downloading Mobicents jss7 version: ${mobicents-jss7.version}</echo>
@@ -103,14 +103,8 @@
 
 	<target name="extract-mobicents-jss7" depends="get-mobicents-jss7">
 		<delete dir="${checkout.mobicents-jss7.dir}" failonerror="false" />
-		<unzip src="${mobicents-jss7.distro.zip.path}" dest="${release.dir}"/>
-		<copy todir="${release.dir}" failonerror="true">
-			<fileset dir="${release.dir}/mobicents-jss7-${mobicents-jss7.version}">
-				<include name="**/*" />
-			</fileset>
-		</copy>
-		<delete dir="${release.dir}/mobicents-jss7-${mobicents-jss7.version}" includeemptydirs="true" failonerror="false" verbose="false"/>
-		<delete dir="${checkout.mobicents-jss7.dir}/jboss-5.1.0.GA/server/all" includeemptydirs="true" failonerror="false" verbose="false"/>
+		<unzip src="${mobicents-jss7.distro.zip.path}" dest="${checkout.mobicents-jss7.dir}"/>
+		<move file="${checkout.mobicents-jss7.dir}/mobicents-jss7-${mobicents-jss7.version}" tofile="${checkout.mobicents-jss7.dir}/mobicents-jss7-${mobicents-jss7.version}" failonerror="false"/>
 	</target>
 
 
@@ -442,12 +436,7 @@
 		<copy file="${mobicents.ussd.dir}/core/bootstrap/src/main/config/conf/jboss-log4j.xml" todir="${release.dir}/jboss-5.1.0.GA/server/simulator/conf" failonerror="true" overwrite="true"/>
 -->
 
-		<!-- Mobicents Management HQ -->
-		<echo>Mobicents Management Hq</echo>
-		<copy file="${checkout.mobicents-management-hq.dir}/mobicents-management.war" todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true" />
-		<copy file="${checkout.mobicents-management-hq.dir}/mobicents-management.war" todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true" />
-		
-		<!-- Coppy http pull and push example to simulator-->
+		<!-- Copy http pull and push example to simulator-->
 		<echo>Copy http-push-example to simulator/deploy</echo>
 		<copy todir="${release.dir}/jboss-5.1.0.GA//server/simulator/deploy/http-push-example" failonerror="true">
 			<fileset dir="${mobicents.ussd.dir}/examples/http-push/target/http-push-example">

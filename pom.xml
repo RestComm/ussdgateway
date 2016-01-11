@@ -34,7 +34,7 @@
 		<mobicents.resources.sip.version>3.0.0-SNAPSHOT</mobicents.resources.sip.version>
 		<mobicents.resources.http-client.version>2.5.0.FINAL</mobicents.resources.http-client.version>
 		<mobicents.core.ext.version>1.0.0.BETA2</mobicents.core.ext.version>
-		<mobicents.resources.map.version>2.8.0-SNAPSHOT</mobicents.resources.map.version>
+		<mobicents.resources.map.version>2.8.10</mobicents.resources.map.version>
 		<mobicents.resources.jdbc.version>1.0.0.FINAL</mobicents.resources.jdbc.version>
         <mobicents.resources.http-servlet.version>2.8.0-SNAPSHOT</mobicents.resources.http-servlet.version>
 
