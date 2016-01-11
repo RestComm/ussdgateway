@@ -38,7 +38,7 @@
 		<mobicents.resources.jdbc.version>1.0.0.FINAL</mobicents.resources.jdbc.version>
         <mobicents.resources.http-servlet.version>2.8.0-SNAPSHOT</mobicents.resources.http-servlet.version>
 
-		<jss7.mobicents.version>3.0.0-SNAPSHOT</jss7.mobicents.version>
+		<jss7.mobicents.version>3.0.1317</jss7.mobicents.version>
 		
 		<!-- mobicents but not strictly ss7 -->
 		<asn.version>2.0.3.FINAL</asn.version>

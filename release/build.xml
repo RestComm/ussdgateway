@@ -18,28 +18,25 @@
 	<property name="mobicents.ussd.dir" value="${base.dir}/.." />
 	<property name="mobicents.ussd.release.version" value="1.0.1-Mobicents-SNAPSHOT" />
 	<property name="mobicents-slee.version" value="2.8.9.29" />
-	<property name="mobicents-slee.ss7.map.ra.tag" value="ts113ga" />
-	<property name="mobicents-slee.http.ra.tag" value="ts115ga" />
-	<property name="mobicents-slee.jdbc.ra.tag" value="ts111ga" />
+	<property name="mobicents-slee.ss7.map.ra.tag" value="master" />
+	<property name="mobicents-slee.http.ra.tag" value="master" />
+	<property name="mobicents-slee.jdbc.ra.tag" value="master" />
 
 	<!--GET Mobicents-Slee & Mobicents-jss7 - properties-->
+	<property name="cloudbees.url" value="https://mobicents.ci.cloudbees.com" />
 	<property name="mobicents-slee.download.distro.name" value="mobicents-slee-${mobicents-slee.version}" />
 	<property name="mobicents-slee.download.distro.file" value="${mobicents-slee.download.distro.name}.zip" />
-	<property name="mobicents-slee.download.url" value="https://mobicents.ci.cloudbees.com/job/Mobicents-JAIN-SLEE-Release/lastSuccessfulBuild/artifact/release/${mobicents-slee.download.distro.file}" />
+	<property name="mobicents-slee.build-number" value="29" />
+	<property name="mobicents-slee.download.url" value="${cloudbees.url}/job/Mobicents-JAIN-SLEE-Release/${mobicents-slee.build-number}/artifact/release/${mobicents-slee.download.distro.file}" />
 	<property name="mobicents-slee.distro.zip.path" value="${checkout.dir}/${mobicents-slee.download.distro.file}" />
 
-	<property name="mobicents-jss7.version" value="3.0.0-SNAPSHOT" />
-	<property name="mobicents-jss7.timestamp" value="1510060913" />
+	<property name="mobicents-jss7.version" value="3.0.1321" />
+	<property name="mobicents-jss7.timestamp" value="1601081355" />
+	<property name="mobicents-jss7.build-number" value="1321" />
 	<property name="mobicents-jss7.download.distro.file" value="Mobicents-jss7-${mobicents-jss7.version}-${mobicents-jss7.timestamp}.zip" />
-	<property name="mobicents-jss7.download.url" value="" />
+	<property name="mobicents-jss7.download.url" value="${cloudbees.url}/job/Mobicents-jSS7/${mobicents-jss7.build-number}/artifact/release/${mobicents-jss7.download.distro.file}" />
 	<property name="mobicents-jss7.distro.zip.path" value="${checkout.dir}/${mobicents-jss7.download.distro.file}" />
-	
-	<property name="mobicents-management-hq.version" value="3.0.0-SNAPSHOT" />
-	<property name="mobicents-management-hq.download.distro.file" value="management-hq-${mobicents-management-hq.version}.zip" />
-	<property name="mobicents-management-hq.distro.zip.path" value="${checkout.dir}/${mobicents-management-hq.download.distro.file}" />
-	<property name="mobicents-management-hq.download.url" value="${mobicents-management-hq.download.distro.file}" />
-	<property name="checkout.mobicents-management-hq.dir" value="${checkout.dir}/mobicents-management-hq" />
-	
+
 
 	<property name="release.build.goals" value="clean install" />
 	<property name="release.ts.deploy.goals" value="clean deploy" />
@@ -69,10 +66,11 @@
 	<!--GET Map & Mobicents-Slee & Mobicents-jss7 - downloads-->
 
 	<target name="get-map" depends="checkout-ss7-map,build-ss7-map" />
-	<target name="get-deps" depends="get-mobicents-slee,get-mobicents-jss7,get-mobicents-management-hq,checkout-ss7-map,build-ss7-map,checkout-http,build-http-client,build-http-servlet,checkout-jdbc,build-jdbc" />
-	<target name="extract-deps" depends="extract-mobicents-slee,extract-mobicents-jss7,extract-mobicents-management-hq" />
+	<target name="get-deps" depends="get-mobicents-slee,get-mobicents-jss7,checkout-ss7-map,build-ss7-map,checkout-http,build-http-client,build-http-servlet,checkout-jdbc,build-jdbc" />
+	<target name="extract-deps" depends="extract-mobicents-slee,extract-mobicents-jss7" />
 
 	<available file="${mobicents-slee.distro.zip.path}" property="got.mobicents-slee" />
+	<available file="${mobicents-jss7.download.distro.file}" property="got.mobicents-jss7" />
 	<target name="get-mobicents-slee" unless="got.mobicents-slee">
 		<echo>Is Mobicents Slee : ${mobicents-slee.distro.zip.path} present ${got.mobicents-slee}</echo>
 		<echo>Downloading Mobicents Slee version: ${mobicents-slee.version}</echo>
@@ -86,13 +84,35 @@
 		<delete dir="${checkout.mobicents-slee.dir}" failonerror="false" />
 		<unzip src="${mobicents-slee.distro.zip.path}" dest="${release.dir}"/>
         <copy todir="${release.dir}" failonerror="true">
-                <fileset dir="${release.dir}/mobicents-slee-${mobicents-slee.version}__slim">
+                <fileset dir="${release.dir}/mobicents-slee-${mobicents-slee.version}">
                         <include name="**/*" />
                 </fileset>
         </copy>
-		<delete dir="${release.dir}/mobicents-slee-${mobicents-slee.version}__slim" includeemptydirs="true" failonerror="false" verbose="false"/>
+		<delete dir="${release.dir}/mobicents-slee-${mobicents-slee.version}" includeemptydirs="true" failonerror="false" verbose="false"/>
 		<delete dir="${checkout.mobicents-slee.dir}/jboss-5.1.0.GA/server/all" includeemptydirs="true" failonerror="false" verbose="false"/>
 	</target>
+
+	<target name="get-mobicents-jss7" unless="got.mobicents-jss7">
+		<echo>Is Mobicents jss7 : ${mobicents-jss7.distro.zip.path} present ${got.mobicents-jss7}</echo>
+		<echo>Downloading Mobicents jss7 version: ${mobicents-jss7.version}</echo>
+		<exec failonerror="true" executable="wget">
+			<arg value="${mobicents-jss7.download.url}" />
+		</exec>
+		<move file="${base.dir}/${mobicents-jss7.download.distro.file}" todir="${checkout.dir}" />
+	</target>
+
+	<target name="extract-mobicents-jss7" depends="get-mobicents-jss7">
+		<delete dir="${checkout.mobicents-jss7.dir}" failonerror="false" />
+		<unzip src="${mobicents-jss7.distro.zip.path}" dest="${release.dir}"/>
+		<copy todir="${release.dir}" failonerror="true">
+			<fileset dir="${release.dir}/mobicents-jss7-${mobicents-jss7.version}">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+		<delete dir="${release.dir}/mobicents-jss7-${mobicents-jss7.version}" includeemptydirs="true" failonerror="false" verbose="false"/>
+		<delete dir="${checkout.mobicents-jss7.dir}/jboss-5.1.0.GA/server/all" includeemptydirs="true" failonerror="false" verbose="false"/>
+	</target>
+
 
 	<target name="checkout-ss7-map">
 		<echo>Checking out Map resource</echo>
