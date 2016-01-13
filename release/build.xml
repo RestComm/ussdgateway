@@ -335,7 +335,7 @@
 		<mkdir dir="${release.dir}/jboss-5.1.0.GA/server/default/data" />
 		
 		<copy todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true">
-			<fileset dir="${checkout.mobicents-jss7.dir}/Mobicents-jss7-${mobicents-jss7.version}/oam/new-ui">
+			<fileset dir="${checkout.mobicents-jss7.dir}/mobicents-jss7-${mobicents-jss7.version}/oam/new-ui">
 				<include name="**" />
 			</fileset>
 		</copy>		
@@ -387,21 +387,21 @@
 		</copy>
 		
 		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true">
-			<fileset dir="${checkout.mobicents-jss7.dir}/Mobicents-jss7-${mobicents-jss7.version}/oam/new-ui">
+			<fileset dir="${checkout.mobicents-jss7.dir}/mobicents-jss7-${mobicents-jss7.version}/oam/new-ui">
 				<include name="**" />
 			</fileset>
 		</copy>
 
 		<!--tools-->
-		<copy todir="${release.dir}/tools/Mobicents-jss7-simulator" failonerror="true">
-			<fileset dir="${checkout.mobicents-jss7.dir}/Mobicents-jss7-${mobicents-jss7.version}/ss7/Mobicents-ss7-simulator">
+		<copy todir="${release.dir}/tools/mobicents-jss7-simulator" failonerror="true">
+			<fileset dir="${checkout.mobicents-jss7.dir}/mobicents-jss7-${mobicents-jss7.version}/ss7/mobicents-ss7-simulator">
 				<include name="**" />
 			</fileset>
 		</copy>
-        <copy file="${mobicents.ussd.dir}/core/bootstrap/src/main/config/ss7-simulator/main_simulator2.xml" todir="${release.dir}/tools/Mobicents-jss7-simulator/data" failonerror="true" />
-        <copy file="${mobicents.ussd.dir}/core/bootstrap/src/main/config/ss7-simulator/win_simulator2.xml" todir="${release.dir}/tools/Mobicents-jss7-simulator/data" failonerror="true" />
+        <copy file="${mobicents.ussd.dir}/core/bootstrap/src/main/config/ss7-simulator/main_simulator2.xml" todir="${release.dir}/tools/mobicents-jss7-simulator/data" failonerror="true" />
+        <copy file="${mobicents.ussd.dir}/core/bootstrap/src/main/config/ss7-simulator/win_simulator2.xml" todir="${release.dir}/tools/mobicents-jss7-simulator/data" failonerror="true" />
 		
-		<copy todir="${release.dir}/tools/Mobicents-ussd-simulator" failonerror="true">
+		<copy todir="${release.dir}/tools/mobicents-ussd-simulator" failonerror="true">
 			<fileset dir="${mobicents.ussd.dir}/test/bootstrap/target/ussd-server">
 				<include name="**" />
 			</fileset>
@@ -409,7 +409,7 @@
 		<!--CLI-->
 		<copy file="${mobicents.ussd.dir}/core/oam/cli/target/ussd-cli-${mobicents.ussd.release.version}.jar" todir="${release.dir}/jboss-5.1.0.GA/lib" failonerror="true" />
 		<copy todir="${release.dir}/jboss-5.1.0.GA/" failonerror="true">
-			<fileset dir="${checkout.mobicents-jss7.dir}/Mobicents-jss7-${mobicents-jss7.version}/ss7/shell">
+			<fileset dir="${checkout.mobicents-jss7.dir}/mobicents-jss7-${mobicents-jss7.version}/ss7/shell">
 				<include name="**/*" />
 			</fileset>
 		</copy>
@@ -501,7 +501,7 @@
 		<mkdir dir="${docs.dir}/jss7" />
 		<mkdir dir="${docs.dir}/ussd" />
 		<copy todir="${docs.dir}/jss7" failonerror="true">
-			<fileset dir="${checkout.mobicents-jss7.dir}/Mobicents-jss7-${mobicents-jss7.version}/_docs/">
+			<fileset dir="${checkout.mobicents-jss7.dir}/mobicents-jss7-${mobicents-jss7.version}/_docs/">
 				<include name="*.pdf" />
 			</fileset>
 		</copy>
@@ -510,19 +510,13 @@
 				<include name="**/*.pdf" />
 			</fileset>
 		</copy>
-		
-		<mkdir dir="${docs.dir}/management-hq" />
-		<copy todir="${docs.dir}/management-hq" failonerror="true" flatten="true">
-			<fileset dir="${checkout.mobicents-management-hq.dir}/docs/">
-				<include name="**/*.pdf" />
-			</fileset>			
-		</copy>		
+			
 	</target>
 
 
 	<target name="make-final-zip" depends="set-time-stamp">
-		<zip destfile="${base.dir}/Mobicents-ussd-${mobicents.ussd.release.version}-${time.stamp}.zip" filesonly="false">
-			<zipfileset dir="${release.dir}" prefix="Mobicents-ussd-${mobicents.ussd.release.version}">
+		<zip destfile="${base.dir}/mobicents-ussd-${mobicents.ussd.release.version}-${time.stamp}.zip" filesonly="false">
+			<zipfileset dir="${release.dir}" prefix="mobicents-ussd-${mobicents.ussd.release.version}">
 				<include name="**" />
 			</zipfileset>
 		</zip>
@@ -569,7 +563,7 @@
 		<mkdir dir="${bundle.docs.dir}/jss7" />
 		<mkdir dir="${bundle.docs.dir}/ussd" />
 		<copy todir="${bundle.docs.dir}/jss7" failonerror="true">
-			<fileset dir="${checkout.mobicents-jss7.dir}/Mobicents-jss7-${mobicents-jss7.version}/_docs/">
+			<fileset dir="${checkout.mobicents-jss7.dir}/mobicents-jss7-${mobicents-jss7.version}/_docs/">
 				<include name="**" />
 			</fileset>
 		</copy>
@@ -589,8 +583,8 @@
 			</fileset>
 		</copy>
 
-		<zip destfile="${base.dir}/Mobicents-ussd-${mobicents.ussd.release.version}-docs-${time.stamp}.zip" filesonly="false">
-			<zipfileset dir="${bundle.docs.dir}" prefix="Mobicents-ussd-${mobicents.ussd.release.version}/docs">
+		<zip destfile="${base.dir}/mobicents-ussd-${mobicents.ussd.release.version}-docs-${time.stamp}.zip" filesonly="false">
+			<zipfileset dir="${bundle.docs.dir}" prefix="mobicents-ussd-${mobicents.ussd.release.version}/docs">
 				<include name="**/*" />
 			</zipfileset>
 		</zip>

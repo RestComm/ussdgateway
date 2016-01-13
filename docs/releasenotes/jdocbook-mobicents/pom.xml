@@ -78,13 +78,13 @@
 					<dependency>
 						<groupId>org.mobicents.jdocbook</groupId>
 						<artifactId>telestax-xslt-ns</artifactId>
-						<version>1.2.0</version>
+						<version>1.5.0.FINAL</version>
 					</dependency>
 					<dependency>
 						<groupId>org.mobicents.jdocbook</groupId>
-						<artifactId>telestax-mobicents-style</artifactId>
+						<artifactId>telestax-community-style</artifactId>
 						<type>jdocbook-style</type>
-						<version>1.2.0</version>
+						<version>1.5.0.FINAL</version>
 					</dependency>
 				</dependencies>
 				<configuration>
