@@ -16,7 +16,7 @@
 	<property name="release.http-client.dir" value="${base.dir}/checkout/http-client-release" />
 	<property name="release.http-servlet.dir" value="${base.dir}/checkout/http-servlet-release" />
 	<property name="mobicents.ussd.dir" value="${base.dir}/.." />
-	<property name="mobicents.ussd.release.version" value="1.0.1-SNAPSHOT" />
+	<property name="mobicents.ussd.release.version" value="3.0.0-SNAPSHOT" />
 	<property name="mobicents-slee.version" value="2.8.9.29" />
 	<property name="mobicents-slee.ss7.map.ra.tag" value="master" />
 	<property name="mobicents-slee.http.ra.tag" value="master" />
