@@ -30,21 +30,21 @@ import javolution.util.FastMap;
 import org.apache.log4j.Logger;
 import org.mobicents.protocols.ss7.statistics.api.LongValue;
 
-import com.telscale.protocols.ss7.oam.common.jmx.MBeanHost;
-import com.telscale.protocols.ss7.oam.common.jmx.MBeanType;
-import com.telscale.protocols.ss7.oam.common.jmxss7.Ss7Layer;
-import com.telscale.protocols.ss7.oam.common.statistics.ComplexValueImpl;
-import com.telscale.protocols.ss7.oam.common.statistics.CounterDefImpl;
-import com.telscale.protocols.ss7.oam.common.statistics.CounterDefSetImpl;
-import com.telscale.protocols.ss7.oam.common.statistics.SourceValueCounterImpl;
-import com.telscale.protocols.ss7.oam.common.statistics.SourceValueObjectImpl;
-import com.telscale.protocols.ss7.oam.common.statistics.SourceValueSetImpl;
-import com.telscale.protocols.ss7.oam.common.statistics.api.ComplexValue;
-import com.telscale.protocols.ss7.oam.common.statistics.api.CounterDef;
-import com.telscale.protocols.ss7.oam.common.statistics.api.CounterDefSet;
-import com.telscale.protocols.ss7.oam.common.statistics.api.CounterMediator;
-import com.telscale.protocols.ss7.oam.common.statistics.api.CounterType;
-import com.telscale.protocols.ss7.oam.common.statistics.api.SourceValueSet;
+import org.mobicents.protocols.ss7.oam.common.jmx.MBeanHost;
+import org.mobicents.protocols.ss7.oam.common.jmx.MBeanType;
+import org.mobicents.protocols.ss7.oam.common.jmxss7.Ss7Layer;
+import org.mobicents.protocols.ss7.oam.common.statistics.ComplexValueImpl;
+import org.mobicents.protocols.ss7.oam.common.statistics.CounterDefImpl;
+import org.mobicents.protocols.ss7.oam.common.statistics.CounterDefSetImpl;
+import org.mobicents.protocols.ss7.oam.common.statistics.SourceValueCounterImpl;
+import org.mobicents.protocols.ss7.oam.common.statistics.SourceValueObjectImpl;
+import org.mobicents.protocols.ss7.oam.common.statistics.SourceValueSetImpl;
+import org.mobicents.protocols.ss7.oam.common.statistics.api.ComplexValue;
+import org.mobicents.protocols.ss7.oam.common.statistics.api.CounterDef;
+import org.mobicents.protocols.ss7.oam.common.statistics.api.CounterDefSet;
+import org.mobicents.protocols.ss7.oam.common.statistics.api.CounterMediator;
+import org.mobicents.protocols.ss7.oam.common.statistics.api.CounterType;
+import org.mobicents.protocols.ss7.oam.common.statistics.api.SourceValueSet;
 
 /**
 *
