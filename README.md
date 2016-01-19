@@ -18,7 +18,7 @@ RestComm USSD Gateway is lead by [TeleStax, Inc.](www.telestax.com) and develope
 
 ## Downloads
 
-Download binary from [here](https://github.com/RestComm/ussdgateway/releases) or Continuous Delivery builds from [CloudBees](https://mobicents.ci.cloudbees.com/job/Mobicents-USSD-Gateway/)
+Download binary from [here](https://github.com/RestComm/ussdgateway/releases) or Continuous Delivery builds from [CloudBees](https://mobicents.ci.cloudbees.com/job/RestComm-USSD-Gateway/)
 
 ## Maven Repository
 
