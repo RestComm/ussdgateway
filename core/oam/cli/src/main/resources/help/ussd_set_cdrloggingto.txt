@@ -1,0 +1,13 @@
+Name
+	ussd set cdrloggingto
+
+SYNOPSIS
+	ussd set cdrloggingto <Database | Textfile>
+
+DESCRIPTION
+	This command is used to set CDR logging to either Database or Textfile. 
+	By default, the value is Textfile and all transactions are logged to a
+	plain text file.	
+SEE ALSO
+	ussd get cdrloggingto
+

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "${ent.filename}">
+%BOOK_ENTITIES;
+]>
+
+<chapter id="introduction">
+	<title>Introduction</title>
+   <para>&THIS.PLATFORM; &THIS.APPLICATION; is an Open Source Java based USSD Gateway Platform that routes USSD messages from the signaling network to service applications and the other way around. It enables operators to offer real-time interactions to mobile subscribers and deliver interactive content to their mobile phones. 
+	</para>
+	<para>&THIS.PLATFORM; &THIS.APPLICATION; acts as an intermediary platform linking the service applications to the GSM network in a session oriented communication. The platform is easy-to-install and easy-to-deploy allowing you to have the Gateway set up and configured very quickly. 
+	</para>
+	<para>
+		&THIS.PLATFORM; &THIS.APPLICATION; supports TDM hardware offered by major vendors in the market, namely Intel family boards (Dialogic) and 
+		Zaptel/Dahdi (Digium, Sangoma). TeleStax also has in-house SS7 cards also known as Mobicents SS7 Cards. Mobicents SS7 cards have MTP2/3 support on-board and therefore the processing load on the server hosting the
+		&THIS.PLATFORM; &THIS.APPLICATION; platform will be low when you use these SS7 cards.    
+	</para>
+	<para>&THIS.PLATFORM; &THIS.APPLICATION;
+		is based on the robust and proven &THIS.PLATFORM;
+		JAIN SLEE 1.1 Server and &THIS.PLATFORM;
+		jSS7 Stack.
+	&THIS.PLATFORM;
+		JAIN SLEE Server is a highly scalable event-driven application server with a robust component model and fault tolerant execution environment. It provides a set of connectors to a
+		variety of networks elements: SS7 MAP, TCAP, INAP, ISUP, SMPP, XMPP, SIP, MGCP, HTTP, XDM, XCAP, Diameter and many others. It is fully compliant with JSR 240 (JSLEE 1.1).
+	&THIS.PLATFORM;
+		jSS7 is a software based implementation of the SS7 protocol. It provides implementation for Level 2 and above in the SS7 protocol Stack. &THIS.PLATFORM;
+		jSS7 Stack User Guide is bundled within and you can refer to the guide for more details on the Stack.
+	</para>
+	<para>
+		The &THIS.PLATFORM; USSD Gateway makes use of HTTP protocol between the gateway and the third-party applications (or Value Added Service Modules). &THIS.PLATFORM; USSD Gateway receives the USSD request from the subscriber's handset/device via the GSM Signaling network and then translates these requests to HTTP depending on the rules configured in the Gateway to route to a corresponding Value Added Service (VAS) or third-party application. The HTTP callback mechanism allows the third-party Application to be agnostic to Operating System, Programming Language and Framework.
+	</para>
+	<para>
+		This guide will assist you in installing &THIS.PLATFORM; &THIS.APPLICATION;. For more details on configuring and using the platform, please refer to the &THIS.PLATFORM; &THIS.APPLICATION; User Guide. 
+	</para>
+</chapter>

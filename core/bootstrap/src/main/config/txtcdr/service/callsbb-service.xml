@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE service-xml PUBLIC "-//Sun Microsystems, Inc.//DTD JAIN SLEE Service 1.1//EN"
+                             "http://java.sun.com/dtd/slee-service-xml_1_1.dtd">
+<service-xml>
+	<service>
+		<service-name>mobicents-ussdgateway-cdr</service-name>
+		<service-vendor>org.mobicents</service-vendor>
+		<service-version>1.0</service-version>
+		<root-sbb>
+			<sbb-name>CDRSbbPlain</sbb-name>
+			<sbb-vendor>org.mobicents</sbb-vendor>
+			<sbb-version>1.0</sbb-version>
+		</root-sbb>
+		<default-priority>51</default-priority>
+	</service>
+	<service>
+        <service-name>mobicents-ussdgateway</service-name>
+        <service-vendor>org.mobicents</service-vendor>
+        <service-version>1.0</service-version>
+        <root-sbb>
+            <sbb-name>ParentSbb</sbb-name>
+            <sbb-vendor>org.mobicents</sbb-vendor>
+            <sbb-version>1.0</sbb-version>
+        </root-sbb>
+        <default-priority>50</default-priority>
+    </service>
+    <service>
+        <service-name>mobicents-ussdgateway-server-http</service-name>
+        <service-vendor>org.mobicents</service-vendor>
+        <service-version>1.0</service-version>
+        <root-sbb>
+            <sbb-name>HttpServerSbb</sbb-name>
+            <sbb-vendor>org.mobicents</sbb-vendor>
+            <sbb-version>1.0</sbb-version>
+        </root-sbb>
+        <default-priority>49</default-priority>
+    </service>
+    <service>
+        <service-name>mobicents-ussdgateway-server-sip</service-name>
+        <service-vendor>org.mobicents</service-vendor>
+        <service-version>1.0</service-version>
+        <root-sbb>
+            <sbb-name>SipServerSbb</sbb-name>
+            <sbb-vendor>org.mobicents</sbb-vendor>
+            <sbb-version>1.0</sbb-version>
+        </root-sbb>
+        <default-priority>49</default-priority>
+    </service>    
+</service-xml>

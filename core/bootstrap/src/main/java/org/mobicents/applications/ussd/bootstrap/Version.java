@@ -74,7 +74,7 @@ public final class Version {
 	 * @return Basic information as a string.
 	 */
 	public String toString() {
-		StringBuilder sb = new StringBuilder("Mobicents SMSC Server: ");
+		StringBuilder sb = new StringBuilder("Mobicents USSD Gateway Server: ");
 		boolean first = true;
 		for (Object key : props.keySet()) {
 			if (first) {

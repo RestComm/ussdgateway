@@ -22,10 +22,16 @@
 
 package org.mobicents.ussdgateway.slee.cdr.jdbc.task;
 
+import java.sql.PreparedStatement;
+import java.sql.Timestamp;
+import java.sql.Types;
+
 import javax.slee.facilities.Tracer;
 
+import org.mobicents.slee.resource.jdbc.task.JdbcTaskContext;
 import org.mobicents.slee.resource.jdbc.task.simple.SimpleJdbcTask;
 import org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent;
+import org.mobicents.ussdgateway.slee.cdr.RecordStatus;
 import org.mobicents.ussdgateway.slee.cdr.USSDCDRState;
 
 /**
@@ -50,4 +56,82 @@ public abstract class CDRTaskBase extends SimpleJdbcTask {
     public abstract void callParentOnFailure(ChargeInterfaceParent parent, String message, Throwable t);
 
     public abstract void callParentOnSuccess(ChargeInterfaceParent parent);
+    
+    protected void markRecordCorrupted(JdbcTaskContext ctx){
+        try {
+            PreparedStatement preparedStatement = ctx.getConnection().prepareStatement(Schema._QUERY_INSERT);
+            Timestamp tstamp = new Timestamp(System.currentTimeMillis());
+
+//            _COLUMN_L_SPC+","+
+          preparedStatement.setNull(1, Types.SMALLINT);
+//            _COLUMN_L_SSN+","+
+          preparedStatement.setNull(2, Types.TINYINT);
+//            _COLUMN_L_RI+","+
+          preparedStatement.setNull(3,Types.TINYINT);              
+//            _COLUMN_L_GT_I+","+
+          preparedStatement.setNull(4, Types.TINYINT);
+           
+//            _COLUMN_L_GT_DIGITS+","+
+          preparedStatement.setNull(5, Types.VARCHAR);
+
+//          _COLUMN_R_SPC+","+
+          preparedStatement.setNull(6, Types.SMALLINT);
+             
+//          _COLUMN_R_SSN+","+
+          preparedStatement.setNull(7, Types.TINYINT);
+
+//          _COLUMN_R_RI+","+
+          preparedStatement.setNull(8,Types.TINYINT);  
+//          _COLUMN_R_GT_I+","+
+          preparedStatement.setNull(9, Types.TINYINT);
+//          _COLUMN_R_GT_DIGITS+","+
+          preparedStatement.setNull(10, Types.VARCHAR);
+//            _COLUMN_SERVICE_CODE+","+
+          preparedStatement.setNull(11, Types.VARCHAR);
+//            _COLUMN_OR_NATURE+","+
+//            _COLUMN_OR_PLAN+","+
+//            _COLUMN_OR_DIGITS+","+
+
+          preparedStatement.setNull(12, Types.TINYINT);
+          preparedStatement.setNull(13, Types.TINYINT);
+          preparedStatement.setNull(14, Types.VARCHAR);
+//            _COLUMN_DE_NATURE+","+
+//            _COLUMN_DE_PLAN+","+
+//            _COLUMN_DE_DIGITS+","+
+          preparedStatement.setNull(15, Types.TINYINT);
+          preparedStatement.setNull(16, Types.TINYINT);
+          preparedStatement.setNull(17, Types.VARCHAR);
+//            _COLUMN_ISDN_NATURE+","+
+//            _COLUMN_ISDN_PLAN+","+
+//            _COLUMN_ISDN_DIGITS+","+
+          preparedStatement.setNull(18, Types.TINYINT);
+          preparedStatement.setNull(19, Types.TINYINT);
+          preparedStatement.setNull(20, Types.VARCHAR);
+//            _COLUMN_VLR_NATURE+","+
+//            _COLUMN_VLR_PLAN+","+
+//            _COLUMN_VLR_DIGITS+","+
+          preparedStatement.setNull(21, Types.TINYINT);
+          preparedStatement.setNull(22, Types.TINYINT);
+          preparedStatement.setNull(23, Types.VARCHAR);
+//            _COLUMN_IMSI+","+
+          preparedStatement.setNull(24, Types.VARCHAR);    
+//            _COLUMN_LOCAL_DIALOG_ID+","+
+//          preparedStatement.setLong(25, this.state.getLocalDialogId());
+          if (this.state.getLocalDialogId() != null) {
+              preparedStatement.setLong(25, this.state.getLocalDialogId());
+          } else {
+              preparedStatement.setNull(25, Types.BIGINT);
+          }
+//            _COLUMN_TSTAMP+","+
+          preparedStatement.setTimestamp(26, tstamp);
+//        _COLUMN_STATUS+ <-- null - create record
+          preparedStatement.setString(27,RecordStatus.FAILED_CORRUPTED_MESSAGE.toString());
+//        _COLUMN_ID
+          preparedStatement.setString(28,this.state.getId());
+          preparedStatement.execute();
+        } catch (Exception e) {
+            this.tracer.severe("Failed at execute!", e);
+            //throw new CDRCreateException(e);
+        }
+    }
 }

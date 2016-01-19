@@ -1,0 +1,35 @@
+Name
+	ussd set noroutingruleconfigerrmssg
+
+SYNOPSIS
+	ussd set noroutingruleconfigerrmssg <message>
+
+DESCRIPTION
+	This command is used to set the message to be displayed to the end user if the 
+	USSD Gateway is not configured for the dialled short code. For example, if the 
+	dialled short code is *345#, but the USSD Gateway is not configured with an 
+	appropriate routing rule for this code, then the message displayed to the 
+	end user will be the value set for the parameter 'noroutingruleconfigerrmssg'.
+
+EXAMPLES
+	ussd set noroutingruleconfigerrmssg Not valid short code. Please dial valid 
+	short code.
+
+	The above command will set the value of the parameter 
+	'noroutingruleconfigerrmssg' as "Not valid short code. Please dial valid short 
+	code." and the terminal will display the message "Parameter has been successfully 
+	set". You can verify this by issuing the 'ussd get' command whose output will be
+	as below:
+
+	ussd get
+
+	noroutingruleconfigerrmssg = Not valid short code. Please dial valid short code
+	dialogtimeouterrmssg = null
+	dialogtimeout = 25000
+	servererrmssg = null
+
+SEE ALSO
+	ussd set, ussd set dialogtimeouterrmssg, ussd set dialogtimeout, 
+	ussd set servererrmssg, ussd get
+
+

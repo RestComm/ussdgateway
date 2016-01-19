@@ -65,7 +65,9 @@ public class UssdManagement {
 	}
 
 	public void start() throws Exception {
-		this.ussdPropertiesManagement = UssdPropertiesManagement.getInstance(this.name);
+        UssdStatAggregator.getInstance().clearDialogsInProcess();
+
+	    this.ussdPropertiesManagement = UssdPropertiesManagement.getInstance(this.name);
 		this.ussdPropertiesManagement.setPersistDir(this.persistDir);
 		this.ussdPropertiesManagement.start();
 

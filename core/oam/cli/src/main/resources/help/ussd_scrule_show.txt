@@ -1,0 +1,18 @@
+Name
+	ussd scrule show
+
+SYNOPSIS
+	ussd scrule show <short-code> <networkid>
+
+DESCRIPTION
+	This command is used to view the details of all or specified configured routing rules
+	in the USSD Gateway.
+	If you run a CLI command without <short-code> and <networkid> parameters, then
+	all rules will be displayed. If you specify both <short-code> and <networkid>
+	parameters, then the rule for the specified short code and the networkid if such rule
+	is configured. If you specify only <short-code> parameter, then the rule for the
+	specified short code and networkid==0 if such rule is configured.
+
+SEE ALSO
+	ussd scrule, ussd scrule create, ussd scrule delete, ussd scrule modify
+

@@ -1,0 +1,13 @@
+Name
+	ussd set scgt
+
+SYNOPSIS
+	ussd set scgt <globalTitle>
+
+DESCRIPTION
+	This command is used to set a value for ussd Global Title.
+
+SEE ALSO
+	ussd get scgt, ussd get scssn, ussd set scssn, ussd get hlrssn,
+	ussd set hlrssn, ussd get mscssn, ussd set mscssn, ussd get maxmapv, 
+	ussd set maxmapv

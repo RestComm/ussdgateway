@@ -1,0 +1,508 @@
+<?xml version='1.0'?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [<!ENTITY % BOOK_ENTITIES SYSTEM "${ent.filename}">%BOOK_ENTITIES;]>
+
+<chapter id="setup">
+
+	<title>Setup</title>
+
+	<section id="preinstall_requirements_and_prerequisites">
+		<title>Pre-Install Requirements and Prerequisites</title>
+		<para>Ensure that the following requirements have been met before continuing with the install.</para>
+		<section id="hardware_requirements">
+			<title>Hardware Requirements</title>
+			<para>The Application doesn't change the &THIS.PLATFORM; JAIN SLEE Hardware Requirements, refer to &THIS.PLATFORM; JAIN SLEE documentation for more information.</para>
+			<note>
+				<para>Note that application makes use of Resource Adaptors - this implies that <acronym>RA</acronym>s requirements must be taken into consideration!</para>
+				<para>Also be aware that each Resource Adaptor may have some specific hardware requirements!</para>
+			</note>
+			
+		</section>
+		<section id="software_prerequisites">
+			<title>Software Prerequisites</title>
+			<para>The Application requires &THIS.PLATFORM; JAIN SLEE properly set, with:</para>
+			<itemizedlist>
+				<!--  
+				<listitem>
+					<para><acronym>SIP</acronym> </para>
+				</listitem>
+				-->
+				<listitem>
+					<para><acronym>HTTP</acronym> Client</para>
+				</listitem>				
+				<listitem>
+					<para><acronym>MAP</acronym> </para>
+				</listitem>
+			</itemizedlist>
+			<para>Resource Adaptors deployed.</para>
+			<note><para>Note <acronym>MAP</acronym> Resource Adaptor - has some specific software requirements! Please refer to MAP RA document in JSLEE Guide</para></note>
+		</section>
+	</section>	
+	
+	<section id="source_code">
+		<title>&THIS.PLATFORM; JAIN SLEE &THIS.APPLICATION; Source Code</title>
+		<para></para>
+		
+		<section id="release_source_building">
+			<title>Release Source Code Building</title>
+			<procedure>
+				<step>
+				    <title>Downloading the source code</title>
+				    <important>
+				    	<para>GIT is used to manage its source code. Instructions for using GIT, including install, can be found at <ulink url="http://git-scm.com/documentation" /></para>
+				    </important>
+					<para>Use GIT to clone repository, the base URL is &THIS.TRUNK_SOURCE_CODE_URL;,
+						then to checkout specific release version(tag) use <command>git checkout tag_name</command>, lets consider release-&THIS.VERSION;.
+					</para>
+					<programlisting>
+[usr]$ git clone &THIS.TRUNK_SOURCE_CODE_URL;
+[usr]$ cd ussdgateway
+[usr]$ git checkout release-&THIS.VERSION;
+					</programlisting>	    
+  				</step>
+				<step>
+				    <title>Building the source code</title>
+				    <important>
+				    	<para>Maven 2.0.9 (or higher) is used to build the release. Instructions for using Maven2, including install, can be found at <ulink url="http://maven.apache.org" /></para>
+				    </important>
+				    <para>Use Maven to build the binary.</para>
+				    <programlisting>
+				    [usr]$ cd &THIS.APPLICATION.DIRNAME;-&THIS.VERSION;
+				    [usr]$ mvn install
+				    </programlisting>
+				    <para>Once the process finishes you should have the <literal>&THIS.APPLICATION.DIRNAME;-&THIS.VERSION;/core/bootstrap/target/mobicents-ussd-gateway</literal> directory, 
+				    if &THIS.PLATFORM; JAIN SLEE is installed and environment variable JBOSS_HOME is pointing to its underlying &JEE.PLATFORM; directory, then the  <literal>mobicents-ussd-gateway</literal> will also be 
+				    deployed in the container.</para>
+  				</step>
+			</procedure>      
+		</section>	
+		
+		<section
+			id="trunk_source_building">
+			<title>Development Trunk Source Building</title>
+			<para>
+				Similar process as for <xref linkend="release_source_building" />, the only change is don't switch to specific tag.
+			</para>
+		</section>
+		
+	</section>
+	<!--
+	<section id="install">
+		<title>Installing &THIS.PLATFORM; JAIN SLEE &THIS.APPLICATION; Application</title>
+		<para>To install the Application simply execute provided ant script <filename>build.xml</filename> default target:</para>
+		<programlisting>
+		[usr]$ ant
+		</programlisting>
+		<para>The script will copy the Application's deployable unit jar to the <literal>default</literal> &THIS.PLATFORM; JAIN SLEE server profile deploy directory, to deploy to another server profile use the argument <literal>-Dnode=</literal>.</para>
+	</section>
+	
+	<section id="uninstall">
+		<title>Uninstalling &THIS.PLATFORM; JAIN SLEE &THIS.APPLICATION; Application</title>
+		<para>To uninstall the Application simply execute provided ant script <filename>build.xml</filename> <literal>undeploy</literal> target:</para>
+		<programlisting>
+		[usr]$ ant undeploy
+		</programlisting>
+		<para>The script will delete the Application's deployable unit jar from the <literal>default</literal> &THIS.PLATFORM; JAIN SLEE server profile deploy directory, to undeploy from another server profile use the argument <literal>-Dnode=</literal>.</para>
+	</section>
+	-->
+	<section id="Strucure">
+				<title>Folder structure of &THIS.PLATFORM; JAIN SLEE &THIS.APPLICATION;</title>
+				<para>
+					Installing Mobicents USSD Gateway creates a mobicents-ussd-gateway directory that contains gateway configuration, 
+					libraries required for boot and running, example rules definition file (.drl) etc. You need to know your way around 
+					the distribution layout to locate the drools file's to add new rules. The figure "view of Mobicens USSD Gateway" 
+					illustrates the installation directory of the Gateway.
+				</para>
+				
+				
+					<mediaobject>
+						<imageobject>
+							<imagedata width="300px" align="center"
+								fileref="images/mobicents-ussd-structure.png" format="PNG" />
+						</imageobject>
+						<caption>
+							<para>&THIS.PLATFORM; USSD Gateway
+							</para>
+						</caption>
+					</mediaobject>				
+				
+	</section>	
+				
+	<section id="setup_rule">
+		<title>Rule engine configuration</title>
+		<important>
+			<para>&THIS.APPLICATION; uses <literal>Drools</literal> as rule engine to perform decisions, it is important to understand <ulink url="&THIS.JBOSS.DROOLS.DOCUMENTATION;">JBoss Drools</ulink> </para>
+		</important>
+		<para>
+			Engine is fed with <literal>DRL</literal> files having reference to fact. <literal>DRL</literal> file contains set of rules which perform operations on facts passed into engine.
+			&THIS.APPLICATION; <literal>DRL</literal> file defines rules to match initial <acronym>USSD</acronym> string to set of values identifying protocol and address of peer to which messages should be forwarded.
+		</para>
+		<para>
+		 Fact is simple POJO class. &THIS.APPLICATION; fact looks like
+		</para>
+	<programlisting language="Java" role="JAVA"><![CDATA[
+package org.mobicents.ussdgateway.rules;
+
+import java.io.Serializable;
+
+/**
+ * Acts as Fact for Rules
+ * 
+ */
+public class Call implements Serializable {
+	// Initial string, its like #123*
+	private String ussdString;
+
+	private boolean isHttp;
+	private boolean isSmpp;
+
+	// to be used with other protocols
+	private String genericUrl;
+
+	public Call(String ussdString) {
+		this.ussdString = ussdString;
+	}
+
+	public String getUssdString() {
+		return ussdString;
+	}
+
+	public boolean isHttp() {
+		return isHttp;
+	}
+
+	public void setHttp(boolean isHttp) {
+		this.isHttp = isHttp;
+	}
+
+	public boolean isSmpp() {
+		return isSmpp;
+	}
+
+	public void setSmpp(boolean isSmpp) {
+		this.isSmpp = isSmpp;
+	}
+
+	/**
+	 * @return the genericUrl
+	 */
+	public String getGenericUrl() {
+		return genericUrl;
+	}
+
+	/**
+	 * @param genericUrl
+	 *            the genericUrl to set
+	 */
+	public void setGenericUrl(String genericUrl) {
+		this.genericUrl = genericUrl;
+	}
+
+	@Override
+	public String toString() {
+		return "Call [ussdString=" + ussdString + ", isHttp=" + isHttp + ", isSmpp=" + isSmpp + ", genericUrl="
+				+ genericUrl + "]";
+	}
+	
+}
+	]]>
+            	</programlisting>	
+        <para>
+        	Rule engine can be fed with static <literal>.drl</literal> file or use <literal>Guvnor</literal> to dynamically create and maintain <literal>.drl</literal>
+        </para>	
+		<para>
+			Rule engine (<literal>Drools</literal>) is configured with <filename>USSDGatewayChangeSet.xml</filename> file. Its content alters how rule set is loaded and maintained within engine.
+			There are two ways of maintaining rules:
+		</para>
+			<variablelist>
+				<varlistentry>
+					<term>locally</term>
+					<listitem>
+						<para>rules are loaded from designated file as explained in <xref linkend="setup_rule_local"/>. Configuration file should look as follows:</para>
+						<programlisting language="XML" role="XML"><![CDATA[
+<change-set xmlns='http://drools.org/drools-5.0/change-set'
+	xmlns:xs='http://www.w3.org/2001/XMLSchema-instance'
+	xs:schemaLocation='http://drools.org/drools-5.0/change-set.xsd'>
+	<add>
+	]]><co id="example.setup.rules1.co1"/><![CDATA[
+		<resource
+			source='file:${jboss.home}/server/${node}
+				/deploy/${application.name}/rules/'
+			type='DRL' />
+	</add>
+</change-set>
+						]]>
+						</programlisting>
+						<calloutlist>
+							<callout arearefs="example.setup.rules1.co1">
+									<para>points to subdirectory in current application which is scanned for rule files.</para>
+								</callout>
+							</calloutlist>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>remotely</term>
+					<listitem>
+						<para>rules are managed by <literal>Guvnor</literal>. Guvnor configuration is explpained in <xref linkend="setup_rule_guvnor"/> 
+						Configuration file should look as follows:</para>
+						<programlisting language="XML" role="XML"><![CDATA[
+<change-set xmlns='http://drools.org/drools-5.0/change-set'
+	xmlns:xs='http://www.w3.org/2001/XMLSchema-instance'
+	xs:schemaLocation='http://drools.org/drools-5.0/change-set.xsd'>
+	<add>
+	]]><co id="example.setup.rules2.co1"/><![CDATA[
+		<resource source='http://localhost:8080/drools-guvnor/
+			org.drools.guvnor.Guvnor/package/ussdGateway/LATEST.drl' type='DRL' />
+	</add>
+</change-set>
+						]]>
+						</programlisting>
+						<calloutlist>
+							<callout arearefs="example.setup.rules2.co1">
+									<para>points to <literal>Guvnor</literal>s latest rule file. Note that path after package <literal>MUST</literal> match your custom created package inside <literal>Guvnor</literal> .</para>
+								</callout>
+							</calloutlist>
+					</listitem>
+				</varlistentry>
+
+			</variablelist>
+			
+		
+		
+	</section>
+	<section id="setup_rule_local">
+		<title>Local file configuration</title>
+		<para>Rule file name is <filename>USSDGateway.drl</filename>. File content looks as follows:</para>
+		<!-- Dev: Its java? or what -->
+		<programlisting language="Java" role="JAVA"><![CDATA[
+package org.mobicents.ussdgateway.rules
+]]><co id="example.rules.rule.co1"/><![CDATA[
+import org.mobicents.ussdgateway.rules.Call;
+]]><co id="example.rules.rule.co2"/><![CDATA[
+rule "USSDGateway1"
+	]]><co id="example.rules.rule.co3"/><![CDATA[
+	when
+		$c : Call( ussdString == "*123#" )
+	then]]><co id="example.rules.rule.co4"/><![CDATA[
+		$c.setHttp( true );
+		$c.setGenericUrl( "http://localhost:8080/ussddemo/test" );
+]]><co id="example.rules.rule.co5"/><![CDATA[
+end
+	]]>
+	</programlisting>
+		<calloutlist>
+			<callout arearefs="example.rules.rule.co1">
+				<para>import of fact <acronym>POJO</acronym> </para>
+			</callout>
+			<callout arearefs="example.rules.rule.co2">
+				<para>definition of rule</para>
+			</callout>
+			<callout arearefs="example.rules.rule.co3">
+				<para>condition to enter rule clause. It accesses fact property <literal>ussdString</literal> and matches it against <literal>#123*</literal> value, if it matches engine jumps to <literal>then</literal> part</para>
+			</callout>
+			<callout arearefs="example.rules.rule.co4">
+				<para>rule part which sets defined <acronym>HTTP</acronym> peer as destination for messages</para>
+			</callout>
+			<callout arearefs="example.rules.rule.co5">
+				<para>end of rule <literal>USSDGateway1</literal> rule</para>
+			</callout>
+			
+		</calloutlist>	
+	<para>The folder <filename>rules</filename> is scanned every 60 seconds and if any changes made to <filename>USSDGateway.drl</filename> or new <literal>.drl</literal> file added, engine will automatically
+	deploy changed/new file and re-create the Knowledge Base </para>
+	</section>	
+	<section id="setup_rule_guvnor">
+		<title>Guvnor configuration</title>
+		<important>
+			<para>&THIS.APPLICATION;
+				Application uses
+				<literal>Gunvor</literal>
+				to manage system wide rule set in consistent way, it is important to
+				understand
+				<ulink url="&THIS.JBOSS.GUVNOR.DOCUMENTATION;">Guvnor</ulink>
+			</para>
+		</important>
+		<para>
+			<literal>Guvnor</literal>
+			is deployed along with &THIS.APPLICATION;
+			Application. To access it simply go to
+			<literal>http://&lt;your server&gt;/drools-guvnor/</literal>
+			. This will bring initial info screen or login screen - depends on
+			configuration.
+		</para>
+		<para>If you have not configured the security you can directly login
+			without providing any user id or password.</para>
+		<section id="setup_rule_guvnor_initial">
+			<title>Creating resources</title>
+			<note><para><literal>Guvnor</literal> requires upload for fact model and creation of some resources before it can perform its tasks.</para></note>
+			<para>
+				In case
+				<literal>Guvnor</literal>
+				has not been used(it is a new repository) you will get a message
+				asking if you would you like to install a sample repository? Its upto
+				you to install the sample repository. If you say yes, you would get
+				sample repository which you can refer to have better understanding of
+				Guvnor
+			</para>
+			<para>Once you log-in follow the bellow steps:</para>
+			<procedure>
+				<step>
+					<title>Create a category specific to USSD gateway.</title>
+					<para>
+						Go to
+						<guimenu>Administration &gt; Category &gt; New Category</guimenu>
+						. Enter Category name as
+						<literal>UssdGateway</literal>
+						.
+					</para>
+					<mediaobject>
+						<imageobject>
+							<imagedata width="300px" align="center"
+								fileref="images/USSD-Guvnor-createCategory.png" format="PNG" />
+						</imageobject>
+						<caption>
+							<para>Guvnor category
+							</para>
+						</caption>
+					</mediaobject>
+				</step>
+				<step>
+					<title>Create package for fact model.</title>
+					<para>
+						Rules need a fact model (object model) to work off, so next you
+						will want to go to the Package management feature. Go to
+						<guimenu>Knowledge Bases &gt; Create New &gt; New Package</guimenu>
+						. Type
+						<literal>ussdGateway</literal>
+						(note that this name
+						<literal>MUST</literal>
+						match package in
+						<filename>USSDGatewayChangeSet.xml</filename>
+						file).
+					</para>
+					<mediaobject>
+						<imageobject>
+							<imagedata width="300px" align="center"
+								fileref="images/USSD-Guvnor-CreatePackage.png" format="PNG" />
+						</imageobject>
+						<caption>
+							<para>Guvnor package
+							</para>
+						</caption>
+					</mediaobject>
+				</step>
+				<step>
+					<title>Upload fact model.</title>
+					<para>
+						To upload a model, use ussdgateway-domain-x.y.z.jar which has the
+						fact model (Call.java API) that you will be using in your rules.
+						When you are in the model editor screen, you can upload a jar file,
+						choose the package name from the list that you created in the
+						previous step. Go to
+						<guimenu>Knowledge Base &gt; Create New &gt; Upload POJO Model Jar
+						</guimenu>
+						. On the screen enter name as
+						<literal>UssdPojo</literal>
+						, select package
+						<literal>ussdGateway</literal>
+						and add the description, click
+						<guibutton>Ok</guibutton>
+						.
+					</para>
+					<mediaobject>
+						<imageobject>
+							<imagedata width="300px" align="center"
+								fileref="images/USSD-Guvnor-UploadModel.png" format="PNG" />
+						</imageobject>
+						<caption>
+							<para>Guvnor fact model upload
+							</para>
+						</caption>
+					</mediaobject>
+					<para>
+						Browse in newly open window and point to
+						<filename>${JBOSS.HOME}/server/default/deploy/mobicents-ussd-gateway/lib/ussdgateway-domain-x.y.z.jar
+						</filename>
+						.
+					</para>
+	
+				</step>
+				<step>
+					<title>Edit your package configuration.</title>
+					<para>
+						Now edit your package configuration (you just created) to import
+						the fact types you just uploaded (add import statements), and save
+						the changes. Go to Knowledge Bases and click on
+						<literal>ussdGateway</literal>
+						package. Click on
+						<guibutton>Save and validate configuration</guibutton>
+						button.
+					</para>
+				</step>
+			</procedure>
+			<para>
+				This concludes configuration of
+				<literal>Guvnor</literal>
+				. Note that this has to be done only once.
+			</para>
+		</section>
+		<section id="setup_rule_guvnor_creating_rules">
+			<title>Creating rules</title>
+			<para><literal>Guvnor</literal> allows to create rules and edit previously existing ones. Changes done with <literal>Guvnor</literal> are automaticly propagated to all clients.
+			To create rule follow procedure below:</para>
+			<procedure>
+				<step>
+					<title>Create rule.</title>
+					<para> Go to <guimenu>Knowledge Bases&gt; Create New &gt; New Rule</guimenu>.
+							Enter Name as <literal>ussd123Sip</literal>, click on <literal>UssdGateway</literal> Initial Category.
+							Select <guibutton>DRL Rule (Technical rule - text editor)</guibutton>, actually you can use
+							any editor here that you are comfortable with. Select <literal>ussdGateway</literal> as
+							package. Enter description and click <literal>Ok</literal>.</para>
+							
+					<mediaobject>
+						<imageobject>
+							<imagedata width="300px" align="center"
+								fileref="images/USSD-Guvnor-NewRule.png" format="PNG" />
+						</imageobject>
+						<caption>
+							<para>Guvnor new rule
+							</para>
+						</caption>
+					</mediaobject>
+				</step>
+				<step>
+					<title>Edit rule.</title>
+					<para></para>
+					<mediaobject>
+						<imageobject>
+							<imagedata width="300px" align="center"
+								fileref="images/USSD-Guvnor-DRL.png" format="PNG" />
+						</imageobject>
+						<caption>
+							<para>Guvnor edit rule
+							</para>
+						</caption>
+					</mediaobject>
+				</step>
+				<step>
+					<title>Accept rule.</title>
+					<para>Click on <guibutton>Validate</guibutton> to validate the Rules you just defined. Once done with rule editing, you can check in the changes (save) by clicking on <guibutton>Save Changes</guibutton></para>
+				</step>
+				<step>
+					<title>Rebuild and validate package</title>
+					<para>After you have edited some rules in <guibutton>ussdGateway</guibutton> package, you can click on the <guibutton>ussdGateway</guibutton> package, open the package, and build the whole package.</para>
+					<mediaobject>
+						<imageobject>
+							<imagedata width="300px" align="center"
+								fileref="images/USSD-Guvnor-BuildPackage.png" format="PNG" />
+						</imageobject>
+						<caption>
+							<para>Guvnor new rule
+							</para>
+						</caption>
+					</mediaobject>
+				</step>		
+			</procedure>
+		</section>
+	</section>
+</chapter>
+

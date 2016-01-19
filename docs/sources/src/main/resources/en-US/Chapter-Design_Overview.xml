@@ -1,36 +1,0 @@
-<?xml version='1.0'?>
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [<!ENTITY % BOOK_ENTITIES SYSTEM "Application_User_Guide.ent">%BOOK_ENTITIES;]>
-
-<chapter id="design_overview">
-
-	<title>Design Overview</title>
-
-	<para>&THIS.APPLICATION; is  JAIN SLEE 1.1 Application. It is capable of forwarding <acronym>USSD</acronym> messages to desired peer.</para>
-	
-	<para>Following diagram depicts top design overview:</para>
-	<mediaobject>
-		<imageobject>
-			<imagedata width="300px" align="center"
-			fileref="images/ussd-application-design-overview.png" format="PNG" />
-		</imageobject>
-		<caption>
-			<para>&THIS.APPLICATION;
-				Design overview
-			</para>
-		</caption>
-	</mediaobject>
-	
-	<para>
-		&THIS.APPLICATION; provides Load Balancing and Fault Tolerance of applications. Two 3rd Party Application Servers can be paired to provide Fault-Tolerance on the Gateway and GSM Network level.
-	</para>
-	<important>
-		<para>Currently gateway supports following protocols for proxying:</para>
-		<itemizedlist>
-			<listitem>
-				<para><acronym>HTTP</acronym></para>
-			</listitem>
-		</itemizedlist>
-	</important>
-
-</chapter>
-

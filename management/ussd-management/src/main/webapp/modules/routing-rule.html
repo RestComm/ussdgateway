@@ -1,0 +1,321 @@
+					<h3 style="margin: 0px;"><i class="icon-resize-small"></i> Short Code Routing Rules</h3>
+					<hr style="margin: 10 0px;"/>
+					
+					<div class="alert alert-error" id="login-settings-error" style="display:none;">
+					  <button type="button" class="close">&times;</button>
+					  Some Fields are not correctly filled out, please double check the settings below !
+					</div>	
+										
+ 					<span style="float:right;">
+						<button id="refresh" style="float: right; margin-right: 20px; margin-left: 20px; height: 30px;" class="btn btn-medium btn-success" data-toggle="tooltip" data-placement="left" title="Refresh Short Code List" onclick="updateScRules();" ><i class="icon-refresh"></i></button>
+					</span>
+				
+					<span id="scrule-summary"></span>
+					<span id="ras-table-wrapper">
+						<table id="no-scrr-table" class="table" style="display: none;">
+							<tr>
+								<td>
+									<div class="alert alert-warning fade in text-center" >
+										<h2>No Short Code Routing Rule have been defined yet.</h2>
+									</div>
+								</td>
+							</tr>
+						</table>				
+						<table id="ras-table" class="table table-hover">
+							<thead>
+								<tr>
+									<th style="width: 30px;">&nbsp;</th>
+									<th>Short Code</th>
+									<th>Type</th>
+									<th>URL or SIP Proxy</th>
+									<th>Network Id</th>
+									<th>Exact Match</th>
+									<th>Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</span>
+					<span class="span12" style="width: 95%; text-align: right;">
+						<div id="add-sc-rule-box" class="input-prepend input-append" style="display: none;">
+							<input id="short-code" class="span2" type="text" placeholder="Short Code" />
+							
+							<select name="short-code-type" id="short-code-type" style="margin: 0 0px; width: 100px;" placeholder="Absolute">
+								<option>HTTP</option>
+								<option>SIP</option>
+							</select>
+														
+							<input id="short-code-url" class="span3" type="text" placeholder="URL or SIP Proxy" />
+							<input id="short-code-networkid" class="span1" type="text" placeholder="Network Id" />
+							
+							<select name="short-code-absolute" id="short-code-absolute" style="margin: 0 0px; width: 100px;" placeholder="Absolute">
+								<option>true</option>
+								<option>false</option>
+							</select>							
+							<button id="add-sc-rule-btn" onclick="addScRule();" class="btn" >Create</button>
+							<button id="cancel-add-sc-rule-btn" class="btn btn-inverse" onclick="cancelAddScRule();">Cancel</button>
+						</div>
+					<button id="show-add-sc-rule-btn" class="btn btn-inverse" onclick="showAddScRule();" ><i class="icon-plus"></i>Create Rule</button>
+					</span>
+							
+							
+				<script type="text/javascript">
+					function showAddScRule() {
+					        $("#show-add-sc-rule-btn").hide();
+					        $("#add-sc-rule-box").css("display", "block");
+					        $("#short-code").focus();
+					}
+		
+					function cancelAddScRule() {
+					        $("#short-code").val("");
+					        $("#short-code-url").val("");
+					        $("#short-code-networkid").val("");
+					        $("#short-code-absolute").val("");
+					        $("#add-sc-rule-box").css("display", "none");
+					        $("#show-add-sc-rule-btn").show();
+					}
+					function updateScRules() {
+						jolokia.request(
+							[
+								{ type: "read", mbean: "org.mobicents.ussdgateway:name=ShortCodeRoutingRuleManagement", attribute: ["ScRoutingRuleList"] },
+							],
+							{ success: [ 
+								function(response) {
+									ras = response.value.ScRoutingRuleList;
+									$('#scrule-summary').html('<h5>Short Code Routing Rules (' + ras.length + ')</h5>')
+									
+									
+									if(ras.length == 0){
+										$('#no-scrr-table').show();
+										$('#ras-table').hide();										
+									} else {
+										$('#no-scrr-table').hide();
+										$('#ras-table').show();
+									}
+									
+									$('.ra-row').remove();
+
+										jQuery.each(response.value.ScRoutingRuleList, function() {
+											var httpOrSipProxy;
+											var scTypeHttpSelected = "";
+											var scTypeSipSelected = "";
+											
+											var scExactMatchTrue = "";
+											var scExactMatchFalse = "";
+											
+											if(this.ruleType == 'HTTP'){
+												httpOrSipProxy = this.ruleUrl;
+												scTypeHttpSelected = "selected";
+											} else {
+												httpOrSipProxy = this.sipProxy;
+												scTypeSipSelected = "selected";
+											}
+											
+											if(this.exactMatch){
+												scExactMatchTrue = "selected";
+											} else {
+												scExactMatchFalse = "selected";
+											}
+											
+											var hashSc = this.shortCode.hashCode();
+											
+										$('#ras-table').children('tbody').append('<tr class="ra-row"><td style="text-align: center;"><i class="icon-resize-small"></i></td>' +
+											'<td>' + this.shortCode + '</td>' +
+											'<td>' + this.ruleType + '</td>' +
+											'<td>' + httpOrSipProxy + '</td>' +
+											'<td>' + this.networkId + '</td>' +
+											'<td>' + this.exactMatch + '</td>'+
+											'<td style="text-align: center;"><a href="#entities-modal' + hashSc + '" role="button" class="btn btn-info" data-toggle="modal"><i class="icon-external-link"></i></a><button class="btn btn-danger" data-toggle="tooltip" data-placement="left" title="Delete Short Code" onclick="deleteScRoutingRule(\'' + this.shortCode + '\',\''+this.networkId+'\' );"><i class="icon-remove"></i></button></td>');
+
+										$('#ras-table-wrapper').append('<div id="entities-modal' + hashSc + '" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">'+
+												'<div class="modal-header">'+
+													'<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>'+
+													'<h3>Short Code '+this.shortCode+' Properties</h3>'+
+												'</div>'+	
+												'<div id="entities-modal-body' + hashSc + '" class="modal-body">'+
+														'<div class="accordion-group">' +
+															'<div class="accordion-heading">' +this.shortCode+ 										
+															'</div>'+
+															'<div id="' + hashSc + '" class="accordion-body">' +
+																'<div class="accordion-inner">' +
+																	'<strong><i class="icon-list"></i> Short Code Configuration</strong>' +
+																	
+																	'<div class="alert alert-error" id="login-settings-error" style="display:none;">'+
+																	  '<button type="button" class="close">&times;</button>'+
+																	  'Some Fields are not correctly filled out, please double check the settings below !'+
+																	'</div>'+																			
+
+										                        	'<div id="div-short-code-type-edit' + hashSc + '" class="control-group">'+
+																		'<span  class="input-prepend" data-toggle="tooltip" data-placement="bottom" title="USSD Gateway supports 2 protocols - HTTP and SIP (3GPP Specification 24.390). If not specified default is HTTP. If protocol is HTTP, gateway will forward request as HTTP POST. If its SIP, INVITE will be sent SIP Client.">'+
+																			'<span class="add-on">Type</span>'+
+																			'<select id="short-code-type-edit' + hashSc + '" >'+
+																			'  	<option '+scTypeHttpSelected+'>HTTP</option>'+
+																			'  	<option '+ scTypeSipSelected +'>SIP</option>'+
+																			'   </select>'+																			
+																		'</span>'+
+																	'</div>'+	
+																	
+										                        	'<div id="div-short-code-url-edit' + hashSc + '" class="control-group">'+
+																		'<span  class="input-prepend" data-toggle="tooltip" data-placement="bottom" title=" If rule is configured as HTTP, this should be the URL where HTTP POST with XML payload should be forwarded to. If rule is configured as SIP, INVITE will be sent to this ip:port">'+
+																			'<span class="add-on">URL or SIP Proxy</span>'+
+																			'<input id="short-code-url-edit' + hashSc + '" type="text" placeholder="URL or SIP Proxy"  value="'+httpOrSipProxy+'" class="input-mini" style="width: 220px; margin-right: 12px; text-align: center;" />'+																																				
+																		'</span>'+
+																	'</div>'+																	
+																	
+										                        	'<div id="div-short-code-absolute-edit' + hashSc + '" class="control-group">'+
+																		'<span  class="input-prepend" data-toggle="tooltip" data-placement="bottom" title="flag is either true or false, default is true. If true that means this is exact match. If false, that means the dialed short-code begins with configured short-code. For example if you created rule *123, and user dials *123*7776543*223#, it will match the rule and request will be forwarded to the URL http://myip:8080/mobiussd/recharge">'+
+																			'<span class="add-on">Exact Match</span>'+
+																			'<select id="short-code-absolute-edit' + hashSc + '" >'+
+																			'  	<option '+scExactMatchTrue+'>true</option>'+
+																			'  	<option '+scExactMatchFalse+'>false</option>'+
+																			'   </select>'+																			
+																		'</span>'+
+																	'</div>'+
+																	
+										                        	'<div id="div-short-code-networkid-edit' + hashSc + '" class="control-group">'+
+																		'<span  class="input-prepend" data-toggle="tooltip" data-placement="bottom" title="USSD Gateway can be connected to multiple operators/network at same time and each operator exposing same or different short-code. Each operator (jSS7 stack configured) has its unique networkid assigned and incoming request can be matched with configured networkid here. Only if short-code  and networkid match\'s, request is forwarded to corresponding url. Default value is 0">'+
+																			'<span class="add-on">Network Id</span>'+
+																			'<input id="short-code-networkid-edit' + hashSc + '" type="text" placeholder="Network Id"  value="'+this.networkId+'" readonly class="input-mini" style="width: 120px; margin-right: 12px; text-align: center;" />'+																																				
+																		'</span>'+
+																	'</div>'+
+																	
+																'</div>'+
+															'</div>'+
+														'</div>'+
+														
+														'<button id="modify-short-code" onclick="modifyShortCode(\'' + this.shortCode + '\',\''+hashSc+'\');" class="btn btn btn-primary" >Modify</button> '+
+														
+												'</div>'+
+												'<div class="modal-footer">'+
+													'<a href="#" onclick="$(\'#entities-modal' + hashSc + '\').modal(\'hide\'); return false;" class="btn">Close</a>'+
+												'</div>'+										
+											'</div>');										
+										
+										});
+								}
+								],
+								error: function(response) {
+									alert("Jolokia request failed: " + response.error);
+								} 
+							}
+						);
+					}
+					
+					function deleteScRoutingRule(scrule, networkId){
+						jolokia.execute("org.mobicents.ussdgateway:name=ShortCodeRoutingRuleManagement","deleteScRoutingRule", scrule,networkId,
+								{
+									success: function(value) {
+										updateScRules();
+										logToConsole('INFO', 'Short Code Routing Rule ' + scrule + ' deleted successfuly.');
+									},
+									error: function(value){
+										errorUID = ("st" + new Date().getTime()).hashCode();
+										createStackTrace(errorUID, value.stacktrace);
+										logToConsole("ERROR", value.error + ". (<a href=\"#" + errorUID + "-modal\" data-toggle=\"modal\">Full Stack Trace</a>)");
+									}
+								});						
+					}
+					function modifyShortCode(shortCode, hashsc){
+						var formInvalid = false;
+						var shortCodeTypeEdit = $("#short-code-type-edit"+hashsc).val();
+						var shortCodeUrlEdit = $("#short-code-url-edit"+hashsc).val();
+						var shortCodeAbsoluteEdit = $("#short-code-absolute-edit"+hashsc).val();
+						var shortCodeNetworkIdEdit = $("#short-code-networkid-edit"+hashsc).val();
+						
+						mbean = "org.mobicents.ussdgateway:name=ShortCodeRoutingRuleManagement";
+						method = "modifyScRoutingRule(java.lang.String,java.lang.String,java.lang.String,boolean,int)";
+						shortCodeUrlEdit = shortCodeUrlEdit.replace(/\//g, "!/");
+						
+						shortCode = shortCode.replace("#", "%23");
+						
+								$.ajax({
+										dataType : "json",
+										url : "http://"	+ window.jolokiaAddress	+ ":" + window.jolokiaPort + "/jolokia/exec/" + jolokia.escape(mbean) + "/" + method + "/" + shortCode+"/"+shortCodeTypeEdit+"/"+shortCodeUrlEdit+"/"+shortCodeAbsoluteEdit+"/"+shortCodeNetworkIdEdit
+									})
+							.done(function(html) {
+										if (html.error) {
+											logToConsole("ERROR", html.error);
+										} else {
+											updateScRules();
+											cancelAddScRule();
+											$('#entities-modal' + hashsc).modal('hide');
+											logToConsole('INFO', 'Short Code Routing Rule ' + shortCode.replace("%23", "#") + ' modified successfuly.');
+										}
+									})
+							.fail(function() {
+										logToConsole("ERROR","Failure trying to communicate with the JAIN SLEE Server. Please try again later.");
+									});						
+						
+					}
+					function addScRule(){
+						var formInvalid = false;
+						
+						var shortCode = $("#short-code").val();
+						var shortCodeNetworkid = $("#short-code-networkid").val();
+						var shortCodeUrl = $("#short-code-url").val();
+						var shortCodeAbsolute = $("#short-code-absolute").val();
+						var shortCodeType = $("#short-code-type").val();
+						
+						shortCode = shortCode.trim();
+						shortCodeUrl = shortCodeUrl.trim();
+						shortCodeAbsolute = shortCodeAbsolute.trim();
+						shortCodeType = shortCodeType.trim();
+						shortCodeNetworkid = shortCodeNetworkid.trim();
+						
+						if(shortCode == "") {
+							formInvalid = true;
+						}
+						
+						if(shortCodeUrl == "") {
+							formInvalid = true;
+						}
+						
+						if(shortCodeAbsolute == "" || (shortCodeAbsolute != "true" && shortCodeAbsolute != "false")) {
+							formInvalid = true;
+						}
+						
+						if(formInvalid) {
+							$("#login-settings-error").show();
+							logToConsole("ERROR", "Some Fields are not correctly filled out, please double check!");
+							return false;
+						} else {
+							$("#login-settings-error").hide();
+						}
+						
+						if(shortCodeNetworkid == ""){
+							shortCodeNetworkid = "0";
+						}
+						
+						
+						mbean = "org.mobicents.ussdgateway:name=ShortCodeRoutingRuleManagement";
+						method = "createScRoutingRule(java.lang.String,java.lang.String,java.lang.String,boolean,int)";
+						shortCodeUrl = shortCodeUrl.replace(/\//g, "!/");
+						
+						shortCode = shortCode.replace("#", "%23");
+						
+								$.ajax({
+										dataType : "json",
+										url : "http://"	+ window.jolokiaAddress	+ ":" + window.jolokiaPort + "/jolokia/exec/" + jolokia.escape(mbean) + "/" + method + "/" + shortCode+"/"+shortCodeType+"/"+shortCodeUrl+"/"+shortCodeAbsolute+"/"+shortCodeNetworkid
+									})
+							.done(function(html) {
+										if (html.error) {
+											logToConsole("ERROR", html.error);
+										} else {
+											updateScRules();
+											cancelAddScRule();
+											logToConsole('INFO', 'Short Code Routing Rule ' + shortCode.replace("%23", "#") + ' created successfuly.');
+										}
+									})
+							.fail(function() {
+										logToConsole("ERROR","Failure trying to communicate with the JAIN SLEE Server. Please try again later.");
+									});
+							
+						
+													
+
+					}
+					$(document).ready(function () {
+						updateScRules();
+					});
+				</script>

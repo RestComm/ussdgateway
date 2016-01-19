@@ -32,6 +32,7 @@ package org.mobicents.ussdgateway.slee.cdr;
 public interface ChargeInterface {
 
     public static final String TRACER_NAME="Charger";
+    public static final String CRD_TRACER_NAME="cdr";
     /**
      * Initializes CDR storage.
      * 
@@ -44,18 +45,6 @@ public interface ChargeInterface {
     
     public USSDCDRState getState();
     
-    public void createInitRecord();
-    
-    public void createContinueRecord();
-   
-    public void createTerminateRecord();
-
-
-    /**
-     * @param mapUserAbortChoice
-     */
-    public void createAbortRecord(AbortType abortChoice);
-    
-    public void createTimeoutRecord(TimeoutType timeoutReason);
+    public void createRecord(RecordStatus outcome);
 
 }

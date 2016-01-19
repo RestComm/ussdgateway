@@ -83,8 +83,13 @@ public class CDRTableCreateTask extends CDRTaskBase {
             //TODO: this may be required to run as TX?
             if(reset){
                 statement.execute(Schema._QUERY_DROP);
+                if(tracer.isFineEnabled()){
+                    tracer.fine("Dropping DB: "+Schema._QUERY_DROP);
+                }
             }
-            System.err.println("QUERRY: 000000 "+Schema._QUERY_CREATE);
+            if(tracer.isFineEnabled()){
+                tracer.fine("Creating DB: "+Schema._QUERY_CREATE);
+            }
             statement.execute(Schema._QUERY_CREATE);
         } catch (Exception e) {
             super.tracer.severe("Failed at execute!", e);

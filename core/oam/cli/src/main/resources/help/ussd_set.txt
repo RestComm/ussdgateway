@@ -1,0 +1,33 @@
+Name
+	ussd set
+
+SYNOPSIS
+	ussd set [noroutingruleconfigerrmssg | dialogtimeouterrmssg | servererrmssg]
+
+DESCRIPTION
+	This command is used to configure the USSD Gateway and set appropriate values for 
+	USSD paramters.
+
+PARAMETERS
+
+	Standard Parameters
+
+	noroutingruleconfigerrmssg	-	message 
+						shown to end user if USSD Gateway is not 
+						configured for the dialed shortcode.
+
+	dialogtimeouterrmssg		-	error message shown to user when request 
+						timesout.
+
+	dialogtimeout			-	the maximum time allowed by the Gateway 
+						for the	application to respond.
+
+	servererrmssg			-	the error message shown to user when 
+						something goes wrong on the USSD gateway.
+
+
+SEE ALSO
+	ussd set noroutingruleconfigerrmssg, ussd set dialogtimeouterrmssg, 
+	ussd set dialogtimeout, ussd set servererrmssg, ussd get
+
+

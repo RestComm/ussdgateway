@@ -23,6 +23,7 @@
 package org.mobicents.ussdgateway.slee.cdr.jdbc.task;
 
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
 
@@ -31,12 +32,12 @@ import javax.slee.facilities.Tracer;
 import org.mobicents.protocols.ss7.indicator.AddressIndicator;
 import org.mobicents.protocols.ss7.map.api.primitives.AddressString;
 import org.mobicents.protocols.ss7.map.api.primitives.IMSI;
+import org.mobicents.protocols.ss7.map.api.primitives.ISDNAddressString;
 import org.mobicents.protocols.ss7.sccp.parameter.GlobalTitle;
 import org.mobicents.protocols.ss7.sccp.parameter.SccpAddress;
 import org.mobicents.slee.resource.jdbc.task.JdbcTaskContext;
 import org.mobicents.ussdgateway.slee.cdr.CDRCreateException;
 import org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent;
-import org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent.RecordType;
 import org.mobicents.ussdgateway.slee.cdr.USSDCDRState;
 
 /**
@@ -45,207 +46,251 @@ import org.mobicents.ussdgateway.slee.cdr.USSDCDRState;
  */
 public class CDRCreateTask extends CDRTaskBase {
 
-    /**
-     * @param callerID
-     * @param callingID
-     * @param dialogId
-     */
-    public CDRCreateTask(final Tracer tracer, USSDCDRState state) {
-        super(tracer,state);
+	/**
+	 * @param callerID
+	 * @param callingID
+	 * @param localDialogId
+	 */
+	public CDRCreateTask(final Tracer tracer, final USSDCDRState state) {
+		super(tracer, state);
+	}
 
-     
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.mobicents.ussdgateway.slee.cdr.jdbc.CDRBaseTask#callParentOnFailure
+	 * (org.mobicents.ussdgateway.slee.cdr. ChargeInterfaceParent,
+	 * java.lang.String, java.lang.Throwable)
+	 */
+	@Override
+	public void callParentOnFailure(final ChargeInterfaceParent parent, final String message, final Throwable t) {
+		if (parent != null)
+			parent.recordGenerationFailed(message, t);
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mobicents.ussdgateway.slee.cdr.jdbc.CDRBaseTask#callParentOnFailure(org.mobicents.ussdgateway.slee.cdr.
-     * ChargeInterfaceParent, java.lang.String, java.lang.Throwable)
-     */
-    @Override
-    public void callParentOnFailure(final ChargeInterfaceParent parent, final String message, final Throwable t) {
-        parent.recordGenerationFailed(RecordType.INIT, message, t);
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.mobicents.ussdgateway.slee.cdr.jdbc.CDRBaseTask#callParentOnSuccess
+	 * (org.mobicents.ussdgateway.slee.cdr. ChargeInterfaceParent)
+	 */
+	@Override
+	public void callParentOnSuccess(ChargeInterfaceParent parent) {
+		if (parent != null)
+			parent.recordGenerationSucessed();
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mobicents.ussdgateway.slee.cdr.jdbc.CDRBaseTask#callParentOnSuccess(org.mobicents.ussdgateway.slee.cdr.
-     * ChargeInterfaceParent)
-     */
-    @Override
-    public void callParentOnSuccess(ChargeInterfaceParent parent) {
-        parent.recordGenerationSucessed(RecordType.INIT);
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.mobicents.slee.resource.jdbc.task.simple.SimpleJdbcTask#executeSimple
+	 * (org.mobicents.slee.resource.jdbc.task. JdbcTaskContext)
+	 */
+	@Override
+	public Object executeSimple(JdbcTaskContext ctx) {
+		try {
+			PreparedStatement preparedStatement = ctx.getConnection().prepareStatement(Schema._QUERY_INSERT);
+			Timestamp tstamp = new Timestamp(System.currentTimeMillis());
+			SccpAddress localAddress = super.state.getLocalAddress();
+			AddressIndicator addressIndicator = null;
+			GlobalTitle gt = null;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mobicents.slee.resource.jdbc.task.simple.SimpleJdbcTask#executeSimple(org.mobicents.slee.resource.jdbc.task.
-     * JdbcTaskContext)
-     */
-    @Override
-    public Object executeSimple(JdbcTaskContext ctx) {
-        try {
-            PreparedStatement preparedStatement = ctx.getConnection().prepareStatement(Schema._QUERY_INSERT);
-            Timestamp tstamp = new Timestamp(System.currentTimeMillis());
-            SccpAddress localAddress = super.state.getLocalAddress();
-            AddressIndicator addressIndicator = localAddress.getAddressIndicator();
-//            _COLUMN_L_SPC+","+
-            if(addressIndicator.pcPresent()){
-                preparedStatement.setInt(1, localAddress.getSignalingPointCode());
-            }else {
-                preparedStatement.setNull(1, Types.SMALLINT);
+			if (localAddress == null) {
+				preparedStatement.setNull(1, Types.SMALLINT);
+				preparedStatement.setNull(2, Types.TINYINT);
+				preparedStatement.setNull(3, Types.TINYINT);
+				preparedStatement.setNull(4, Types.TINYINT);
+				preparedStatement.setNull(5, Types.VARCHAR);
+			} else {
+
+				addressIndicator = localAddress.getAddressIndicator();
+				// _COLUMN_L_SPC+","+
+				if (addressIndicator.isPCPresent()) {
+					preparedStatement.setInt(1, localAddress.getSignalingPointCode());
+				} else {
+					preparedStatement.setNull(1, Types.SMALLINT);
+				}
+
+				// _COLUMN_L_SSN+","+
+				if (addressIndicator.isSSNPresent()) {
+					preparedStatement.setByte(2, (byte) localAddress.getSubsystemNumber());
+				} else {
+					preparedStatement.setNull(2, Types.TINYINT);
+				}
+				// _COLUMN_L_RI+","+
+				if (addressIndicator.getRoutingIndicator() != null) {
+					preparedStatement.setByte(3, (byte) addressIndicator.getRoutingIndicator().getValue());
+				} else {
+					preparedStatement.setNull(3, Types.TINYINT);
+				}
+
+				// _COLUMN_L_GT_I+","+
+				gt = localAddress.getGlobalTitle();
+				if (gt != null && gt.getGlobalTitleIndicator() != null) {
+					preparedStatement.setByte(4, (byte) gt.getGlobalTitleIndicator().getValue());
+				} else {
+					preparedStatement.setNull(4, Types.TINYINT);
+				}
+				// _COLUMN_L_GT_DIGITS+","+
+				if (gt != null && gt.getDigits() != null) {
+					preparedStatement.setString(5, gt.getDigits());
+				} else {
+					preparedStatement.setNull(5, Types.VARCHAR);
+				}
+			}
+
+			SccpAddress remoteAddress = super.state.getRemoteAddress();
+
+			if (remoteAddress == null) {
+				preparedStatement.setNull(6, Types.SMALLINT);
+				preparedStatement.setNull(7, Types.TINYINT);
+				preparedStatement.setNull(8, Types.TINYINT);
+				preparedStatement.setNull(9, Types.TINYINT);
+				preparedStatement.setNull(10, Types.VARCHAR);
+			} else {
+
+				addressIndicator = remoteAddress.getAddressIndicator();
+				// _COLUMN_R_SPC+","+
+				if (addressIndicator.isPCPresent()) {
+					preparedStatement.setInt(6, remoteAddress.getSignalingPointCode());
+				} else {
+					preparedStatement.setNull(6, Types.SMALLINT);
+				}
+
+				// _COLUMN_R_SSN+","+
+				if (addressIndicator.isSSNPresent()) {
+					preparedStatement.setByte(7, (byte) remoteAddress.getSubsystemNumber());
+				} else {
+					preparedStatement.setNull(7, Types.TINYINT);
+				}
+				// _COLUMN_R_RI+","+
+				if (addressIndicator.getRoutingIndicator() != null) {
+					preparedStatement.setByte(8, (byte) addressIndicator.getRoutingIndicator().getValue());
+				} else {
+					preparedStatement.setNull(8, Types.TINYINT);
+				}
+
+				// _COLUMN_R_GT_I+","+
+				gt = remoteAddress.getGlobalTitle();
+				if (gt != null && gt.getGlobalTitleIndicator() != null) {
+					preparedStatement.setByte(9, (byte) gt.getGlobalTitleIndicator().getValue());
+				} else {
+					preparedStatement.setNull(9, Types.TINYINT);
+				}
+				// _COLUMN_R_GT_DIGITS+","+
+				if (gt != null && gt.getDigits() != null) {
+					preparedStatement.setString(10, gt.getDigits());
+				} else {
+					preparedStatement.setNull(10, Types.VARCHAR);
+				}
+			}
+			// _COLUMN_SERVICE_CODE+","+
+			preparedStatement.setString(11, super.state.getServiceCode());
+
+			AddressString addressString = super.state.getOrigReference();
+			if (addressString != null) {
+				// _COLUMN_OR_NATURE+","+
+				// _COLUMN_OR_PLAN+","+
+				// _COLUMN_OR_DIGITS+","+
+				preparedStatement.setByte(12, (byte) addressString.getAddressNature().getIndicator());
+				preparedStatement.setByte(13, (byte) addressString.getNumberingPlan().getIndicator());
+				preparedStatement.setString(14, addressString.getAddress());
+
+			} else {
+				preparedStatement.setNull(12, Types.TINYINT);
+				preparedStatement.setNull(13, Types.TINYINT);
+				preparedStatement.setNull(14, Types.VARCHAR);
+
+			}
+			addressString = super.state.getDestReference();
+
+			if (addressString != null) {
+				// _COLUMN_DE_NATURE+","+
+				// _COLUMN_DE_PLAN+","+
+				// _COLUMN_DE_DIGITS+","+
+				preparedStatement.setByte(15, (byte) addressString.getAddressNature().getIndicator());
+				preparedStatement.setByte(16, (byte) addressString.getNumberingPlan().getIndicator());
+				preparedStatement.setString(17, addressString.getAddress());
+
+			} else {
+				preparedStatement.setNull(15, Types.TINYINT);
+				preparedStatement.setNull(16, Types.TINYINT);
+				preparedStatement.setNull(17, Types.VARCHAR);
+
+			}
+
+			ISDNAddressString isdnAddressString = super.state.getISDNAddressString();
+			if (isdnAddressString != null) {
+				// _COLUMN_ISDN_NATURE+","+
+				// _COLUMN_ISDN_PLAN+","+
+				// _COLUMN_ISDN_DIGITS+","+
+				preparedStatement.setByte(18, (byte) isdnAddressString.getAddressNature().getIndicator());
+				preparedStatement.setByte(19, (byte) isdnAddressString.getNumberingPlan().getIndicator());
+				preparedStatement.setString(20, isdnAddressString.getAddress());
+
+			} else {
+				preparedStatement.setNull(18, Types.TINYINT);
+				preparedStatement.setNull(19, Types.TINYINT);
+				preparedStatement.setNull(20, Types.VARCHAR);
+
+			}
+
+			addressString = super.state.getEriVlrNo();
+			if (addressString != null) {
+				// _COLUMN_VLR_NATURE+","+
+				// _COLUMN_VLR_PLAN+","+
+				// _COLUMN_VLR_DIGITS+","+
+				preparedStatement.setByte(21, (byte) addressString.getAddressNature().getIndicator());
+				preparedStatement.setByte(22, (byte) addressString.getNumberingPlan().getIndicator());
+				preparedStatement.setString(23, addressString.getAddress());
+
+			} else {
+				preparedStatement.setNull(21, Types.TINYINT);
+				preparedStatement.setNull(22, Types.TINYINT);
+				preparedStatement.setNull(23, Types.VARCHAR);
+
+			}
+
+			IMSI imsi = super.state.getEriImsi();
+			if (imsi != null) {
+				// _COLUMN_IMSI+","+
+				preparedStatement.setString(24, imsi.getData());
+			} else {
+				preparedStatement.setNull(24, Types.VARCHAR);
+			}
+
+			// _COLUMN_LOCAL_DIALOG_ID+","+
+            if (super.state.getLocalDialogId() != null) {
+                preparedStatement.setLong(25, super.state.getLocalDialogId());
+            } else {
+                preparedStatement.setNull(25, Types.BIGINT);
             }
-                
-//            _COLUMN_L_SSN+","+
-            if(addressIndicator.ssnPresent()){
-                preparedStatement.setByte(2, (byte) localAddress.getSubsystemNumber());
-            }else{
-                preparedStatement.setNull(2, Types.TINYINT);
-            }
-//            _COLUMN_L_RI+","+
-            if(addressIndicator.getRoutingIndicator()!=null){
-                preparedStatement.setByte(3, (byte) addressIndicator.getRoutingIndicator().getIndicator());
-            }else {
-                preparedStatement.setNull(3,Types.TINYINT);
-            }
-                
-//            _COLUMN_L_GT_I+","+
-            GlobalTitle gt = localAddress.getGlobalTitle();
-            if(gt!=null && gt.getIndicator() != null){
-                preparedStatement.setByte(4, (byte) gt.getIndicator().getValue());
-            }else{
-                preparedStatement.setNull(4, Types.TINYINT);
-            }
-//            _COLUMN_L_GT_DIGITS+","+
-            if(gt!=null && gt.getDigits() != null){
-                preparedStatement.setString(5, gt.getDigits());
-            }else{
-                preparedStatement.setNull(5, Types.VARCHAR);
-            }
-            SccpAddress remoteAddress = super.state.getRemoteAddress();
-            addressIndicator = remoteAddress.getAddressIndicator();
-//          _COLUMN_R_SPC+","+
-          if(addressIndicator.pcPresent()){
-              preparedStatement.setInt(6, remoteAddress.getSignalingPointCode());
-          }else {
-              preparedStatement.setNull(6, Types.SMALLINT);
-          }
-              
-//          _COLUMN_R_SSN+","+
-          if(addressIndicator.ssnPresent()){
-              preparedStatement.setByte(7, (byte) remoteAddress.getSubsystemNumber());
-          }else{
-              preparedStatement.setNull(7, Types.TINYINT);
-          }
-//          _COLUMN_R_RI+","+
-          if(addressIndicator.getRoutingIndicator()!=null){
-              preparedStatement.setByte(8, (byte) addressIndicator.getRoutingIndicator().getIndicator());
-          }else {
-              preparedStatement.setNull(8,Types.TINYINT);
-          }
-              
-//          _COLUMN_R_GT_I+","+
-          gt = remoteAddress.getGlobalTitle();
-          if(gt!=null && gt.getIndicator() != null){
-              preparedStatement.setByte(9, (byte) gt.getIndicator().getValue());
-          }else{
-              preparedStatement.setNull(9, Types.TINYINT);
-          }
-//          _COLUMN_R_GT_DIGITS+","+
-          if(gt!=null && gt.getDigits() != null){
-              preparedStatement.setString(10, gt.getDigits());
-          }else{
-              preparedStatement.setNull(10, Types.VARCHAR);
-          }
-//            _COLUMN_SERVICE_CODE+","+
-          preparedStatement.setString(11, super.state.getServiceCode());
 
-          AddressString addressString = super.state.getOrigReference();
-          if(addressString != null){
-//            _COLUMN_OR_NATURE+","+
-//            _COLUMN_OR_PLAN+","+
-//            _COLUMN_OR_DIGITS+","+
-              preparedStatement.setByte(12, (byte) addressString.getAddressNature().getIndicator());
-              preparedStatement.setByte(13, (byte) addressString.getNumberingPlan().getIndicator());
-              preparedStatement.setString(14, addressString.getAddress());
-              
-          }else{
-              preparedStatement.setNull(12, Types.TINYINT);
-              preparedStatement.setNull(13, Types.TINYINT);
-              preparedStatement.setNull(14, Types.VARCHAR);
-              
-          }
-          addressString = super.state.getDestReference();
+			if (super.state.getRemoteDialogId() != null) {
+				preparedStatement.setLong(26, super.state.getRemoteDialogId());
+			} else {
+				preparedStatement.setNull(26, Types.BIGINT);
+			}
+			// _COLUMN_TSTAMP+","+
+			preparedStatement.setTimestamp(27, tstamp);
+			// _COLUMN_TERMINATD+ <-- null - create record
+			preparedStatement.setString(28, super.state.getRecordStatus().toString());
 
-          if(addressString != null){
-//            _COLUMN_DE_NATURE+","+
-//            _COLUMN_DE_PLAN+","+
-//            _COLUMN_DE_DIGITS+","+
-              preparedStatement.setByte(15, (byte) addressString.getAddressNature().getIndicator());
-              preparedStatement.setByte(16, (byte) addressString.getNumberingPlan().getIndicator());
-              preparedStatement.setString(17, addressString.getAddress());
-              
-          }else{
-              preparedStatement.setNull(15, Types.TINYINT);
-              preparedStatement.setNull(16, Types.TINYINT);
-              preparedStatement.setNull(17, Types.VARCHAR);
-              
-          }
-          
-          addressString= super.state.getISDNString();
-          if(addressString != null){
-//            _COLUMN_ISDN_NATURE+","+
-//            _COLUMN_ISDN_PLAN+","+
-//            _COLUMN_ISDN_DIGITS+","+
-              preparedStatement.setByte(18, (byte) addressString.getAddressNature().getIndicator());
-              preparedStatement.setByte(19, (byte) addressString.getNumberingPlan().getIndicator());
-              preparedStatement.setString(20, addressString.getAddress());
-              
-          }else{
-              preparedStatement.setNull(18, Types.TINYINT);
-              preparedStatement.setNull(19, Types.TINYINT);
-              preparedStatement.setNull(20, Types.VARCHAR);
-              
-          }
-          
-          addressString= super.state.getEriVlrNo();
-          if(addressString != null){
-//            _COLUMN_VLR_NATURE+","+
-//            _COLUMN_VLR_PLAN+","+
-//            _COLUMN_VLR_DIGITS+","+
-              preparedStatement.setByte(21, (byte) addressString.getAddressNature().getIndicator());
-              preparedStatement.setByte(22, (byte) addressString.getNumberingPlan().getIndicator());
-              preparedStatement.setString(23, addressString.getAddress());
-              
-          }else{
-              preparedStatement.setNull(21, Types.TINYINT);
-              preparedStatement.setNull(22, Types.TINYINT);
-              preparedStatement.setNull(23, Types.VARCHAR);
-              
-          }
+			preparedStatement.setString(29, super.state.getUssdType().toString());
+			// _COLUMN_ID
+			preparedStatement.setString(30, super.state.getId());
+			preparedStatement.execute();
 
-          IMSI imsi = super.state.getEriImsi();
-          if(imsi != null){
-//            _COLUMN_IMSI+","+
-              preparedStatement.setString(24, imsi.getData());
-          }else{
-              preparedStatement.setNull(24, Types.VARCHAR);
-          }
-              
-//            _COLUMN_DIALOG_ID+","+
-          preparedStatement.setLong(25, super.state.getDialogId());
-//            _COLUMN_TSTAMP+","+
-          preparedStatement.setTimestamp(26, tstamp);
-//            _COLUMN_TERMINATE_REASON+ <-- null
-          preparedStatement.setNull(27,Types.VARCHAR);
-          preparedStatement.setString(28,super.state.getId());
-            preparedStatement.execute();
-        } catch (Exception e) {
-            super.tracer.severe("Failed at execute!", e);
-            throw new CDRCreateException(e);
-        }
-        return this;
-    }
+		} catch (SQLException e) {
+			super.tracer.severe("Failed at execute!", e);
+			throw new CDRCreateException(e);
+		} catch (RuntimeException re) {
+			super.tracer.severe("Failed at execute!", re);
+			markRecordCorrupted(ctx);
+		}
+		return this;
+	}
 }

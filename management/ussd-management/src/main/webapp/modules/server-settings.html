@@ -1,0 +1,357 @@
+					<h3 style="margin: 0px;"><i class="icon-dashboard"></i> USSD Gateway Server Settings</h3>
+					<hr style="margin: 10 0px;"/>
+
+					<button id="apply-server-settings" class="btn btn-small" onclick="applyServerSettings()"><i class="icon-save" style="color: #000000;"></i>  Apply Changes</button>
+					
+					<p>
+						<br/>
+					</p> 
+					
+					<div class="alert alert-error" id="login-settings-error" style="display:none;">
+					  <button type="button" class="close">&times;</button>
+					  Some Fields are not correctly filled out, please double check the settings below !
+					</div>
+					
+ 					<p>
+					<span id="mss-settings">
+					<ul class="nav nav-tabs" id="myTab">
+  						<li class="active"><a href="#errormessages" data-toggle="tab">Error Messages</a></li>
+  						<li><a href="#ss7settings" data-toggle="tab">SS7 settings</a></li>
+  						<li><a href="#various" data-toggle="tab">Various</a></li>
+					</ul>	
+						
+  				 	<div id="sbb-op-content" class="tab-content">
+  				 	
+						<div class="tab-pane active" id="errormessages" style="margin-left: 10px;">
+							<div id="div-noroutingruleconfigerrmssg" class="control-group">
+								<span class="input-prepend" data-toggle="tooltip" data-placement="bottom" title="if user dials short code for which no routing rule is configured, this error message will be shown to user">
+									<span class="add-on">No routing rule configured error message</span>
+									<input id="noroutingruleconfigerrmssg" type="text" class="input-mini" style="width: 260px; margin-right: 12px; text-align: center;" value="0" />
+								</span>
+							</div>
+							
+							<div id="div-dialogtimeouterrmssg" class="control-group">
+								<span class="input-prepend" data-toggle="tooltip" data-placement="bottom" title="if 3rd party application is taking longer than configured Dialog Timeout, this error message will be shown to user">
+									<span class="add-on">Dialog timeout error message</span>
+									<input id="dialogtimeouterrmssg" type="text" class="input-mini" style="width: 260px; margin-right: 12px; text-align: center;" value="0" />
+								</span>
+							</div>
+
+							<div id="div-servererrmssg" class="control-group">
+								<span class="input-prepend" data-toggle="tooltip" data-placement="bottom" title="if any error occurs in USSD Gateway, this message will be shown to user">
+									<span class="add-on">Server error message</span>
+									<input id="servererrmssg" type="text" class="input-mini" style="width: 260px; margin-right: 12px; text-align: center;" value="0" />
+								</span>
+							</div>							
+					  	</div>
+                    
+                        <div class="tab-pane" id="ss7settings">
+                        	<h5 style="border-bottom: 1px solid #DDD;">Global Title Configuration</h5>
+							
+							
+							<div id="div-gtinitext" class="control-group">
+								<span class="input-prepend" data-toggle="tooltip" data-placement="bottom" title="USSD Gateway Global Title Indicator Network Id. Double click on select box to add new values. networkId specifies Global Title for a virtual SS7 subnetwork (this is for Multi-tenancy support). You can define different networkIds as unique subnetworks and assign Global Titles for each of the subnetworks. networkId 0 is for default SS7 network.">
+								  <span class="add-on">USSD Gateway Global Title Indicator Network Id</span>				
+								  <select id="gtinisel" style="width: 200px;" onchange="gtInSelChange()">
+								  </select>
+							 	 <input id="gtinitext" type="text" name="format" class="input-mini" value="0" style="width: 165px; margin-left: -199px; margin-top: 1px; border: none;">
+							 	</span>
+							</div>	                        	
+                        	
+                        	<div id="div-ussdgt" class="control-group">
+								<span class="input-prepend" data-toggle="tooltip" data-placement="bottom" title="USSD Gateway Global Title">
+									<span class="add-on">USSD Gateway Global Title</span>
+									<input id="ussdgt" type="text" class="input-mini" style="width: 160px; margin-right: 12px; text-align: center;" value="0" />
+								</span>
+							</div>							
+							
+							<div id="div-hrhlrgt" class="control-group">
+								<span class="input-prepend" data-toggle="tooltip" data-placement="bottom" title="HLR Global Title for Home Routing. If this is set, MAP SRI query for USSD Push will be sent to this Global Title instead of MSISDN as SCCP Called Party Address.">
+									<span class="add-on">Home Routing HLR Global Title</span>
+									<input id="hrhlrgt" type="text" class="input-mini" style="width: 160px; margin-right: 12px; text-align: center;" value="0" />
+								</span>							
+							</div>
+							
+							
+							<h5 style="border-bottom: 1px solid #DDD;">Sub System Number Configuration</h5>  
+							
+							<div id="div-ussdssn" class="control-group">      
+								<span class="input-prepend" data-toggle="tooltip" data-placement="bottom" title="USSD Gateway subsystem number">
+									<span class="add-on">USSD Gateway subsystem number</span>
+									<input id="ussdssn" type="text" class="input-mini" style="width: 30px; margin-right: 12px; text-align: center;" value="0" />
+								</span>	
+							</div>
+
+							<div id="div-hlrssn" class="control-group">
+								<span class="input-prepend" data-toggle="tooltip" data-placement="bottom" title="HLR subsystem number">
+									<span class="add-on">HLR subsystem number</span>
+									<input id="hlrssn" type="text" class="input-mini" style="width: 30px; margin-right: 12px; text-align: center;" value="0" />
+								</span>	
+							</div>
+							
+							<div id="div-mscssn" class="control-group">
+								<span class="input-prepend" data-toggle="tooltip" data-placement="bottom" title="MSC subsystem number">
+									<span class="add-on">MSC subsystem number</span>
+									<input id="mscssn" type="text" class="input-mini" style="width: 30px; margin-right: 12px; text-align: center;" value="0" />
+								</span>
+							</div>
+							
+							<h5 style="border-bottom: 1px solid #DDD;">SS7 Version Configuration</h5>     
+							
+							<div id="div-maxmapv" class="control-group">   						                		
+								<span class="input-prepend" data-toggle="tooltip" data-placement="bottom" title="this is MAP version supported. If its USSD push, the outgoing message will be formed for this MAP version, if far end returns error indicating lower/highers version, USSD Gw will automatically create new message with lower/highers version of MAP message">
+									<span class="add-on">MAP version supported</span>
+									<input id="maxmapv" type="text" class="input-mini" style="width: 30px; margin-right: 12px; text-align: center;" value="0" />
+								</span>							
+							</div>
+                        </div>
+                        <div class="tab-pane" id="various">
+                        	<h5 style="border-bottom: 1px solid #DDD;">Dialog Configuration</h5>
+                        	
+                        	<div id="div-dialogtimeout" class="control-group">
+								<span class="input-prepend" data-toggle="tooltip" data-placement="bottom" title="3rd party application should revert back within configured Dialog Timeout value, else USSD Gw will send back error message configured for Dialog timeout">
+									<span class="add-on">Dialog Timeout</span>
+									<input id="dialogtimeout" type="text" class="input-mini" style="width: 120px; margin-right: 12px; text-align: center;" value="0" />
+								</span>                        
+							</div>
+                        	<h5 style="border-bottom: 1px solid #DDD;">CDR Configuration</h5>
+                        	
+                        	<div id="div-cdrgeneratedto" class="control-group">
+								<span class="input-prepend" data-toggle="tooltip" data-placement="bottom" title="indicates if USSD Service is configured to log CDR in database or plain text file">
+									<span class="add-on">CDR generated to</span>
+									<select id="cdrgeneratedto" >
+										<option>Database</option>
+										<option>Textfile</option>
+									</select>
+								</span>    
+							</div>                    							
+                        </div>                        					  	
+					</div>	
+					</span>					 
+				</p>	
+				<script type="text/javascript">
+					$('#login-settings-error .close').on("click", function(e) {
+					    $(this).parent().hide();
+					});
+				
+					$(document).ready(function () {
+						mbeanSearch="org.mobicents.ussdgateway:name=UssdPropertiesManagement";
+						
+						jolokia.request(
+								[
+									{ type: "read", mbean: mbeanSearch },
+								],
+								{ success: [
+									function(response) {
+										$("#dialogtimeouterrmssg").val(response.value.DialogTimeoutErrorMessage);
+										$("#dialogtimeout").val(response.value.DialogTimeout);
+										$("#noroutingruleconfigerrmssg").val(response.value.NoRoutingRuleConfiguredMessage);
+										$("#servererrmssg").val(response.value.ServerErrorMessage);
+										$("#ussdgt").val(response.value.UssdGt);
+										$("#hrhlrgt").val(response.value.HrHlrGt);
+										$("#ussdssn").val(response.value.UssdSsn);
+										$("#hlrssn").val(response.value.HlrSsn);
+										$("#mscssn").val(response.value.MscSsn);
+										$("#maxmapv").val(response.value.MaxMapVersion);
+										var cdrloggingto = response.value.CdrLoggingTo;
+										
+										var e = document.getElementById("cdrgeneratedto");
+										if(cdrloggingto == "Database"){
+											e.options[0].selected = 'selected';
+										} else {
+											e.options[1].selected = 'selected';
+										}
+										
+										$("#gtinisel").append(new Option("0", response.value.UssdGt));
+										
+										jQuery.each(response.value.NetworkIdVsUssdGwGt, function(key, val) {
+											$("#gtinisel").append(new Option(key, val));
+											
+										});										
+									}],
+									error: function(value) {
+										errorUID = ("st" + new Date().getTime()).hashCode();
+										createStackTrace(errorUID, value.stacktrace);
+										logToConsole("ERROR", value.error + ". (<a href=\"#" + errorUID + "-modal\" data-toggle=\"modal\">Full Stack Trace</a>)");										
+									} 
+								}
+							);						
+
+	    			});
+					
+					function applyServerSettings() {
+						var formInvalid = false;
+						
+						var noroutingruleconfigerrmssg = $("#noroutingruleconfigerrmssg").val();
+						if(noroutingruleconfigerrmssg.trim() == "") {
+			    			$("#div-noroutingruleconfigerrmssg").addClass("error");					    			
+			    			formInvalid = true;
+			    		} else if($("#div-noroutingruleconfigerrmssg").hasClass("error")) {
+			    			$("#div-noroutingruleconfigerrmssg").removeClass("error");		
+			    		}
+						
+						
+						var dialogtimeouterrmssg = $("#dialogtimeouterrmssg").val();
+						if(dialogtimeouterrmssg.trim() == "") {
+			    			$("#div-dialogtimeouterrmssg").addClass("error");					    			
+			    			formInvalid = true;
+			    		} else if($("#div-dialogtimeouterrmssg").hasClass("error")) {
+			    			$("#div-dialogtimeouterrmssg").removeClass("error");		
+			    		}
+						
+						var dialogtimeout = $("#dialogtimeout").val();
+						if(dialogtimeout.trim() == "") {
+			    			$("#div-dialogtimeout").addClass("error");					    			
+			    			formInvalid = true;
+			    		} else if($("#div-dialogtimeout").hasClass("error")) {
+			    			$("#div-dialogtimeout").removeClass("error");		
+			    		}
+						
+						var servererrmssg = $("#servererrmssg").val();
+						if(servererrmssg.trim() == "") {
+			    			$("#div-servererrmssg").addClass("error");					    			
+			    			formInvalid = true;
+			    		} else if($("#div-servererrmssg").hasClass("error")) {
+			    			$("#div-servererrmssg").removeClass("error");		
+			    		}
+						
+						
+						var gtinitext = $("#gtinitext").val();
+						if(gtinitext.trim() == "") {
+			    			$("#div-gtinitext").addClass("error");					    			
+			    			formInvalid = true;
+			    		} else if($("#div-gtinitext").hasClass("error")) {
+			    			$("#div-gtinitext").removeClass("error");		
+			    		}											
+						
+						var ussdgt = $("#ussdgt").val();
+						if(ussdgt.trim() == "") {
+			    			$("#div-ussdgt").addClass("error");					    			
+			    			formInvalid = true;
+			    		} else if($("#div-ussdgt").hasClass("error")) {
+			    			$("#div-ussdgt").removeClass("error");		
+			    		}
+						
+						
+						
+						
+						var hrhlrgt = $("#hrhlrgt").val();
+						if(hrhlrgt.trim() == "") {
+							hrhlrgt = null;
+						}
+						
+						var ussdssn = $("#ussdssn").val();
+						if(ussdssn.trim() == "") {
+			    			$("#div-ussdssn").addClass("error");					    			
+			    			formInvalid = true;
+			    		} else if($("#div-ussdssn").hasClass("error")) {
+			    			$("#div-ussdssn").removeClass("error");		
+			    		}		
+						
+						var hlrssn = $("#hlrssn").val();
+						if(hlrssn.trim() == "") {
+			    			$("#div-hlrssn").addClass("error");					    			
+			    			formInvalid = true;
+			    		} else if($("#div-hlrssn").hasClass("error")) {
+			    			$("#div-hlrssn").removeClass("error");		
+			    		}	
+						
+						var mscssn = $("#mscssn").val();
+						if(mscssn.trim() == "") {
+			    			$("#div-mscssn").addClass("error");					    			
+			    			formInvalid = true;
+			    		} else if($("#div-mscssn").hasClass("error")) {
+			    			$("#div-mscssn").removeClass("error");		
+			    		}
+						
+						var maxmapv = $("#maxmapv").val();
+						if(maxmapv.trim() == "") {
+			    			$("#div-maxmapv").addClass("error");					    			
+			    			formInvalid = true;
+			    		} else if($("#div-maxmapv").hasClass("error")) {
+			    			$("#div-maxmapv").removeClass("error");		
+			    		}
+						
+						var e = document.getElementById("cdrgeneratedto");
+						var cdrgeneratedto = e.options[e.selectedIndex].text;						
+						
+						if(formInvalid) {
+							$("#login-settings-error").show();
+							logToConsole("ERROR", "Some Fields are not correctly filled out, please double check the settings !");
+							return false;
+						} else {
+							$("#login-settings-error").hide();
+						}
+						
+						mbeanSearch="org.mobicents.ussdgateway:name=UssdPropertiesManagement";
+						
+						
+						
+						jolokia.request(
+								[
+									{ type: "write", mbean: mbeanSearch, attribute: "NoRoutingRuleConfiguredMessage", value: noroutingruleconfigerrmssg },
+									{ type: "write", mbean: mbeanSearch, attribute: "DialogTimeoutErrorMessage", value: dialogtimeouterrmssg },
+									{ type: "write", mbean: mbeanSearch, attribute: "DialogTimeout", value: dialogtimeout },
+									{ type: "write", mbean: mbeanSearch, attribute: "ServerErrorMessage", value: servererrmssg },
+									{ type: "write", mbean: mbeanSearch, attribute: "UssdSsn", value: ussdssn },
+									{ type: "write", mbean: mbeanSearch, attribute: "HlrSsn", value: hlrssn },
+									{ type: "write", mbean: mbeanSearch, attribute: "MscSsn", value: mscssn },
+									{ type: "write", mbean: mbeanSearch, attribute: "MaxMapVersion", value: maxmapv },
+									{ type: "write", mbean: mbeanSearch, attribute: "HrHlrGt", value: hrhlrgt },
+									{ type: "write", mbean: mbeanSearch, attribute: "CdrLoggingTo", value: cdrgeneratedto },
+								],
+								{
+									success: function(response) {
+										logToConsole("INFO", "USSD Gateway Proerties successfully updated.");
+									},
+									error: function(response) {
+										errorUID = ("st" + new Date().getTime()).hashCode();
+										createStackTrace(errorUID, response.stacktrace);
+										logToConsole("ERROR", value.error + ". (<a href=\"#" + errorUID + "-modal\" data-toggle=\"modal\">Full Stack Trace</a>)");										
+									} 
+								}
+							);	
+						
+						
+						if(gtinitext != "0"){
+							jolokia.execute(mbeanSearch,"setUssdGt", gtinitext,ussdgt, 
+									{
+										success: function(value) {
+											$("#gtinisel").empty();
+											updateSs7Properties();
+											logToConsole("INFO", "USSD Gateway SS7 settings successfully updated.");
+										},
+										error: function(value){
+											errorUID = ("st" + new Date().getTime()).hashCode();
+											createStackTrace(errorUID, value.stacktrace);
+											logToConsole("ERROR", value.error + ". (<a href=\"#" + errorUID + "-modal\" data-toggle=\"modal\">Full Stack Trace</a>)");
+										}					
+									});	
+							} else {
+								
+								
+								jolokia.request(
+										[							
+											{ type: "write", mbean: mbeanSearch, attribute: "UssdGt", value: ussdgt },
+										],
+										{
+											success: function(response) {
+												logToConsole("INFO", "USSD Gateway SS7 settings successfully updated.");
+											},
+											error: function(response) {
+												logToConsole("ERROR", "Failure trying to communicate with the Mobicents USSD Gateway. Please try again later.");
+											} 
+										}
+								);
+							}						
+					}
+					
+					function gtInSelChange(){
+						var gtinisel = document.getElementById("gtinisel");
+						var gtinitext = document.getElementById("gtinitext");
+						var ussdgt = document.getElementById("ussdgt");
+						
+						gtinitext.value = gtinisel.options[gtinisel.selectedIndex].text;
+						ussdgt.value = gtinisel.options[gtinisel.selectedIndex].value;
+					}					
+					</script>

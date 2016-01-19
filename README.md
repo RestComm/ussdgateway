@@ -70,3 +70,4 @@ To test USSD Gateway with RestComm ss7-simulator make sure you follow the below 
 6) Assuming RestComm ss7-simulator is started already you should see on jboss console "10:21:28,046 WARN  [SccpStackImpl-SccpStack] Rx : MTP-RESUME: AffectedDpc=2" indicating that USSD Gateway M3UA layer is now connected with ss7-simulator
 
 7) Dial *519# on ss7-simulator and you should see USSD getting exchanged between simulator and server
+

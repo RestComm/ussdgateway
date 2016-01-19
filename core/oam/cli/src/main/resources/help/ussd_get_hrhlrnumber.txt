@@ -1,0 +1,17 @@
+Name
+	ussd get hrhlrnumber
+
+SYNOPSIS
+	ussd get hrhlrnumber 
+
+DESCRIPTION
+	This command is used to obtain the value of HLR GT digits set for 
+	HLR address in SRI requests (if SMSC is present and configured in
+	Home Routing mode).
+
+SEE ALSO
+	ussd set scgt, ussd get scssn, ussd set scssn, ussd get hlrssn,
+	ussd set hlrssn, ussd get mscssn, ussd set mscssn, ussd get maxmapv, 
+	ussd set maxmapv
+
+

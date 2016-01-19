@@ -24,17 +24,49 @@ package org.mobicents.ussdgateway;
 import java.util.List;
 
 import org.mobicents.ussdgateway.rules.ScRoutingRule;
+import org.mobicents.ussdgateway.rules.ScRoutingRuleType;
 
 /**
  * @author amit bhayani
  * 
  */
 public interface ShortCodeRoutingRuleManagementMBean {
-	public List<ScRoutingRule> getScRoutingRuleList();
+	List<ScRoutingRule> getScRoutingRuleList();
 
-	public ScRoutingRule getScRoutingRule(String shortCode);
+	/**
+	 * Finds the {@link ScRoutingRule} that match's with passed shortCode and networkId
+	 * @param shortCode short code for which rule is to be found. 
+	 * @param networkId networkId for which rule is to be found.
+	 * @return
+	 */
+	ScRoutingRule getScRoutingRule(String shortCode, int networkId);
 
-	public ScRoutingRule createScRoutingRule(String shortCode, String url) throws Exception;
+	/**
+	 * Creates new HTTP based routing rule
+	 * 
+	 * @param shortCode
+	 *            the ussd short code for this rule
+	 * @param url
+	 *            the HTTP URL where HTTP POST request should be forwarded if
+	 *            rule match's
+	 * @param exactMatch
+	 *            if received dial string should be exactly matched with
+	 *            shortCode or should just begin with shortCode
+	 * @return the {@link ScRoutingRule} instance
+	 * 
+	 * @Deprecated use
+	 *             {@link ShortCodeRoutingRuleManagementMBean#createScRoutingRule(String, ScRoutingRuleType, String, String, boolean)}
+	 *             instead
+	 * @throws Exception
+	 */
+	@Deprecated
+	ScRoutingRule createScRoutingRule(String shortCode, String url, boolean exactMatch) throws Exception;
 
-	public ScRoutingRule deleteScRoutingRule(String systemId) throws Exception;
+	ScRoutingRule createScRoutingRule(String shortCode, ScRoutingRuleType routingRuleType, String urlOrsipProxy,
+			boolean exactMatch, int networkId) throws Exception;
+	
+	ScRoutingRule modifyScRoutingRule(String shortCode, ScRoutingRuleType routingRuleType, String urlOrsipProxy,
+			boolean exactMatch, int networkId) throws Exception;	
+
+	ScRoutingRule deleteScRoutingRule(String shortCode, int networkId) throws Exception;
 }

@@ -36,6 +36,7 @@ import javolution.xml.stream.XMLStreamException;
 
 import org.apache.log4j.Logger;
 import org.mobicents.ussdgateway.rules.ScRoutingRule;
+import org.mobicents.ussdgateway.rules.ScRoutingRuleType;
 
 /**
  * @author amit bhayani
@@ -97,51 +98,125 @@ public class ShortCodeRoutingRuleManagement implements ShortCodeRoutingRuleManag
 	}
 
 	@Override
-	public ScRoutingRule getScRoutingRule(String shortCode) {
+	public ScRoutingRule getScRoutingRule(String shortCode, int networkId) {
 		for (FastList.Node<ScRoutingRule> n = this.scRoutingRuleList.head(), end = this.scRoutingRuleList.tail(); (n = n
 				.getNext()) != end;) {
 			ScRoutingRule rule = n.getValue();
-			if (rule.getShortCode().equals(shortCode)) {
-				return rule;
+
+			if (rule.isExactMatch()) {
+				if (rule.getShortCode().equals(shortCode) && (rule.getNetworkId() == networkId)) {
+					return rule;
+				}
+			} else {
+				if (shortCode.startsWith(rule.getShortCode()) && (rule.getNetworkId() == networkId)) {
+					return rule;
+				}
 			}
 		}
 		return null;
 	}
 
 	@Override
-	public ScRoutingRule createScRoutingRule(String shortCode, String url) throws Exception {
+	public ScRoutingRule createScRoutingRule(String shortCode, ScRoutingRuleType routingRuleType, String urlOrsipProxy,
+			boolean exactMatch, int networkId) throws Exception {
 		if (shortCode == null || shortCode.equals("")) {
 			throw new Exception(UssdOAMMessages.INVALID_SC);
 		}
 
-		if (url == null || url.equals("")) {
-			throw new Exception(UssdOAMMessages.INVALID_ROUTING_RULE_URL);
-		}
-
-		ScRoutingRule rule = this.getScRoutingRule(shortCode);
+		ScRoutingRule rule = this.getScRoutingRule(shortCode, networkId);
 		if (rule != null) {
 			throw new Exception(UssdOAMMessages.CREATE_SC_RULE_FAIL_ALREADY_EXIST);
 		}
 
-		rule = new ScRoutingRule(shortCode);
-		rule.setRuleUrl(url);
+		if (routingRuleType == null) {
+			throw new Exception(UssdOAMMessages.NULL_RULE_TYPE);
+		}
 
-		this.scRoutingRuleList.add(rule);
+		if (urlOrsipProxy == null || urlOrsipProxy.equals("")) {
+			throw new Exception(UssdOAMMessages.INVALID_ROUTING_RULE_URL);
+		}
 
-		this.store();
+		if (routingRuleType == ScRoutingRuleType.HTTP) {
 
-		return rule;
+			rule = new ScRoutingRule(shortCode);
+			rule.setRuleType(routingRuleType);
+			rule.setRuleUrl(urlOrsipProxy);
+			rule.setExactMatch(exactMatch);
+			rule.setNetworkId(networkId);
+			this.scRoutingRuleList.add(rule);
+
+			this.store();
+
+			return rule;
+		} else {
+			// TODO : Parse the sipProxy for ip:port for validity
+
+			rule = new ScRoutingRule(shortCode);
+			rule.setSipProxy(urlOrsipProxy);
+			rule.setExactMatch(exactMatch);
+			rule.setRuleType(routingRuleType);
+			rule.setNetworkId(networkId);
+			this.scRoutingRuleList.add(rule);
+
+			this.store();
+
+			return rule;
+		}
 	}
-
+	
 	@Override
-	public ScRoutingRule deleteScRoutingRule(String shortCode) throws Exception {
+	public ScRoutingRule modifyScRoutingRule(String shortCode, ScRoutingRuleType routingRuleType, String urlOrsipProxy,
+			boolean exactMatch, int networkId) throws Exception {
 		if (shortCode == null || shortCode.equals("")) {
 			throw new Exception(UssdOAMMessages.INVALID_SC);
 		}
 
-		ScRoutingRule rule = this.getScRoutingRule(shortCode);
+		ScRoutingRule rule = this.getScRoutingRule(shortCode, networkId);
 		if (rule == null) {
-			throw new Exception(String.format(UssdOAMMessages.DELETE_ESME_FAILED_NO_ESME_FOUND, shortCode));
+			throw new Exception(String.format(UssdOAMMessages.DELETE_SC_RULE_FAILED_NO_SC_RULE_FOUND, shortCode, networkId));
+		}
+
+		if (routingRuleType == null) {
+			throw new Exception(UssdOAMMessages.NULL_RULE_TYPE);
+		}
+
+		if (urlOrsipProxy == null || urlOrsipProxy.equals("")) {
+			throw new Exception(UssdOAMMessages.INVALID_ROUTING_RULE_URL);
+		}
+
+		if (routingRuleType == ScRoutingRuleType.HTTP) {
+			rule.setRuleType(routingRuleType);
+			rule.setRuleUrl(urlOrsipProxy);
+			rule.setExactMatch(exactMatch);
+			this.store();
+
+			return rule;
+		} else {
+			// TODO : Parse the sipProxy for ip:port for validity
+			rule.setSipProxy(urlOrsipProxy);
+			rule.setExactMatch(exactMatch);
+			rule.setRuleType(routingRuleType);
+			this.store();
+
+			return rule;
+		}
+	}	
+
+	@Override
+	@Deprecated
+	public ScRoutingRule createScRoutingRule(String shortCode, String url, boolean exactMatch) throws Exception {
+		return this.createScRoutingRule(shortCode, ScRoutingRuleType.HTTP, url, exactMatch, 0);
+	}
+
+	@Override
+	public ScRoutingRule deleteScRoutingRule(String shortCode, int networkId) throws Exception {
+		if (shortCode == null || shortCode.equals("")) {
+			throw new Exception(UssdOAMMessages.INVALID_SC);
+		}
+
+		ScRoutingRule rule = this.getScRoutingRule(shortCode, networkId);
+		if (rule == null) {
+			throw new Exception(String.format(UssdOAMMessages.DELETE_SC_RULE_FAILED_NO_SC_RULE_FOUND, shortCode, networkId));
 		}
 
 		this.scRoutingRuleList.remove(rule);
@@ -177,6 +252,11 @@ public class ShortCodeRoutingRuleManagement implements ShortCodeRoutingRuleManag
 	}
 
 	public void stop() throws Exception {
+		this.store();
+	}
+
+	public void removeAllResourses() throws Exception {
+		this.scRoutingRuleList.clear();
 		this.store();
 	}
 

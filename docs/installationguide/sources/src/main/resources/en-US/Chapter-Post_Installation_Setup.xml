@@ -1,0 +1,47 @@
+<?xml version='1.0'?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "${ent.filename}">
+%BOOK_ENTITIES;
+]>
+
+<chapter
+	id="setup_configuration">
+	<title>Post Installation Configuration</title>
+	
+	<section id="memory_settings">
+		<title>Memory Settings</title>
+		<para>
+		You should fine tune the JVM memory settings based on your needs but we recommend you allocate a minimum of 3 GB for initial and maximum heap size.
+		</para> 
+		<variablelist>
+				<varlistentry>
+					<term>-Xms3072m</term><listitem><para> Initial heap size, set in megabytes</para></listitem>
+ 				</varlistentry>
+ 				<varlistentry>
+					<term>-Xmx3072m</term><listitem><para>Maximum heap size, set in megabytes</para></listitem>  
+ 				</varlistentry>
+</variablelist>
+	</section>
+	<section id="database_settings">
+		<title>Database Settings</title>
+		<para>
+			Every transaction in the &THIS.PLATFORM; &THIS.APPLICATION; is logged in a Database. By default, transactions are logged in the HSQLDB that comes bundled with JBoss AS and leverages the JBoss AS DataSource. However this is only made available to allow the platform to run "out of the box". You must configure a production ready Database prior to using the Gateway in a production environment. &THIS.PLATFORM; &THIS.APPLICATION; has been tested with PostgreSQL and MySQL.
+		</para>
+		<para>
+			The example HSQLDB DataSource is bound to the JNDI name java:/DefaultDS and its descriptor is available in the file <filename>mobicents-ussdgateway-&tl;version&gt;/jboss-5.1.0.GA/server/default/deploy/hsqldb-ds.xml</filename>. You must delete this datasource and configure the Platform to use your choice of Database. For instructions on configuring an alternate DataSource, please refer to Chapter 14, "Using Other Databases" in the JBoss AS Getting Started Guide available <ulink url="https://community.jboss.org/wiki/JBossAS5InstallationAndGettingStartedGuide">here</ulink>. You will also find a lot of examples in the folder <filename>mobicents-ussdgateway-&tl;version&gt;/jboss-5.1.0.GA/docs/examples/jca/</filename>.
+		</para>
+		<warning>
+			<para>HSQLDB must not be used in a production environment. You must ensure that you delete this datasource and configure a production-friendly Database like PostgreSQL or MySQL.</para>
+		</warning>
+		
+	</section>
+<section id="ss7_ussd_settings">
+		<title>Configuring the Gateway</title>
+		<para>
+		Now that you have installed &THIS.PLATFORM; &THIS.APPLICATION; to suit your needs, you can go ahead and configure the SS7 Stack and the USSD Gateway to meet your requirements. The &THIS.PLATFORM; jSS7 Stack User Guide in the <filename>mobicents-ussdgateway-&lt;version&gt;/docs/ss7/</filename> folder will assist you in configuring and managing the SS7 Stack. Only when you have completely configured the SS7 Stack to meet your requirements, you must go ahead with configuring the USSD Gateway. The &THIS.PLATFORM; &THIS.APPLICATION; Admin Guide in the <filename>mobicents-ussdgateway-&lt;version&gt;/docs/ussd/</filename> folder will assist you in configuring and managing the USSD Gateway. To configure and manage both the Stack and the Gateway you must use the Command Line Interface (CLI) tool that comes with the platform. For instructions on starting the Shell and help with commands, please refer to the &THIS.PLATFORM; &THIS.APPLICATION; Admin Guide.
+		</para>	
+	</section>
+
+
+</chapter>
+
