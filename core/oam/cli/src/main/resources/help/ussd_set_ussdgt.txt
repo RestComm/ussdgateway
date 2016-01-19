@@ -1,0 +1,36 @@
+Name
+	ussd set ussdgt
+
+SYNOPSIS
+	ussd set ussdgt <globalTitle> networkid <networkId>
+
+DESCRIPTION
+	This command is used to set a value for USSD Global Title. 
+	
+        networkId - a specifies Global Title for a virtual SS7
+        subnetwork (this is for Multi-tenancy support). By using of
+        this command with different networkIds you can specify
+        Global Titles for several subnetworks. If this parameter 
+        is skipped - networkId will be set to "0" when Global Title 
+        creation (master networkId). When we do not specify Global 
+        Title for some networkid - Global Title for master networkId 
+        will be used. When we se "0" as Global Title value 
+        (like "ussd set scgt 0 networkid <xxx>") - this will just clear 
+        Global Title for an specified networkid.	
+
+EXAMPLES
+	ussd set ussdgt 912020015
+
+	The above command will set the value for the parameter 'globalTitle' to 
+	'912020015'and the terminal will display the message 
+	"Parameter has been successfully set". 
+
+	You can verify this by issuing the 'ussd get ussdgt' command.
+
+	ussd get ussdgt
+	networkId=0 - GT=912020015
+
+SEE ALSO
+	ussd set, ussd set noroutingruleconfigerrmssg, ussd set dialogtimeout, 
+	ussd set dialogtimeouterrmssg, ussd set servererrmssg, ussd set ussdssn,
+	ussd set hlrssn, ussd set mscssn, ussd set maxmapv, ussd get

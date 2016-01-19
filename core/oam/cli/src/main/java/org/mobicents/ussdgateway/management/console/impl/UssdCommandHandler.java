@@ -34,22 +34,37 @@ public class UssdCommandHandler extends CommandHandlerWithHelp {
 
 	static final Tree commandTree = new Tree("ussd");
 	static {
-		Node parent = commandTree.getTopNode();
+        Node parent = commandTree.getTopNode();
 
-		Node esme = parent.addChild("scrule");
-		esme.addChild("create");
-		esme.addChild("delete");
-		esme.addChild("show");
-		
-		Node set = parent.addChild("set");
-		set.addChild("noroutingruleconfigerrmssg");
-		set.addChild("servererrmssg");
-		set.addChild("dialogtimeouterrmssg");
-		
-		Node get = parent.addChild("get");
-		get.addChild("noroutingruleconfigerrmssg");
-		get.addChild("servererrmssg");
-		get.addChild("dialogtimeouterrmssg");
+        Node esme = parent.addChild("scrule");
+        esme.addChild("create");
+        esme.addChild("modify");
+        esme.addChild("delete");
+        esme.addChild("show");
+
+        Node set = parent.addChild("set");
+        set.addChild("noroutingruleconfigerrmssg");
+        set.addChild("servererrmssg");
+        set.addChild("dialogtimeouterrmssg");
+        set.addChild("ussdgt");
+        set.addChild("ussdssn");
+        set.addChild("hlrssn");
+        set.addChild("mscssn");
+        set.addChild("maxmapv");
+        set.addChild("cdrloggingto");
+        set.addChild("hrhlrgt");
+
+        Node get = parent.addChild("get");
+        get.addChild("noroutingruleconfigerrmssg");
+        get.addChild("servererrmssg");
+        get.addChild("dialogtimeouterrmssg");
+        get.addChild("ussdgt");
+        get.addChild("ussdssn");
+        get.addChild("hlrssn");
+        get.addChild("mscssn");
+        get.addChild("maxmapv");
+        get.addChild("cdrloggingto");
+        get.addChild("hrhlrgt");
 
 	};
 

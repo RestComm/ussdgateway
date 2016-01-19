@@ -21,7 +21,7 @@
  */
 package org.mobicents.ussdgateway.slee;
 
-import javax.slee.SbbLocalObject;
+import org.mobicents.slee.SbbLocalObjectExt;
 import org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent;
 
 /**
@@ -29,6 +29,6 @@ import org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent;
  * @author amit bhayani
  *
  */
-public interface ChildSbbLocalObject extends SbbLocalObject, ChildInterface,ChargeInterfaceParent {
+public interface ChildSbbLocalObject extends SbbLocalObjectExt, ChildInterface,ChargeInterfaceParent {
 
 }

@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "${ent.filename}">
+%BOOK_ENTITIES;
+]>
+
+<chapter id="logging_traces_and_alarms">
+
+	<title>Monitoring</title>
+
+	<section id="tracers">
+		<title>Tracers</title>
+		<para>&THIS.APPLICATION; &THIS.APPLICATION; Application creates following tracers:</para>     
+		      
+		      <table frame="all" pgwide="1">
+			<title>&THIS.APPLICATION; Application Tracer and Log Categories
+			</title>
+			<tgroup colsep="1" cols="3">
+				<colspec colnum="1" colname="c0" colwidth="1*"/>
+				<colspec colnum="2" colname="c1" colwidth="1*"/>
+				<colspec colnum="3" colname="c2" colwidth="2*"/>
+
+				<thead>
+					<row>
+						<entry>Sbb</entry>
+						<entry>Tracer name</entry>
+						<entry>LOG4J category</entry>
+					</row>
+				</thead>
+				<tbody>
+					<row>
+						<entry>ParentSbb</entry>
+						<entry>USSD-Parent</entry>
+						<entry>
+							javax.slee.SbbNotification
+							[service=ServiceID[name=mobicents-ussdgateway,vendor=org.mobicents,
+							version=1.0],sbb=SbbID[name=ParentSbb,
+							vendor=org.mobicents,version=1.0]].USSD-Parent
+						</entry>
+					</row>
+					<row>
+						<entry>SipSbb</entry>
+						<entry>USSD-CHILD-SipSbb</entry>
+						<entry>
+							javax.slee.SbbNotification
+							[service=ServiceID[name=mobicents-ussdgateway,vendor=org.mobicents,
+							version=1.0],sbb=SbbID[name=SipSbb,
+							vendor=org.mobicents,version=1.0]].USSD-CHILD-SipSbb
+						</entry>
+					</row>
+					<row>
+						<entry>HttpClientSbb</entry>
+						<entry>USSD-CHILD-HttpClientSbb</entry>
+						<entry>
+							javax.slee.SbbNotification
+							[service=ServiceID[name=mobicents-ussdgateway,vendor=org.mobicents,
+							version=1.0],sbb=SbbID[name=HttpClientSbb,
+							vendor=org.mobicents,version=1.0]].USSD-CHILD-HttpClientSbb
+						</entry>
+					</row>
+				</tbody>
+			</tgroup>
+		</table>
+		<important>
+       		<para>Spaces where introduced in <literal>LOG4J category</literal>  column values, to correctly render the table. Please remove them when using copy/paste.</para>
+		</important>
+	</section>	
+	
+	<section id="statistics">
+		<title>Statistics</title>
+		<section id="view_stats">
+		<title>View USSD Statistics using the GUI</title>
+		<para>You can view USSD statistics in the GUI Management Console by following the procedure below.</para>
+		<procedure>
+				<title>View USSD Statistics in the GUI</title>
+				<step><para>In the GUI Management Console for USSD Gateway, click on 'Manage Campaigns' in the left panel.
+				</para></step>
+				<step><para>If there are no statistics campaigns created yet, press the "Create Statistics Campaign" button. 
+				</para></step>
+				<step>
+					<para>
+						Set the value of "Counter Definition Set Name" to "USSD GW-USSD-Main". You can set the 'Duration' value to any desired statistic interval as required. 
+						USSD Gateway will collect statistics for selected duration and then reset all to zero and start over again. However stats of type cumulative will not be reset to 0.
+						Enter any unique name for "Campaign Name" (eg. "camp1").
+					</para>
+				</step>
+				<step><para>Open the newly created campaign and click on the tag "Counter value". You will now be able to observe the current set of counter values. Whenever you wish to see the current counter values set, you can view them here by clicking on the tag "Counter value".
+				</para></step>
+				<step><para>For multiple counters, you can also view in the form of time histograms. To view this, you must click on "Metrics" in the left panel of the GUI. 
+				</para></step>
+				<step>
+					<para>
+						The main panel will display the current statistics and the details of the parameters. 
+						This page get auto-refreshed for every "Refresh Rate" seconds and therefore the statistics are refreshed automatically.
+						It makes sense to select refresh rate same as duration value for which USSD Gateway is collecting stats.
+					</para>
+				</step>
+		</procedure>
+		<para>Statistics info is also written by default into the log file (<filename>mobicents-ussdgateway-&THIS.VERSION;/jboss-5.1.0.GA/server/default/log/stats.log</filename>).
+		File format is plain text and easy to understand.
+		This log file can achieve a big size if your statistic duration is short.
+		If you do not need that statistic data will be written into stats.log file, you can remove the section from <filename>mobicents-ussdgateway-&THIS.VERSION;/jboss-5.1.0.GA/server/default/conf/jboss-log4j.xml</filename>
+		that contains the appender: 
+<screen><![CDATA[
+	<appender name="STATS" class="org.jboss.logging.appender.DailyRollingFileAppender">
+		...... 
+		...... 
+		...... 
+	</appender>
+]]></screen>
+		</para>
+		</section>
+		<section id="ussd_counters">
+		<title>USSD Counters</title>
+		<para>The table below lists the USSD counters along with their description.</para>
+				      <table frame="all" pgwide="1">
+			<title>USSD Counters
+			</title>
+			<tgroup colsep="1" cols="2">
+				<colspec colnum="1" colname="c0" colwidth="1*"/>
+				<colspec colnum="2" colname="c1" colwidth="1*"/>
+				<thead>
+					<row>
+						<entry>Name</entry>
+						<entry>Description</entry>
+					</row>
+				</thead>
+				<tbody>
+					<row>
+						<entry>MinDialogsInProcess</entry>
+						<entry>A minimal count of dialogs that are in progress during a statistic period.</entry>
+					</row>
+					<row>
+						<entry>MaxDialogsInProcess</entry>
+						<entry>A maximum count of dialogs that are in progress during a statistic period.</entry>
+					</row>
+					<row>
+						<entry>DialogsAllEstablished</entry>
+						<entry>A count of successfully established Dialogs for all dialog cases. A PULL Dialog is established if <literal>ProcessUnstructuredSSRequest</literal> has come to the &THIS.APPLICATION; and a Short Code from the request is configured as USSD GW side and USSD request has routed to a HTTP or SIP application. A PUSH Dialog is established if the &THIS.APPLICATION; has sent an <literal>UnstructuredSSRequest</literal> or <literal>UnstructuredSSNotifyRequest</literal> to the SS7 network and a non-error response from a mobile station has been received.</entry>
+					</row>
+					<row>
+						<entry>DialogsAllFailed</entry>
+						<entry>A count of the Dialogs failed at establishing or established phases for all dialog cases. The most common case of failure at establishing phases is in the PUSH case when a USSD request has failed due to bad subscriber number, absent or busy subscriber. If there is an incoming <literal>ProcessUnstructuredSSRequest</literal> with a wrong short code, this Dialog is not registerd into the <literal>DialogsAllFailed</literal> counter. Instead it is registered into the <literal>UssdPullNoRoutingRule</literal> counter. A Dialog can be registered in the <literal>DialogsAllFailed</literal> counter only if it failed at establishing phase. It can be registered in both <literal>DialogsAllEstablished</literal> and <literal>DialogsAllFailed</literal> counters if it failed in the established phase.</entry>
+					</row>
+					<row>
+						<entry>DialogsPullEstablished</entry>
+						<entry>A count of successfully established PULL Dialogs. It is similar to the counter <literal>DialogsAllEstablished</literal> but used only for PULL dialogs.</entry>
+					</row>
+					<row>
+						<entry>DialogsPullFailed</entry>
+						<entry>A count of the PULL Dialogs failed at establishing or established phases. It is similar to the counter <literal>DialogsAllFailed</literal> but used only for PULL dialogs.</entry>
+					</row>
+					<row>
+						<entry>DialogsPushEstablished</entry>
+						<entry>A count of successfully established PUSH Dialogs. It is similar to the counter <literal>DialogsAllEstablished</literal> but used only for PUSH dialogs.</entry>
+					</row>
+					<row>
+						<entry>DialogsPushFailed</entry>
+						<entry>A count of the PUSH Dialogs failed at establishing or established phases. It is similar to the counter <literal>DialogsAllFailed</literal> but used only for PUSH dialogs.</entry>
+					</row>
+					<row>
+						<entry>DialogsHttpEstablished</entry>
+						<entry>A count of successfully established HTTP Dialogs. It is similar to the counter <literal>DialogsAllEstablished</literal> but used only for HTTP dialogs.</entry>
+					</row>
+					<row>
+						<entry>DialogsHttpFailed</entry>
+						<entry>A count of the HTTP Dialogs failed at establishing or established phases. It is similar to the counter <literal>DialogsAllFailed</literal> but used only for HTTP dialogs.</entry>
+					</row>
+					<row>
+						<entry>DialogsSipEstablished</entry>
+						<entry>A count of successfully established SIP Dialogs. It is similar to the counter <literal>DialogsAllEstablished</literal> but used only for SIP dialogs.</entry>
+					</row>
+					<row>
+						<entry>DialogsSipFailed</entry>
+						<entry>A count of the SIP Dialogs failed at establishing or established phases. It is similar to the counter <literal>DialogsAllFailed</literal> but used only for SIP dialogs.</entry>
+					</row>
+					<row>
+						<entry>DialogsAllEstablishedCumulative</entry>
+						<entry>This counter contains a cumulative value of <literal>DialogsAllEstablished</literal> counter from the time the USSD GW was started.</entry>
+					</row>
+					<row>
+						<entry>DialogsAllFailedCumulative</entry>
+						<entry>This counter contains a cumulative value of <literal>DialogsAllFailed</literal> counter from the time the USSD GW was started.</entry>
+					</row>
+					<row>
+						<entry>DialogsAllEstablishedPerSec</entry>
+						<entry>A count of the successfully established Dialogs per second, for all dialog cases.</entry>
+					</row>
+					<row>
+						<entry>DialogsAllFailedPerSec</entry>
+						<entry>A count of the Dialogs failed per second at establishing or established phases, for all dialog cases.</entry>
+					</row>
+					<row>
+						<entry>ProcessUssdRequestOperations</entry>
+						<entry>A count of all requested <literal>ProcessUnstructuredSSRequest</literal>.</entry>
+					</row>
+					<row>
+						<entry>ProcessUssdRequestOperationsCumulative</entry>
+						<entry>This counter contains a cumulative value of <literal>ProcessUssdRequestOperations</literal> counter from the time the USSD GW was started.</entry>
+					</row>
+					<row>
+						<entry>UssdRequestOperations</entry>
+						<entry>A count of all requested <literal>UnstructuredSSRequest</literal>.</entry>
+					</row>
+					<row>
+						<entry>UssdRequestOperationsCumulative</entry>
+						<entry>This counter contains a cumulative value of <literal>UssdRequestOperations</literal> counter from the time the USSD GW was started.</entry>
+					</row>
+					<row>
+						<entry>UssdNotifyOperations</entry>
+						<entry>A count of all requested <literal>UnstructuredSSNotifyRequest</literal>.</entry>
+					</row>
+					<row>
+						<entry>UssdNotifyOperationsCumulative</entry>
+						<entry>This counter contains a cumulative value of <literal>UssdNotifyOperations</literal> counter from the time the USSD GW was started.</entry>
+					</row>
+					<row>
+						<entry>UssdPullNoRoutingRule</entry>
+						<entry>A count of incoming PULL requests for Short Codes that are not configured in the USSD GW and are therefore rejected.</entry>
+					</row>
+					<row>
+						<entry>UssdPullNoRoutingRuleCumulative</entry>
+						<entry>This counter contains a cumulative value of <literal>UssdPullNoRoutingRule</literal> counter from the time the USSD GW was started.</entry>
+					</row>
+					<row>
+						<entry>MapErrorAbsentSubscribers</entry>
+						<entry>A count of MAP error message <literal>AbsentSubscribers</literal> received from the HLR/MSC (PUSH case).</entry>
+					</row>
+					<row>
+						<entry>MapErrorAbsentSubscribersCumulative</entry>
+						<entry>This counter contains a cumulative value of <literal>MapErrorAbsentSubscribers</literal> counter from the time the USSD GW was started.</entry>
+					</row>
+					<row>
+						<entry>MapErrorCallBarred</entry>
+						<entry>A count of MAP error message <literal>CallBarred</literal> received from the HLR (PUSH case).</entry>
+					</row>
+					<row>
+						<entry>MapErrorCallBarredCumulative</entry>
+						<entry>This counter contains a cumulative value of <literal>MapErrorCallBarred</literal> counter from the time the USSD GW was started.</entry>
+					</row>
+					<row>
+						<entry>MapErrorTeleserviceNotProvisioned</entry>
+						<entry>A count of MAP error message <literal>TeleserviceNotProvisioned</literal> received from the HLR (PUSH case).</entry>
+					</row>
+					<row>
+						<entry>MapErrorTeleserviceNotProvisionedCumulative</entry>
+						<entry>This counter contains a cumulative value of <literal>MapErrorTeleserviceNotProvisioned</literal> counter from the time the USSD GW was started.</entry>
+					</row>
+					<row>
+						<entry>MapErrorUnknownSubscriber</entry>
+						<entry>A count of MAP error message <literal>UnknownSubscriber</literal> received from the HLR (PUSH case).</entry>
+					</row>
+					<row>
+						<entry>MapErrorUnknownSubscriberCumulative</entry>
+						<entry>This counter contains a cumulative value of <literal>MapErrorUnknownSubscriber</literal> counter from the time the USSD GW was started.</entry>
+					</row>
+					<row>
+						<entry>MapErrorUssdBusy</entry>
+						<entry>A count of MAP error message <literal>UssdBusy</literal> received from the MSC (PUSH case).</entry>
+					</row>
+					<row>
+						<entry>MapErrorUssdBusyCumulative</entry>
+						<entry>This counter contains a cumulative value of <literal>MapErrorUssdBusy</literal> counter from the time the USSD GW was started.</entry>
+					</row>
+					<row>
+						<entry>MapErrorComponentOther</entry>
+						<entry>A count of all other MAP error messages received from the HRL/MSC (PUSH case).</entry>
+					</row>
+					<row>
+						<entry>MapErrorComponentOtherCumulative</entry>
+						<entry>This counter contains a cumulative value of <literal>MapErrorComponentOther</literal> counter from the time the USSD GW was started.</entry>
+					</row>
+					<row>
+						<entry>MapDialogTimeouts</entry>
+						<entry>A count of all MAP Dialog timeouts. This is the case when a mobile subscriber does not respond for a long time after the MAP Dialog is established.</entry>
+					</row>
+					<row>
+						<entry>MapDialogTimeoutsCumulative</entry>
+						<entry>This counter contains a cumulative value of <literal>MapDialogTimeouts</literal> counter from the time the USSD GW was started.</entry>
+					</row>
+					<row>
+						<entry>MapInvokeTimeouts</entry>
+						<entry>A count of all MAP Invoke timeouts. This is the case when a mobile subscriber does not respond for a long time for the Invoke from USSD GW.</entry>
+					</row>
+					<row>
+						<entry>MapInvokeTimeoutsCumulative</entry>
+						<entry>This counter contains a cumulative value of <literal>MapInvokeTimeouts</literal> counter from the time the USSD GW was started.</entry>
+					</row>
+					<row>
+						<entry>AppTimeouts</entry>
+						<entry>A count of all HTTP / SIP Application timeouts. This is the case when a HTTP / SIP application does not respond for a long time (PULL cases only).</entry>
+					</row>
+					<row>
+						<entry>AppTimeoutsCumulative</entry>
+						<entry>This counter contains a cumulative value of <literal>AppTimeouts</literal> counter from the time the USSD GW was started.</entry>
+					</row>
+					<row>
+						<entry>RequestsPerUssdCode</entry>
+						<entry>A count of <literal>ProcessUnstructuredSSRequest</literal> requests per Short Code. This value is a complex value and there may be several values for several Short Codes inside the counter. Only the Short Codes for which there were requests during this time interval are present.</entry>
+					</row>
+				</tbody>
+			</tgroup>
+		</table>
+		</section>
+	</section>
+	
+</chapter>

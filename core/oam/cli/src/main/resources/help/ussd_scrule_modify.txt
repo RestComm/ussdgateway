@@ -1,0 +1,70 @@
+Name
+	ussd scrule modify
+
+SYNOPSIS
+	ussd scrule modify <short-code> <url> <flag> <protocol> <network-id>
+
+DESCRIPTION
+	This command is used to modify existing routing rule for a short code for 
+	PULL case only. This is not applicable for PUSH case.
+	A short code and networkId pair is used as a unique routing rule identifier.
+
+	Standard Parameters
+	
+	short-code        - USSD short code which when dialed by user and received 
+                        by USSD Gw, will forward request to configured URL
+                        
+    url               - If rule is configured as HTTP, this should be the URL
+                        where HTTP POST with XML payload should be forwarded to.
+                        If rule is configured as SIP, INVITE will be sent to this 
+                        ip:port
+
+    Optional Parameters
+    
+    flag              - flag is either true or false, default is true. If true that 
+                        means this is exact match. If false, that means the dialed 
+                        short-code begins with configured short-code. For example 
+                        if you created below rule, and user dials *123*7776543*223#, 
+                        it will match the rule and request will be forwarded to the 
+                        URL http://myip:8080/mobiussd/recharge
+                        
+                        ussd scrule create *123* http://myip:8080/mobiussd/recharge false
+                        
+    protocol          - USSD Gateway supports 2 protocols - HTTP and SIP (3GPP Specification 
+                        24.390). If not specified default is HTTP. If protocol is HTTP, gateway
+                        will forward request as HTTP POST. If its SIP, INVITE will be sent 
+                        SIP Client.  
+                        
+    networkid         - USSD Gateway can be connected to multiple operators/network at same time
+                        and each operator exposing same or different short-code. Each operator 
+                        (jSS7 stack configured) has its unique networkid assigned and incoming
+                        request can be matched with configured networkid here. Only if short-code 
+                        and networkid match's, request is forwarded to corresponding url. Default
+                        value is 0.                                                
+	                                             
+		
+
+EXAMPLES
+    ussd scrule modify *519# http://localhost:8080/ussddemo/test
+
+    Above rule will update the routing rule for the short code *519# and networkId 0
+    for HTTP url http://localhost:8080/ussddemo/test and the matching flag "false".
+
+    ussd scrule modify *916* http://localhost:8080/ussddemo/test2 true HTTP 2	
+
+    Above rule will update the routing rule for the short code *916* and networkId 2
+    for HTTP url http://localhost:8080/ussddemo/test2 and the matching flag "true".
+
+    ussd scrule modify *123* 127.0.0.1:5065 true SIP
+
+    Above rule will update the routing rule for the short code *123* and networkId 0
+    for SIP destination 127.0.0.1:5065 and the matching flag "true".
+
+    ussd scrule modify *321# 127.0.0.1:5066 SIP 4
+
+    Above rule will update the routing rule for the short code *321# and networkId 4
+    for SIP destination 127.0.0.1:5066 and the matching flag "false".
+
+SEE ALSO
+	ussd scrule, ussd scrule create, ussd scrule delete, ussd scrule show
+

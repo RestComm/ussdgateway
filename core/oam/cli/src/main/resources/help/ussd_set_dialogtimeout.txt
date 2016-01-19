@@ -1,0 +1,36 @@
+Name
+	ussd set dialogtimeout
+
+SYNOPSIS
+	ussd set dialogtimeout <timeout-value>
+
+DESCRIPTION
+	This command is used to set the request timeout duration in milliseconds. For 
+	example, the end user dials the short code *123#, and the USSD Gateway is 
+	configured to route this request to a third party application 'xyz'. The value of
+	the parameter 'dialogtimeout' is the maximum time allowed by the Gateway for the 
+	application 'xyz' to respond. If the application 'xyz' takes longer than the time 
+	specified by the value of the parameter 'dialogtimeout' to respond, then the USSD 
+	Gateway will kill the session and send an error message to be displayed to the 
+	user. 
+
+EXAMPLES
+	ussd set dialogtimeout 25000
+
+	The above command will set the value of the parameter 'dialogtimeout' to  25000
+	milliseconds and the terminal will display the message "Parameter has been 
+	successfully set". You can verify this by issuing the 'ussd get' command whose 
+	output will be as below:
+
+	ussd get
+
+	noroutingruleconfigerrmssg = Not valid short code. Please dial valid short code
+	dialogtimeouterrmssg = Request timedout please try again after sometime
+	dialogtimeout = 25000
+	servererrmssg = null
+
+SEE ALSO
+	ussd set, ussd set noroutingruleconfigerrmssg, ussd set dialogtimeouterrmssg, 
+	ussd set servererrmssg, ussd get
+
+

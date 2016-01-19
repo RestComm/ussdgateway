@@ -1,47 +1,25 @@
-
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<parent>
 		<groupId>org.mobicents.ussd</groupId>
 		<artifactId>parent</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
+		<version>3.0.0-SNAPSHOT</version>
 	</parent>
-	
-	<artifactId>docs-parent</artifactId>
-		
+
+	<groupId>org.mobicents.ussd.docs</groupId>
+	<artifactId>mobicents-ussd-docs</artifactId>
+
+	<name>Mobicents USSD :: Docs :: Parent :: ${pom.artifactId}</name>
 	<packaging>pom</packaging>
-	
+
 	<properties>
-		<docs.application.name>USSD Gateway</docs.application.name>
-		<docs.application.dirname>ussdgateway</docs.application.dirname>
-		<docs.bookid>USSDGateway</docs.bookid>
-		<docs.drools.documentation>http://downloads.jboss.com/drools/docs/5.0.1.26597.FINAL/drools-expert/html_single/</docs.drools.documentation>
-		<docs.guvnor.documentation>http://downloads.jboss.com/drools/docs/5.0.1.26597.FINAL/drools-guvnor/html_single/</docs.guvnor.documentation>
 	</properties>
+
 	<modules>
-		<module>sources</module>		
+		<module>commons</module>
+		<module>releasenotes</module>
+		<module>adminguide</module>
+		<module>installationguide</module>
 	</modules>
-
-	<profiles>
-		<profile>
-			<id>mobicents</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>			
-			<modules>
-				<module>sources-mobicents</module>
-				<module>jdocbook-mobicents</module>				
-			</modules>
-		</profile>
-		<profile>
-			<id>jbcp</id>
-			<modules>
-				<module>sources-jbcp</module>
-				<module>jdocbook-jbcp</module>
-			</modules>
-		</profile>
-	</profiles>
-
 </project>

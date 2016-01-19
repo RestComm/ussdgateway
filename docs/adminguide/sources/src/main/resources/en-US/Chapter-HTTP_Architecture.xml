@@ -1,0 +1,729 @@
+<?xml version='1.0'?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "${ent.filename}">
+%BOOK_ENTITIES;
+]>
+
+<chapter id="http_architecture">
+
+	<title>HTTP Transfer Mechanism</title>
+	<para>
+		&THIS.PLATFORM; &THIS.APPLICATION; supports implementation of HTTP 1.1 standards and acts as a HTTP Client invoking the HTTP Application deployed on the third-party Application Server. The <literal>HTTP Request/Response</literal> carries XML payload with USSD specific information. 
+	</para>
+	<para>
+  		The HTTP callback mechanism allows the third-party Application to be agnostic to Operating System, Programming Language and Framework. 
+  		The third-party Application could be one of the following technologies on any Operating System:
+		<itemizedlist>
+			<listitem><para>Apache Tomcat, JBoss AS, Oracle Application Server, IBM Websphere etc for JSP/Servlet on Java </para></listitem>
+			<listitem><para>PHP</para></listitem>
+			<listitem><para>Microsoft IIS for ASP</para></listitem>
+		</itemizedlist>       
+	</para>
+	<para>
+		HTTP errors are supported and recognized by the &THIS.APPLICATION;
+	</para>
+	<section id="HTTP_Messages - USSD Pull">
+		<title>HTTP Message Structure - USSD Pull</title>
+		<para>The diagram below depicts an example message sequence for interacting with the &THIS.PLATFORM; &THIS.APPLICATION; HTTP API.
+
+
+		<mediaobject>
+ 		 <imageobject>
+    			<imagedata fileref="images/http-call-flow-USSD-Pull.png" format="PNG" scalefit="1" >
+  			</imagedata>
+			<caption>
+				<para>&THIS.PLATFORM; HTTP Message Flow - USSD Pull
+				</para>
+			</caption>
+ 		 </imageobject>
+		</mediaobject>
+		</para>
+		<orderedlist>
+			<listitem>
+				<para>When the subscriber initiates a USSD Request, the HLR sends a <literal>MAP_PROCESS_UNSTRUCTURED_SS_REQUEST</literal> to the USSD Gateway.</para>
+			</listitem>
+			<listitem>
+				<para>Upon receipt of the <literal>MAP_PROCESS_UNSTRUCTURED_SS_REQUEST</literal> of type <literal>Begin</literal>, &THIS.APPLICATION; invokes the third-party Application through a <literal>HTTP POST Request</literal>, carrying an XML Payload with USSD specific information. The XML Structure of this payload is explained in the sections below. </para>
+			</listitem>
+			<listitem>
+				<para>The third-party Application will now get a new Session and maintain it till the last response. The Application will send a <literal>HTTP Response</literal>, carrying an XML Payload, to the &THIS.APPLICATION;.</para>
+			</listitem>
+			<listitem>
+				<para>The &THIS.APPLICATION; will send a <literal>MAP_UNSTRUCTURED_SS_REQUEST</literal> of type <literal>Continue</literal> to the HLR.</para>
+			</listitem>
+			<listitem>
+				<para>The Subscriber will receive a menu to choose from and reply. When the subscriber replies, the HLR will send a <literal>MAP_UNSTRUCTURED_SS_RESPONSE</literal> of type <literal>Continue</literal> to the &THIS.APPLICATION;.</para>
+			</listitem>
+			<listitem>
+				<para>The &THIS.APPLICATION; will send a <literal>HTTP POST Request</literal>, carrying an XML Payload, to the third-party Application in the same session.</para>
+			</listitem>
+			<listitem>
+				<para>Based on the input from the subscriber, the third-party Application will send a final response (<literal>HTTP Response</literal>, carrying an XML Payload) and invalidate the session.</para>
+			</listitem>
+			<listitem>
+				<para>The &THIS.APPLICATION; will send a <literal>MAP_PROCESS_UNSTRUCTURED_SS_RESPONSE</literal> of type <literal>End</literal> to the HLR. Consequently, the subscriber will receive a final response.</para>
+			</listitem>
+		</orderedlist>
+	</section>
+	<section id="HTTP_Messages-USSD Push">
+		<title>HTTP Message Structure - USSD Push</title>
+		<para>For USSD PUSH, the third party application should send a HTTP POST request to the &THIS.PLATFORM; &THIS.APPLICATION;. The URL for sending this is http://&lt;bind address of JBoss&gt;:8080/mobicents. The diagram below depicts an example message sequence (USSD Push) for interacting with the &THIS.PLATFORM; &THIS.APPLICATION; HTTP API.
+		<mediaobject>
+ 		 <imageobject>
+    			<imagedata fileref="images/http-call-flow-USSD-Push.png" format="PNG" scalefit="1" >
+  			</imagedata>
+			<caption>
+				<para>&THIS.PLATFORM; HTTP Message Flow - USSD Push
+				</para>
+			</caption>
+ 		 </imageobject>
+		</mediaobject>
+		</para>
+	<!--	<orderedlist>
+			<listitem>
+				<para></para>
+			</listitem>
+			<listitem>
+				<para></para>
+			</listitem>
+			<listitem>
+				<para></para>
+			</listitem>
+			<listitem>
+				<para></para>
+			</listitem>
+			<listitem>
+				<para></para>
+			</listitem>
+			<listitem>
+				<para></para>
+			</listitem>
+			<listitem>
+				<para></para>
+			</listitem>
+			<listitem>
+				<para></para>
+			</listitem>
+		</orderedlist>-->
+	</section>
+
+<!--
+	<section id="HTTP_Messages-USSD Proxy">
+		<title>HTTP Message Structure - USSD Proxy</title>
+		<para>
+			USSD Gateway can also act as a statefull proxy forwarding the received USSD request to third-party Node (Forwarded Node). 
+			The diagram below depicts an example message sequence (USSD Proxy) for interacting with the &THIS.PLATFORM; &THIS.APPLICATION; HTTP API. 
+			When the HTTP Application is forwarding the USSD request for the first time, it should set the SCCP remote address &lt;remoteAddress&gt; pointing to "Forwarded Node".
+		<mediaobject>
+ 		 <imageobject>
+    			<imagedata fileref="images/http-call-flow-proxy.png" format="PNG" scalefit="1" >
+  			</imagedata>
+			<caption>
+				<para>&THIS.PLATFORM; HTTP Message Flow - USSD Proxy
+				</para>
+			</caption>
+ 		 </imageobject>
+		</mediaobject>
+		<mediaobject>
+ 		 <imageobject>
+    			<imagedata fileref="images/http-call-flow-proxy1.png" format="PNG" scalefit="1" >
+  			</imagedata>
+			<caption>
+				<para>&THIS.PLATFORM; HTTP Message Flow - USSD Proxy (Continued)</para>
+			</caption>
+ 		 </imageobject> 		
+		</mediaobject>		
+		</para>
+	</section>	
+-->
+
+	<section id="HTTP-payload">
+		<title>HTTP Payload</title>
+		<section id="xml_structure">
+		<title>XML Structure</title>
+		<para>The <literal>HTTP Request</literal>/<literal>Response</literal> carries XML Payload with USSD specific information as defined below:
+<screen>
+<![CDATA[
+<dialog type="Begin" appCntx="networkUnstructuredSsContext_version2"
+	networkId="0" localId="1" remoteId="1" mapMessagesSize="1"
+	returnMessageOnError="false">
+	....
+	....
+	....
+</dialog>
+]]>
+</screen>
+		</para>
+		</section>
+		<section id="attributes">
+		<title>Dialog Attributes</title>
+		<para>The XML element <literal>&lt;dialog&gt;</literal> contains various attributes to represent the state and the parameters of the Dialog.
+		Some of them are mandatory while others are optional. This section explains in detail all possible attributes and what they represent.
+		The list of mandatory attributes that a USSD application must supply will be described for an each concrete response.
+		</para>
+		<variablelist>
+			<title>Parameters</title>
+			<varlistentry>
+				<term>type</term>
+				<listitem><para>Represents the state of the Dialog. This parameter is for information only and is not used by the &THIS.APPLICATION; to take any decision on the fate of the underlying MAP Dialog.
+				The possible values for 'type' are: <literal>Unidirectional, Begin, End, Continue, Abort, Unknown.</literal>
+				You do not need to supply this parameter in payload from HTTP App.
+				</para></listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>appCntx</term>
+				<listitem><para>Represents the MAP Application Context for USSD GW request. Now it always "networkUnstructuredSsContext_version2".
+				You do not need to supply this parameter in payload from HTTP App.
+				For outgoung USSD operations it is always networkUnstructuredSsContext version 2.
+				For outgoing SRI request an initial MAP operation version is defined by the 'maxmapv' parameter configured in <xref linkend="setting_ussd_maxmapv" />.
+				</para></listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>networkId</term>
+				<listitem><para>Represents a networkId value. USSD Gateway can be connected to multiple operators/network at same time.
+				For each operator unique networkId is assigned.
+				In the initial PUSH (unstructuredSS-Request or unstructuredSS-Notify) message HTTP app can specify networkId parameter for forsing of usage of desired network operator.
+				If this value is missed then the default value ("0") will be used.
+				</para></listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>localId</term>
+				<listitem><para>Represents the local TCAP transaction ID.
+				You do not need to supply this parameter in payload from HTTP App because localId values for all outgoing MAP dialogs is assigned by TCAP stack itself.
+				All subsequent messages from the USSD Gateway will have the actual value.
+				</para></listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>remoteId</term>
+				<listitem><para>Represents the remote TCAP transaction ID.
+				You do not need to supply this parameter in payload from HTTP App.
+				</para></listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>mapMessagesSize</term>
+				<listitem><para>Represents the actual number of MAP messages carried in the &lt;dialog&gt;. This value can be 0 if no MAP messages are carried or 1 when a USSD message is present.
+				This parameter is mandatory in payload from HTTP App and is usually "1" when you are sending a message or "0" for an empty TC-END response in PUSH case.
+				</para></listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>returnMessageOnError</term>
+				<listitem><para>For USSD GW originated XMP payload this parameter corresponds to SCCP message returnMessageOnError parameter.
+				You can supply this parameter in payload from HTTP App.
+				This will affect to outgoing SCCP messages. (SCCP will return the notification is the message has non been delivered to the peer).
+				Mostly we do not need to specify this parameter. By default this is true.
+				</para></listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>prearrangedEnd</term>
+				<listitem><para>This parameter can only be present in payload from HTTP App.
+				If this parameter is present, it means the underlying TCAP Dialog will be closed.
+				The value can be true or false. If it is false, the messages will be sent to peer and the TCAP dialog ended.
+				If it is true, all the messages in the Dialog are dropped and the Dialog is closed without informing peer.
+				If this parameter is not present, all the messages in the Dialog are sent to peer as TCAP Continue.
+				If you do not want to close dialog this step do not include this parameter.
+				If you want to close dialog this step include this parameter with value "false".
+				</para></listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>mapAbortProviderReason</term>
+				<listitem><para>If this parameter is present, it means the underlying Dialog is Provider Aborted. The example below will describe in detail:
+<screen>
+<![CDATA[
+<dialog type="Unknown" localId="12" remoteId="13" mapMessagesSize="0" 
+mapAbortProviderReason="SupportingDialogueTransactionReleased" 
+returnMessageOnError="false">
+	<errComponents/>
+</dialog>
+]]>
+</screen>
+The possible values for <literal>mapAbortProviderReason</literal> are <literal>ProviderMalfunction, SupportingDialogueTransactionReleased, ResourceLimitation, MaintenanceActivity, VersionIncompatibility, AbnormalMAPDialogueLocal, AbnormalMAPDialogueFromPeer</literal> and <literal>InvalidPDU</literal>.
+				You do not need to supply this parameter in payload from HTTP App.
+				</para></listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>mapRefuseReason</term>
+				<listitem><para>
+If this parameter is present, it means the underlying Dialog is refused by peer. The example below will describe in detail:
+<screen>
+<![CDATA[
+<dialog type="Unknown" localId="12" remoteId="13" mapMessagesSize="0" 
+mapRefuseReason="NoReasonGiven" returnMessageOnError="false">
+	<errComponents/>
+</dialog>
+]]>
+</screen>
+The possible values for <literal>mapRefuseReason</literal> are <literal>ApplicationContextNotSupported, InvalidDestinationReference, InvalidOriginatingReference, NoReasonGiven, RemoteNodeNotReachable</literal> and <literal>PotentialVersionIncompatibility</literal>.
+				You do not need to supply this parameter in payload from HTTP App.
+				</para></listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>mapUserAbortChoice</term>
+				<listitem><para>
+If this parameter is present, it means peer user has aborted Dialog. The example below will describe in detail:
+<screen>
+<![CDATA[
+<dialog type="Unknown" localId="12" remoteId="13" mapMessagesSize="0" 
+mapUserAbortChoice="isUserSpecificReason" returnMessageOnError="false">
+	<errComponents/>
+</dialog>
+]]>
+</screen>
+The possible values for <literal>mapUserAbortChoice</literal> are <literal>isProcedureCancellationReason_handoverCancellation, isProcedureCancellationReason_radioChannelRelease, isProcedureCancellationReason_networkPathRelease, isProcedureCancellationReason_callRelease,
+isProcedureCancellationReason_associatedProcedureFailure, isProcedureCancellationReason_tandemDialogueRelease, isProcedureCancellationReason_remoteOperationsFailure, isResourceUnavailableReason_shortTermResourceLimitation, isResourceUnavailableReason_longTermResourceLimitation, isUserResourceLimitation</literal> and <literal>isUserSpecificReason</literal>.
+Even the HTTP App can Abort a specific Dialog by setting this value and sending it to the USSD Gateway.
+				</para></listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>dialogTimedOut</term>
+				<listitem><para>
+If this parameter is present, it means the underlying TCAP Dialog has timedout. The deafult value of TCAP Dialog timeout should always be greater than USSD Timeout value set in <xref linkend="set_dialogtimeout" />. 
+<screen>
+<![CDATA[
+<?xml version="1.0" encoding="UTF-8" ?>
+<dialog type="Unknown" localId="12" remoteId="13" mapMessagesSize="0" dialogTimedOut="true" 
+returnMessageOnError="false">
+	<errComponents/>
+</dialog>
+]]>
+</screen>
+				You do not need to supply this parameter in payload from HTTP App.
+				</para></listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>emptyDialogHandshake</term>
+				<listitem><para>This parameter can only be present in payload from HTTP App.
+				This is used only when USSD gateway is initiating Dialog (Push case). 
+				This parameter indicates that USSD Gateway should firstly send empty dialog 
+				(without USSD Payload) and only once dialog is accepted by peer, 
+				USSD message should be sent.
+<screen>
+<![CDATA[
+<dialog mapMessagesSize="1" emptyDialogHandshake="true">
+...
+...
+</dialog>
+]]>
+</screen>
+				</para></listitem>
+			</varlistentry>	
+
+			<varlistentry>
+				<term>customInvokeTimeOut</term>
+				<listitem><para>This parameter can only be present in payload from HTTP App.
+				Each MAP operation has its own default invoke timeout, for example for the unstructuredSS-Request MAP operation default invoke timeout is 10 min.
+				HTTP App can set custom invoke timeout for each USSD message it sends to other end by using of this parameter (value is in milliseconds).
+                </para>
+                <para>
+                Pay attention that customInvokeTimeOut can not be bigger than TCAP Dialog timeout value
+                (that equals by default 1 minute by default). If you want to setup customInvokeTimeOut
+                value you have to care also for TCAP Dialog timeout. Look at "TCAP" chapture of Mobicents
+                jSS7 Stack User Guide.
+				</para></listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>invokeTimedOut</term>
+				<listitem><para>This parameter indicates the invoke sent by USSD Gw has timed out. 
+				This generally means user has taken longer than expected to respond to USSD message. 
+				HTTP App can set custom invoke timeout for each ussd message by setting 
+				customInvokeTimeOut explained above. Once invoke timesout, USSD gateway will 
+				automatically abort the Dialog and send corresponding message to HTTP App.
+				You do not need to supply this parameter in payload from HTTP App.
+				</para></listitem>
+			</varlistentry>						
+
+			<varlistentry>
+				<term>userObject</term>
+				<listitem><para>Application can set some user specific String value that the USSD gateway 
+				will always send back in corresponding messages exchanged:
+<screen>
+<![CDATA[
+<dialog type="Continue" appCntx="networkUnstructuredSsContext_version2"
+localId="12" remoteId="13" mapMessagesSize="1" returnMessageOnError="false"
+userObject="123456789">
+....
+....
+</dialog>
+]]>
+</screen>
+				</para></listitem>
+			</varlistentry>						
+					
+		</variablelist>
+		</section>
+		<section id="child-elements">
+			<title>Child Elements</title>
+			<para>The element &lt;dialog&gt; may contain any of these child elements but the order has to be respected. The possible child elements and the order to be followed, if present, must be as in the below list:
+			<itemizedlist>
+			<listitem><para>SCCP Address</para>
+			</listitem>
+			<listitem><para>AddressString</para>
+			</listitem>
+			<listitem><para>Error Components</para>
+			</listitem>
+			<listitem><para>processUnstructuredSSRequest_Request</para>
+			</listitem>
+			<listitem><para>processUnstructuredSSRequest_Response</para>
+			</listitem>
+			<listitem><para>unstructuredSSRequest_Request</para>
+			</listitem>
+			<listitem><para>unstructuredSSRequest_Response</para>
+			</listitem>
+			<listitem><para>unstructuredSSNotify_Request</para>
+			</listitem>
+			<listitem><para>unstructuredSSNotify_Response</para>
+			</listitem>
+			</itemizedlist>
+			</para>
+			<section id="child-sccp-address">
+				<title>SCCP Address</title>
+<para>
+Dialog carries SCCP information like &lt;localAddress&gt;, which is the SCCP Address of USSD gateway and &lt;remoteAddress&gt;, which is the SCCP address from where the Dialog is initiated, in case if this Dialog is received from other side (USSD Pull) or SCCP Address of remote side, incase of USSD Gateway acting as Proxy.
+</para>
+<para>
+Both the elements are optional and if they are not passed, the USSD Gateway will get the values from the Global Title configured from <xref linkend="setting_ussd_gt" /> for &lt;localAddress&gt;. If the USSD Gateway is acting as proxy, it mandatory to set the &lt;remoteAddress&gt;, else this parameter is ignored.
+</para>
+<para>
+Attributes of SCCP (localAddress and remoteAddress) address are:
+<itemizedlist> 
+<listitem><para>pc: Mandatory parameter. Represents the point code.</para></listitem>
+<listitem><para>ssn: Mandatory parameter. Represents the Sub System Number.</para></listitem>
+</itemizedlist> 
+</para>
+<para>
+Child elements of SCCP Address are &lt;ai&gt; and &lt;gt&gt;, where &lt;ai&gt; is Address indicator and suggests if routing is based on PC + SSN or GT. If it is based on GT, include &lt;gt&gt; element.
+</para>
+<para>
+Please refer to the examples below:
+<screen>
+<![CDATA[
+a) Routing based on PC + SSN
+
+	<localAddress pc="1" ssn="8">
+		<ai value="67"/>
+	</localAddress>
+
+b) Routing based on GT
+	<localAddress pc="0" ssn="146">
+		<ai value="18"/>
+		<gt type="GlobalTitle0100" tt="0" es="2" np="1" nai="4" digits="9960639902"/>
+	</localAddress>
+]]>
+</screen>
+	Different Gloabl Titles are <literal>GlobalTitle0001</literal>, <literal>GlobalTitle0010</literal>, <literal>GlobalTitle0011</literal> and <literal>GlobalTitle0100</literal>.
+ 	For more details about SCCP, please refer to the jSS7 Admin Guide included in the documentation.
+</para>  
+			</section>
+			<section id="child-address-string">
+			<title>AddressString</title>
+<para>
+Dialog carries the AddressString information like &lt;destinationReference&gt; and &lt;originationReference&gt;. The attributes of AddressString are defined below:
+<screen>
+<![CDATA[
+"nai" : nature of address indicator. The values are 
+	0 : unknown
+	1 : international_number
+	2 : national_significant_number
+	3 : network_specific_number
+	4 : subscriber_number
+	5 : reserved
+	6 : abbreviated_number
+	7 : reserved_for_extension
+
+"npi" : Numbering plan. The values are 
+	0 : unknown
+	1 : ISDN
+	2 : spare_2
+	3 : data
+	4 : telex
+	5 : spare_5
+	6 : land_mobile
+	7 : spare_7
+	8 : national
+	9 : private_plan
+	15 : reserved
+
+"number" : The actual number
+
+The XML example is 
+<destinationReference number="204208300008002" nai="international_number" npi="land_mobile"/>
+<originationReference number="204208300008002" nai="international_number" npi="ISDN"/>
+]]>
+</screen>
+</para>
+			</section>
+			<section id="ErrorComponents">
+			<title>Error Components</title>
+<para>
+If peer reports <literal>ErrorComponents</literal>, same is forwarded to the Application through the child element <literal>&lt;errComponents/&gt;</literal>.
+The example of payload is:
+<screen>
+<![CDATA[
+<dialog type="End" networkId="0" localId="0" remoteId="0" mapMessagesSize="0" sriPart="true" emptyDialogHandshake="true" returnMessageOnError="false">
+	<errComponents>
+		<invokeId value="1"/>
+		<errorComponent type="MAPErrorMessageAbsentSubscriberSM" errorCode="6">
+			<absentSubscriberDiagnosticSM value="IMSIDetached"/>
+		</errorComponent>
+	</errComponents>
+</dialog>
+]]>
+</screen>
+</para>
+			</section>
+			<section id="processUnstructuredSSRequest_Request">
+			<title>processUnstructuredSSRequest_Request</title>
+			<para>
+This message is always sent by the USSD Gateway to the Application as a HTTP POST request or from the Application to the USSD Gateway if it is acting as Proxy. The Application should always send back <literal>processUnstructuredSSResponse</literal> indicating that it is the last message of this dialog or can also send <literal>unstructuredSSRequest</literal> indicating that the Application is expecting more response from the user (menu structure).
+			</para>
+			<para>
+The Attributes of <literal>processUnstructuredSSRequest_Request</literal> are defined below:
+<itemizedlist>
+<listitem>
+<para>
+"invokeId" : All message types have the mandatory <literal>invokeId</literal> attribute helping to relate the response to request. For example, <literal>processUnstructuredSSResponse</literal> will have the same <literal>invokeId</literal> as carried by <literal>processUnstructuredSSRequest</literal>. Hence if the Application has a multi-level menu, it should store the <literal>invokeId</literal>, received in the <literal>processUnstructuredSSRequest</literal> in a HTTP Session, for later use. Also for every new request in the same dialog, <literal>invokeId</literal> should be incremented by 1. For example when the Application sends <literal>unstructuredSSRequest</literal> to a received <literal>processUnstructuredSSRequest</literal> with <literal>invokeId</literal> equal to zero, it should set the <literal>invokeId</literal> equal to 1 in <literal>unstructuredSSRequest</literal>.
+</para>
+</listitem>
+<listitem>
+<para>
+"dataCodingScheme" : The Attribute <literal>dataCodingScheme</literal> is mandatory and represents the actual USSD Message. <literal>dataCodingScheme</literal> is the encoding parameter of the USSD Message.
+</para>
+</listitem>
+<listitem>
+<para>
+"string" : The Attribute <literal>string</literal> is mandatory and represents the USSD String length. In GSM 0902 160, octets are stated as the maximum length for the USSD String. However due to underlying signalling layers the maximum length of the USSD
+string depends on the message and can be less than 160.
+</para>
+</listitem>
+</itemizedlist>
+			</para>
+
+			<para>
+			The XML structure is defined below:
+<screen>
+<![CDATA[
+<processUnstructuredSSRequest_Request invokeId="0" dataCodingScheme="15" string="*234#">
+	<msisdn nai="international_number" npi="ISDN" number="79273605819"/>
+	<alertingPattern size="1">
+		<value value="6"/>
+	</alertingPattern>
+</processUnstructuredSSRequest_Request>
+]]>
+</screen>
+			</para>
+			<para>
+Child elements of <literal>processUnstructuredSSRequest_Request</literal> are &lt;msisdn&gt; and &lt;alertingPattern&gt;.
+The child element &lt;msisdn&gt; is optional and included only if the actual MAP message received by the USSD Gateway carries this value. This is MSISDN of the user who originated this request.
+			</para>
+			<note>
+			<para>
+If &lt;msisdn&gt; is not included in processUnstructuredSSRequest,
+originationReference will be included in the dialog and this will be the MSISDN
+of the user originating the request.
+			</para>
+			</note>
+			<para>
+&lt;alertingPattern&gt; is also an optional attribute.
+			</para>
+			</section>
+			<section id="processUnstructuredSSRequest_Response">
+			<title>processUnstructuredSSRequest_Response</title>
+			<para>
+This message is always sent by the Application to the USSD GateWay as a response to the received <literal>processUnstructuredSSRequest</literal> or <literal>unstructuredSSResponse</literal>. If the USSD Gateway is acting as Proxy, this message is sent from the USSD Gateway to the Application. This should always be the last message in the dialog.
+			</para>
+			<para>
+			The XML structure is defined below:
+<screen>
+<![CDATA[
+<processUnstructuredSSRequest_Response invokeId="0" dataCodingScheme="15" string="Thank You!"/>
+]]>
+</screen>
+			</para>
+			</section>
+			<section id="unstructuredSSRequest_Request">
+			<title>unstructuredSSRequest_Request</title>
+<para>
+This message is sent by the Application to the USSD GateWay in response to the received <literal>processUnstructuredSSRequest</literal> or <literal>unstructuredSSResponse</literal> in case of USSD Pull. In case of USSD Push, the Application can send this message to initiate a tree based menu push. This indicates that the Application is expecting some response from the user. If the USSD Gateway is acting as Proxy, this message is sent by the USSD Gateway to the Application.
+</para>
+			<para>
+			The XML structure is defined below:
+<screen>
+<![CDATA[
+<unstructuredSSRequest_Request invokeId="0" dataCodingScheme="15" string="USSD String : Hello World&#10; 1. Balance&#10; 2. Texts Remaining"/>
+]]>
+</screen>
+			</para>
+			</section>
+			<section id="unstructuredSSRequest_Response">
+			<title>unstructuredSSRequest_Response</title>
+			<para>
+This message is sent by the USSD GateWay to the Application in HTTP POST request. This is a response to <literal>unstructuredSSRequest</literal> sent by the Application earlier. If the USSD Gateway acts as proxy, this message is sent by the Application to the USSD Gateway in response to <literal>unstructuredSSRequest_Request</literal> received by the Application.
+</para>
+			<para>
+			The XML structure is defined below:
+<screen>
+<![CDATA[
+<unstructuredSSRequest_Response invokeId="0" dataCodingScheme="15" string="1"/>
+]]>
+</screen>
+			</para>
+			</section>
+			<section id="unstructuredSSNotify_Request">
+			<title>unstructuredSSNotify_Request</title>
+			<para>
+This message is sent by the Application to the USSD GateWay to initiate USSD Push. This is just to notify the user and no input is expected back from the user. If the USSD Gateway is acting as proxy, this message is sent by USSD Gateway to the Application.
+</para>
+			<para>
+			The XML structure is defined below:
+<![CDATA[
+<unstructuredSSNotify_Request invokeId="0" dataCodingScheme="15" string="Your new balance is 34.38 AFN and expires on 30.07.2012. Cost of last event was 0.50 AFN."/>
+]]>
+			</para>
+			</section>
+			<section id="unstructuredSSNotify_Response">
+			<title>unstructuredSSNotify_Response</title>
+			<para>
+This message is sent by the USSD Gateway to the Application in response to <literal>unstructuredSSNotify_Request</literal> sent by the Application. If the USSD Gateway is acting as proxy, the Application will send this message to the USSD Gateway.
+</para>
+			<para>
+			The XML structure is defined below:
+<screen>
+<![CDATA[
+<unstructuredSSRequest_Response invokeId="0"/>
+]]>
+</screen>
+			</para>
+			</section>
+			<section id="Using_non-Latin_menu">
+				<title>Using non-Latin menu</title>
+				<para>If you wish to send non-Latin text (example, Cyrillic, Arabic, etc) then you must set the value of the attribute <literal>dataCodingScheme</literal> to "72" (unlike the case of latin/digits where this is set to 15). You must ensure that any message text that contains non-Latin symbols must be UTF-8 encoded. The entire length of the message (in characters) must be less because this uses 2-byte encoding per character.
+				</para> 
+			</section>
+		</section>
+
+
+            <section id="xml_payload_examples">
+<title>Typical usage of USSD application originated XML payload.</title>
+<para>
+  <para>
+For USSD PULL case, a USSD application can usually issue following messages:
+<itemizedlist> 
+<listitem><para>PROCESS_UNSTRUCTURED_SS_RESPONSE</para></listitem>
+<listitem><para>UNSTRUCTURED_SS_REQUEST</para></listitem>
+</itemizedlist> 
+  </para>
+  <para>
+For USSD PUSH case, a USSD application can usually issue following messages:
+<itemizedlist> 
+<listitem><para>UNSTRUCTURED_NOTIFY_REQUEST</para></listitem>
+<listitem><para>UNSTRUCTURED_SS_REQUEST</para></listitem>
+<listitem><para>RELEASE COMPLETE - finishing of a dialog</para></listitem>
+</itemizedlist> 
+  </para>
+  <para>
+We will discuss few payload examples in this section.
+  </para>
+</para>
+
+            <section id="xml_payload_examples_PROCESS_UNSTRUCTURED_SS_RESPONSE">
+<title>PULL case - PROCESS_UNSTRUCTURED_SS_RESPONSE</title>
+<para>
+Payload example:
+<screen><![CDATA[
+<?xml version="1.0" encoding="UTF-8" ?>
+<dialog mapMessagesSize="1" prearrangedEnd="false">
+  <processUnstructuredSSRequest_Response invokeId="1" dataCodingScheme="15" string="Your balance is 1 USD"/>
+</dialog>
+]]>
+</screen>
+This message must finish PULL Dialog so we set "prearrangedEnd="false"".
+For USSD GW a count of internal messages is always 1, but this field is mandatory and we have to include it into a payload: mapMessagesSize="1".
+You have to also set "invokeId="1"" record which must be equal invokeId from processUnstructuredSSRequest_Request.
+"dataCodingScheme" value is usually "15" (GSM7 encoding) or "72" (USC2 encoding).
+"string" is USSD string value. Pay attention that as for GSM specification USSD string length has maximum length 182 characters for GSM7 coding and 80 characters for USC2 encoding.
+</para>
+            </section>
+
+            <section id="xml_payload_examples_UNSTRUCTURED_SS_REQUEST">
+<title>PULL case - UNSTRUCTURED_SS_REQUEST</title>
+<para>
+Payload example:
+<screen><![CDATA[
+<?xml version="1.0" encoding="UTF-8" ?>
+<dialog mapMessagesSize="1">
+  <unstructuredSSRequest_Request dataCodingScheme="15" string="Press 1 for paying or press 2 for aborting"/>
+</dialog>
+]]>
+</screen>
+This message will continue PULL Dialog.
+"userObject" attribute is optional. You can use it for identification puposes. This value will be return to USSD application with the all next xml payloads.
+</para>
+            </section>
+
+            <section id="xml_payload_examples_UNSTRUCTURED_NOTIFY_REQUEST">
+<title>PUSH case - UNSTRUCTURED_NOTIFY_REQUEST</title>
+<para>
+Payload example:
+<screen><![CDATA[
+<?xml version="1.0" encoding="UTF-8" ?>
+<dialog mapMessagesSize="1">
+  <unstructuredSSNotify_Request dataCodingScheme="15" string="Your new balance is 34.38 AFN and expires on 30.07.2012. Cost of last event was 0.50 AFN.">
+    <msisdn nai="international_number" npi="ISDN" number="11111111111111"/>
+  </unstructuredSSNotify_Request>
+</dialog>
+]]>
+</screen>
+You are initiating a PUSH dialog.
+We need to include "msisdn" parameter which identifies a destination subscriber phone number (nai is "Nature of address", npi means "Numeric plan").
+"msisdn" parameter must be included only in the first unstructuredSSNotify_Request or unstructuredSSRequest_Request of the PUSH dialog.
+</para>
+            </section>
+
+            <section id="xml_payload_examples_PUSH_UNSTRUCTURED_SS_REQUEST">
+<title>PUSH case - UNSTRUCTURED_SS_REQUEST</title>
+<para>
+Payload example:
+<screen><![CDATA[
+<?xml version="1.0" encoding="UTF-8" ?>
+<dialog mapMessagesSize="1">
+  <unstructuredSSRequest_Request dataCodingScheme="15" string="Press 1 for paying or press 2 for aborting">
+    <msisdn nai="international_number" npi="ISDN" number="5444444444"/>
+  </unstructuredSSRequest_Request>
+</dialog>
+]]>
+</screen>
+</para>
+            </section>
+
+            <section id="xml_payload_examples_RELEASE_COMPLETE">
+<title>PUSH case - RELEASE COMPLETE - finishing dialog</title>
+<para>
+Payload example:
+<screen><![CDATA[
+<?xml version="1.0" encoding="UTF-8" ?>
+<dialog mapMessagesSize="0" prearrangedEnd="false">
+</dialog>
+]]>
+</screen>
+PUSH dialog can include one or more UNSTRUCTURED_NOTIFY_REQUEST or UNSTRUCTURED_SS_REQUEST. After this USSD application must finish the dialog by this payload.
+PUSH dialog always uses several HTTP request to create, continue and terminatie it. For successfull processing it is needed to use a http cookie JSESSIONID.
+First http response contains a session cookie like "Set-Cookie: JSESSIONID=1379BF8AF4DB8CACF444AEA6375AD85E; Path=/mobicents".
+Every next request must contain a tag like: "Cookie: JSESSIONID=1379BF8AF4DB8CACF444AEA6375AD85E"
+Every request (UNSTRUCTURED_SS_REQUEST and UNSTRUCTURED_NOTIFY_REQUEST) can contain extra parameter "customInvokeTimeout" in the dialog section to set up a custom invoke timeout (in milliseconds).
+For example (for 10 minutes invoke timeout):
+<screen><![CDATA[
+<?xml version="1.0" encoding="UTF-8" ?>
+<dialog mapMessagesSize="1" customInvokeTimeout="600000">
+  <unstructuredSSRequest_Request dataCodingScheme="15" string="Press 1 for paying or press 2 for aborting">
+    <msisdn nai="international_number" npi="ISDN" number="5444444444"/>
+  </unstructuredSSRequest_Request>
+</dialog>        
+]]>
+</screen>
+</para>
+            </section>
+
+        </section>
+	</section>
+</chapter>
+

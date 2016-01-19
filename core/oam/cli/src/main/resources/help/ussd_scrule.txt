@@ -1,0 +1,12 @@
+Name
+	ussd scrule
+
+SYNOPSIS
+	ussd scrule [create | delete | show]
+
+DESCRIPTION
+	This command is used to configure and manage routing rules in the USSD Gateway.
+ 
+SEE ALSO
+	ussd scrule create, ussd scrule delete, ussd scrule show
+

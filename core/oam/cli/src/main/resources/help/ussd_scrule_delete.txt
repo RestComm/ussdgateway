@@ -1,0 +1,38 @@
+Name
+	ussd scrule delete
+
+SYNOPSIS
+	ussd scrule delete <short-code> <networkid>
+
+DESCRIPTION
+	This command is used to delete an existing routing rule for a short-code.
+	A short code and networkId pair is used as a unique routing rule identifier.
+	
+	Standard Parameters
+	
+	short-code        - USSD short code which when dialed by user and received 
+                        by USSD Gw, will forward request to configured URL
+                        
+    Optional Parameters
+
+    networkid         - USSD Gateway can be connected to multiple operators/network at same time
+                        and each operator exposing same or different short-code. Each operator 
+                        (jSS7 stack configured) has its unique networkid assigned and incoming
+                        request can be matched with configured networkid here. Only if short-code 
+                        and networkid match's, request is forwarded to corresponding url. Default
+                        value is 0.                                    	
+
+EXAMPLES
+	ussd scrule delete *519#
+	
+	The above command will delete the routing rule in the USSD Gateway for the short
+	code *519# and network-id 0.
+	
+	ussd scrule delete *519# 1
+	
+	The above command will delete the routing rule in the USSD Gateway for the short
+	code *519# and network-id 1. 
+
+SEE ALSO
+	ussd scrule, ussd scrule create, ussd scrule show, ussd scrule modify
+

@@ -36,12 +36,17 @@ public class SS7Service extends ServiceMBeanSupport implements SS7ServiceMBean {
 
 	private static final Logger logger = Logger.getLogger(SS7Service.class);
 
+	private final String serviceName;
 	private Object stack;
 
 	private String jndiName;
 
 	private static final String rLogo = " ]]]]]]]]] ";
 	private static final String lLogo = " [[[[[[[[[ ";
+	
+    public SS7Service(String serviceName) {
+        this.serviceName = serviceName;
+    }
 
 	@Override
 	public void startService() throws Exception {
@@ -53,6 +58,10 @@ public class SS7Service extends ServiceMBeanSupport implements SS7ServiceMBean {
 	private String generateMessageWithLogo(String message) {
 		return lLogo + getSS7Name() + " " + getSS7Version() + " " + message + rLogo;
 	}
+	
+    public String getSS7ServiceName() {
+        return this.serviceName;
+    }
 
 	public String getSS7Name() {
 		String name = Version.instance.getProperty("name");
@@ -138,5 +147,10 @@ public class SS7Service extends ServiceMBeanSupport implements SS7ServiceMBean {
 		InitialContext initialContext = new InitialContext();
 		initialContext.unbind(jndiName);
 	}
+	
+    @Override
+    public boolean isStarted() {
+        return (this.getState() == STARTED);
+    }
 
 }

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<scroutingrulelist>
+	<scroutingrule ruleType="HTTP" shortcode="*519#" ruleurl="http://127.0.0.1:8080/ussddemo/test" exactmatch="true"/>
+	<scroutingrule ruleType="SIP" shortcode="*518#" sipProxy="http://127.0.0.1:5080" exactmatch="true"/>
+</scroutingrulelist>

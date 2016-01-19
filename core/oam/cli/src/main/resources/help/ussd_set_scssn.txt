@@ -1,0 +1,18 @@
+Name
+	ussd set scssn
+
+SYNOPSIS
+	ussd set scssn <ussdSubSystemNumber>
+
+DESCRIPTION
+	This command is used to set the value of ussd Sub System Number (SSN). Issuing 
+	this command in CLI will set the SSN value but you must ensure that the SSN number
+	is properly configured in the TCAP Stack in the xml descriptor file
+	"mobicents-ussdgateway-version/jboss-5.1.0.GA/server/default/deploy/
+	mobicents-ussd-server/META-INF/jboss-beans.xml".
+
+SEE ALSO
+	ussd get scgt, ussd set scgt, ussd get scssn, ussd get hlrssn,
+	ussd set hlrssn, ussd get mscssn, ussd set mscssn, ussd get maxmapv, 
+	ussd set maxmapv
+

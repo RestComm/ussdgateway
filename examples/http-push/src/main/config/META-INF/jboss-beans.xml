@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<deployment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="urn:jboss:bean-deployer:2.0">
+
+
+	<bean name="USSD_PUSH_EXAMPLE" class="org.mobicents.applications.ussd.examples.http.push.HTTPPush">
+        <annotation>@org.jboss.aop.microcontainer.aspects.jmx.JMX(name="org.mobicents.ussdgateway.example:name=HttpPush",exposedInterface=org.mobicents.applications.ussd.examples.http.push.HTTPPushMBean.class,registerDirectly=true)</annotation>
+		<!--
+		<property name="persistDir">${jboss.server.data.dir}</property> 
+		 -->
+	</bean>
+
+</deployment>

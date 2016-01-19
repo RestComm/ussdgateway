@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<noroutingruleconfigerrmssg value="Not valid short code. Please dial valid short code."/>
+<servererrmssg value="Server error, please try again after sometime"/>
+<dialogtimeouterrmssg value="Request timeout please try again after sometime."/>
+<dialogtimeout value="25000"/>
+<cdrloggingto value="Textfile"/>
+<ussdgt value="923330053058"/>
+<ussdssn value="8"/>
+<hlrssn value="6"/>
+<mscssn value="8"/>
+<maxmapv value="3"/>

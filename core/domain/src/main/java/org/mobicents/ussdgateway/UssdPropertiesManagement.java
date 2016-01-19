@@ -25,14 +25,19 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javolution.text.TextBuilder;
+import javolution.util.FastMap;
 import javolution.xml.XMLBinding;
 import javolution.xml.XMLObjectReader;
 import javolution.xml.XMLObjectWriter;
 import javolution.xml.stream.XMLStreamException;
 
 import org.apache.log4j.Logger;
+import org.mobicents.protocols.ss7.map.primitives.ArrayListSerializingBase;
 
 /**
  * @author amit bhayani
@@ -49,6 +54,15 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
 	protected static final String DIALOG_TIMEOUT_ERROR_MESSAGE = "dialogtimeouterrmssg";
 
 	protected static final String DIALOG_TIMEOUT = "dialogtimeout";
+	
+	private static final String USSD_GT_LIST = "ussdgtlist";
+	protected static final String USSD_GT = "ussdgt";
+	protected static final String USSD_SSN = "ussdssn";
+	protected static final String HLR_SSN = "hlrssn";
+	protected static final String MSC_SSN = "mscssn";
+	protected static final String MAX_MAP_VERSION = "maxmapv";
+    protected static final String HR_HLR_GT = "hrhlrgt";
+    protected static final String CDR_LOGGING_TO = "cdrloggingto";
 
 	private static final String TAB_INDENT = "\t";
 	private static final String CLASS_ATTRIBUTE = "type";
@@ -63,15 +77,28 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
 
 	private final TextBuilder persistFile = TextBuilder.newInstance();
 
-	private String noRoutingRuleConfiguredMessage;
-	private String serverErrorMessage;
-	private String dialogTimeoutErrorMessage;
+    private String noRoutingRuleConfiguredMessage = "Not valid short code. Please dial valid short code.";
+    private String serverErrorMessage = "Server error, please try again after sometime";
+    private String dialogTimeoutErrorMessage = "Request timeout please try again after sometime.";
 
+	private String ussdGwGt = null;
+	private FastMap<Integer, String> networkIdVsUssdGwGt = new FastMap<Integer, String>();
+    private int ussdGwSsn = -1;
+    private int hlrSsn = -1;
+    private int mscSsn = -1;
+    private int maxMapVersion = 3;
 	/**
 	 * Dialog time out in milliseconds. Once HTTP request is sent, it expects
 	 * back response in dialogTimeout milli seconds.
 	 */
 	private long dialogTimeout = 25000;
+
+    // if !=null and !=""
+    // this address will be inserted as CalledPartyAddress SCCP into all SRI
+    // outgoing requests
+    private String hrHlrGt = null;
+
+    private CdrLoggedType cdrLoggingTo = CdrLoggedType.Textfile;
 
 	private UssdPropertiesManagement(String name) {
 		this.name = name;
@@ -91,14 +118,6 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
 
 	public String getName() {
 		return name;
-	}
-
-	public String getPersistDir() {
-		return persistDir;
-	}
-
-	public void setPersistDir(String persistDir) {
-		this.persistDir = persistDir;
 	}
 
 	@Override
@@ -144,6 +163,107 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
 		this.dialogTimeout = dialogTimeout;
 		this.store();
 	}
+	
+	public String getPersistDir() {
+        return persistDir;
+    }
+
+    public void setPersistDir(String persistDir) {
+        this.persistDir = persistDir;
+    }
+
+    @Override
+    public String getUssdGt() {
+        return this.ussdGwGt;
+    }
+
+    @Override
+    public void setUssdGt(String serviceCenterGt) {
+        this.setUssdGt(0, serviceCenterGt);
+    }
+    
+	@Override
+	public String getUssdGt(int networkId) {
+		 String res = this.networkIdVsUssdGwGt.get(networkId);
+	        if (res != null)
+	            return res;
+	        else
+	            return this.ussdGwGt;
+	}
+	
+	@Override
+    public Map<Integer, String> getNetworkIdVsUssdGwGt() {
+        return this.networkIdVsUssdGwGt;
+    }
+
+	@Override
+	public void setUssdGt(int networkId, String serviceCenterGt) {
+		 if (networkId == 0) {
+	            this.ussdGwGt = serviceCenterGt;
+	        } else {
+	            if (serviceCenterGt == null || serviceCenterGt.equals("") || serviceCenterGt.equals("0")) {
+	                this.networkIdVsUssdGwGt.remove(networkId);
+	            } else {
+	                this.networkIdVsUssdGwGt.put(networkId, serviceCenterGt);
+	            }
+	        }
+
+	        this.store();
+	}
+
+    public int getUssdSsn() {
+        return ussdGwSsn;
+    }
+
+    public void setUssdSsn(int serviceCenterSsn) {
+        this.ussdGwSsn = serviceCenterSsn;
+        this.store();
+    }
+
+    public int getHlrSsn() {
+        return hlrSsn;
+    }
+
+    public void setHlrSsn(int hlrSsn) {
+        this.hlrSsn = hlrSsn;
+        this.store();
+    }
+
+    public int getMaxMapVersion() {
+        return maxMapVersion;
+    }
+
+    public void setMaxMapVersion(int maxMapVersion) {
+        this.maxMapVersion = maxMapVersion;
+        this.store();
+    }
+
+    public String getHrHlrGt() {
+        return hrHlrGt;
+    }
+
+    public void setHrHlrGt(String hrHlrNumber) {
+        this.hrHlrGt = hrHlrNumber;
+        this.store();
+    }
+
+    public int getMscSsn() {
+        return mscSsn;
+    }
+
+    public void setMscSsn(int mscSsn) {
+        this.mscSsn = mscSsn;
+        this.store();
+    }
+
+    public CdrLoggedType getCdrLoggingTo() {
+        return cdrLoggingTo;
+    }
+
+    public void setCdrLoggingTo(CdrLoggedType cdrLoggingTo) {
+        this.cdrLoggingTo = cdrLoggingTo;
+        this.store();
+    }
 
 	public void start() throws Exception {
 
@@ -186,12 +306,32 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
 			// Enables cross-references.
 			// writer.setReferenceResolver(new XMLReferenceResolver());
 			writer.setIndentation(TAB_INDENT);
+			
+            if (networkIdVsUssdGwGt.size() > 0) {
+                ArrayList<UssdGwGtNetworkIdElement> al = new ArrayList<UssdGwGtNetworkIdElement>();
+                for (Entry<Integer, String> val : networkIdVsUssdGwGt.entrySet()) {
+                    UssdGwGtNetworkIdElement el = new UssdGwGtNetworkIdElement();
+                    el.networkId = val.getKey();
+                    el.ussdGwGt = val.getValue();
+                    al.add(el);
+                }
+                UssdPropertiesManagement_ussdGwGtNetworkId al2 = new UssdPropertiesManagement_ussdGwGtNetworkId(al);
+                writer.write(al2, USSD_GT_LIST, UssdPropertiesManagement_ussdGwGtNetworkId.class);
+            }
 
 			writer.write(this.noRoutingRuleConfiguredMessage, NO_ROUTING_RULE_CONFIGURED_ERROR_MESSAGE, String.class);
 			writer.write(this.serverErrorMessage, SERVER_ERROR_MESSAGE, String.class);
 			writer.write(this.dialogTimeoutErrorMessage, DIALOG_TIMEOUT_ERROR_MESSAGE, String.class);
 			writer.write(this.dialogTimeout, DIALOG_TIMEOUT, Long.class);
+            writer.write(this.hrHlrGt, HR_HLR_GT, String.class);
+            writer.write(this.cdrLoggingTo.toString(), CDR_LOGGING_TO, String.class);
 
+			writer.write(this.ussdGwGt, USSD_GT, String.class);
+            writer.write(this.ussdGwSsn, USSD_SSN, Integer.class);
+            writer.write(this.hlrSsn, HLR_SSN, Integer.class);
+            writer.write(this.mscSsn, MSC_SSN, Integer.class);
+            writer.write(this.maxMapVersion, MAX_MAP_VERSION, Integer.class);
+			
 			writer.close();
 		} catch (Exception e) {
 			logger.error("Error while persisting the Rule state in file", e);
@@ -209,12 +349,49 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
 		try {
 			reader = XMLObjectReader.newInstance(new FileInputStream(persistFile.toString()));
 
-			reader.setBinding(binding);
-			this.noRoutingRuleConfiguredMessage = reader.read(NO_ROUTING_RULE_CONFIGURED_ERROR_MESSAGE, String.class);
-			this.serverErrorMessage = reader.read(SERVER_ERROR_MESSAGE, String.class);
-			this.dialogTimeoutErrorMessage = reader.read(DIALOG_TIMEOUT_ERROR_MESSAGE, String.class);
+            reader.setBinding(binding);
+            
+            UssdPropertiesManagement_ussdGwGtNetworkId al = reader.read(USSD_GT_LIST, UssdPropertiesManagement_ussdGwGtNetworkId.class);
+            networkIdVsUssdGwGt.clear();
+            if (al != null) {
+                for (UssdGwGtNetworkIdElement elem : al.getData()) {
+                    networkIdVsUssdGwGt.put(elem.networkId, elem.ussdGwGt);
+                }
+            }            
+
+            String s1 = reader.read(NO_ROUTING_RULE_CONFIGURED_ERROR_MESSAGE, String.class);
+            if (s1 != null)
+                this.noRoutingRuleConfiguredMessage = s1;
+            s1 = reader.read(SERVER_ERROR_MESSAGE, String.class);
+            if (s1 != null)
+                this.serverErrorMessage = s1;
+            s1 = reader.read(DIALOG_TIMEOUT_ERROR_MESSAGE, String.class);
+            if (s1 != null)
+                this.dialogTimeoutErrorMessage = s1;
+
 			this.dialogTimeout = reader.read(DIALOG_TIMEOUT, Long.class);
 
+            String vals = reader.read(HR_HLR_GT, String.class);
+            if (vals != null)
+                this.hrHlrGt = vals;
+            vals = reader.read("hrHlrGt", String.class);
+            if (vals != null)
+                this.hrHlrGt = vals;
+            vals = reader.read("hrhlrnumber", String.class);
+            if (vals != null)
+                this.hrHlrGt = vals;
+            vals = reader.read(CDR_LOGGING_TO, String.class);
+            if (vals != null)
+                this.cdrLoggingTo = Enum.valueOf(CdrLoggedType.class, vals);
+            vals = reader.read("cdrLoggingTo", String.class);
+            if (vals != null)
+                this.cdrLoggingTo = Enum.valueOf(CdrLoggedType.class, vals);
+
+			this.ussdGwGt = reader.read(USSD_GT, String.class);
+            this.ussdGwSsn = reader.read(USSD_SSN, Integer.class);
+            this.hlrSsn = reader.read(HLR_SSN, Integer.class);
+            this.mscSsn = reader.read(MSC_SSN, Integer.class);
+            this.maxMapVersion = reader.read(MAX_MAP_VERSION, Integer.class);
 			reader.close();
 		} catch (XMLStreamException ex) {
 			// this.logger.info(
@@ -222,4 +399,19 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
 		}
 	}
 
+    public enum CdrLoggedType {
+        Database, Textfile,
+    }
+    
+    public static class UssdPropertiesManagement_ussdGwGtNetworkId extends ArrayListSerializingBase<UssdGwGtNetworkIdElement> {
+
+        public UssdPropertiesManagement_ussdGwGtNetworkId() {
+            super(USSD_GT_LIST, UssdGwGtNetworkIdElement.class);
+        }
+
+        public UssdPropertiesManagement_ussdGwGtNetworkId(ArrayList<UssdGwGtNetworkIdElement> data) {
+            super(USSD_GT_LIST, UssdGwGtNetworkIdElement.class, data);
+        }
+
+    }
 }

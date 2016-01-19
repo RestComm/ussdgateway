@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "${ent.filename}">
+%BOOK_ENTITIES;
+]>
+
+<chapter id="multi-tenancy">
+	<title>Multi-tenancy support</title>
+
+	<para>&THIS.PLATFORM; &THIS.APPLICATION; is able to work in multi-tenant mode by connecting to a set of different SS7 operators.
+	The procedure is based on dividing of USSD routing rules into several areas ("subnetworks").
+	</para>
+	<para>
+Each area has its unique digital "netwokId" value. You can assign a unique USSD Global Title for each netwokId. Each SS7 SCCP service access point (SAP) and each 
+USSD Routing Rule belongs to one of the networks (to each of them a networkId value is assigned). Default netwokId value is "0". If a user does not specify a netwokId value when USSD Routing Rule or SAP rule creation, networkId=0 will be assigned.
+	</para>
+	<para>
+When a PULL request comes from SS7 network, a networkId value from SAP will be assigned to a USSD dialog.
+Then USSD Routing Rule with assigned networkId will be chosen for request routing to a proper HTTP or SIP application.
+	</para>
+	<para>
+When a PUSH request comes from HTTP application, a networkId value from HTTP XML payload ("networkId" attribute) 
+is taken (or is assigned as 0 if "networkId" attribute is missed in the XML payload).
+Then SS7 SAP will be chosen when routing USSD request to SS7 network.
+	</para>
+	<para>
+When a PUSH request comes from SIP application, a networkId value is always assigned as 0. It is impossible now to use SIP App originated messages for multi-tenancy.
+	</para>
+	<para>
+	<itemizedlist>
+<para>NetworkId are specified at different places:</para>
+<listitem>
+<para>for JSS7 level SAPs and SCCP routing rules are configured for this. See "7.4.5. Create a new Service Access Point" and "7.4.17. Create a new SCCP Rule" chapters of "JSS7 stack User Guide".</para>
+</listitem>
+<listitem>
+<para>for USSD Routing Rule see the chapter <xref linkend="setting_ussd_routing_rules_create"/>.</para>
+</listitem>
+	</itemizedlist>
+	</para>
+		<para>For configuring of USSD Global Titles - see chapters <xref linkend="setting_ussd_gt"/>.
+		</para>
+</chapter>

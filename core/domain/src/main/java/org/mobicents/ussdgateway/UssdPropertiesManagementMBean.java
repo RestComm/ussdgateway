@@ -21,9 +21,13 @@
  */
 package org.mobicents.ussdgateway;
 
+import java.util.Map;
+
+import org.mobicents.ussdgateway.UssdPropertiesManagement.CdrLoggedType;
+
 /**
  * @author amit bhayani
- * 
+ * @author baranowb
  */
 public interface UssdPropertiesManagementMBean {
 
@@ -42,5 +46,39 @@ public interface UssdPropertiesManagementMBean {
 	public long getDialogTimeout();
 
 	public void setDialogTimeout(long dialogTimeout);
+	
+	public String getUssdGt();
 
+    public void setUssdGt(String serviceCenterGt);
+    
+    public String getUssdGt(int networkId);
+    
+    public void setUssdGt(int networkId, String serviceCenterGt);
+    
+    public Map<Integer, String> getNetworkIdVsUssdGwGt();
+
+    public int getUssdSsn();
+
+    public void setUssdSsn(int serviceCenterSsn);
+
+    public int getHlrSsn();
+    
+    public void setHlrSsn(int ssn);
+
+    public int getMaxMapVersion();
+
+    public void setMaxMapVersion(int maxMapVersion);
+    
+    public int getMscSsn();
+
+    public void setMscSsn(int mscSsn);
+
+    public CdrLoggedType getCdrLoggingTo();
+
+    public void setCdrLoggingTo(CdrLoggedType cdrLogging);
+
+    public void setHrHlrGt(String hrHlrGt);
+
+    public String getHrHlrGt();
+    
 }

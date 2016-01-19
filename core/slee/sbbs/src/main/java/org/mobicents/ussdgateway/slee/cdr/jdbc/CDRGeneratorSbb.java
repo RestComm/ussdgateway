@@ -27,44 +27,32 @@ import javax.naming.NamingException;
 import javax.slee.ActivityContextInterface;
 import javax.slee.CreateException;
 import javax.slee.RolledBackContext;
-import javax.slee.Sbb;
 import javax.slee.SbbContext;
-import javax.slee.facilities.Tracer;
-import javax.slee.resource.ResourceAdaptorTypeID;
 
-import org.mobicents.protocols.ss7.tcap.api.tc.dialog.events.AbortReason;
-import org.mobicents.slee.SbbContextExt;
 import org.mobicents.slee.resource.jdbc.JdbcActivity;
 import org.mobicents.slee.resource.jdbc.JdbcActivityContextInterfaceFactory;
 import org.mobicents.slee.resource.jdbc.JdbcResourceAdaptorSbbInterface;
 import org.mobicents.slee.resource.jdbc.event.JdbcTaskExecutionThrowableEvent;
 import org.mobicents.slee.resource.jdbc.task.simple.SimpleJdbcTaskResultEvent;
-import org.mobicents.ussdgateway.slee.cdr.AbortType;
+import org.mobicents.ussdgateway.slee.USSDBaseSbb;
 import org.mobicents.ussdgateway.slee.cdr.ChargeInterface;
 import org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent;
-import org.mobicents.ussdgateway.slee.cdr.TimeoutType;
+import org.mobicents.ussdgateway.slee.cdr.RecordStatus;
 import org.mobicents.ussdgateway.slee.cdr.USSDCDRState;
-import org.mobicents.ussdgateway.slee.cdr.jdbc.task.CDRAbortTask;
 import org.mobicents.ussdgateway.slee.cdr.jdbc.task.CDRCreateTask;
 import org.mobicents.ussdgateway.slee.cdr.jdbc.task.CDRTableCreateTask;
 import org.mobicents.ussdgateway.slee.cdr.jdbc.task.CDRTaskBase;
-import org.mobicents.ussdgateway.slee.cdr.jdbc.task.CDRTerminateTask;
-import org.mobicents.ussdgateway.slee.cdr.jdbc.task.CDRTimeoutTask;
 
 /**
  * @author baranowb
  * 
  */
-public abstract class CDRGeneratorSbb implements Sbb, ChargeInterface {
-
-    // --------------- JDBC RA essentials ---------------
-    private static final ResourceAdaptorTypeID JDBC_RESOURCE_ADAPTOR_ID = JdbcResourceAdaptorSbbInterface.RATYPE_ID;
-    private static final String JDBC_RA_LINK = "JDBCRA";
-    private JdbcResourceAdaptorSbbInterface jdbcRA;
-    private JdbcActivityContextInterfaceFactory jdbcACIF;
-    // --------------- SBB essentials ---------------
-    private SbbContextExt sbbContextExt;
-    private Tracer tracer;
+public abstract class CDRGeneratorSbb extends USSDBaseSbb implements ChargeInterface {
+	private static final String CDR_GENERATED_TO = "Database";
+	
+    public CDRGeneratorSbb() {
+		super("CDRGeneratorSbb");
+	}
 
     // --------------- ChargeInterface methods ---------------
 
@@ -75,64 +63,38 @@ public abstract class CDRGeneratorSbb implements Sbb, ChargeInterface {
      */
     @Override
     public void init(final boolean reset) {
-        CDRTableCreateTask task = new CDRTableCreateTask(this.tracer, reset);
+        if(this.logger.isFineEnabled()){
+            this.logger.fine("Generating table");
+        }
+        
+//        UssdPropertiesManagement ussdPropertiesManagement = UssdPropertiesManagement.getInstance();
+//        ussdPropertiesManagement.setCdrLoggedTo(CDR_GENERATED_TO);
+        
+        CDRTableCreateTask task = new CDRTableCreateTask(this.logger, reset);
         executeTask(task);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mobicents.ussdgateway.slee.cdr.ChargeInterface#createInitRecord()
+
+	/* (non-Javadoc)
+     * @see org.mobicents.ussdgateway.slee.cdr.ChargeInterface#createRecord(org.mobicents.ussdgateway.slee.cdr.Status)
      */
     @Override
-    public void createInitRecord() {
-        CDRCreateTask task = new CDRCreateTask(this.tracer, getUSSDCDRState());
-        executeTask(task);
+    public void createRecord(RecordStatus outcome) {
+        USSDCDRState state = getState();
+        if(state.isGenerated()){
+            this.logger.severe("");
+        }else{
+            if(this.logger.isFineEnabled()){
+                this.logger.fine("Generating record, status '"+outcome+"' for '"+state+"'");
+            }
+            state.setRecordStatus(outcome);
+            state.setGenerated(true);
+            this.setState(state);
+            CDRCreateTask task = new CDRCreateTask(this.logger, getState());
+            executeTask(task);
+        }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mobicents.ussdgateway.slee.cdr.ChargeInterface#createContinueRecord()
-     */
-    @Override
-    public void createContinueRecord() {
-        // TODO Auto-generated method stub
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mobicents.ussdgateway.slee.cdr.ChargeInterface#createTerminateRecord()
-     */
-    @Override
-    public void createTerminateRecord() {
-        CDRTerminateTask task = new CDRTerminateTask(this.tracer, getUSSDCDRState());
-        executeTask(task);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mobicents.ussdgateway.slee.cdr.ChargeInterface#createAbortRecord(java.lang.String)
-     */
-    @Override
-    public void createAbortRecord(AbortType abortChoice) {
-        CDRAbortTask task = new CDRAbortTask(this.tracer, getUSSDCDRState(), abortChoice);
-        executeTask(task);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.mobicents.ussdgateway.slee.cdr.ChargeInterface#createTimeoutRecord(java.lang.String)
-     */
-    @Override
-    public void createTimeoutRecord(TimeoutType timeoutReason) {
-        CDRTimeoutTask task = new CDRTimeoutTask(this.tracer, getUSSDCDRState(), timeoutReason);
-        executeTask(task);
-    }
 
     /*
      * (non-Javadoc)
@@ -163,7 +125,7 @@ public abstract class CDRGeneratorSbb implements Sbb, ChargeInterface {
     private void executeTask(CDRTaskBase jdbcTask) {
         JdbcActivity jdbcActivity = jdbcRA.createActivity();
         ActivityContextInterface jdbcACI = jdbcACIF.getActivityContextInterface(jdbcActivity);
-        jdbcACI.attach(sbbContextExt.getSbbLocalObject());
+        jdbcACI.attach(super.sbbContext.getSbbLocalObject());
         jdbcActivity.execute(jdbcTask);
     }
 
@@ -182,8 +144,8 @@ public abstract class CDRGeneratorSbb implements Sbb, ChargeInterface {
      * @param aci
      */
     public void onJdbcTaskExecutionThrowableEvent(JdbcTaskExecutionThrowableEvent event, ActivityContextInterface aci) {
-        if (tracer.isWarningEnabled()) {
-            tracer.warning("Received a JdbcTaskExecutionThrowableEvent, as result of executed task " + event.getTask(),
+        if (super.logger.isWarningEnabled()) {
+            super.logger.warning("Received a JdbcTaskExecutionThrowableEvent, as result of executed task " + event.getTask(),
                     event.getThrowable());
         }
 
@@ -191,7 +153,7 @@ public abstract class CDRGeneratorSbb implements Sbb, ChargeInterface {
         final JdbcActivity activity = (JdbcActivity) aci.getActivity();
         activity.endActivity();
         // call back parent
-        final ChargeInterfaceParent parent = (ChargeInterfaceParent) sbbContextExt.getSbbLocalObject().getParent();
+        final ChargeInterfaceParent parent = (ChargeInterfaceParent) super.sbbContext.getSbbLocalObject().getParent();
         final CDRTaskBase jdbcTask = (CDRTaskBase) event.getTask();
         jdbcTask.callParentOnFailure(parent, null, event.getThrowable());
 
@@ -199,15 +161,15 @@ public abstract class CDRGeneratorSbb implements Sbb, ChargeInterface {
 
     public void onSimpleJdbcTaskResultEvent(SimpleJdbcTaskResultEvent event, ActivityContextInterface aci) {
 
-        if (tracer.isFineEnabled()) {
-            tracer.fine("Received a SimpleJdbcTaskResultEvent, as result of executed task " + event.getTask());
+        if (super.logger.isFineEnabled()) {
+            super.logger.fine("Received a SimpleJdbcTaskResultEvent, as result of executed task " + event.getTask());
         }
 
         // end jdbc activity
         final JdbcActivity activity = (JdbcActivity) aci.getActivity();
         activity.endActivity();
         // call back parent
-        final ChargeInterfaceParent parent = (ChargeInterfaceParent) sbbContextExt.getSbbLocalObject().getParent();
+        final ChargeInterfaceParent parent = (ChargeInterfaceParent) super.sbbContext.getSbbLocalObject().getParent();
         final CDRTaskBase jdbcTask = (CDRTaskBase) event.getTask();
         jdbcTask.callParentOnSuccess(parent);
 
@@ -333,27 +295,14 @@ public abstract class CDRGeneratorSbb implements Sbb, ChargeInterface {
      */
     @Override
     public void setSbbContext(SbbContext ctx) {
-        this.sbbContextExt = (SbbContextExt) ctx;
-        this.tracer = this.sbbContextExt.getTracer(TRACER_NAME);
-        this.jdbcRA = (JdbcResourceAdaptorSbbInterface) this.sbbContextExt.getResourceAdaptorInterface(
+        super.setSbbContext(ctx);
+        super.logger = ctx.getTracer(TRACER_NAME);
+        super.jdbcRA = (JdbcResourceAdaptorSbbInterface) super.sbbContext.getResourceAdaptorInterface(
                 JDBC_RESOURCE_ADAPTOR_ID, JDBC_RA_LINK);
-        this.jdbcACIF = (JdbcActivityContextInterfaceFactory) this.sbbContextExt
+        super.jdbcACIF = (JdbcActivityContextInterfaceFactory) super.sbbContext
                 .getActivityContextInterfaceFactory(JDBC_RESOURCE_ADAPTOR_ID);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.slee.Sbb#unsetSbbContext()
-     */
-    @Override
-    public void unsetSbbContext() {
-
-        this.sbbContextExt = null;
-        this.tracer = null;
-        this.jdbcRA = null;
-        this.jdbcACIF = null;
-    }
 
     // /*
     // * (non-Javadoc)

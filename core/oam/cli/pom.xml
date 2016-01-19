@@ -1,11 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
 		<groupId>org.mobicents.ussd</groupId>
 		<artifactId>core</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
+		<version>3.0.0-SNAPSHOT</version>
+		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
 	<artifactId>ussd-cli</artifactId>
@@ -17,8 +17,8 @@
 		<!-- MTP3 -->
 		<dependency>
 			<groupId>org.mobicents.protocols.ss7.management</groupId>
-			<artifactId>shell</artifactId>
-			<version>${ss7.version}</version>
+			<artifactId>shell-client</artifactId>
+			<version>${jss7.mobicents.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -55,8 +55,7 @@
 								</goals>
 								<configuration>
 									<tasks>
-										<copy todir="${jboss.home}/lib"
-											file="${project.build.directory}/${build.finalName}.jar" />
+										<copy todir="${jboss.home}/lib" file="${project.build.directory}/${build.finalName}.jar" />
 									</tasks>
 								</configuration>
 							</execution>
@@ -68,8 +67,7 @@
 								</goals>
 								<configuration>
 									<tasks>
-										<delete failonerror="fals"
-											file="${jboss.home}/lib/${build.finalName}.jar" />
+										<delete failonerror="fals" file="${jboss.home}/lib/${build.finalName}.jar" />
 									</tasks>
 								</configuration>
 							</execution>

@@ -1,17 +1,16 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<packaging>pom</packaging>
 
 	<parent>
-		<groupId>org.mobicents</groupId>
 		<artifactId>mobicents-parent</artifactId>
-		<version>2.22</version>
+		<groupId>org.mobicents</groupId>
+		<version>2.27.18</version>
 	</parent>
 
 	<groupId>org.mobicents.ussd</groupId>
 	<artifactId>parent</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>3.0.0-SNAPSHOT</version>
 
 	<name>USSD Gateway Parent</name>
 
@@ -26,36 +25,37 @@
 		<jboss.microcontainer.version>2.2.0.M2</jboss.microcontainer.version>
 		<compiler.plugin.version>2.0.2</compiler.plugin.version>
 		<compile.source>1.5</compile.source>
-		<testng.version>6.2</testng.version>
+		<testng.version>6.8</testng.version>
 		<javolution.version>5.5.1</javolution.version>
-		<javassist.version>3.9.0.GA</javassist.version>
-		<xerces.version>2.9.1</xerces.version>
 		<log4j.version>1.2.12</log4j.version>
-		<drools.version>5.0.1</drools.version>
 		<servlet.version>2.5</servlet.version>
 		<concurrent.version>1.3.4</concurrent.version>
-		<mvel.dep.version>2.0.10</mvel.dep.version>
-		 
-		<mobicents.resources.http-client.version>2.5.0.FINAL</mobicents.resources.http-client.version>
-		<mobicents.core.ext.version>1.0.0.BETA2</mobicents.core.ext.version>
-		<mobicents.resources.map.version>2.0.0-SNAPSHOT</mobicents.resources.map.version>
-		<mobicents.resoruces.jdbc.version>1.0.0.FINAL</mobicents.resoruces.jdbc.version>
+
+		<mobicents.resources.sip.version>2.8.4</mobicents.resources.sip.version>
+		<mobicents.resources.http-client.version>2.8.4</mobicents.resources.http-client.version>
+		<mobicents.core.ext.version>2.8.10</mobicents.core.ext.version>
+		<mobicents.resources.map.version>2.8.14</mobicents.resources.map.version>
+		<mobicents.resources.jdbc.version>2.8.3</mobicents.resources.jdbc.version>
+        <mobicents.resources.http-servlet.version>2.8.5</mobicents.resources.http-servlet.version>
+
+		<jss7.mobicents.version>3.0.1322</jss7.mobicents.version>
 		
-		<jslee.ext.version>1.0.0.BETA2</jslee.ext.version>
-		
-		<ss7.version>2.0.0-SNAPSHOT</ss7.version>
 		<!-- mobicents but not strictly ss7 -->
-		<asn.version>2.0.0-SNAPSHOT</asn.version>
+		<asn.version>2.0.3.FINAL</asn.version>
 		<stream.version>1.0.0.CR1</stream.version>
-		<sctp.version>1.0.0-SNAPSHOT</sctp.version>
-		<commons.version>1.0.0-SNAPSHOT</commons.version>
+        <sctp.version>1.6.0.FINAL</sctp.version>
+		<commons.version>1.0.0.CR1</commons.version>
 		
 		<application.name>mobicents-ussd-gateway</application.name>
 	</properties>
 
 	<modules>
 		<module>core</module>
-		<module>example</module>
+		<module>management/ussd-management</module>
+		<!-- this deploys examples! -->
+		<module>examples</module>
+        <module>tools</module>
+		<module>test</module>
 	</modules>
 	<dependencies>
 
@@ -67,6 +67,29 @@
 
 	<profiles>
 		<profile>
+			<id>qa</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>install</phase>
+								<goals>
+									<goal>copy-dependencies</goal>
+								</goals>
+								<configuration>
+									<copyPom>true</copyPom>
+									<useRepositoryLayout>true</useRepositoryLayout>
+									<outputDirectory>/home/abhayani/workarea/mobicents/git/mobicents-ussdgateway/mvnlibs</outputDirectory>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>	
+		<profile>
 			<id>maven-release</id>
 			<modules>
 				<module>docs</module>
@@ -76,20 +99,10 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-release-plugin</artifactId>
-						<version>2.0-beta-9</version>
 						<configuration>
-							<remoteTagging>true</remoteTagging>
-							<autoVersionSubmodules>
-								true
-							</autoVersionSubmodules>
-
-							<tagBase>
-								https://mobicents.googlecode.com/svn/tags/applications/ussdgateway
-							</tagBase>
-							<resume>false</resume>
-							<preparationGoals>
-								clean install
-							</preparationGoals>
+							<allowTimestampedSnapshots>true</allowTimestampedSnapshots>
+							<preparationGoals>clean install</preparationGoals>
+							<autoVersionSubmodules>true</autoVersionSubmodules>
 						</configuration>
 					</plugin>
 				</plugins>
@@ -102,21 +115,56 @@
 			</modules>
 
 		</profile>
+		<profile>
+			<id>release-sign-artifacts</id>
+			<activation>
+				<property>
+					<name>performRelease</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>install</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>2.1.2</version>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 
-	<scm>
-		<connection>
-			scm:svn:https://mobicents.googlecode.com/svn/trunk/applications/ussdgateway
-		</connection>
-		<developerConnection>
-			scm:svn:https://mobicents.googlecode.com/svn/trunk/applications/ussdgateway
-		</developerConnection>
-		<url>
-			http://mobicents.googlecode.com/svn/trunk/applications/ussdgateway
-		</url>
-	</scm>
+	<licenses>
+		<license>
+			<name>GNU Affero General Public License</name>
+			<url>http://www.gnu.org/licenses/agpl-3.0.html</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 
-	<!-- -->
 	<build>
 		<plugins>
 			<plugin>
@@ -136,7 +184,7 @@
 						true
 					</resolveTransitiveDependencies>
 					<eclipseProjectName>
-						ussdgateway
+						mobicents-ussdgateway
 					</eclipseProjectName>
 				</configuration>
 			</plugin>
@@ -154,10 +202,28 @@
 		</plugins>
 	</build>
 
+	<scm>
+		<connection>scm:git:https://github.com/Mobicents/ussdgateway.git</connection>
+		<developerConnection>scm:git:https://github.com/Mobicents/ussdgateway.git</developerConnection>
+		<url>https://github.com/Mobicents/ussdgateway</url>
+	</scm>
 
-
-	<!-- define repository so we dont have to checkout parent edit settings.xml -->
+	<!-- repositories -->
 	<repositories>
+		<repository>
+			<id>mobicents-public-repository-group</id>
+			<name>Mobicens Public Maven Repository Group</name>
+			<url>https://oss.sonatype.org/content/groups/public/</url>
+			<layout>default</layout>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</snapshots>
+		</repository>
 		<repository>
 			<id>jboss-public-repository-group</id>
 			<name>JBoss Public Maven Repository Group</name>
@@ -173,9 +239,9 @@
 			</snapshots>
 		</repository>
 		<repository>
-			<id>jboss-releases</id>
-			<name>JBoss Releases</name>
-			<url>http://repository.jboss.org/nexus/content/repositories/releases/</url>
+			<id>jboss-3rd-party-repository-group</id>
+			<name>JBoss ThirdParty Releases Repository Group</name>
+			<url>http://repository.jboss.org/nexus/content/repositories/thirdparty-releases</url>
 			<layout>default</layout>
 			<releases>
 				<enabled>true</enabled>
@@ -185,6 +251,44 @@
 				<enabled>true</enabled>
 				<updatePolicy>never</updatePolicy>
 			</snapshots>
+		</repository>
+		<repository>
+			<id>jboss-3rd-party-upload-repository-group</id>
+			<name>JBoss ThirdParty Upload Repository Group</name>
+			<url>http://repository.jboss.org/nexus/content/repositories/thirdparty-upload</url>
+			<layout>default</layout>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>java.net-Public</id>
+			<name>Maven Java Net Snapshots and Releases</name>
+			<url>http://download.java.net/maven/2/</url>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>backup.repository.jboss.org</id>
+			<name>JBoss Repository Backup</name>
+			<url>http://anonsvn.jboss.org/repos/repository.jboss.org/maven2/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
 		</repository>
 	</repositories>
 

@@ -19,17 +19,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+
 package org.mobicents.ussdgateway.slee.http;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Map;
 
 import javax.slee.ActivityContextInterface;
 import javax.slee.SbbContext;
-import javax.slee.resource.ResourceAdaptorTypeID;
+
+import javolution.util.FastList;
 
 import net.java.client.slee.resource.http.HttpClientActivity;
 import net.java.client.slee.resource.http.HttpClientActivityContextInterfaceFactory;
@@ -46,43 +47,37 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
-import org.mobicents.protocols.ss7.map.api.MAPException;
 import org.mobicents.protocols.ss7.map.api.MAPMessage;
-import org.mobicents.protocols.ss7.map.api.service.supplementary.ProcessUnstructuredSSResponse;
-import org.mobicents.protocols.ss7.map.api.service.supplementary.UnstructuredSSRequest;
-import org.mobicents.ussdgateway.Dialog;
+import org.mobicents.protocols.ss7.map.api.dialog.MAPUserAbortChoice;
+import org.mobicents.protocols.ss7.map.api.service.supplementary.MAPDialogSupplementary;
 import org.mobicents.ussdgateway.EventsSerializeFactory;
+import org.mobicents.ussdgateway.XmlMAPDialog;
 import org.mobicents.ussdgateway.rules.ScRoutingRule;
 import org.mobicents.ussdgateway.slee.ChildSbb;
+import org.mobicents.ussdgateway.slee.cdr.RecordStatus;
 
 /**
  * 
  * @author amit bhayani
+ * @author sergey vetyutnev
  */
 public abstract class HttpClientSbb extends ChildSbb {
 
 	private static final String CONTENT_TYPE = "text";
 	private static final String CONTENT_SUB_TYPE = "xml";
 
+	private static final String CONTENT_ENCODING = "utf-8";
+
 	private static final String ACCEPTED_CONTENT_TYPE = CONTENT_TYPE + "/" + CONTENT_SUB_TYPE;
-
-	// /////////////////
-	// HTTP RA Stuff //
-	// /////////////////
-	private static final ResourceAdaptorTypeID httpRATypeID = new ResourceAdaptorTypeID(
-			"HttpClientResourceAdaptorType", "org.mobicents", "4.0");
-	private static final String httpRaLink = "HttpClientResourceAdaptor";
-
-	private HttpClientActivityContextInterfaceFactory httpClientActivityContextInterfaceFactory;
-	private HttpClientResourceAdaptorSbbInterface httpProvider;
 
 	/** Creates a new instance of CallSbb */
 	public HttpClientSbb() {
+		super("HttpClientSbb");
 	}
 
-	// /////////////////
-	// HTTP Handlers //
-	// /////////////////
+	// -------------------------------------------------------------
+	// HTTP Handlers
+	// -------------------------------------------------------------
 
 	public void onResponseEvent(ResponseEvent event, ActivityContextInterface aci) {
 
@@ -91,106 +86,131 @@ public abstract class HttpClientSbb extends ChildSbb {
 		HttpResponse response = event.getHttpResponse();
 		HttpClientActivity httpClientActivity = ((HttpClientActivity) aci.getActivity());
 
-		if (response == null) {
-			// Error condition
-			logger.severe("Exception received for HTTP request sent. See traces above");
+		MAPDialogSupplementary mapDialogSupplementary = this.getMAPDialog();
 
-			// TODO Abort Dialog or Send response back?
-			try {
-				this.abort(this.getMAPDialog());
-				this.endHttpClientActivity(httpClientActivity);
-			} catch (MAPException e) {
-				logger.severe("Exception while trying to abort MAP Dialog", e);
-			}
-			return;
-		}
+        try {
+            if (response == null) {
+                // Error condition
+                throw new Exception("Exception received for HTTP request sent. See traces above");
+            }
 
-		StatusLine statusLine = response.getStatusLine();
+            StatusLine statusLine = response.getStatusLine();
 
-		int statusCode = statusLine.getStatusCode();
+            int statusCode = statusLine.getStatusCode();
 
-		switch (statusCode) {
+            switch (statusCode) {
 
-		case 200:
-			try {
-				byte[] xmlContent = null;
-				if (response.getEntity() != null) {
-					xmlContent = getResultData(response.getEntity());
-					if (logger.isFineEnabled()) {
-						logger.fine("Received answer content: \n" + new String(xmlContent));
-					}
-					if (xmlContent == null || xmlContent.length <= 0) {
-						// TODO Error Condition
-						logger.severe("Received invalid payload from http server");
-					}
-					EventsSerializeFactory factory = this.getEventsSerializeFactory();
-					Dialog dialog = factory.deserialize(xmlContent);
+            case 200:
+                try {
+                    byte[] xmlContent = null;
+                    if (response.getEntity() != null) {
+                        xmlContent = getResultData(response.getEntity());
 
-					if (dialog == null) {
-						// TODO Error Condition
-						logger.severe("Received Success Response but couldn't deserialize to Dialog. Dialog is null");
-					}
+                        if (logger.isFineEnabled()) {
+                            logger.fine("Received answer content: \n" + new String(xmlContent));
+                        }
 
-					MAPMessage mapMessage = dialog.getMAPMessage();
+                        if (xmlContent == null || xmlContent.length <= 0) {
+                            throw new Exception("Received invalid payload from http server (null or zero length)");
+                        }
 
-					switch (mapMessage.getMessageType()) {
-					case unstructuredSSRequest_Request:
-						this.addUnstructuredSSRequest((UnstructuredSSRequest) mapMessage);
-						break;
-					case processUnstructuredSSRequest_Response:
-						aci.detach(this.sbbContext.getSbbLocalObject());
-						this.addProcessUnstructuredSSResponse((ProcessUnstructuredSSResponse) mapMessage);
-						this.endHttpClientActivity(httpClientActivity);
-						break;
-					default:
-						logger.severe("Received Success Response but unidentified response body");
-						break;
-					}
+                        EventsSerializeFactory factory = this.getEventsSerializeFactory();
+                        XmlMAPDialog dialog = factory.deserialize(xmlContent);
 
-				} else {
-					// TODO Error condition, take care
-					logger.severe("Received Success Response but without response body");
-				}
+                        if (dialog == null) {
+                            throw new Exception("Received Success HTTPResponse but couldn't deserialize to Dialog. Dialog is null");
+                        }
 
-			} catch (Exception e) {
-				// TODO Error condition, take care
-				logger.severe("Error while processing 2xx", e);
-			}
-			break;
+                        Object userObject = dialog.getUserObject();
+                        if (userObject != null) {
+                            this.setUserObject(userObject.toString());
+                        }
 
-		default:
-			// TODO Error condition, take care
-			logger.severe(String.format("Received non 2xx Response=%s", response));
-			break;
-		}
+                        MAPUserAbortChoice mapUserAbortChoice = dialog.getMAPUserAbortChoice();
+                        if (mapUserAbortChoice != null) {
+                            MAPDialogSupplementary mapDialog = this.getMAPDialog();
+                            mapDialog.abort(mapUserAbortChoice);
+                            this.endHttpClientActivity(httpClientActivity);
+                            this.updateDialogFailureStat();
+                            this.createCDRRecord(RecordStatus.ABORT_APP);
+                            return;
+                        }
+
+                        Boolean prearrangedEnd = dialog.getPrearrangedEnd();
+
+                        FastList<MAPMessage> mapMessages = dialog.getMAPMessages();
+                        if (mapMessages != null) {
+                            for (FastList.Node<MAPMessage> n = mapMessages.head(), end = mapMessages.tail(); (n = n.getNext()) != end;) {
+                                switch (n.getValue().getMessageType()) {
+                                case unstructuredSSRequest_Request:
+                                    super.ussdStatAggregator.updateUssdRequestOperations();
+                                    break;
+                                case unstructuredSSNotify_Request:
+                                    super.ussdStatAggregator.updateUssdNotifyOperations();
+                                    break;
+                                case processUnstructuredSSRequest_Request:
+                                    super.ussdStatAggregator.updateProcessUssdRequestOperations();
+                                    break;
+                                }
+                            }
+                        }
+
+                        this.processXmlMAPDialog(dialog, mapDialogSupplementary);
+
+                        if (prearrangedEnd != null) {
+                            mapDialogSupplementary.close(prearrangedEnd);
+                            this.endHttpClientActivity(httpClientActivity);
+                            this.createCDRRecord(RecordStatus.SUCCESS);
+                        } else {
+                            mapDialogSupplementary.send();
+                        }
+
+                    } else {
+                        throw new Exception("Received Success Response but without response body");
+                    }
+
+                } catch (Exception e) {
+                    throw new Exception("Error while processing 2xx", e);
+                }
+                break;
+
+            default:
+                // TODO Error condition, take care
+                logger.severe(String.format("Received non 2xx Response=%s", response));
+                this.sendServerErrorMessage();
+                this.endHttpClientActivity(httpClientActivity);
+                this.updateDialogFailureStat();
+                this.createCDRRecord(RecordStatus.FAILED_TRANSPORT_FAILURE);
+
+                break;
+            }
+        } catch (Throwable e) {
+            logger.severe("Error while processing RESPONSE event", e);
+
+            this.sendServerErrorMessage();
+            this.endHttpClientActivity(httpClientActivity);
+            this.updateDialogFailureStat();
+            this.createCDRRecord(RecordStatus.FAILED_CORRUPTED_MESSAGE);
+        }
 
 	}
 
-	public void setSbbContext(SbbContext sbbContext) {
-		super.setSbbContext(sbbContext);
-		try {
-			this.httpClientActivityContextInterfaceFactory = (HttpClientActivityContextInterfaceFactory) this.sbbContext
-					.getActivityContextInterfaceFactory(httpRATypeID);
-			this.httpProvider = (HttpClientResourceAdaptorSbbInterface) this.sbbContext.getResourceAdaptorInterface(
-					httpRATypeID, httpRaLink);
-
-		} catch (Exception ne) {
-			super.logger.severe("Could not set SBB context:", ne);
-		}
-	}
-
-	public void unsetSbbContext() {
-		this.sbbContext = null;
-		super.unsetSbbContext();
-	}
-
-	private HttpClientActivity getHTTPClientActivity() {
+	private ActivityContextInterface getHttpClientActivityContextInterface() {
 		ActivityContextInterface[] acis = this.sbbContext.getActivities();
 		for (ActivityContextInterface aci : acis) {
 			Object activity = aci.getActivity();
 			if (activity instanceof HttpClientActivity) {
-				return (HttpClientActivity) activity;
+				return aci;
 			}
+		}
+		return null;
+	}
+
+	private HttpClientActivity getHTTPClientActivity() {
+		ActivityContextInterface aci = this.getHttpClientActivityContextInterface();
+		if (aci != null) {
+			Object activity = aci.getActivity();
+			return (HttpClientActivity) activity;
 		}
 		return null;
 	}
@@ -200,11 +220,12 @@ public abstract class HttpClientSbb extends ChildSbb {
 		HttpPost uriRequest = createRequest(url, null, ACCEPTED_CONTENT_TYPE, null);
 
 		// NOTE: here we assume that its text/xml utf8 encoded... bum.
-		pushContent(uriRequest, ACCEPTED_CONTENT_TYPE, "utf-8", new ByteArrayInputStream(content));
+		pushContent(uriRequest, ACCEPTED_CONTENT_TYPE, CONTENT_ENCODING, content);
 
 		if (logger.isFineEnabled()) {
 			logger.fine("Executing HttpPost=" + uriRequest);
 		}
+
 		httpClientActivity.execute(uriRequest, null);
 	}
 
@@ -246,15 +267,18 @@ public abstract class HttpClientSbb extends ChildSbb {
 			throw new NullPointerException("URI mst not be null.");
 		}
 		String requestURI = uri;
+
 		if (queryParameters != null) {
 			requestURI = encode(requestURI, queryParameters);
 		}
+
 		HttpPost request = new HttpPost(uri);
 
 		if (acceptedContent != null) {
 			BasicHeader acceptedContentHeader = new BasicHeader("Accept", acceptedContent);
 			request.addHeader(acceptedContentHeader);
 		}
+
 		if (headers != null) {
 			for (Header h : headers) {
 				request.addHeader(h);
@@ -264,12 +288,14 @@ public abstract class HttpClientSbb extends ChildSbb {
 		return request;
 	}
 
-	private void pushContent(HttpUriRequest request, String contentType, String contentEncoding, InputStream content) {
+	private void pushContent(HttpUriRequest request, String contentType, String contentEncoding, byte[] content) {
 
 		// TODO: check other preconditions?
 		if (contentType != null && content != null && request instanceof HttpEntityEnclosingRequest) {
 			BasicHttpEntity entity = new BasicHttpEntity();
-			entity.setContent(content);
+			entity.setContent(new ByteArrayInputStream(content));
+			entity.setContentLength(content.length);
+			entity.setChunked(false);
 			if (contentEncoding != null)
 				entity.setContentEncoding(contentEncoding);
 			entity.setContentType(contentType);
@@ -283,9 +309,9 @@ public abstract class HttpClientSbb extends ChildSbb {
 		return EntityUtils.toByteArray(entity);
 	}
 
-	// /////////////////////////
-	// Client abstract stuff //
-	// /////////////////////////
+	// -------------------------------------------------------------
+	// Client abstract stuff
+	// -------------------------------------------------------------
 
 	@Override
 	protected boolean checkProtocolConnection() {
@@ -293,26 +319,49 @@ public abstract class HttpClientSbb extends ChildSbb {
 	}
 
 	@Override
-	protected void sendUssdData(byte[] data) throws Exception {
+	protected void sendUssdData(XmlMAPDialog xmlMAPDialog /* byte[] data */) throws Exception {
+
+		String userData = this.getUserObject();
+		if(userData != null){
+			xmlMAPDialog.setUserObject(userData);
+		}
+		
+		byte[] data = this.getEventsSerializeFactory().serialize(xmlMAPDialog);
+
 		HttpClientActivity httpClientActivity = this.getHTTPClientActivity();
+
 		if (httpClientActivity == null) {
 
-			httpClientActivity = this.httpProvider.createHttpClientActivity(false, null);
+			httpClientActivity = this.httpClientProvider.createHttpClientActivity(false, null);
 			// combo
 			this.httpClientActivityContextInterfaceFactory.getActivityContextInterface(httpClientActivity).attach(
 					this.sbbContext.getSbbLocalObject());
-			logger.info("Created HTTP Activity '" + httpClientActivity + "' ");
+
+			if (logger.isFineEnabled()) {
+				logger.fine("Created HTTP Activity '" + httpClientActivity.getSessionId() + "' for MAPDialog "
+						+ this.getMAPDialog());
+			}
 		}
 
 		ScRoutingRule call = this.getCall();
-
-		// combo
-		this.httpClientActivityContextInterfaceFactory.getActivityContextInterface(httpClientActivity).attach(
-				this.sbbContext.getSbbLocalObject());
 		String url = call.getRuleUrl();
+
+		// If this is MAP Abort sending to client, we don't care for response so
+		// better to detach
+//		if (xmlMAPDialog.getTCAPMessageType() == MessageType.Abort) {
+//			ActivityContextInterface aci = getHttpClientActivityContextInterface();
+//			aci.detach(this.sbbContext.getSbbLocalObject());
+//		}
 
 		doPost(httpClientActivity, url, data);
 	}
+
+    @Override
+    protected void updateDialogFailureStat() {
+        super.ussdStatAggregator.updateDialogsAllFailed();
+        super.ussdStatAggregator.updateDialogsPullFailed();
+        super.ussdStatAggregator.updateDialogsHttpFailed();
+    }
 
 	@Override
 	protected void terminateProtocolConnection() {
@@ -322,8 +371,30 @@ public abstract class HttpClientSbb extends ChildSbb {
 
 	private void endHttpClientActivity(HttpClientActivity httpClientActivity) {
 		if (httpClientActivity != null) {
-			httpClientActivity.endActivity();
+
+			try {
+				httpClientActivity.endActivity();
+			} catch (Exception e) {
+				logger.severe(String.format("Error while trying to end HttpClientActivity = %s for MAPDialog = %s",
+						httpClientActivity.getSessionId(), this.getMAPDialog()));
+			}
 		}
 	}
 
+	// -------------------------------------------------------------
+	// SLEE STUFF
+	// -------------------------------------------------------------
+
+	public void setSbbContext(SbbContext sbbContext) {
+		super.setSbbContext(sbbContext);
+		try {
+			super.httpClientActivityContextInterfaceFactory = (HttpClientActivityContextInterfaceFactory) super.sbbContext
+					.getActivityContextInterfaceFactory(httpClientRATypeID);
+			super.httpClientProvider = (HttpClientResourceAdaptorSbbInterface) super.sbbContext
+					.getResourceAdaptorInterface(httpClientRATypeID, httpClientRaLink);
+
+		} catch (Exception ne) {
+			super.logger.severe("Could not set SBB context:", ne);
+		}
+	}
 }

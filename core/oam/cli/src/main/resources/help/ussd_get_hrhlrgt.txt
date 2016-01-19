@@ -1,0 +1,15 @@
+Name
+	ussd get hrhlrgt
+
+SYNOPSIS
+	ussd get hrhlrgt
+
+DESCRIPTION
+	This command is used to get the GT value for HLR, used when Home 
+	Routing is enabled.
+	
+SEE ALSO
+	ussd get scgt, ussd set scgt, ussd set scssn, ussd get hlrssn,
+	ussd set hrhlrgt, ussd set hlrssn, ussd get mscssn, ussd set mscssn,  
+	ussd get maxmapv, ussd set maxmapv	
+

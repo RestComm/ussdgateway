@@ -1,0 +1,85 @@
+<?xml version='1.0'?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "${ent.filename}">
+%BOOK_ENTITIES;
+]>
+
+<chapter id="design_overview">
+
+	<title>Architecture</title>
+
+	<para>
+		&THIS.PLATFORM; &THIS.APPLICATION; is based on robust and proven &THIS.PLATFORM; JAIN SLEE 1.1 Server and &THIS.PLATFORM; jSS7 Stack.
+	</para>
+
+	<para>
+		&THIS.PLATFORM; JAIN SLEE Server is a highly scalable event-driven application server with a robust component model and fault tolerant execution environment. 
+		It provides a set of connectors to a variety of networks elements: SS7 MAP, TCAP, INAP, ISUP, SMPP, XMPP, SIP, MGCP, HTTP, XDM, XCAP, Diameter and many others. 
+		It is fully compliant with JSR 240 (JSLEE 1.1).
+	</para>
+
+	<para>
+		&THIS.PLATFORM; jSS7 is a software based implementation of the SS7 protocol. It provides implementation for Level 2 and above in the SS7 protocol Stack. &THIS.PLATFORM;
+		jSS7 Stack User Guide is bundled within and you can refer to the guide for more details on the Stack.
+	</para>
+
+	<para>The diagram below depicts top design overview:</para>
+	<mediaobject>
+		<imageobject>
+			<imagedata width="300px" align="center" fileref="images/ussd-application-design-overview.png" format="PNG" />
+		</imageobject>
+		<caption>
+			<para>&THIS.APPLICATION;
+				Design overview
+			</para>
+		</caption>
+	</mediaobject>
+
+	<para>
+		&THIS.PLATFORM; &THIS.APPLICATION; provides Load Balancing and Fault Tolerance. 
+		Two or more third-party Application Servers can be paired to provide Fault-Tolerance on the Gateway and GSM Network level.
+	</para>
+	<para>Geographic Redundancy can be achieved as shown in the diagram below:</para>
+	<mediaobject>
+		<imageobject>
+			<imagedata width="300px" align="center" fileref="images/MultipleGeoghraphicSite.png" format="PNG" />
+		</imageobject>
+		<caption>
+			<para>&THIS.APPLICATION; load balanced and high availability deployment - Geographic Redundancy
+			</para>
+		</caption>
+	</mediaobject>
+	
+	<para>
+		Below diagram shows how to achieve load-balancing by connecting to two STP's from Operator side.
+	</para>
+	
+	<mediaobject>
+		<imageobject>
+			<imagedata width="300px" align="center" fileref="images/Load-balanced-USSD-Topology.png" format="PNG" />
+		</imageobject>
+		<caption>
+			<para>&THIS.APPLICATION; load balanced and high availability deployment
+			</para>
+		</caption>
+	</mediaobject>
+		
+	<important>
+		<para>As of now, the Gateway supports the following protocols for proxying:
+		</para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					<acronym>HTTP</acronym>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<acronym>SIP</acronym>
+				</para>
+			</listitem>			
+		</itemizedlist>
+	</important>
+
+</chapter>
+
