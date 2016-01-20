@@ -233,7 +233,7 @@
 
 	<target name="build-ussd">
 		<exec failonerror="true" executable="${mvn.executable}" dir="${base.dir}/../">
-			<arg line="${release.build.goals} -Dmaven.test.skip=true" />
+			<arg line="${release.build.goals}" />
 		</exec>
 	</target>
 
