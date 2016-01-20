@@ -18,7 +18,7 @@ RestComm USSD Gateway is lead by [TeleStax, Inc.](www.telestax.com) and develope
 
 ## Downloads
 
-Download binary from [here](https://github.com/RestComm/ussdgateway/releases) or Continuous Delivery builds from [CloudBees](https://mobicents.ci.cloudbees.com/job/RestComm-USSD-Gateway/)
+Download source code and build from [here](https://github.com/RestComm/ussdgateway/releases) or Continuous Delivery binary from [CloudBees](https://mobicents.ci.cloudbees.com/job/RestComm-USSD-Gateway/)
 
 ## Maven Repository
 
@@ -34,16 +34,14 @@ Open Source http://telestax.com/open-source-2/
 
 # Testing 
 To test USSD Gateway with RestComm ss7-simulator make sure you follow the below configuration changes and the execute SS7 Command's
+Assume you are using USSD GW version 3.0.4
 
-1) Copy folder ussd-RestComm-jainslee-x.y.z.FINAL-jboss-5.1.0.GA/extra/RestComm-ss7/ss7/RestComm-ss7-service and paste to ussd-RestComm-jainslee-2.6.0.FINAL-jboss-5.1.0.GA/jboss-5.1.0.GA/server/default/deploy
+1) Download and extract mobicents-ussd-3.0.4-1601192026.zip form [Sonatype USSD GW Repo](https://mobicents.ci.cloudbees.com/job/RestComm-USSD-Gateway/4/artifact/release/)
  
-2) Copy below Resource Adaptors from ussd-RestComm-jainslee-2.6.0.FINAL-jboss-5.1.0.GA/resources/ and paste to ussd-RestComm-jainslee-2.6.0.FINAL-jboss-5.1.0.GA/jboss-5.1.0.GA/server/default/deploy
+2) Set JBOSS_HOME to mobicents-ussd-3.0.4/jboss-5.1.0.GA
+	2.1) export JBOSS_HOME=/path/to/mobicents-ussd-3.0.4/jboss-5.1.0.GA
 
-	a) map/RestComm-slee-ra-map-du-1.0.0.CR3.jar
-	b) http-client/http-client-ra-DU-2.5.0.FINAL.jar
-	c) jdbc/RestComm-slee-ra-jdbc-DU-1.0.0.FINAL.jar
-
-3) If you are deploying USSD Gateway from source code, set JBOSS_HOME variable to point to "ussd-RestComm-jainslee-2.6.0.FINAL-jboss-5.1.0.GA/jboss-5.1.0.GA" and execute "mvn clean install" command, it should create "RestComm-ussd-gateway" and ussdhttpdemo.war in /deploy folder of JBoss. 
+3) If you are deploying RestComm USSD Gateway from source code, set JBOSS_HOME variable to point to "jboss-5.1.0.GA/" and execute "mvn clean install" command, it should create "mobicents-ussd-gateway" directory and ussdhttpdemo.war in server/default/deploy/ directory of JBoss. 
 
 5) Execute below commands in SS7 CLI to setup SS7 
 
