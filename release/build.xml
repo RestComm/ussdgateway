@@ -18,12 +18,12 @@
 	<property name="mobicents.ussd.dir" value="${base.dir}/.." />
 
 	<property name="mobicents.ussd.release.version" value="3.0.0-SNAPSHOT" />
-	<property name="mobicents-slee.version" value="2.8.9.29" />
+	
+	<property name="mobicents-slee.build-number" value="33" />
+	<property name="mobicents-slee.version" value="2.8.11.${mobicents-slee.build-number}" />
 	<property name="mobicents-slee.ss7.map.ra.tag" value="2.8.16" />
 	<property name="mobicents-slee.http.ra.tag" value="2.8.5" />
 	<property name="mobicents-slee.jdbc.ra.tag" value="2.8.3" />
-
-	<property name="mobicents-slee.build-number" value="29" />
 
 	<property name="mobicents-jss7.build-number" value="1323" />
 	<property name="mobicents-jss7.version" value="3.0.${mobicents-jss7.build-number}" />
