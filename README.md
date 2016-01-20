@@ -39,6 +39,7 @@ Assume you are using USSD GW version 3.0.4
 1) Download and extract mobicents-ussd-3.0.4-1601192026.zip form [Sonatype USSD GW Repo](https://mobicents.ci.cloudbees.com/job/RestComm-USSD-Gateway/4/artifact/release/)
  
 2) Set JBOSS_HOME to mobicents-ussd-3.0.4/jboss-5.1.0.GA
+
 	2.1) export JBOSS_HOME=/path/to/mobicents-ussd-3.0.4/jboss-5.1.0.GA
 
 3) If you are deploying RestComm USSD Gateway from source code, set JBOSS_HOME variable to point to "jboss-5.1.0.GA/" and execute "mvn clean install" command, it should create "mobicents-ussd-gateway" directory and ussdhttpdemo.war in server/default/deploy/ directory of JBoss. 
@@ -64,8 +65,34 @@ Assume you are using USSD GW version 3.0.4
 	5.9) sccp rsp create 1 2 0 0
 
 	5.10) sccp rss create 1 2 8 0
+// USSD Settings
+
+// Remember that USSD demo is not included in release build, so you should make it from source
+
+	5.11) ussd scrule create *519# http://127.0.0.1:8080/ussddemo/test
+
+	5.12) ussd set noroutingruleconfigerrmssg Please dial valid short code
+
+	5.13) ussd set dialogtimeouterrmssg Request timedout please try again
+
+	5.14) ussd set servererrmssg Server error. Please try again later
+	
+//USSD Settings for PUSH
+
+	ussd set scgt 923330053058
+
+	ussd set scssn 8
+
+	ussd set hlrssn 6
+
+	ussd set mscssn 8
+
+	ussd set maxmapv 3
 
 6) Assuming RestComm ss7-simulator is started already you should see on jboss console "10:21:28,046 WARN  [SccpStackImpl-SccpStack] Rx : MTP-RESUME: AffectedDpc=2" indicating that USSD Gateway M3UA layer is now connected with ss7-simulator
 
 7) Dial *519# on ss7-simulator and you should see USSD getting exchanged between simulator and server
+
+8) Use this config for JSS7 [USSD SIM](https://github.com/RestComm/ussdgateway/wiki/SS7-Simulator-Configuration-for-USSD-demo)
+
 
