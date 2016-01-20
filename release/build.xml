@@ -27,7 +27,7 @@
 
 	<property name="mobicents-jss7.build-number" value="1323" />
 	<property name="mobicents-jss7.version" value="3.0.${mobicents-jss7.build-number}" />
-	<property name="mobicents-jss7.timestamp" value="1601130356" />
+	<property name="mobicents-jss7.timestamp" value="1601192032" />
 
 
 	<!--GET Mobicents-Slee & Mobicents-jss7 - properties-->
