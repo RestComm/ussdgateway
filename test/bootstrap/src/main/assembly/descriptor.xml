@@ -68,6 +68,11 @@
 				<include>org.jboss:jboss-reflect</include>
 				<include>org.jboss:jboss-mdr</include>
 				<include>org.jboss:jbossxb</include>
+				<include>org.jboss.jbossas:jboss-as-security</include>
+				<include>org.jboss.jbossas:jboss-as-system</include>
+				<include>org.jboss.jbossas:jboss-as-system-jmx</include>
+				<include>org.jboss.jbossas:jboss-as-j2se</include>
+				<include>org.jboss.security:jboss-security-spi</include>
 				<include>trove:trove</include>
 				<include>javassist:javassist</include>
 
@@ -81,6 +86,8 @@
 
 				<!-- SS7 Libraries -->
 				<include>org.mobicents.protocols.ss7.scheduler:scheduler</include>
+				<include>org.mobicents.protocols.ss7.statistics:statistics-api</include>
+				<include>org.mobicents.protocols.ss7.statistics:statistics-impl</include>
 				<include>org.mobicents.protocols.ss7.sccp:sccp-api</include>
 				<include>org.mobicents.protocols.ss7.sccp:sccp-impl</include>
 				<include>org.mobicents.protocols.ss7.tcap:tcap-api</include>

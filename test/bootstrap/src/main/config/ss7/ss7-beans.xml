@@ -9,14 +9,23 @@
 		</constructor>
 		<property name="persistDir">${smsc.data.dir}</property>
 		<property name="singleThread">true</property>
+<!--
 		<property name="connectDelay">30000</property>
+-->
 	</bean>
 	
 	<bean name="SCTPShellExecutor"
 		class="org.mobicents.protocols.ss7.m3ua.impl.oam.SCTPShellExecutor">
-		<property name="sctpManagement">
-			<inject bean="SCTPManagement" />
-		</property>
+        <property name="sctpManagements">
+            <map keyClass="java.lang.String" valueClass="org.mobicents.protocols.sctp.ManagementImpl">
+                <entry>
+                    <key>SCTPManagement</key>
+                    <value>
+                        <inject bean="SCTPManagement" />
+                    </value>
+                </entry>
+            </map>
+        </property>
 	</bean>		
 
 	<!-- ==================================================================== -->
@@ -27,6 +36,7 @@
 	<bean name="Mtp3UserPart" class="org.mobicents.protocols.ss7.m3ua.impl.M3UAManagementImpl">
 		<constructor>
 			<parameter>Mtp3UserPart</parameter>
+			<parameter>Mtp3UserPart</parameter>
 		</constructor>
 		<property name="persistDir">${smsc.data.dir}</property>
 		<property name="transportManagement">
@@ -36,9 +46,16 @@
 
 	<bean name="M3UAShellExecutor"
 		class="org.mobicents.protocols.ss7.m3ua.impl.oam.M3UAShellExecutor">
-		<property name="m3uaManagement">
-			<inject bean="Mtp3UserPart" />
-		</property>
+        <property name="m3uaManagements">
+            <map keyClass="java.lang.String" valueClass="org.mobicents.protocols.ss7.m3ua.impl.M3UAManagementImpl">
+                <entry>
+                    <key>Mtp3UserPart</key>
+                    <value>
+                        <inject bean="Mtp3UserPart" />
+                    </value>
+                </entry>
+            </map>
+        </property>
 	</bean>
 	
 	<!-- ==================================================================== -->
@@ -84,9 +101,16 @@
 
 	<bean name="SccpExecutor"
 		class="org.mobicents.protocols.ss7.sccp.impl.oam.SccpExecutor">
-		<property name="sccpStack">
-			<inject bean="SccpStack" />
-		</property>
+        <property name="sccpStacks">
+            <map keyClass="java.lang.String" valueClass="org.mobicents.protocols.ss7.sccp.impl.SccpStackImpl">
+                <entry>
+                    <key>SccpStack</key>
+                    <value>
+                        <inject bean="SccpStack" />
+                    </value>
+                </entry>
+            </map>      
+        </property>
 	</bean>
 
 </deployment>

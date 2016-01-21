@@ -47,6 +47,31 @@
 			<version>${version.jboss.microcontainer}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.jboss.jbossas</groupId>
+			<artifactId>jboss-as-security</artifactId>
+			<version>5.1.0.GA</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.jbossas</groupId>
+			<artifactId>jboss-as-system</artifactId>
+			<version>5.1.0.GA</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.jbossas</groupId>
+			<artifactId>jboss-as-system-jmx</artifactId>
+			<version>5.1.0.GA</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.jbossas</groupId>
+			<artifactId>jboss-as-j2se</artifactId>
+			<version>5.1.0.GA</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.security</groupId>
+			<artifactId>jboss-security-spi</artifactId>
+			<version>2.0.3.SP1</version>
+		</dependency>
+		<dependency>
 			<groupId>org.jboss.aop</groupId>
 			<artifactId>jboss-aop</artifactId>
 		</dependency>
@@ -82,6 +107,19 @@
 			<version>${jss7.mobicents.version}</version>
 			<scope>runtime</scope>
 		</dependency>
+
+        <dependency>
+            <artifactId>statistics-api</artifactId>
+            <groupId>org.mobicents.protocols.ss7.statistics</groupId>
+            <version>${jss7.mobicents.version}</version>
+			<scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <artifactId>statistics-impl</artifactId>
+            <groupId>org.mobicents.protocols.ss7.statistics</groupId>
+            <version>${jss7.mobicents.version}</version>
+			<scope>runtime</scope>
+        </dependency>
 
 	</dependencies>
 
