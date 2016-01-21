@@ -110,12 +110,14 @@
 				<include>org.mobicents.protocols.ss7.sccp:sccp-cli</include>
 				
 				<!-- Mobicents licensing lib -->
+<!--
 			 	<include>org.mobicents.licensing:lce-core</include>
 			 	<include>org.mobicents.licensing:lce-common:jar:jar-with-dependencies</include>
 			 	<include>org.mobicents.licensing:lce-secret:jar:obfuscated</include>
 			 	<include>org.mobicents.licensing:lce-notify</include>
 			    <include>org.apache.commons:commons-email</include>
-			    
+-->
+
 			</includes>
 		</dependencySet>
 	</dependencySets>

@@ -101,7 +101,7 @@
 						<format>
 							<formatName>pdf</formatName>
 							<stylesheetResource>classpath:/xslt/org/jboss/pdf.xsl</stylesheetResource>
-							<finalName>TelScale_${docs.bookid}_Installation_Guide.pdf</finalName>
+							<finalName>Mobicents_${docs.bookid}_Installation_Guide.pdf</finalName>
 						</format>
 						<format>
 							<formatName>html</formatName>

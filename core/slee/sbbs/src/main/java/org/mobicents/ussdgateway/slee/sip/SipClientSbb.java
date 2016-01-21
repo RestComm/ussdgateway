@@ -91,7 +91,7 @@ public abstract class SipClientSbb extends ChildSbb {
 	// Get the transport
 	private final String TRANSPORT = "udp";
 
-	public static final String FROM_DISPLAY_NAME = "TelScaleUSSDGateway";
+	public static final String FROM_DISPLAY_NAME = "MobicentsUSSDGateway";
 
 	// private static final String CONTENT_TYPE = "multipart";
 	// private static final String CONTENT_SUB_TYPE = "mixed";

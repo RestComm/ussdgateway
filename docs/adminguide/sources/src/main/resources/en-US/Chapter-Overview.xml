@@ -102,9 +102,9 @@
         	The AS also provides the tools and interfaces to enable access to the content providers through the Internet.
         </para>
 	</section>
-    <section id="telscale_ussd_overview">
+    <section id="mobicents_ussd_overview">
 	<title>&THIS.PLATFORM; &THIS.APPLICATION;</title>
-	<section id="telscale_ussd_overview_features">
+	<section id="mobicents_ussd_overview_features">
         <title>Major Features</title>
 		<para>
 			&THIS.PLATFORM;'s implementation of USSD Gateway is the first and only open source USSD Gateway with a host of rich features and advantages.
@@ -275,7 +275,7 @@
                 </varlistentry>                                                                                  
             </variablelist>   
 	</section>	
-        <section id="telscale_ussd_overview_tech_spec">
+        <section id="mobicents_ussd_overview_tech_spec">
         <title>Technical Specifications</title>
                       <para>&THIS.PLATFORM; &THIS.APPLICATION; is not restricted by Transaction Per Second model. The only restricting factor is memory + CPU capacity of the host servers,
                         third-party applications or the underlying database service.
@@ -288,7 +288,7 @@
                         </itemizedlist>       
                     </para>
 	</section>	
-        <section id="telscale_ussd_overview_http">
+        <section id="mobicents_ussd_overview_http">
         <title>HTTP Transfer Mechanism</title>        
                   <para>The &THIS.PLATFORM; USSD Gateway makes use of HTTP protocol between the gateway and the third-party applications (or Value Added Service Modules). &THIS.PLATFORM; USSD Gateway receives the USSD request from the subscriber's handset/device via the GSM Signaling network and then translates these requests to HTTP depending on the rules configured in the Gateway to route to a corresponding Value Added Service (VAS) or third-party application.
                   <!--</para>  <para>&THIS.PLATFORM; &THIS.APPLICATION; supports implementation of HTTP 1.1 standards and acts as a HTTP Client invoking (HTTP POST) the HTTP Application deployed on the third-party Application Server. The HTTP Request carries an XML payload with USSD specific information.</para>
@@ -301,7 +301,7 @@
                         </itemizedlist>       
                     </para>
 	</section>
-        <section id="telscale_ussd_overview_sip">
+        <section id="mobicents_ussd_overview_sip">
         <title>SIP Transfer Mechanism</title>        
                   <para>The &THIS.PLATFORM; USSD Gateway makes use of SIP protocol between the gateway and the third-party applications (or Value Added Service Modules).
                   24.390 specification "Unstructured Supplementary Service Data (USSD) using IP Multimedia (IM) Core Network (CN) subsystem IMS" is implemented.

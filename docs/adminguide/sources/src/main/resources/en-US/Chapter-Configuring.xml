@@ -44,7 +44,7 @@
 		</section>
 		<section id="configure_jslee_jdbc_ra">
 		<title>Configuring JSLEE JDBC RA</title>
-<para>&THIS.PLATFORM; &THIS.APPLICATION; leverages JSLEE JDBC RA for persistence. Detailed JSLEE JDBC RA documentation is available in <filename>mobicents-ussdgateway-&THIS.VERSION;/docs/slee/Telscale_SLEE_RA_JDBC_User_Guide.pdf</filename> that explains how to point to the new DataSource. An example configuration is explained in this admin guide in the section <xref linkend="configuring-mysql" />. When you have completed configuring an alternate DataSource in JBoss AS, you can proceed to modify JSLEE configurations accordingly. You must change the Dialect in the file <filename>mobicents-ussdgateway-&THIS.VERSION;/jboss-5.1.0.GA/server/&lt;profile&gt;/deploy/mobicents-slee/META-INF/jboss-beans.xml</filename> to reflect your alternate DataSource.
+<para>&THIS.PLATFORM; &THIS.APPLICATION; leverages JSLEE JDBC RA for persistence. Detailed JSLEE JDBC RA documentation is available in <filename>mobicents-ussdgateway-&THIS.VERSION;/docs/slee/Mobicents_SLEE_RA_JDBC_User_Guide.pdf</filename> that explains how to point to the new DataSource. An example configuration is explained in this admin guide in the section <xref linkend="configuring-mysql" />. When you have completed configuring an alternate DataSource in JBoss AS, you can proceed to modify JSLEE configurations accordingly. You must change the Dialect in the file <filename>mobicents-ussdgateway-&THIS.VERSION;/jboss-5.1.0.GA/server/&lt;profile&gt;/deploy/mobicents-slee/META-INF/jboss-beans.xml</filename> to reflect your alternate DataSource.
 </para>
 		</section>	
 		<section id="table_structure">
@@ -224,7 +224,7 @@ REMOTE_DIALOG_ID : Remote Transaction Id of TCAP Dialog
 
 	<section id="http-client_RA">
 		<title>Configuring JSLEE http-client RA</title>
-		<para>&THIS.PLATFORM; &THIS.APPLICATION; acts as a HTTP Client to achieve USSD pull by sending a HTTP POST request to third party applications (HTTP Server) for every dialled short code. You must configure the HTTP Client JSLEE Resource Adaptor's properties to suit your requirements. Please refer to the SLEE RA HTTP Client User Guide available in <filename>mobicents-ussdgateway-&THIS.VERSION;/docs/slee/Telscale_SLEE_RA_HTTP_Client_User_Guide.pdf</filename>.
+		<para>&THIS.PLATFORM; &THIS.APPLICATION; acts as a HTTP Client to achieve USSD pull by sending a HTTP POST request to third party applications (HTTP Server) for every dialled short code. You must configure the HTTP Client JSLEE Resource Adaptor's properties to suit your requirements. Please refer to the SLEE RA HTTP Client User Guide available in <filename>mobicents-ussdgateway-&THIS.VERSION;/docs/slee/Mobicents_SLEE_RA_HTTP_Client_User_Guide.pdf</filename>.
 		</para>
 		<para>For every Short Code Routing rule added in the USSD Gateway, you must ensure that there is a corresponding <literal>MAX_CONNECTIONS_FOR_ROUTES</literal> property appropriately configured in the HTTP Client JSLEE RA.</para>
 		<warning><para>HTTP Client JSLEE RA's default configuration allows the http-client to handle only two concurrent connections at a time. You must modify the <literal>MAX_CONNECTIONS_FOR_ROUTES</literal> property to meet your Short Code Routing Rules requirements in production.</para></warning>
