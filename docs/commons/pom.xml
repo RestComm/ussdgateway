@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.mobicents.ussd.docs</groupId>
 		<artifactId>mobicents-ussd-docs</artifactId>
-		<version>3.0.0-SNAPSHOT</version>
+		<version>3.0.9</version>
 	</parent>
 
 	<artifactId>mobicents-ussd-commons-sources</artifactId>
