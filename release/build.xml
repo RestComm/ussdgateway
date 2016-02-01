@@ -39,7 +39,7 @@
 	<property name="mobicents-slee.distro.zip.path" value="${checkout.dir}/${mobicents-slee.download.distro.file}" />
 
 	<property name="mobicents-jss7.download.distro.file" value="mobicents-jss7-${mobicents-jss7.version}-${mobicents-jss7.timestamp}.zip" />
-	<property name="mobicents-jss7.download.url" value="${cloudbees.url}/job/Mobicents-jSS7/${mobicents-jss7.build-number}/artifact/release/${mobicents-jss7.download.distro.file}" />
+	<property name="mobicents-jss7.download.url" value="${cloudbees.url}/job/Restcomm-jSS7/${mobicents-jss7.build-number}/artifact/release/${mobicents-jss7.download.distro.file}" />
 	<property name="mobicents-jss7.distro.zip.path" value="${checkout.dir}/${mobicents-jss7.download.distro.file}" />
 
 
