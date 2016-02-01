@@ -19,8 +19,9 @@
 
 	<property name="mobicents.ussd.release.version" value="3.0.0-SNAPSHOT" />
 	
-	<property name="mobicents-slee.build-number" value="46" />
-	<property name="mobicents-slee.version" value="2.8.11.${mobicents-slee.build-number}" />
+	<property name="mobicents-slee.build-number-1" value="46" />
+	<property name="mobicents-slee.build-number-2" value="2.8.17.46" />
+	<property name="mobicents-slee.version" value="${mobicents-slee.build-number-2}" />
 	<property name="mobicents-slee.ss7.map.ra.tag" value="2.8.21" />
 	<property name="mobicents-slee.http.ra.tag" value="2.8.5" />
 	<property name="mobicents-slee.jdbc.ra.tag" value="2.8.3" />
@@ -34,7 +35,7 @@
 	<property name="cloudbees.url" value="https://mobicents.ci.cloudbees.com" />
 	<property name="mobicents-slee.download.distro.name" value="mobicents-slee-${mobicents-slee.version}" />
 	<property name="mobicents-slee.download.distro.file" value="${mobicents-slee.download.distro.name}.zip" />
-	<property name="mobicents-slee.download.url" value="${cloudbees.url}/job/Mobicents-JAIN-SLEE-Release/${mobicents-slee.build-number}/artifact/release/${mobicents-slee.download.distro.file}" />
+	<property name="mobicents-slee.download.url" value="${cloudbees.url}/job/Mobicents-JAIN-SLEE-Release/${mobicents-slee.build-number-1}/artifact/release/${mobicents-slee.download.distro.file}" />
 	<property name="mobicents-slee.distro.zip.path" value="${checkout.dir}/${mobicents-slee.download.distro.file}" />
 
 	<property name="mobicents-jss7.download.distro.file" value="mobicents-jss7-${mobicents-jss7.version}-${mobicents-jss7.timestamp}.zip" />
