@@ -19,7 +19,7 @@
 
 	<property name="mobicents.ussd.release.version" value="3.0.0-SNAPSHOT" />
 	
-	<property name="mobicents-slee.build-number" value="33" />
+	<property name="mobicents-slee.build-number" value="46" />
 	<property name="mobicents-slee.version" value="2.8.11.${mobicents-slee.build-number}" />
 	<property name="mobicents-slee.ss7.map.ra.tag" value="2.8.21" />
 	<property name="mobicents-slee.http.ra.tag" value="2.8.5" />
