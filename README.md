@@ -9,16 +9,38 @@ USSD information is sent from mobile handset directly to an application platform
 
 RestComm USSD Gateway is built on [RestComm SS7](https://github.com/RestComm/jss7) and RestComm JSLEE Server. It offers RESTful HTTP interface that allows web developers to build interactive apps for feature mobile phones.
 
-## License
+## Documentation
 
-RestComm USSD Gateway is licensed under dual license policy. The default license is the Free Open Source [GNU Affero GPL v3.0](http://www.gnu.org/licenses/agpl-3.0.html). Alternatively a commercial license can be obtained from Telestax ([contact form](http://www.telestax.com/contactus/#InquiryForm))
-
-RestComm USSD Gateway is lead by [TeleStax, Inc.](www.telestax.com) and developed collaboratively by a [community of individual and enterprise contributors](http://www.telestax.com/open-source-2/acknowledgments/).
-
+Read the [Online SIP Servlets Documentation](http://docs.telestax.com/ussd-homepage/) or it is also contained in the download binary
 
 ## Downloads
 
 Download source code and build from [here](https://github.com/RestComm/ussdgateway/releases) or Continuous Delivery binary from [CloudBees](https://mobicents.ci.cloudbees.com/job/RestComm-USSD-Gateway/)
+
+## Want to Contribute ? 
+
+[See our Contributors Guide](https://github.com/RestComm/Restcomm-Core/wiki/Contribute-to-RestComm)
+
+## Issue Tracking and Roadmap
+
+[Issue Tracker](https://github.com/RestComm/sip-servlets/issues)
+
+## Questions ?
+
+Please ask your question on [StackOverflow](http://stackoverflow.com/questions/tagged/restcomm) or the Google [public forum](http://groups.google.com/group/restcomm)
+
+## License
+
+RestComm USSD Gateway is lead by [TeleStax](http://www.telestax.com/), Inc. and developed collaboratively by a community of individual and enterprise contributors.
+
+RestComm USSD Gateway is licensed under dual license policy. The default license is the Free Open Source GNU Affero GPL v3.0. Alternatively a commercial license can be obtained from Telestax ([contact form](http://www.telestax.com/contactus/#InquiryForm))
+
+## Continuous Integration and Delivery
+
+[![RestComm USSD Gateway Continuous Job](http://www.cloudbees.com/sites/default/files/Button-Built-on-CB-1.png)](https://mobicents.ci.cloudbees.com/job/RestComm-USSD-Gateway//)
+
+## Acknowledgements
+[See who has been contributing to RestComm](http://www.telestax.com/opensource/acknowledgments/)
 
 ## Maven Repository
 
@@ -27,10 +49,6 @@ Artifacts are available at [Sonatype Maven Repo](https://oss.sonatype.org/conten
 ## Wiki
 
 Read our [RestComm jSS7 wiki](https://github.com/RestComm/ussdgateway/wiki) 
-
-## All Open Source RestComm Projects
-
-Open Source http://telestax.com/open-source-2/
 
 # Testing 
 To test USSD Gateway with RestComm ss7-simulator make sure you follow the below configuration changes and the execute SS7 Command's
