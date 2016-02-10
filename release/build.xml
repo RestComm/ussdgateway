@@ -21,7 +21,7 @@
 	
 	<property name="restcomm-slee.build-number-1" value="56" />
 	<property name="restcomm-slee.build-number-2" value="2.8.26.56" />
-	<property name="restcomm-slee.version" value="${mobicents-slee.build-number-2}" />
+	<property name="restcomm-slee.version" value="${restcomm-slee.build-number-2}" />
 	<property name="restcomm-slee.ss7.map.ra.tag" value="2.8.25" />
 	<property name="restcomm-slee.http.ra.tag" value="2.8.5" />
 	<property name="restcomm-slee.jdbc.ra.tag" value="2.8.3" />
