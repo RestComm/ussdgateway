@@ -191,7 +191,7 @@ MBean provides two operations: 1) <literal>sendNotify</literal> to push Notifica
   		<title>Mobicents USSD Simulator - Notify</title>
   		<mediaobject>
     		<imageobject>
-      			<imagedata fileref="images/Mobicents-ussd-simulator_Notify.png" format="PNG" align="center"/>
+      			<imagedata fileref="images/Restcomm-ussd-simulator_Notify.png" format="PNG" align="center"/>
     		</imageobject>
   		</mediaobject>
 	</figure>
