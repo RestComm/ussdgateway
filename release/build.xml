@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
-<project name="mobicents.ussdgw.release" default="release" basedir=".">
+<project name="restcomm.ussdgw.release" default="release" basedir=".">
 	<property environment="sys" />
-	<property name="release.dir" location="${ant.file.mobicents.ussdgw.release}/../target" />
-	<property name="base.dir" location="${ant.file.mobicents.ussdgw.release}/.." />
+	<property name="release.dir" location="${ant.file.restcomm.ussdgw.release}/../target" />
+	<property name="base.dir" location="${ant.file.restcomm.ussdgw.release}/.." />
 	<property name="docs.dir" location="${release.dir}/docs" />
 	<property name="bundle.docs.dir" location="${base.dir}/docs-bundle" />
 	<property name="checkout.dir" value="${base.dir}/checkout" />
-	<property name="checkout.mobicents-slee.dir" value="${checkout.dir}/mobicents-slee" />
-	<property name="checkout.mobicents-jss7.dir" value="${checkout.dir}/mobicents-jss7" />
+	<property name="checkout.restcomm-slee.dir" value="${checkout.dir}/restcomm-slee" />
+	<property name="checkout.restcomm-jss7.dir" value="${checkout.dir}/restcomm-jss7" />
 	<property name="checkout.map.dir" value="${base.dir}/checkout/map" />
 	<property name="checkout.jdbc.dir" value="${base.dir}/checkout/jdbc" />
 	<property name="checkout.http.dir" value="${base.dir}/checkout/http" />
@@ -15,33 +15,32 @@
 	<property name="release.jdbc.dir" value="${base.dir}/checkout/jdbc-release" />
 	<property name="release.http-client.dir" value="${base.dir}/checkout/http-client-release" />
 	<property name="release.http-servlet.dir" value="${base.dir}/checkout/http-servlet-release" />
-	<property name="mobicents.ussd.dir" value="${base.dir}/.." />
+	<property name="restcomm.ussd.dir" value="${base.dir}/.." />
 
-	<property name="mobicents.ussd.release.version" value="3.0.0-SNAPSHOT" />
+	<property name="restcomm.ussd.release.version" value="3.0.0-SNAPSHOT" />
 	
-	<property name="mobicents-slee.build-number-1" value="46" />
-	<property name="mobicents-slee.build-number-2" value="2.8.17.46" />
-	<property name="mobicents-slee.version" value="${mobicents-slee.build-number-2}" />
-	<property name="mobicents-slee.ss7.map.ra.tag" value="2.8.21" />
-	<property name="mobicents-slee.http.ra.tag" value="2.8.5" />
-	<property name="mobicents-slee.jdbc.ra.tag" value="2.8.3" />
+	<property name="restcomm-slee.build-number-1" value="56" />
+	<property name="restcomm-slee.build-number-2" value="2.8.26.56" />
+	<property name="restcomm-slee.version" value="${mobicents-slee.build-number-2}" />
+	<property name="restcomm-slee.ss7.map.ra.tag" value="2.8.25" />
+	<property name="restcomm-slee.http.ra.tag" value="2.8.5" />
+	<property name="restcomm-slee.jdbc.ra.tag" value="2.8.3" />
 
-	<property name="mobicents-jss7.build-number" value="1329" />
-	<property name="mobicents-jss7.version" value="3.0.${mobicents-jss7.build-number}" />
-	<property name="mobicents-jss7.timestamp" value="1601292003" />
+	<property name="restcomm-jss7.build-number" value="1335" />
+	<property name="restcomm-jss7.version" value="3.0.${restcomm-jss7.build-number}" />
+	<property name="restcomm-jss7.timestamp" value="1602101139" />
 
 
-	<!--GET Mobicents-Slee & Mobicents-jss7 - properties-->
-	<property name="cloudbees.url" value="https://mobicents.ci.cloudbees.com" />
-	<property name="mobicents-slee.download.distro.name" value="mobicents-slee-${mobicents-slee.version}" />
-	<property name="mobicents-slee.download.distro.file" value="${mobicents-slee.download.distro.name}.zip" />
-	<property name="mobicents-slee.download.url" value="${cloudbees.url}/job/Mobicents-JAIN-SLEE-Release/${mobicents-slee.build-number-1}/artifact/release/${mobicents-slee.download.distro.file}" />
-	<property name="mobicents-slee.distro.zip.path" value="${checkout.dir}/${mobicents-slee.download.distro.file}" />
+	<!--GET Restcomm-Slee & Restcomm-jss7 - properties-->
+	<property name="cloudbees.url" value="https://restcomm.ci.cloudbees.com" />
+	<property name="restcomm-slee.download.distro.name" value="restcomm-slee-${restcomm-slee.version}" />
+	<property name="restcomm-slee.download.distro.file" value="${restcomm-slee.download.distro.name}.zip" />
+	<property name="restcomm-slee.download.url" value="${cloudbees.url}/job/Restcomm-JAIN-SLEE-Release/${restcomm-slee.build-number-1}/artifact/release/${restcomm-slee.download.distro.file}" />
+	<property name="restcomm-slee.distro.zip.path" value="${checkout.dir}/${restcomm-slee.download.distro.file}" />
 
-	<property name="mobicents-jss7.download.distro.file" value="mobicents-jss7-${mobicents-jss7.version}-${mobicents-jss7.timestamp}.zip" />
-	<property name="mobicents-jss7.download.url" value="${cloudbees.url}/job/Restcomm-jSS7/${mobicents-jss7.build-number}/artifact/release/${mobicents-jss7.download.distro.file}" />
-	<property name="mobicents-jss7.distro.zip.path" value="${checkout.dir}/${mobicents-jss7.download.distro.file}" />
-
+	<property name="restcomm-jss7.download.distro.file" value="restcomm-jss7-${restcomm-jss7.version}-${restcomm-jss7.timestamp}.zip" />
+	<property name="restcomm-jss7.download.url" value="${cloudbees.url}/job/Restcomm-jSS7/${restcomm-jss7.build-number}/artifact/release/${restcomm-jss7.download.distro.file}" />
+	<property name="restcomm-jss7.distro.zip.path" value="${checkout.dir}/${restcomm-jss7.download.distro.file}" />
 
 	<property name="release.build.goals" value="clean install" />
 	<property name="release.ts.deploy.goals" value="clean deploy" />
@@ -54,62 +53,62 @@
 
 	<taskdef onerror="fail" resource="net/sf/antcontrib/antlib.xml">
 		<classpath>
-			<pathelement location="${ant.file.mobicents.ussdgw.release}/../ant-contrib-1.0b3.jar" />
+			<pathelement location="${ant.file.restcomm.ussdgw.release}/../ant-contrib-1.0b3.jar" />
 		</classpath>
 	</taskdef>
 
-	<target name="release" depends="clean,get-deps,extract-deps,clean-up-mobicents-slee,build-ussd,copy-ussd,build-docs,copy-docs,make-final-zip,bundle-documentation" />
-	<target name="release-no-clean" depends="get-deps,extract-deps,clean-up-mobicents-slee, build-ussd,copy-ussd,build-docs,copy-docs,make-final-zip,bundle-documentation" />
+	<target name="release" depends="clean,get-deps,extract-deps,clean-up-restcomm-slee,build-ussd,copy-ussd,build-docs,copy-docs,make-final-zip,bundle-documentation" />
+	<target name="release-no-clean" depends="get-deps,extract-deps,clean-up-restcomm-slee, build-ussd,copy-ussd,build-docs,copy-docs,make-final-zip,bundle-documentation" />
 
 	<target name="deploy">
-		<ant antfile="${ant.file.mobicents.ussdgw.release}" target="release">
+		<ant antfile="${ant.file.restcomm.ussdgw.release}" target="release">
 			<property name="release.build.goals" value="${release.ts.deploy.goals}" />
 		</ant>
 	</target>
 
 
-	<!--GET Map & Mobicents-Slee & Mobicents-jss7 - downloads-->
+	<!--GET Map & Restcomm-Slee & Restcomm-jss7 - downloads-->
 
 	<target name="get-map" depends="checkout-ss7-map,build-ss7-map" />
-	<target name="get-deps" depends="get-mobicents-slee,get-mobicents-jss7,checkout-ss7-map,build-ss7-map,checkout-http,build-http-client,build-http-servlet,checkout-jdbc,build-jdbc" />
-	<target name="extract-deps" depends="extract-mobicents-slee,extract-mobicents-jss7" />
+	<target name="get-deps" depends="get-restcomm-slee,get-restcomm-jss7,checkout-ss7-map,build-ss7-map,checkout-http,build-http-client,build-http-servlet,checkout-jdbc,build-jdbc" />
+	<target name="extract-deps" depends="extract-restcomm-slee,extract-restcomm-jss7" />
 
-	<available file="${mobicents-slee.distro.zip.path}" property="got.mobicents-slee" />
-	<target name="get-mobicents-slee" unless="got.mobicents-slee">
-		<echo>Is Mobicents Slee : ${mobicents-slee.distro.zip.path} present ${got.mobicents-slee}</echo>
-		<echo>Downloading Mobicents Slee version: ${mobicents-slee.version}</echo>
+	<available file="${restcomm-slee.distro.zip.path}" property="got.restcomm-slee" />
+	<target name="get-restcomm-slee" unless="got.restcomm-slee">
+		<echo>Is Restcomm Slee : ${restcomm-slee.distro.zip.path} present ${got.restcomm-slee}</echo>
+		<echo>Downloading Restcomm Slee version: ${restcomm-slee.version}</echo>
 		<exec failonerror="true" executable="wget">
-			<arg value="${mobicents-slee.download.url}" />
+			<arg value="${restcomm-slee.download.url}" />
 		</exec>
-		<move file="${base.dir}/${mobicents-slee.download.distro.file}" todir="${checkout.dir}" />
+		<move file="${base.dir}/${restcomm-slee.download.distro.file}" todir="${checkout.dir}" />
 	</target>
 
-	<target name="extract-mobicents-slee" depends="get-mobicents-slee">
-		<delete dir="${checkout.mobicents-slee.dir}" failonerror="false" />
-		<unzip src="${mobicents-slee.distro.zip.path}" dest="${release.dir}"/>
+	<target name="extract-restcomm-slee" depends="get-restcomm-slee">
+		<delete dir="${checkout.restcomm-slee.dir}" failonerror="false" />
+		<unzip src="${restcomm-slee.distro.zip.path}" dest="${release.dir}"/>
         <copy todir="${release.dir}" failonerror="true">
-                <fileset dir="${release.dir}/mobicents-slee-${mobicents-slee.version}">
+                <fileset dir="${release.dir}/restcomm-slee-${restcomm-slee.version}">
                         <include name="**/*" />
                 </fileset>
         </copy>
-		<delete dir="${release.dir}/mobicents-slee-${mobicents-slee.version}" includeemptydirs="true" failonerror="false" verbose="false"/>
-		<delete dir="${checkout.mobicents-slee.dir}/jboss-5.1.0.GA/server/all" includeemptydirs="true" failonerror="false" verbose="false"/>
+		<delete dir="${release.dir}/restcomm-slee-${restcomm-slee.version}" includeemptydirs="true" failonerror="false" verbose="false"/>
+		<delete dir="${checkout.restcomm-slee.dir}/jboss-5.1.0.GA/server/all" includeemptydirs="true" failonerror="false" verbose="false"/>
 	</target>
 
-	<available file="${mobicents-jss7.download.distro.file}" property="got.mobicents-jss7" />
-	<target name="get-mobicents-jss7" unless="got.mobicents-jss7">
-		<echo>Is Mobicents jss7 : ${mobicents-jss7.distro.zip.path} present ${got.mobicents-jss7}</echo>
-		<echo>Downloading Mobicents jss7 version: ${mobicents-jss7.version}</echo>
+	<available file="${restcomm-jss7.download.distro.file}" property="got.restcomm-jss7" />
+	<target name="get-restcomm-jss7" unless="got.restcomm-jss7">
+		<echo>Is restcomm jss7 : ${restcomm-jss7.distro.zip.path} present ${got.restcomm-jss7}</echo>
+		<echo>Downloading restcomm jss7 version: ${restcomm-jss7.version}</echo>
 		<exec failonerror="true" executable="wget">
-			<arg value="${mobicents-jss7.download.url}" />
+			<arg value="${restcomm-jss7.download.url}" />
 		</exec>
-		<move file="${base.dir}/${mobicents-jss7.download.distro.file}" todir="${checkout.dir}" />
+		<move file="${base.dir}/${restcomm-jss7.download.distro.file}" todir="${checkout.dir}" />
 	</target>
 
-	<target name="extract-mobicents-jss7" depends="get-mobicents-jss7">
-		<delete dir="${checkout.mobicents-jss7.dir}" failonerror="false" />
-		<unzip src="${mobicents-jss7.distro.zip.path}" dest="${checkout.mobicents-jss7.dir}"/>
-		<move file="${checkout.mobicents-jss7.dir}/mobicents-jss7-${mobicents-jss7.version}" tofile="${checkout.mobicents-jss7.dir}/mobicents-jss7-${mobicents-jss7.version}" failonerror="false"/>
+	<target name="extract-restcomm-jss7" depends="get-restcomm-jss7">
+		<delete dir="${checkout.restcomm-jss7.dir}" failonerror="false" />
+		<unzip src="${restcomm-jss7.distro.zip.path}" dest="${checkout.restcomm-jss7.dir}"/>
+		<move file="${checkout.restcomm-jss7.dir}/restcomm-jss7-${restcomm-jss7.version}" tofile="${checkout.restcomm-jss7.dir}/restcomm-jss7-${restcomm-jss7.version}" failonerror="false"/>
 	</target>
 
 
@@ -117,13 +116,13 @@
 		<echo>Checking out Map resource</echo>
 		<exec failonerror="true" executable="git">
 			<arg value="clone" />
-			<arg value="https://github.com/Mobicents/jain-slee.ss7.git" />
+			<arg value="https://github.com/restcomm/jain-slee.ss7.git" />
 			<arg value="${checkout.map.dir}" />
 		</exec>
 
 		<exec executable="git" dir="${checkout.map.dir}">
 			<arg value="checkout" />
-			<arg value="${mobicents-slee.ss7.map.ra.tag}" />
+			<arg value="${restcomm-slee.ss7.map.ra.tag}" />
 		</exec>
 	</target>
 
@@ -138,13 +137,13 @@
 		<echo>Checking out JDBC resource</echo>
 		<exec failonerror="true" executable="git">
 			<arg value="clone" />
-			<arg value="https://github.com/Mobicents/jain-slee.jdbc.git" />
+			<arg value="https://github.com/restcomm/jain-slee.jdbc.git" />
 			<arg value="${checkout.jdbc.dir}" />
 		</exec>
 
 		<exec executable="git" dir="${checkout.jdbc.dir}">
 			<arg value="checkout" />
-			<arg value="${mobicents-slee.jdbc.ra.tag}" />
+			<arg value="${restcomm-slee.jdbc.ra.tag}" />
 		</exec>
 	</target>
 
@@ -159,13 +158,13 @@
 		<echo>Checking out Http resource</echo>
 		<exec failonerror="true" executable="git">
 			<arg value="clone" />
-			<arg value="https://github.com/Mobicents/jain-slee.http.git" />
+			<arg value="https://github.com/restcomm/jain-slee.http.git" />
 			<arg value="${checkout.http.dir}" />
 		</exec>
 
 		<exec executable="git" dir="${checkout.http.dir}">
 			<arg value="checkout" />
-			<arg value="${mobicents-slee.http.ra.tag}" />
+			<arg value="${restcomm-slee.http.ra.tag}" />
 		</exec>
 	</target>
 
@@ -186,7 +185,7 @@
 	</target>
 
 
-	<target name="clean-up-mobicents-slee">
+	<target name="clean-up-restcomm-slee">
 		<mkdir dir="${release.dir}/jboss-5.1.0.GA/server/simulator" />
 		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator" failonerror="true">
 			<fileset dir="${release.dir}/jboss-5.1.0.GA/server/default">
@@ -223,8 +222,8 @@
 		<delete dir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy/deploy.last" includeemptydirs="true" failonerror="true" />
 		<delete dir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy/snmp-adaptor.sar" includeemptydirs="true" failonerror="true" />
 		<delete dir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy/juddi-service.sar" includeemptydirs="true" failonerror="true" />
-		<delete file="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy/mobicents-slee/profiles-external-ds.xml" failonerror="true" />
-		<delete file="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy/mobicents-slee/META-INF/jboss-cache-config.xml" failonerror="true" />
+		<delete file="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy/restcomm-slee/profiles-external-ds.xml" failonerror="true" />
+		<delete file="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy/restcomm-slee/META-INF/jboss-cache-config.xml" failonerror="true" />
 		<delete file="${release.dir}/jboss-5.1.0.GA/server/simulator/iiop-service.xml" failonerror="true" />
 		<delete file="${release.dir}/jboss-5.1.0.GA/server/simulator/conf/jacorb.properties" failonerror="true" />
 		<delete file="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy/iiop-service.xml" failonerror="true" />
@@ -242,23 +241,23 @@
 	<target name="build-ussd-txtcdr">
 		<echo>Building USSD Service for Text CDR</echo>
 
-		<copy file="${mobicents.ussd.dir}/core/slee/services-du/target/services-DU-${mobicents.ussd.release.version}.jar" todir="${release.dir}/textcdr-service" failonerror="true" />
+		<copy file="${restcomm.ussd.dir}/core/slee/services-du/target/services-DU-${restcomm.ussd.release.version}.jar" todir="${release.dir}/textcdr-service" failonerror="true" />
 
 		<tstamp>
 			<format property="touch.time" pattern="MM/dd/yyyy hh:mm aa" />
 		</tstamp>
 		<touch datetime="${touch.time}">
-			<fileset dir="${mobicents.ussd.dir}/core/bootstrap/src/main/config/txtcdr" />
+			<fileset dir="${restcomm.ussd.dir}/core/bootstrap/src/main/config/txtcdr" />
 		</touch>
 
-		<copy file="${mobicents.ussd.dir}/core/slee/sbbs/target/sbbs-${mobicents.ussd.release.version}.jar" todir="${release.dir}/textcdr-service/sbb" failonerror="true" />
-		<jar destfile="${release.dir}/textcdr-service/sbb/sbbs-${mobicents.ussd.release.version}.jar" update="true">
-			<zipfileset dir="${mobicents.ussd.dir}/core/bootstrap/src/main/config/txtcdr/sbb" prefix="META-INF" />
+		<copy file="${restcomm.ussd.dir}/core/slee/sbbs/target/sbbs-${restcomm.ussd.release.version}.jar" todir="${release.dir}/textcdr-service/sbb" failonerror="true" />
+		<jar destfile="${release.dir}/textcdr-service/sbb/sbbs-${restcomm.ussd.release.version}.jar" update="true">
+			<zipfileset dir="${restcomm.ussd.dir}/core/bootstrap/src/main/config/txtcdr/sbb" prefix="META-INF" />
 		</jar>
 
 
-		<jar destfile="${release.dir}/textcdr-service/services-DU-${mobicents.ussd.release.version}.jar" update="true">
-			<zipfileset dir="${mobicents.ussd.dir}/core/bootstrap/src/main/config/txtcdr/service" prefix="services" />
+		<jar destfile="${release.dir}/textcdr-service/services-DU-${restcomm.ussd.release.version}.jar" update="true">
+			<zipfileset dir="${restcomm.ussd.dir}/core/bootstrap/src/main/config/txtcdr/service" prefix="services" />
 			<zipfileset dir="${release.dir}/textcdr-service/sbb" prefix="jars" />
 		</jar>
 
@@ -267,28 +266,28 @@
 -->
 
 	<target name="copy-ussd">
-		<echo>Copy Mobicents Map RA</echo>
+		<echo>Copy restcomm Map RA</echo>
 		<copy todir="${release.dir}/resources" failonerror="true">
 			<fileset dir="${release.map.dir}/resources">
 				<include name="**" />
 			</fileset>
 		</copy>
 
-		<echo>Copy Mobicents http-client RA</echo>
+		<echo>Copy restcomm http-client RA</echo>
 		<copy todir="${release.dir}/resources" failonerror="true">
 			<fileset dir="${release.http-client.dir}/resources">
 				<include name="**" />
 			</fileset>
 		</copy>
 
-		<echo>Copy Mobicents http-servlet RA</echo>
+		<echo>Copy restcomm http-servlet RA</echo>
 		<copy todir="${release.dir}/resources" failonerror="true">
 			<fileset dir="${release.http-servlet.dir}/resources">
 				<include name="**" />
 			</fileset>
 		</copy>
 
-		<echo>Copy Mobicents JDBC RA</echo>
+		<echo>Copy restcomm JDBC RA</echo>
 		<copy todir="${release.dir}/resources" failonerror="true">
 			<fileset dir="${release.jdbc.dir}/resources">
 				<include name="**" />
@@ -297,14 +296,14 @@
 
 		<echo>Copy USSD GW server</echo>
 		<!--default-->
-		<copy todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy/mobicents-ussd-gateway" failonerror="true">
-			<fileset dir="${mobicents.ussd.dir}/core/bootstrap/target/mobicents-ussd-gateway">
+		<copy todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy/restcomm-ussd-gateway" failonerror="true">
+			<fileset dir="${restcomm.ussd.dir}/core/bootstrap/target/restcomm-ussd-gateway">
 				<include name="**" />
 			</fileset>
 		</copy>
 		
-		<copy file="${mobicents.ussd.dir}/core/slee/services-du/target/services-DU-${mobicents.ussd.release.version}.jar" todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true" />
-		<copy file="${mobicents.ussd.dir}/management/ussd-management/target/ussd-management.war" todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true" />
+		<copy file="${restcomm.ussd.dir}/core/slee/services-du/target/services-DU-${restcomm.ussd.release.version}.jar" todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true" />
+		<copy file="${restcomm.ussd.dir}/management/ussd-management/target/ussd-management.war" todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true" />
 
 
 		<copy todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true">
@@ -340,20 +339,20 @@
 		<mkdir dir="${release.dir}/jboss-5.1.0.GA/server/default/data" />
 		
 		<copy todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true">
-			<fileset dir="${checkout.mobicents-jss7.dir}/mobicents-jss7-${mobicents-jss7.version}/oam/new-ui">
+			<fileset dir="${checkout.restcomm-jss7.dir}/restcomm-jss7-${restcomm-jss7.version}/oam/new-ui">
 				<include name="**" />
 			</fileset>
 		</copy>		
 		
 		<!--simulator-->
-		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy/mobicents-ussd-gateway" failonerror="true">
-			<fileset dir="${mobicents.ussd.dir}/core/bootstrap/target/mobicents-ussd-gateway">
+		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy/restcomm-ussd-gateway" failonerror="true">
+			<fileset dir="${restcomm.ussd.dir}/core/bootstrap/target/restcomm-ussd-gateway">
 				<include name="**" />
 			</fileset>
 		</copy>
 		
-		<copy file="${mobicents.ussd.dir}/core/slee/services-du/target/services-DU-${mobicents.ussd.release.version}.jar" todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true" />
-		<copy file="${mobicents.ussd.dir}/management/ussd-management/target/ussd-management.war" todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true" />
+		<copy file="${restcomm.ussd.dir}/core/slee/services-du/target/services-DU-${restcomm.ussd.release.version}.jar" todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true" />
+		<copy file="${restcomm.ussd.dir}/management/ussd-management/target/ussd-management.war" todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true" />
 		
 		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true">
 			<fileset dir="${release.dir}/resources/map">
@@ -386,71 +385,71 @@
 		</copy>
 		
 		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator/data" failonerror="true">
-			<fileset dir="${mobicents.ussd.dir}/core/bootstrap/src/main/config/data">
+			<fileset dir="${restcomm.ussd.dir}/core/bootstrap/src/main/config/data">
 				<include name="**" />
 			</fileset>
 		</copy>
 		
 		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true">
-			<fileset dir="${checkout.mobicents-jss7.dir}/mobicents-jss7-${mobicents-jss7.version}/oam/new-ui">
+			<fileset dir="${checkout.restcomm-jss7.dir}/restcomm-jss7-${restcomm-jss7.version}/oam/new-ui">
 				<include name="**" />
 			</fileset>
 		</copy>
 
 		<!--tools-->
-		<copy todir="${release.dir}/tools/mobicents-jss7-simulator" failonerror="true">
-			<fileset dir="${checkout.mobicents-jss7.dir}/mobicents-jss7-${mobicents-jss7.version}/ss7/mobicents-ss7-simulator">
+		<copy todir="${release.dir}/tools/restcomm-jss7-simulator" failonerror="true">
+			<fileset dir="${checkout.restcomm-jss7.dir}/restcomm-jss7-${restcomm-jss7.version}/ss7/restcomm-ss7-simulator">
 				<include name="**" />
 			</fileset>
 		</copy>
-        <copy file="${mobicents.ussd.dir}/core/bootstrap/src/main/config/ss7-simulator/main_simulator2.xml" todir="${release.dir}/tools/mobicents-jss7-simulator/data" failonerror="true" />
-        <copy file="${mobicents.ussd.dir}/core/bootstrap/src/main/config/ss7-simulator/win_simulator2.xml" todir="${release.dir}/tools/mobicents-jss7-simulator/data" failonerror="true" />
+        <copy file="${restcomm.ussd.dir}/core/bootstrap/src/main/config/ss7-simulator/main_simulator2.xml" todir="${release.dir}/tools/restcomm-jss7-simulator/data" failonerror="true" />
+        <copy file="${restcomm.ussd.dir}/core/bootstrap/src/main/config/ss7-simulator/win_simulator2.xml" todir="${release.dir}/tools/restcomm-jss7-simulator/data" failonerror="true" />
 		
-		<copy todir="${release.dir}/tools/mobicents-ussd-simulator" failonerror="true">
-			<fileset dir="${mobicents.ussd.dir}/test/bootstrap/target/ussd-server">
+		<copy todir="${release.dir}/tools/restcomm-ussd-simulator" failonerror="true">
+			<fileset dir="${restcomm.ussd.dir}/test/bootstrap/target/ussd-server">
 				<include name="**" />
 			</fileset>
 		</copy>
 		<!--CLI-->
-		<copy file="${mobicents.ussd.dir}/core/oam/cli/target/ussd-cli-${mobicents.ussd.release.version}.jar" todir="${release.dir}/jboss-5.1.0.GA/lib" failonerror="true" />
+		<copy file="${restcomm.ussd.dir}/core/oam/cli/target/ussd-cli-${restcomm.ussd.release.version}.jar" todir="${release.dir}/jboss-5.1.0.GA/lib" failonerror="true" />
 		<copy todir="${release.dir}/jboss-5.1.0.GA/" failonerror="true">
-			<fileset dir="${checkout.mobicents-jss7.dir}/mobicents-jss7-${mobicents-jss7.version}/ss7/shell">
+			<fileset dir="${checkout.restcomm-jss7.dir}/restcomm-jss7-${restcomm-jss7.version}/ss7/shell">
 				<include name="**/*" />
 			</fileset>
 		</copy>
 
     	<!--logs-->
 		<echo>Copy jboss-log4j*.xml</echo>
-		<copy todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy/mobicents-ussd-gateway/log4j-templates" failonerror="true">
-		        <fileset dir="${mobicents.ussd.dir}/core/bootstrap/src/main/config/log4j">
+		<copy todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy/restcomm-ussd-gateway/log4j-templates" failonerror="true">
+		        <fileset dir="${restcomm.ussd.dir}/core/bootstrap/src/main/config/log4j">
 		                <include name="**/*" />
 		        </fileset>
 		</copy>
-		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy/mobicents-ussd-gateway/log4j-templates" failonerror="true">
-		        <fileset dir="${mobicents.ussd.dir}/core/bootstrap/src/main/config/log4j">
+		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy/restcomm-ussd-gateway/log4j-templates" failonerror="true">
+		        <fileset dir="${restcomm.ussd.dir}/core/bootstrap/src/main/config/log4j">
 		                <include name="**/*" />
 		        </fileset>
 		</copy>
 
-    	<copy file="${mobicents.ussd.dir}/core/bootstrap/src/main/config/log4j/jboss-log4j-default.xml" tofile="${release.dir}/jboss-5.1.0.GA/server/default/conf/jboss-log4j.xml" overwrite="true"></copy>
-    	<copy file="${mobicents.ussd.dir}/core/bootstrap/src/main/config/log4j/jboss-log4j-default.xml" tofile="${release.dir}/jboss-5.1.0.GA/server/simulator/conf/jboss-log4j.xml" overwrite="true"></copy>
+    	<copy file="${restcomm.ussd.dir}/core/bootstrap/src/main/config/log4j/jboss-log4j-default.xml" tofile="${release.dir}/jboss-5.1.0.GA/server/default/conf/jboss-log4j.xml" overwrite="true"></copy>
+    	<copy file="${restcomm.ussd.dir}/core/bootstrap/src/main/config/log4j/jboss-log4j-default.xml" tofile="${release.dir}/jboss-5.1.0.GA/server/simulator/conf/jboss-log4j.xml" overwrite="true"></copy>
 
 <!--		
 		<echo>Copy jboss-log4j.xml to default</echo>
-		<copy file="${mobicents.ussd.dir}/core/bootstrap/src/main/config/conf/jboss-log4j.xml" todir="${release.dir}/jboss-5.1.0.GA/server/default/conf" failonerror="true" overwrite="true"/>
-		<copy file="${mobicents.ussd.dir}/core/bootstrap/src/main/config/conf/jboss-log4j.xml" todir="${release.dir}/jboss-5.1.0.GA/server/simulator/conf" failonerror="true" overwrite="true"/>
+		<copy file="${restcomm.ussd.dir}/core/bootstrap/src/main/config/conf/jboss-log4j.xml" todir="${release.dir}/jboss-5.1.0.GA/server/default/conf" failonerror="true" overwrite="true"/>
+		<copy file="${restcomm.ussd.dir}/core/bootstrap/src/main/config/conf/jboss-log4j.xml" todir="${release.dir}/jboss-5.1.0.GA/server/simulator/conf" failonerror="true" overwrite="true"/>
 -->
 
 		<!-- Copy http pull and push example to simulator-->
 		<echo>Copy http-push-example to simulator/deploy</echo>
 		<copy todir="${release.dir}/jboss-5.1.0.GA//server/simulator/deploy/http-push-example" failonerror="true">
-			<fileset dir="${mobicents.ussd.dir}/examples/http-push/target/http-push-example">
+			<fileset dir="${restcomm.ussd.dir}/examples/http-push/target/http-push-example">
 				<include name="**" />
 			</fileset>
 		</copy>	
 		
 		<echo>Copy ussdhttpdemo.war to simulator/deploy</echo>
-		<copy file="${mobicents.ussd.dir}/examples/http/target/ussdhttpdemo.war" todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true" />
+		<copy file="${restcomm.ussd.dir}/examples/http/target/ussdhttpdemo.war" todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true" />
 
 
 	</target>
@@ -506,12 +505,12 @@
 		<mkdir dir="${docs.dir}/jss7" />
 		<mkdir dir="${docs.dir}/ussd" />
 		<copy todir="${docs.dir}/jss7" failonerror="true">
-			<fileset dir="${checkout.mobicents-jss7.dir}/mobicents-jss7-${mobicents-jss7.version}/_docs/">
+			<fileset dir="${checkout.restcomm-jss7.dir}/restcomm-jss7-${restcomm-jss7.version}/_docs/">
 				<include name="*.pdf" />
 			</fileset>
 		</copy>
 		<copy todir="${docs.dir}/ussd" failonerror="true" flatten="true">
-			<fileset dir="${mobicents.ussd.dir}/docs/">
+			<fileset dir="${restcomm.ussd.dir}/docs/">
 				<include name="**/*.pdf" />
 			</fileset>
 		</copy>
@@ -520,8 +519,8 @@
 
 
 	<target name="make-final-zip" depends="set-time-stamp">
-		<zip destfile="${base.dir}/mobicents-ussd-${mobicents.ussd.release.version}-${time.stamp}.zip" filesonly="false">
-			<zipfileset dir="${release.dir}" prefix="mobicents-ussd-${mobicents.ussd.release.version}">
+		<zip destfile="${base.dir}/restcomm-ussd-${restcomm.ussd.release.version}-${time.stamp}.zip" filesonly="false">
+			<zipfileset dir="${release.dir}" prefix="restcomm-ussd-${restcomm.ussd.release.version}">
 				<include name="**" />
 			</zipfileset>
 		</zip>
@@ -568,28 +567,28 @@
 		<mkdir dir="${bundle.docs.dir}/jss7" />
 		<mkdir dir="${bundle.docs.dir}/ussd" />
 		<copy todir="${bundle.docs.dir}/jss7" failonerror="true">
-			<fileset dir="${checkout.mobicents-jss7.dir}/mobicents-jss7-${mobicents-jss7.version}/_docs/">
+			<fileset dir="${checkout.restcomm-jss7.dir}/restcomm-jss7-${restcomm-jss7.version}/_docs/">
 				<include name="**" />
 			</fileset>
 		</copy>
 		<copy todir="${bundle.docs.dir}/ussd/adminguide" failonerror="true">
-			<fileset dir="${mobicents.ussd.dir}/docs/adminguide/jdocbook-mobicents/target/docbook/publish/">
+			<fileset dir="${restcomm.ussd.dir}/docs/adminguide/jdocbook-restcomm/target/docbook/publish/">
 				<include name="**" />
 			</fileset>
 		</copy>
 		<copy todir="${bundle.docs.dir}/ussd/installationguide" failonerror="true">
-			<fileset dir="${mobicents.ussd.dir}/docs/installationguide/jdocbook-mobicents/target/docbook/publish/">
+			<fileset dir="${restcomm.ussd.dir}/docs/installationguide/jdocbook-restcomm/target/docbook/publish/">
 				<include name="**" />
 			</fileset>
 		</copy>
 		<copy todir="${bundle.docs.dir}/ussd/releasenotes" failonerror="true">
-			<fileset dir="${mobicents.ussd.dir}/docs/releasenotes/jdocbook-mobicents/target/docbook/publish/">
+			<fileset dir="${restcomm.ussd.dir}/docs/releasenotes/jdocbook-restcomm/target/docbook/publish/">
 				<include name="**" />
 			</fileset>
 		</copy>
 
-		<zip destfile="${base.dir}/mobicents-ussd-${mobicents.ussd.release.version}-docs-${time.stamp}.zip" filesonly="false">
-			<zipfileset dir="${bundle.docs.dir}" prefix="mobicents-ussd-${mobicents.ussd.release.version}/docs">
+		<zip destfile="${base.dir}/restcomm-ussd-${restcomm.ussd.release.version}-docs-${time.stamp}.zip" filesonly="false">
+			<zipfileset dir="${bundle.docs.dir}" prefix="restcomm-ussd-${restcomm.ussd.release.version}/docs">
 				<include name="**/*" />
 			</zipfileset>
 		</zip>

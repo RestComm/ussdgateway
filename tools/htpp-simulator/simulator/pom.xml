@@ -8,7 +8,7 @@
 
 	<artifactId>http-simulator</artifactId>
 
-	<name>Mobicents HTTP Simulator :: Simulator</name>
+	<name>Restcomm HTTP Simulator :: Simulator</name>
 
 	<dependencies>
 

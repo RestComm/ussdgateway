@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "${ent.filename}">
+%BOOK_ENTITIES;
+]>
+
+<chapter id="introduction">
+	<title>Introduction to &THIS.PLATFORM; &THIS.APPLICATION; </title>
+	<para>&THIS.PLATFORM; &THIS.APPLICATION; is an Open Source Java based USSD Gateway Platform that routes USSD messages from the signaling network to service applications and the other way around. It enables operators to offer real-time interactions to mobile subscribers and deliver interactive content to their mobile phones. &THIS.PLATFORM; &THIS.APPLICATION; strictly adheres to the standards and specifications defined by the
+International Telecommunications Union (ITU).
+	</para>
+	<para>&THIS.PLATFORM; &THIS.APPLICATION; acts as an intermediary platform linking the service applications to the GSM network in a session oriented communication. <!-- allowing the applications to deliver a maximum of 250? characters to the mobile phones.--> The platform is easy-to-install and easy-to-deploy allowing you to have the Gateway set up and configured very quickly. 
+	</para>
+ 	<para>&THIS.PLATFORM; &THIS.APPLICATION; comes with an efficient Command Line Interface (CLI) tool allowing you to completely configure the Gateway at run-time and manage it using simple commands rather than do everything manually. &THIS.PLATFORM; &THIS.APPLICATION; also comes with a Graphical User Interface (GUI) that will allow you to configure,
+monitor and manage the Gateway through a convenient user-friendly interface.
+	</para>
+	<para>The Open Source Software gives you the flexibility to understand the readily available source
+code and the freedom to customise the product to meet your Enterprise needs.</para>
+	<para>
+This guide provides details on configuring and using the platform and information regarding the supported protocols and compliant standards. For installation instructions, please refer to the Installation Guide published along with this. 
+		</para>
+</chapter>

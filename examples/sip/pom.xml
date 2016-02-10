@@ -17,7 +17,7 @@
         <dependency>
             <groupId>org.mobicents.resources</groupId>
             <artifactId>sip11-ratype</artifactId>
-            <version>${mobicents.resources.sip.version}</version>
+            <version>${restcomm.resources.sip.version}</version>
         </dependency>
 
 		<dependency>
@@ -29,7 +29,7 @@
 		<dependency>
 			<groupId>org.mobicents.protocols.ss7.tcap</groupId>
 			<artifactId>tcap-api</artifactId>
-			<version>${jss7.mobicents.version}</version>
+			<version>${jss7.restcomm.version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>

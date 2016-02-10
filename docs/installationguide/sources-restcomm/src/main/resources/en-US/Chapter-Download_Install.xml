@@ -1,0 +1,155 @@
+<?xml version='1.0'?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "${ent.filename}">
+%BOOK_ENTITIES;
+]>
+
+<chapter
+	id="setup_downloading">
+	<title>Downloading and Installing</title>
+	<para>Installing &THIS.PLATFORM; &THIS.APPLICATION; is easy and quick with the binary download. You can either download the binary release or download the source code and set up from source.</para> 
+	<section id="downloading_binary">
+		<title>Binary Download and Installation</title>
+		<para>The binary release is available for download at TeleStax Customer Support Portal <ulink url="&THIS.RELEASE_BINARY_URL;" /> </para>
+		<procedure>
+					<title>
+						Binary Download and Installation
+					</title>
+					<step>
+						<para>
+							Download the zip file <literal>&lt;filename&gt;</literal> to any folder of your choice.
+						</para>
+					</step>
+					<step>
+						<para>Extract the contents of the zip file.
+						<screen>Downloads]$ unzip &lt;filename&gt;</screen>
+						</para>
+					</step>
+					<step>
+						<para>Verify the newly created directory and ensure the contents are as explained below.</para>
+					</step>
+</procedure>
+	</section>
+	<section id="dir_structure">
+		<title>Directory Structure</title>
+	<para>
+		When you download the binary release, you will notice that the top level directory is named <literal>mobicents-ussdgateway-&lt;version&gt;</literal> and immediately below this are five sub-directories as explained below:
+</para>
+<itemizedlist>
+			<listitem><para>docs: Contains all relevant documentation in respective subfolders for JSLEE, jSS7, Management-HQ and USSD.</para></listitem>
+			<listitem><para>jboss-5.1.0.GA: The core server with two profiles "default" and "simulator". The "default" profile is a clean profile where you will have to start from scratch and configure the entire SS7 Stack and USSD Gateway. The "simulator" profile is a pre-configured profile to work with jss7-simulator. Refer to the Admin Guide for instructions on how to start the server in either of the profiles.</para></listitem>
+			<listitem><para>resources: Contains SLEE MAP, JDBC, http-client, http-servlet and SIP RA jars.</para></listitem>
+			<!--<listitem><para>textcdr-service: Contains the jar file <filename>services-DU-&lt;version&gt;-Mobicents-SNAPSHOT.jar</filename>. If you would like to have CDR logged in a plain text file instead of a database, you must replace the jar <filename>mobicents-ussdgateway-&tl;version&gt;/jboss-5.1.0.GA/server/&lt;profile&gt;/deploy/services-DU-&lt;version&gt;-Mobicents-SNAPSHOT.jar</filename> with the jar file found in this folder <filename>textcdr-service</filename>. </para></listitem>-->
+			<listitem><para>tools: Contains SLEE tools and jss7-simulator.</para></listitem>
+		</itemizedlist>
+
+<screen><![CDATA[
+|- mobicents-ussdgateway-<version>
+		|- docs
+				|+ jss7
+				|+ slee
+				|+ ussd
+				|+ management-hq
+		|- jboss-5.1.0.GA
+				|+ bin    //contains start up and shutdown scripts for the Server and the start up script for Shell.
+				|+ client
+				|+ common
+				|+ docs
+				|+ lib
+				|- server
+					|+ default	//clean profile to set up from scratch
+					|+ simulator	//pre-configured profile to work with the jss7-simulator
+		|- resources
+				|+ http-client
+				|+ http-servlet
+				|+ jdbc
+				|+ map
+		|- tools
+				|+ eclipslee
+				|+ jopr-plugin
+				|+ remote-slee-connection
+				|+ snmp
+				|+ Mobicents-jss7-simulator
+				|+ Mobicents-ussd-simulator
+				|+ twiddle
+]]>
+</screen>
+  	
+</section>
+<!--End of Binary layout section -->			  
+		
+	<section
+		id="source_code">
+		<title>
+			Setup from Source 
+		</title>
+		<para>&THIS.PLATFORM; &THIS.APPLICATION; is an open source project and you have the freedom to build from source. Building from source means you can stay on top with the latest features. Whilst aspects of &THIS.PLATFORM; &THIS.APPLICATION; are quite 
+		complicated, you may find ways to become contributors.</para>
+		
+		<para>&THIS.PLATFORM; &THIS.APPLICATION; works with JDK1.7 or above. In addition you must have the following tools installed.
+		
+		<itemizedlist>
+			<listitem>
+				<para><literal>Git Client 1.6</literal> : Instructions for using GIT, including install, can be found at <ulink
+								url="http://git-scm.com/book" /></para>
+			</listitem>		
+			<listitem>
+				<para><literal>Subversion Client 1.4</literal> : Instructions for using SVN, including install, can be found at <ulink
+								url="http://subversion.tigris.org" /></para>
+			</listitem>
+			<listitem>
+				<para><literal>Maven 2.0.9</literal> : Instructions for using Maven, including install, can be found at <ulink
+								url="http://maven.apache.org/" /></para>
+			</listitem>	
+			<listitem>
+				<para><literal>Ant 1.7.0</literal> : Instructions for using Ant, including install, can be found at <ulink
+								url="http://ant.apache.org" /></para>
+			</listitem>	
+		</itemizedlist>
+</para>
+<!--TODO not clear for Mobicents
+		<para>INSTRUCTIONS NOT AVAILABLE</para>-->
+<!-- -->
+		<section
+			id="source_building">
+			<title>Release Source Code Building</title>
+			<procedure>
+				<step>
+					<title>Downloading the source code</title>
+					
+					<para>Use GIT to checkout a specific release source, the base URL is &THIS.TRUNK_SOURCE_CODE_URL;,
+						then add the specific release version.
+					</para>
+					<programlisting>
+[usr]$ git clone https://userid@bitbucket.org/telestax/mobicents-ussdgateway.git
+[usr]$ cd mobicents-ussdgateway
+[usr]$ git checkout &lt;version&gt;					
+					</programlisting>
+				
+				</step>
+				<step>
+					<title>Building the source code</title>
+					<para>Now that we have the source the next step is to build and install the source. 
+					&THIS.PLATFORM; &THIS.APPLICATION; uses Maven 2 to build the system. You must ensure that <literal>JAVA_HOME</literal> environment variable is set properly prior to building the source.</para>
+<programlisting>
+[usr]$ mvn clean install
+</programlisting>
+
+				</step>
+			</procedure>
+		</section>
+
+		<section
+			id="trunk_source_building">
+			<title>Development Trunk Source Building</title>
+			<para>
+				Similar process as for
+				<xref
+					linkend="source_building" />,
+				the only change is don't switch to specific tag.
+			</para>
+		</section>
+
+	</section>
+</chapter>
+

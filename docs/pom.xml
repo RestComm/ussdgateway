@@ -8,9 +8,9 @@
 	</parent>
 
 	<groupId>org.mobicents.ussd.docs</groupId>
-	<artifactId>mobicents-ussd-docs</artifactId>
+	<artifactId>restcomm-ussd-docs</artifactId>
 
-	<name>Mobicents USSD :: Docs :: Parent :: ${pom.artifactId}</name>
+	<name>Restcomm USSD :: Docs :: Parent :: ${pom.artifactId}</name>
 	<packaging>pom</packaging>
 
 	<properties>

@@ -8,7 +8,7 @@
 	</parent>
 
 	<artifactId>tools</artifactId>
-	<name>Mobicents USSD :: Tools :: Parent</name>
+	<name>Restcomm USSD :: Tools :: Parent</name>
 
 	<modules>
 		<module>htpp-simulator</module>
@@ -21,7 +21,7 @@
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<groupId>org.mobicents.tools</groupId>
 				<version>
-					${mobicents.tools.mavenplugin.eclipse.version}
+					${restcomm.tools.mavenplugin.eclipse.version}
 				</version>
 				<inherited>false</inherited>
 				<executions />
