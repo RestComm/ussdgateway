@@ -32,7 +32,7 @@
 
 
 	<!--GET Restcomm-Slee & Restcomm-jss7 - properties-->
-	<property name="cloudbees.url" value="https://restcomm.ci.cloudbees.com" />
+	<property name="cloudbees.url" value="https://mobicents.ci.cloudbees.com" />
 	<property name="restcomm-slee.download.distro.name" value="restcomm-slee-${restcomm-slee.version}" />
 	<property name="restcomm-slee.download.distro.file" value="${restcomm-slee.download.distro.name}.zip" />
 	<property name="restcomm-slee.download.url" value="${cloudbees.url}/job/Restcomm-JAIN-SLEE-Release/${restcomm-slee.build-number-1}/artifact/release/${restcomm-slee.download.distro.file}" />
