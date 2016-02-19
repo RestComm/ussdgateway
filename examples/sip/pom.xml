@@ -19,13 +19,7 @@
             <artifactId>sip11-ratype</artifactId>
             <version>${restcomm.resources.sip.version}</version>
         </dependency>
-
-		<dependency>
-			<groupId>org.mobicents.ussd</groupId>
-			<artifactId>xml</artifactId>
-			<version>${pom.version}</version>
-		</dependency>
-
+ 
 		<dependency>
 			<groupId>org.mobicents.protocols.ss7.tcap</groupId>
 			<artifactId>tcap-api</artifactId>
@@ -35,7 +29,7 @@
 		<dependency>
 			<groupId>org.mobicents.ussd</groupId>
 			<artifactId>xml</artifactId>
-			<version>${pom.version}</version>
+			<version>${project.version}</version>
 			<exclusions>
 				<!-- <exclusion> <groupId>org.mobicents.protocols.asn</groupId> <artifactId>asn</artifactId> 
 					</exclusion> -->

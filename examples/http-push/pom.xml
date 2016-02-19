@@ -35,7 +35,7 @@
 		<dependency>
 			<groupId>org.mobicents.ussd</groupId>
 			<artifactId>xml</artifactId>
-			<version>${pom.version}</version>
+			<version>${project.version}</version>
 			<exclusions>
 				<!-- <exclusion> <groupId>org.mobicents.protocols.asn</groupId> <artifactId>asn</artifactId> </exclusion> -->
 

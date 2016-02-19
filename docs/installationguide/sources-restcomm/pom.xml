@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>restcomm-ussd-installguide-sources-restcomm</artifactId>
-	<name>Restcomm USSD :: Docs :: Install Guide :: Sources :: ${pom.artifactId}</name>
+	<name>Restcomm USSD :: Docs :: Install Guide :: Sources :: ${project.artifactId}</name>
 	<properties>
 		<THIS.PLATFORM>Restcomm</THIS.PLATFORM>
 		<JEE.PLATFORM>JBoss Application Server</JEE.PLATFORM>
@@ -45,9 +45,9 @@
 						<configuration>
 							<artifactItems>
 								<artifactItem>
-									<groupId>${pom.groupId}</groupId>
+									<groupId>${project.groupId}</groupId>
 									<artifactId>restcomm-ussd-installguide-sources</artifactId>
-									<version>${pom.version}</version>
+									<version>${project.version}</version>
 									<type>jar</type>
 									<overWrite>true</overWrite>
 									<outputDirectory>${basedir}/src/main/resources</outputDirectory>
@@ -55,7 +55,7 @@
 								<artifactItem>
 									<groupId>org.mobicents.ussd.docs.commons</groupId>
 									<artifactId>restcomm-ussd-commons-sources</artifactId>
-									<version>${pom.version}</version>
+									<version>${project.version}</version>
 									<type>jar</type>
 									<overWrite>true</overWrite>
 									<outputDirectory>${basedir}/src/main/resources</outputDirectory>

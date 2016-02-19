@@ -11,7 +11,7 @@
 	<groupId>org.mobicents.ussd.management</groupId>
 	<artifactId>ussd-ui-management</artifactId>
 	
-	<name>Restcomm USSD :: Management :: UI :: ${pom.artifactId}</name>
+	<name>Restcomm USSD :: Management :: UI :: ${project.artifactId}</name>
 	<packaging>war</packaging>
 
 	<properties>

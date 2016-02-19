@@ -13,9 +13,9 @@
 	<dependencies>
 
 		<dependency>
-			<groupId>${pom.groupId}</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>library</artifactId>
-			<version>${pom.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mobicents.servers.jainslee.api</groupId>

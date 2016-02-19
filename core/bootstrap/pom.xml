@@ -28,15 +28,15 @@
 		</dependency>
 
 		<dependency>
-			<groupId>${pom.groupId}</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>domain</artifactId>
-			<version>${pom.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>${pom.groupId}</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>xml</artifactId>
-			<version>${pom.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<!-- javolution -->
@@ -235,8 +235,8 @@
 		<!-- SLEE DU -->
 		<dependency>
 			<artifactId>services-DU</artifactId>
-			<groupId>${pom.groupId}</groupId>
-			<version>${pom.version}</version>
+			<groupId>${project.groupId}</groupId>
+			<version>${project.version}</version>
 		</dependency>
 
 	</dependencies>

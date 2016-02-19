@@ -19,8 +19,11 @@
 	<properties>
 		<!-- RELEASE CONFIGURATION -->
 		<release.name>
-			${release.name.prefix}${parent.version}${release.name.suffix}
+			${release.name.prefix}${project.parent.version}${release.name.suffix}
 		</release.name>
+
+		<maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version> <!-- 2.4.2 -->
+		<maven-clean-plugin.version>3.0.0</maven-clean-plugin.version>
 
 		<jboss.microcontainer.version>2.2.0.M2</jboss.microcontainer.version>
 		<compiler.plugin.version>2.0.2</compiler.plugin.version>
