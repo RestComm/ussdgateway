@@ -1,18 +1,18 @@
 Manifest-Version: 1.0
 Archiver-Version: Plexus Archiver
 Created-By: Apache Maven Bundle Plugin
-Built-By: jean
-Build-Jdk: 1.7.0_80
+Built-By: jenkins
+Build-Jdk: 1.7.0_79
 Implementation-Title: org.mobicents.ussd.docs.commons:restcomm-ussd-co
  mmons-sources
-Implementation-Version: 3.0.0-SNAPSHOT
+Implementation-Version: 3.0.24
 Tool: Bnd-1.15.0
 Bundle-Name: Restcomm USSD :: Docs :: Commons :: Sources :: restcomm-u
  ssd-commons-sources
 Implementation-URL: http://www.restcomm.org
 Implementation-Vendor-Id: TeleStax, Inc.
-Bundle-Version: 3.0.0.SNAPSHOT
-Bnd-LastModified: 1455118178483
+Bundle-Version: 3.0.24
+Bnd-LastModified: 1455913461152
 Bundle-ManifestVersion: 2
 Bundle-License: http://www.gnu.org/licenses/agpl-3.0.html
 Bundle-Description: Restcomm :: Parent pom for 2.x releases
