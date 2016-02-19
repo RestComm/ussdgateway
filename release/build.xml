@@ -19,16 +19,16 @@
 
 	<property name="restcomm.ussd.release.version" value="3.0.0-SNAPSHOT" />
 	
-	<property name="restcomm-slee.build-number-1" value="56" />
-	<property name="restcomm-slee.build-number-2" value="2.8.26.56" />
+	<property name="restcomm-slee.build-number-1" value="65" />
+	<property name="restcomm-slee.build-number-2" value="2.8.31.65" />
 	<property name="restcomm-slee.version" value="${restcomm-slee.build-number-2}" />
-	<property name="restcomm-slee.ss7.map.ra.tag" value="2.8.25" />
+	<property name="restcomm-slee.ss7.map.ra.tag" value="2.8.26" />
 	<property name="restcomm-slee.http.ra.tag" value="2.8.5" />
 	<property name="restcomm-slee.jdbc.ra.tag" value="2.8.3" />
 
-	<property name="restcomm-jss7.build-number" value="1335" />
+	<property name="restcomm-jss7.build-number" value="1336" />
 	<property name="restcomm-jss7.version" value="3.0.${restcomm-jss7.build-number}" />
-	<property name="restcomm-jss7.timestamp" value="1602101139" />
+	<property name="restcomm-jss7.timestamp" value="1602171452" />
 
 
 	<!--GET Restcomm-Slee & Restcomm-jss7 - properties-->
