@@ -45,6 +45,7 @@ public class HttpParametersForm extends JDialog {
     private JTextField tbListerningPort;
     private JTextField tbCallingHost;
     private JTextField tbCallingPort;
+    private JTextField tbUrl;
 
     public HttpParametersForm(JFrame owner) {
         super(owner, true);
@@ -102,6 +103,15 @@ public class HttpParametersForm extends JDialog {
         tbCallingPort.setColumns(10);
         tbCallingPort.setBounds(424, 67, 180, 20);
         panel.add(tbCallingPort);
+        
+        JLabel lblUrl = new JLabel("URL");
+        lblUrl.setBounds(10, 98, 401, 14);
+        panel.add(lblUrl);
+        
+        tbUrl = new JTextField();
+        tbUrl.setColumns(10);
+        tbUrl.setBounds(424, 95, 180, 20);
+        panel.add(tbUrl);
     }
 
     public void setData(HttpSimulatorParameters data) {
@@ -110,6 +120,7 @@ public class HttpParametersForm extends JDialog {
         this.tbListerningPort.setText(((Integer) data.getListerningPort()).toString());
         this.tbCallingHost.setText(data.getCallingHost());
         this.tbCallingPort.setText(((Integer) data.getCallingPort()).toString());
+        this.tbUrl.setText(data.getUrl());
     }
 
     public HttpSimulatorParameters getData() {
@@ -133,6 +144,7 @@ public class HttpParametersForm extends JDialog {
             JOptionPane.showMessageDialog(this, "Exception when parsing CallingPort value: " + e.toString());
             return;
         }
+        this.data.setUrl(this.tbUrl.getText());
 
         this.dispose();
     }

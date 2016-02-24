@@ -42,3 +42,4 @@ PutObjectStoreDirHere
 # ignore mvn-rpmbuild repo
 /.m2
 /bin
+/HtppSimulatorParameters.xml

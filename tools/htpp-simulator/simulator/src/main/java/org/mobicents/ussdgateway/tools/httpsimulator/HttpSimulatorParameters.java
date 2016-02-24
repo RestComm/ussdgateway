@@ -32,6 +32,7 @@ public class HttpSimulatorParameters {
     private int listerningPort = 8049;
     private String callingHost = "localhost";
     private int callingPort = 8080;
+    private String url = "/restcomm";
 
     public int getListerningPort() {
         return listerningPort;
@@ -55,6 +56,14 @@ public class HttpSimulatorParameters {
 
     public void setCallingPort(int callingPort) {
         this.callingPort = callingPort;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
 }

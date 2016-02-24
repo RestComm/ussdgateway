@@ -169,7 +169,7 @@ public class ServerTesterForm extends JDialog {
             String s1 = getResponseText();
             byte[] bufx = s1.getBytes(utf8);
             StringBuilder sb = new StringBuilder();
-            sb.append("POST /mobicents HTTP/1.1\n");
+            sb.append("POST " + this.param.getUrl() + " HTTP/1.1\n");
             sb.append("Content-Length: ");
             sb.append(bufx.length);
             sb.append("\n");
