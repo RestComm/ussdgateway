@@ -1,0 +1,44 @@
+[[_design_overview]]
+= Architecture
+:doctype: book
+:sectnums:
+:toc: left
+:icons: font
+:experimental:
+:sourcedir: .
+
+{this-platform}  {this-application} is based on robust and proven {this-platform}  JAIN SLEE 1.1 Server and {this-platform}  jSS7 Stack. 
+
+{this-platform}  JAIN SLEE Server is a highly scalable event-driven application server with a robust component model and fault tolerant execution environment.
+It provides a set of connectors to a variety of networks elements: SS7 MAP, TCAP, INAP, ISUP, SMPP, XMPP, SIP, MGCP, HTTP, XDM, XCAP, Diameter and many others.
+It is fully compliant with JSR 240 (JSLEE 1.1). 
+
+{this-platform}  jSS7 is a software based implementation of the SS7 protocol.
+It provides implementation for Level 2 and above in the SS7 protocol Stack. {this-platform}  jSS7 Stack User Guide is bundled within and you can refer to the guide for more details on the Stack. 
+
+The diagram below depicts top design overview:
+
+
+image::images/ussd-application-design-overview.png[]
+
+{this-platform}  {this-application} provides Load Balancing and Fault Tolerance.
+Two or more third-party Application Servers can be paired to provide Fault-Tolerance on the Gateway and GSM Network level. 
+
+Geographic Redundancy can be achieved as shown in the diagram below:
+
+
+image::images/MultipleGeoghraphicSite.png[]
+
+Below diagram shows how to achieve load-balancing by connecting to two STP's from Operator side. 
+
+
+image::images/Load-balanced-USSD-Topology.png[]
+
+[IMPORTANT]
+====
+As of now, the Gateway supports the following protocols for proxying: 
+
+* HTTP
+* SIP
+
+====

@@ -1,0 +1,115 @@
+
+:sectnums!:
+
+[appendix]
+[[_configuring_mysql]]
+= Configuring MySQL as datasource
+
+If you configure the Gateway to log CDR to a Database, then every transaction of the Gateway is logged in the HSQLDB that comes bundled with JBoss AS and leverages the JBoss AS DataSource.
+However this is only made available to allow the platform to run "out of the box". You must configure a production ready Database prior to using the Gateway in a production environment.
+ 
+
+{this-platform} {this-application} has been tested with PostgreSQL and MySQL.
+In this section, you will find instructions for configuring MySQL database for CDR logging. 
+
+.Procedure: Configuring MySQL as datasource for CDR logging
+. Install MySQL and create a database where CDR data will be stored.
+  In this example, a database named "test" is assumed to have been created. 
+. Copy the MySQL connector library ([path]_mysql-connector-java-5.1.27-bin.jar_) from "Connector/J" in the MySQL library into library folder of the JBoss Server ([path]_mobicents-ussdgateway-/jboss-5.1.0.GA/server/<profile>/lib_). 
+. The example HSQLDB DataSource is bound to the JNDI name java:/DefaultDS and its descriptor is available in the file [path]_mobicents-ussdgateway-/jboss-5.1.0.GA/server/<profile>/deploy/hsqldb-ds.xml_.
+  You must delete this datasource by removing this descriptor file. 
+. Copy the descriptor file for MySQL, [path]_mysql-ds.xml_, from [path]_mobicents-ussdgateway-/jboss-5.1.0.GA/docs/examples/jca/_ into  [path]_mobicents-ussdgateway-/jboss-5.1.0.GA/server/<profile>/deploy/_. 
+. Update the MySQL descriptor file, [path]_mysql-ds.xml_, as required to suit your configuration.
+Below is an example configuration.
+You must update the tags <connection-url> with the host where a database can be found ('localhost' in this example) and the database name ('test' in this example). You must also update the username and password tags ('root' and '111111' in this example). 
++
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- See http://www.jboss.org/community/wiki/Multiple1PC for information about local-tx-datasource -->
+<!-- $Id: mysql-ds.xml 88948 2009-05-15 14:09:08Z jesper.pedersen $ -->
+<!-- Datasource config for MySQL using 3.0.9 available from:
+http://www.mysql.com/downloads/api-jdbc-stable.html
+-->
+<datasources>
+<local-tx-datasource>
+<jndi-name>MySqlDS</jndi-name> <!-- DefaultDS MySqlDS-->
+<connection-url>jdbc:mysql://localhost:3306/test</connection-url>
+<driver-class>com.mysql.jdbc.Driver</driver-class>
+<user-name>root</user-name>
+<password>111111</password>
+<exception-sorter-class-name>org.jboss.resource.adapter.jdbc.vendor.MySQLExceptionSorter</exception-sorter-class-name>
+<valid-connection-checker-class-name>org.jboss.resource.adapter.jdbc.vendor.MySQLValidConnectionChecker</valid-connection-checker-class-name>
+<!-- should only be used on drivers after 3.22.1 with "ping" support
+-->
+<!-- sql to call when connection is created
+<new-connection-sql>some arbitrary sql</new-connection-sql>
+-->
+<!-- sql to call on an existing pooled connection when it is obtained from pool - MySQLValidConnectionChecker is preferred for newer drivers
+<check-valid-connection-sql>some arbitrary sql</check-valid-connection-sql>
+-->
+<!-- corresponding type-mapping in the standardjbosscmp-jdbc.xml (optional) -->
+<metadata>
+<type-mapping>mySQL</type-mapping>
+</metadata>
+</local-tx-datasource>
+</datasources>
+----
++
+. Delete the HSQLDB file for messaging persistence [path]_mobicents-ussdgateway-/jboss-5.1.0.GA/server/<profile>/deploy/messaging/hsqldb-persistence-service.xml_. 
+. Copy the MySQL file for messaging persistence, [path]_mysql-persistence-service.xml_, from [path]_mobicents-ussdgateway-/jboss-5.1.0.GA/docs/examples/jms/_ into  [path]_mobicents-ussdgateway-/jboss-5.1.0.GA/server/<profile>/deploy/messaging_. 
+. Update the below files to replace all "DefaultDS" values with "MySqlDS" in all occurrences in all these files. 
+
+* [path]_messaging/mysql-persistence-service.xml_		
+* [path]_messaging/messaging-jboss-beans.xml_		
+* [path]_ejb2-timer-service.xml_		
+* [path]_schedule-manager-service.xml_		
+* [path]_uuid-key-generator.sar/META-INF/jboss-service.xml_			  
+. Open the file [path]_messaging/mysql-persistence-service.xml_, go the mbean definition <mbean code="org.jboss.messaging.core.jmx.MessagingPostOfficeService"> and locate the line <attribute name="Clustered">false</attribute>. Leave this attribute and comment out or remove all the lines after this till the end of this bean.
+  Save all changes. 
+. Open the file [path]_mobicents-ussdgateway-/jboss-5.1.0.GA/server/<profile>/deploy/mobicents-slee/META-INF/jboss-beans.xml_ and locate the following bean: 
++
+----
+<bean name="Mobicents.JAINSLEE.Profiles.JPA.PostgreSQLConfig" class="org.mobicents.slee.container.deployment.profile.jpa.Configuration">
+.....
+.....
+</bean>
+----
++
+. Add the following bean with properties as specified below:  
++
+----
+<bean name="Mobicents.JAINSLEE.Profiles.JPA.MySQLDBConfig" class="org.mobicents.slee.container.deployment.profile.jpa.Configuration">
+<property name="persistProfiles">true</property>
+<property name="clusteredProfiles">false</property>
+<property name="hibernateDatasource">java:/MySqlDS</property>
+<property name="hibernateDialect">org.hibernate.dialect.MySQLDialect</property>
+</bean>
+----	
++
+. In the [path]_jboss-beans.xml_, comment out or remove the following blocks: 
++
+----
+<bean name="Mobicents.JAINSLEE.Profiles.JPA.HSQLDBConfig" class="org.mobicents.slee.container.deployment.profile.jpa.Configuration">
+................
+</bean>
+<bean name="Mobicents.JAINSLEE.Profiles.JPA.PostgreSQLConfig" class="org.mobicents.slee.container.deployment.profile.jpa.Configuration">
+................
+</bean>
+----	
++
+. In the [path]_jboss-beans.xml_, go to the Profile Management section and replace HSQLDBConfig with MySQLDBConfig as shown below. 
++
+----
+<bean name="Mobicents.JAINSLEE.ProfileManagement">
+....replace
+<inject bean="Mobicents.JAINSLEE.Profiles.JPA.HSQLDBConfig" />
+....with
+<inject bean="Mobicents.JAINSLEE.Profiles.JPA.MySQLDBConfig" />
+----	
++
+. You must note that `mobicents-slee-ra-jdbc-DU-6.1.1.GA-Mobicents.jar` also refers to DataSource name.
+  You must change the value of `DATASOURCE_JNDI_NAME` (which is hardcoded in the library) in the file [path]_mobicents-ussdgateway-/jboss-5.1.0.GA/server/<profile>/deploy/mobicents-slee-ra-jdbc-DU-6.1.1.GA-Mobicents.jar/jars/mobicents-slee-ra-jdbc-ra-6.1.1.GA-Mobicents.jar/META-INF/resource-adaptor-jar.xml_ to `java:MySqlDS`. 
+. Delete all tables from the MySql database you wish to use. 
+. When you run the Gateway now, you will find the `ussd_gw_cdrs` tables where all CDR will be stored. 
+
+:sectnums:

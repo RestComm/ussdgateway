@@ -1,0 +1,128 @@
+[[_sip_architecture]]
+= SIP Transfer Mechanism
+:doctype: book
+:sectnums:
+:toc: left
+:icons: font
+:experimental:
+:sourcedir: .
+
+{this-platform} {this-application} supports implementation of Session Initiation Protocol (SIP) for using Unstructured Supplementary Service Data (USSD) operations for mobile initiated MMI mode over IP Multimedia Core Network Subsystem (IMS). 3GPP Specification 24.390 "Unstructured Supplementary Service Data (USSD) using IP  Multimedia (IM) Core Network (CN) subsystem IMS" further explains flow of USSD over IMS leveraging SIP. 
+
+{this-platform} {this-application} can easily be integarted with {this-platform} RestComm via SIP to enable developers to rapidly build voice, video, WebRTC, USSD, SMS, fax and rich messaging applications.
+More details about RestComm can be obtained from http://www.telestax.com/restcomm/[here]	
+
+Following sections shows SIP flow and integration with RestComm.
+Instead of RestComm, user can easily integrate SIP phone that supports USSD. 
+
+[[_sip_messages_ussd_pull]]
+== SIP Message Structure - USSD Pull
+
+The diagram below depicts an example message sequence for interacting with the {this-platform} {this-application} SIP API.
+Belowflow assumes that third-party application sends back tree based menu. 
+
+
+image::images/SIP-RestComm-Flow-Pull-Case1.png[]		
+
+. When the subscriber initiates a USSD Request, the HLR sends a `MAP_PROCESS_UNSTRUCTURED_SS_REQUEST` to the USSD Gateway.
+. Upon receipt of the `MAP_PROCESS_UNSTRUCTURED_SS_REQUEST` of type `Begin`, {this-application}  invokes the third-party Application through a `SIP INVITE Request`, carrying an XML Payload with USSD specific information.
+  The XML Structure of this payload is explained in the sections below. 
++
+
+----
+
+					
+					<ussd-data>
+    					<language>en</language>
+    					<ussd-string>*123#</ussd-string>
+    					<anyExt> 
+       						<message-type>processUnstructuredSSRequest_Request</message-type> 
+     					</anyExt> 
+					</ussd-data>
+----				 
++
+The `To` Header of `SIP INVITE Request` carries MSISDN from where the USSD request is initiated. 
+
+. The third-party Application will send SIP OK and after receiving SIP ACK, SIP Dialog is established between USSD Gateway and Application
++
+The third-party Application will then send `SIP INFO Request`, carrying an XML Payload with USSD specific information.
+The XML Structure of this payload is explained in the sections below.
++
+
+----
+
+					
+					<ussd-data>
+    					<language>en</language>
+    					<ussd-string>Press 1 for SMS Credit and 2 for Call Credit</ussd-string>
+    					<anyExt> 
+       						<message-type>unstructuredSSRequest_Request</message-type> 
+     					</anyExt> 
+					</ussd-data>
+----				 
+
+. The {this-application} will send a `MAP_UNSTRUCTURED_SS_REQUEST` of type `Continue` to the HLR.
+. The Subscriber will receive a menu to choose from and reply.
+  When the subscriber replies, the HLR will send a `MAP_UNSTRUCTURED_SS_RESPONSE` of type `Continue` to the {this-application} .
+. The {this-application} will send a `SIP INFO Request`, carrying an XML Payload, to the third-party Application in the same session.
+  The XML Structure of this payload is explained in the sections below.
++
+
+----
+
+					
+					<ussd-data>
+    					<language>en</language>
+    					<ussd-string>1</ussd-string>
+    					<anyExt> 
+       						<message-type>unstructuredSSRequest_Response</message-type> 
+     					</anyExt> 
+					</ussd-data>
+----				 
+
+. Based on the input from the subscriber, the third-party Application will send a final (`SIP BYE Request`, carrying an XML Payload) and invalidate the session.
++
+
+----
+
+					
+					<ussd-data>
+    					<language>en</language>
+    					<ussd-string>Balance is 87 sms's</ussd-string>
+    					<anyExt> 
+       						<message-type>processUnstructuredSSRequest_Response</message-type> 
+     					</anyExt> 
+					</ussd-data>
+----				 
+
+. The {this-application} will send a `MAP_PROCESS_UNSTRUCTURED_SS_RESPONSE` of type `End` to the HLR.
+  Consequently, the subscriber will receive a final response.
+
+[[_sip_messages_ussd_pull_notree]]
+== SIP Message Structure - USSD Pull - Without Tree Menu
+
+The diagram below depicts an example message sequence (USSD PULL) without tree based menu for interacting with the {this-platform} {this-application} SIP API. 
+
+
+image::images/SIP-RestComm-Flow-Pull-Case2.png[]		
+
+[[_sip_messages_ussd_push_case3]]
+== SIP Message Structure - USSD Push - With Tree Menu 
+
+The diagram below depicts an example message sequence (USSD Push) for interacting with the {this-platform} {this-application} SIP API.
+Below example initiate USSD Tree based menu.
+ 
+
+
+image::images/SIP-RestComm-Flow-Push-Case3.png[]		
+
+The `To` Header of `SIP INVITE Request` carries MSISDN to which the USSD PUSH request is initiated. 
+
+[[_sip_messages_ussd_push_case4]]
+== SIP Message Structure - USSD Push - Without Tree Menu
+
+The diagram below depicts an example message sequence (USSD Push) for interacting with the {this-platform} {this-application} SIP API for USSD Notify.
+ 
+
+
+image::images/SIP-RestComm-Flow-Push-Case4.png[]		

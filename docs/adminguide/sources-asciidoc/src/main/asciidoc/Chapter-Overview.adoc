@@ -1,0 +1,177 @@
+= Overview 
+:doctype: book
+:sectnums:
+:toc: left
+:icons: font
+:experimental:
+:sourcedir: .
+
+[[_ussd_overview]]
+== USSD
+
+USSD stands for Unstructured Supplementary Services Data which is a protocol used by GSM mobile phones much like the Short Message Service (SMS) but used to communicate with the service provider's  applications/services.
+USSD is used by the service provider to offer the subscriber with operator services like prepaid callback service, location-based content services, menu-based information services,  mobile-money services and similar interactive services. 
+
+There is a difference between USSD and SMS handling.
+Unlike SMS, which makes use of a `store and forward` method of message delivery,  USSD messages establish a real-time connection during a USSD session.
+In the case of SMS, Short Message is first delivered to the sender's Short Message Service Center (SMSc)  which then attempts to deliver the message to the intended recipient (s). So SMS does not guarantee that the message will be delivered instantly.
+ 
+
+== USSD Session
+
+USSD establishes a real time session between the mobile handset and the application handling the service and the information from the mobile handset is sent directly to the service.
+The concept of a real time session is very useful for constructing an interactive menu driven application.
+Refer to the figure below depicting the working of a real time session. 
+
+
+image::images/ussd-arch.png[]
+
+A user dialing an USSD service number (short code) initiates a dialog with the USSD handling application deployed on the {this-platform} Platform as shown in the above figure.
+The "Network Node" in the figure could be a MSC, HLR or VLR.
+The {this-platform} Platform integrates with the "Network Node" using the MAP protocol.
+ 
+
+[[_ussd_shortcode]]
+== USSD Service number
+
+Short codes are special numbers (shorter than normal phone numbers) often associated with automated services and are unique to each operator.
+A detailed description of the allowed MMIs (or short codes) which the user can dial is specified in `3GPP TS 22.090`.
+In the user's home network the following number range is defined for USSD services:
+*1, 2 or 3 digits from the set (*\* *, #) followed by 1X(Y), where X=any number 0-4, Y=any number 0-9, then, optionally "*\* *" followed by any number of any characters, and concluding with # SEND*
+
+For example a user may dial *#122# to reach a specific USSD service which is deployed in the home network.
+The application in its order may reply with a menu based on the dialed short code.
+One of the biggest benefits is that this service is always available even when the user is roaming. 
+
+== MAP Message Flow
+
+The diagram below depicts a typical MAP message flow for data transfer between the "Network Node" and the {this-platform} platform to implement a menu driven application.
+If you would like to read more about mobile-intiated (and network-initated) USSD operations and the use of MAP USSD services, please refer to [3GPPTS 24.090] in the references section. 
+
+
+image::images/ussd-map.png[]
+
+Mobile initiated USSD service begins when the user dials a USSD string (*#122# in this example). The message flow involves the following steps:  
+
+. The Network sends a 'TCAP Begin' message with the Component 'MAP_PROCESS_UNSTRUCTURED_SS_REQUEST' to the {this-platform} platform.
+  The {this-platform} platform invokes USSD application logic. 
+. The Application requests additional information from the user (action one or action two) via 'MAP_UNSTRUCTURED_SS_REQUEST' encapsulated in a 'TCAP Continue' message.
+  The 'TCAP Dialogue' starts now.
+. The Application receives the user's selection of the action.
+. Based on the user's menu selection, the application performs the predefined logic associated with the selection and sends a response back to the user.
+  This time the application does not require additional information from the user and it sends a response using the component 'MAP_PROCESS_UNSTRUCTURED_SS_REQUEST' and terminates the 'TCAP dialogue'.
+
+[[_ussd_gateway_desc]]
+== USSD Gateway
+
+Existing MSC, VLR, and HLR network elements are proprietary and run on non-standard operating environments located in trusted operator's zones that make it difficult to build and deploy new applications.
+Also, these network elements do not provide the tools and interfaces needed to access and retrieve data from content providers over the Internet.
+The USSD Gateway connects to the MSC, VLR, or HLR and enables the flow of USSD messages to be extended to an open, standards-based application server located in the IP network.
+The AS also provides the tools and interfaces to enable access to the content providers through the Internet. 
+
+[[_mobicents_ussd_overview]]
+== {this-platform} {this-application} 
+
+[[_mobicents_ussd_overview_features]]
+=== Major Features
+
+{this-platform} 's implementation of USSD Gateway is the first and only open source USSD Gateway with a host of rich features and advantages. 
+
+Java-based:::
+  {this-platform} {this-application} is the only Java based USSD Gateway.
+  It is robust and reliable and can be installed on any Operating System that supports Java (JDK 7 and SCTP). 
+
+Open Source:::
+  The Software is open-source, giving you the freedom to understand the code and customise it to your enterprise needs.
+  It is supported by a vibrant Open source community. 
+
+Carrier Grade Performance:::
+  {this-platform} {this-application} has been deployed at telecom operators around the world and is processing billions of USSD transactions each day.
+  A single Mobicents USSD node can process 1000's of USSD/sec and can be adapted to the needs of telecom service providers of different sizes in any country reducing your CAPEX and OPEX costs. 
+
+Load Balancing and Transparent Failover:::
+  Multiple {this-platform} {this-application} nodes can be arranged in a cluster across one or more geographically distributed data centers to scale up throughput and provide various levels of redundancy, high availability and fault tolerance. 
+
+Cloud Ready:::
+  {this-platform} {this-application} is Cloud-ready.
+  It can be deployed on dedicated hardware, private cloud infrastructure or public IaaS such as AWS. 
+
+Network Push:::
+  {this-platform} {this-application} supports network/application/service initiated USSD request.
+  The request can be just Notification or menu based interaction (dialog). 
+
+Multilingual:::
+  {this-platform} {this-application} supports UCS2 encoding in addition to GSM 7 Bit.
+  Application can send/receive the request/response in UCS2 format and process at runtime. 
+
+SS7 Hardware Cards:::
+  {this-platform} {this-application} can be used with Intel family boards (Dialogic SS7 cards) or Zaptel/Dahdi compatible TDM devices (Digium, Sangoma).  For production its recommended to use Dialogic boards only. 
+
+SIGTRAN (M3UA):::
+  It also has in-built support for SIGTRAN (M3UA using SCTP). 
+
+HTTP interface:::
+  HTTP interface is a commont interface that can be used for connection with service applications. 
+
+SIP interface:::
+  SIP interface is another interface that can be used for connection with service applications (following 24.390 specification: "Unstructured Supplementary Service Data (USSD) using IP Multimedia (IM) Core Network (CN) subsystem IMS"). This interface is used for interconnecting with Restcomm. 
+
+Easy Configuration and Management:::
+{this-platform} {this-application} comes with an efficient Command Line Interface (CLI) tool allowing you to completely configure the  Gateway at run-time and manage it using simple commands rather than do everything manually.
+ {this-platform} {this-application} also comes with a Graphical User Interface that will allow you to configure, monitor and manage the Gateway through a convenient user-friendly interface. 
+
+* {this-platform} {this-application} is easily scalable with a configurable load-balancing and high available architecture.
+  * {this-platform} {this-application} generates the CDR for every transaction, including the response of users to the menu provided.        
+
+Multi Tenancy:::
+  Same instance of USSD Gateway can be connected to multiple different network each with its own origination or/and remote point codes and global titles.
+   
+
+CDR:::
+  Generates CDR in database or plain text file as CSV.
+   
+
+Audit:::
+  Provides mechanism to record every action of user configuring USSD for latter audit.
+   
+
+Logging:::
+  Provides very powerful logging which can be configured at runtime to log only ERROR's/WARNING for Production or DEBUG when trying to identify problems.
+   
+
+Statistics:::
+  Provides in details statistics of number of requests/response per second, number of Dialog created successfully or failed.
+  If failed reason for failure etc.
+   
+
+[[_mobicents_ussd_overview_tech_spec]]
+=== Technical Specifications
+
+{this-platform} {this-application} is not restricted by Transaction Per Second model.
+The only restricting factor is memory + CPU capacity of the host servers, third-party applications or the underlying database service. 
+
+* {this-platform} {this-application} supports as many as 1073741823 incoming and 1073741823 outgoing concurrent sessions/dialogs.
+* {this-platform} {this-application} supports unlimited E1 links and the only limiting factor is the underlying TDM board used.
+* {this-platform} {this-application} SCTP supports as many associations as supported by the underlying Operating System.
+  Can be setup in multihome.
+* {this-platform} {this-application} M3UA can be confgured to have as many ASP's / IPSP's as needed by the system.
+* {this-platform} {this-application} SCCP can be confgured to have virtually unlimited Global Title Translation rules and also supports wild characters for partial matching of Global Title digits.        
+
+[[_mobicents_ussd_overview_http]]
+=== HTTP Transfer Mechanism
+
+The {this-platform} USSD Gateway makes use of HTTP protocol between the gateway and the third-party applications (or Value Added Service Modules). {this-platform} USSD Gateway receives the USSD request from the subscriber's handset/device via the GSM Signaling network and then translates these requests to HTTP depending on the rules configured in the Gateway to route to a corresponding Value Added Service (VAS) or third-party application. The HTTP callback mechanism allows the third-party Application to be agnostic to Operating System, Programming Language and Framework.
+The third-party Application can be either of the following technologies on any Operating System: 
+
+* Apache Tomcat, JBoss AS, Oracle Application Server, IBM Websphere etc for JSP/Servlet on Java 
+* PHP
+* Microsoft IIS for ASP        
+
+[[_mobicents_ussd_overview_sip]]
+=== SIP Transfer Mechanism
+
+The {this-platform} USSD Gateway makes use of SIP protocol between the gateway and the third-party applications (or Value Added Service Modules). 24.390 specification "Unstructured Supplementary Service Data (USSD) using IP Multimedia (IM) Core Network (CN) subsystem IMS" is implemented.
+SIP interface can be used for interconnection with Mobicents Restcomm application. 
+
+{this-platform} USSD Gateway receives the USSD request from the subscriber's handset/device via the GSM Signaling network and then translates these requests to SIP depending on the rules  configured in the Gateway to route to a corresponding SIP Phone or third-party application.
+ 
