@@ -1,0 +1,31 @@
+= Introduction
+:doctype: book
+:sectnums:
+:toc: left
+:icons: font
+:experimental:
+:sourcedir: .
+
+{this-platform} {this-application} is an Open Source Java based USSD Gateway Platform that routes USSD messages from the signaling network to service applications and the other way around.
+It enables operators to offer real-time interactions to mobile subscribers and deliver interactive content to their mobile phones.
+ 
+
+{this-platform} {this-application} acts as an intermediary platform linking the service applications to the GSM network in a session oriented communication.
+The platform is easy-to-install and easy-to-deploy allowing you to have the Gateway set up and configured very quickly.
+ 
+
+{this-platform} {this-application} supports TDM hardware offered by major vendors in the market, namely Intel family boards (Dialogic) and  Zaptel/Dahdi (Digium, Sangoma). TeleStax also has in-house SS7 cards also known as Mobicents SS7 Cards.
+Mobicents SS7 cards have MTP2/3 support on-board and therefore the processing load on the server hosting the {this-platform} {this-application} platform will be low when you use these SS7 cards.
+ 
+
+{this-platform} {this-application} is based on the robust and proven {this-platform} JAIN SLEE 1.1 Server and {this-platform} jSS7 Stack. {this-platform} JAIN SLEE Server is a highly scalable event-driven application server with a robust component model and fault tolerant execution environment.
+It provides a set of connectors to a variety of networks elements: SS7 MAP, TCAP, INAP, ISUP, SMPP, XMPP, SIP, MGCP, HTTP, XDM, XCAP, Diameter and many others.
+It is fully compliant with JSR 240 (JSLEE 1.1). {this-platform} jSS7 is a software based implementation of the SS7 protocol.
+It provides implementation for Level 2 and above in the SS7 protocol Stack. {this-platform} jSS7 Stack User Guide is bundled within and you can refer to the guide for more details on the Stack. 
+
+The {this-platform} USSD Gateway makes use of HTTP protocol between the gateway and the third-party applications (or Value Added Service Modules). {this-platform} USSD Gateway receives the USSD request from the subscriber's handset/device via the GSM Signaling network and then translates these requests to HTTP depending on the rules configured in the Gateway to route to a corresponding Value Added Service (VAS) or third-party application.
+The HTTP callback mechanism allows the third-party Application to be agnostic to Operating System, Programming Language and Framework. 
+
+This guide will assist you in installing {this-platform} {this-application} .
+For more details on configuring and using the platform, please refer to the {this-platform} {this-application} User Guide.
+ 

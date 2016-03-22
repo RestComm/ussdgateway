@@ -17,8 +17,8 @@
 	</properties>
 
 	<modules>
-		<module>commons</module>
-		<module>releasenotes</module>
+		<!--module>commons</module>
+		<module>releasenotes</module-->
 		<module>adminguide</module>
 		<module>installationguide</module>
 	</modules>

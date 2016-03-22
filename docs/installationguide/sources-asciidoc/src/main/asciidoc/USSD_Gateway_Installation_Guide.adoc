@@ -1,4 +1,4 @@
-= User Guide to {this-platform} {this-application} 
+= Installation Guide to {this-platform} {this-application} 
 :doctype: book
 :sectnums:
 :toc: left
@@ -26,61 +26,43 @@ include::Chapter-Introduction.adoc[]
 
 :leveloffset: 1
 
-include::Chapter-Overview.adoc[]
+include::Chapter-Pre-Requisites.adoc[]
 
 :leveloffset: 0
 
 :leveloffset: 1
 
-include::Chapter-Design_Overview.adoc[]
+include::Chapter-Setup_Hardware.adoc[]
 
 :leveloffset: 0
 
 :leveloffset: 1
 
-include::Chapter-Multi-Tenancy.adoc[]
+include::Chapter-Download_Install.adoc[]
 
 :leveloffset: 0
 
 :leveloffset: 1
 
-include::Chapter-Running.adoc[]
+include::Chapter-Post_Installation_Configuration.adoc[]
 
 :leveloffset: 0
 
 :leveloffset: 1
 
-include::Chapter-Configuring.adoc[]
+include::Chapter-Setup_Uninstalling.adoc[]
 
 :leveloffset: 0
 
 :leveloffset: 1
 
-include::Chapter-HTTP_Architecture.adoc[]
+include::Common_Content/Java_Development_Kit-Installing_Configuring_and_Running.adoc[]
 
 :leveloffset: 0
 
 :leveloffset: 1
 
-include::Chapter-SIP_Architecture.adoc[]
-
-:leveloffset: 0
-
-:leveloffset: 1
-
-include::Chapter-XML_Parser.adoc[]
-
-:leveloffset: 0
-
-:leveloffset: 1
-
-include::Chapter-Logging_Traces_and_Alarms.adoc[]
-
-:leveloffset: 0
-
-:leveloffset: 1
-
-include::Appendix-Configuring_MySQL_Database.adoc[]
+include::Common_Content/Setting_the_JBOSS_HOME_Environment_Variable.adoc[]
 
 :leveloffset: 0
 

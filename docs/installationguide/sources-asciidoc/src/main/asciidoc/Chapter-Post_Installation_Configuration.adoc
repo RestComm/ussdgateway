@@ -1,0 +1,14 @@
+[[_setup_configuration]]
+= Post Installation Configuration
+
+You must perform post-installation configuration of the Gateway according to instructions in the {this-platform} {this-application} Admin Guide.
+Before using in Production, you must remember to fine-tune Memory and Database settings for better performance.
+ 
+
+Once you have installed {this-platform} {this-application} to suit your needs, you can go ahead and configure the SS7 Stack and the Gateway to meet your requirements.
+The {this-platform} jSS7 Stack User Guide in the [path]_mobicents-ussdgateway-<version>/docs/jss7/_ folder will assist you in configuring and managing the SS7 Stack.
+Only when you have completely configured the SS7 Stack to meet your requirements, you must go ahead with configuring the USSD Gateway.
+The {this-platform}  {this-application}  Admin Guide in the [path]_mobicents-ussdgateway-<version>/docs/ussd/_ folder will assist you in configuring and managing the USSD Gateway.
+To configure and manage both the Stack and the Gateway you can make use of the Command Line Interface (CLI) tool or the GUI that comes with the platform. 
+
+WARNING: Failure to configure memory, database, logging and other settings as per the instructions in the Admin Guide may result in poor performance of the Gateway.
