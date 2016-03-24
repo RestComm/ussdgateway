@@ -16,6 +16,5 @@ The following table details the Hardware, Operating System and Software requirem
 | SCTP libraries | If you intend to use SIGTRAN (M3UA), you must have the lksctp library installed. The Linux Kernel Stream Control Transmission Protocol (lksctp) library provides SCTP implementation. | For more details on downloading and installing lksctp, please refer to http://lksctp.sourceforge.net/
 |===
 
-
 IMPORTANT: You must ensure that the `JAVA_HOME` and `JBOSS_HOME` Environment variables are set properly for the user account(s) that will run the server.
 For more details on setting these variables, please refer to the sections <<_jdk_installing_configuring_and_running>> and <<_jboss_home_setup>>. 
