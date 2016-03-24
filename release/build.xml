@@ -577,22 +577,22 @@
 			</fileset>
 		</copy>
 		<copy todir="${bundle.docs.dir}/ussd/adminguide/html-book" failonerror="true">
-			<fileset dir="${restcomm.gmlc.dir}/docs/adminguide/sources-asciidoc/target/generated-docs/html-book/">
+			<fileset dir="${restcomm.ussd.dir}/docs/adminguide/sources-asciidoc/target/generated-docs/html-book/">
 				<include name="**" />
 			</fileset>
 		</copy>
 		<copy todir="${bundle.docs.dir}/ussd/installationguide/html-book" failonerror="true">
-			<fileset dir="${restcomm.gmlc.dir}/docs/installationguide/sources-asciidoc/target/generated-docs/html-book/">
+			<fileset dir="${restcomm.ussd.dir}/docs/installationguide/sources-asciidoc/target/generated-docs/html-book/">
 				<include name="**" />
 			</fileset>
 		</copy>
 		<copy todir="${bundle.docs.dir}/ussd/adminguide/pdf" failonerror="true">
-			<fileset dir="${restcomm.gmlc.dir}/docs/adminguide/sources-asciidoc/target/generated-docs/pdf/">
+			<fileset dir="${restcomm.ussd.dir}/docs/adminguide/sources-asciidoc/target/generated-docs/pdf/">
 				<include name="**" />
 			</fileset>
 		</copy>
 		<copy todir="${bundle.docs.dir}/ussd/installationguide/pdf" failonerror="true">
-			<fileset dir="${restcomm.gmlc.dir}/docs/installationguide/sources-asciidoc/target/generated-docs/pdf/">
+			<fileset dir="${restcomm.ussd.dir}/docs/installationguide/sources-asciidoc/target/generated-docs/pdf/">
 				<include name="**" />
 			</fileset>
 		</copy>
