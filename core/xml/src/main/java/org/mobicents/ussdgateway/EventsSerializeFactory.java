@@ -24,6 +24,7 @@ package org.mobicents.ussdgateway;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 
 import javolution.xml.XMLBinding;
 import javolution.xml.XMLObjectReader;
@@ -73,6 +74,8 @@ public class EventsSerializeFactory {
 	private static final String TAB = "\t";
 
 	final XMLBinding binding = new XMLBinding();
+
+    private Charset charset = Charset.forName("UTF-8");
 
 	public EventsSerializeFactory() {
 		//MAPErrorMessage classes
@@ -163,7 +166,18 @@ public class EventsSerializeFactory {
 	}
 
 	public SipUssdMessage deserializeSipUssdMessage(byte[] data) throws XMLStreamException {
-		final ByteArrayInputStream bais = new ByteArrayInputStream(data);
+
+        // this is a workaround because of javolution xml lib does not parse properly hex values like
+        // &#xa; and we need to replace them to value like &#10;
+        // TODO: we need remove it after we switch to javolution 6.1 lib
+        String s1 = new String(data, charset);
+        String s2 = s1.replaceAll("&#xa;", "&#10;");
+        String s3 = s2.replaceAll("&#XA;", "&#10;");
+        String s4 = s3.replaceAll("&#xd;", "&#13;");
+        String sn = s4.replaceAll("&#XD;", "&#13;");
+        byte[] data2 = sn.getBytes(charset);
+
+	    final ByteArrayInputStream bais = new ByteArrayInputStream(data2);
 		final XMLObjectReader reader = XMLObjectReader.newInstance(bais);
 		try {
 			reader.setBinding(binding);
