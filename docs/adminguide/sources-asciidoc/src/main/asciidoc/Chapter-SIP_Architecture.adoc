@@ -9,11 +9,11 @@
 
 {this-platform} {this-application} supports implementation of Session Initiation Protocol (SIP) for using Unstructured Supplementary Service Data (USSD) operations for mobile initiated MMI mode over IP Multimedia Core Network Subsystem (IMS). 3GPP Specification 24.390 "Unstructured Supplementary Service Data (USSD) using IP  Multimedia (IM) Core Network (CN) subsystem IMS" further explains flow of USSD over IMS leveraging SIP. 
 
-{this-platform} {this-application} can easily be integarted with {this-platform} RestComm via SIP to enable developers to rapidly build voice, video, WebRTC, USSD, SMS, fax and rich messaging applications.
-More details about RestComm can be obtained from http://www.telestax.com/restcomm/[here]	
+{this-platform} {this-application} can easily be integarted with RestComm Connect server via SIP to enable developers to rapidly build voice, video, WebRTC, USSD, SMS, fax and rich messaging applications.
+More details about RestComm Connect server can be obtained from http://www.telestax.com/restcomm/[here]	
 
-Following sections shows SIP flow and integration with RestComm.
-Instead of RestComm, user can easily integrate SIP phone that supports USSD. 
+Following sections shows SIP flow and integration with RestComm Connect server.
+Instead of RestComm Connect server, user can easily integrate SIP phone that supports USSD. 
 
 [[_sip_messages_ussd_pull]]
 == SIP Message Structure - USSD Pull

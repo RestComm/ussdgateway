@@ -87,7 +87,7 @@ Open Source:::
 
 Carrier Grade Performance:::
   {this-platform} {this-application} has been deployed at telecom operators around the world and is processing billions of USSD transactions each day.
-  A single Mobicents USSD node can process 1000's of USSD/sec and can be adapted to the needs of telecom service providers of different sizes in any country reducing your CAPEX and OPEX costs. 
+  A single {this-platform} USSD node can process 1000's of USSD/sec and can be adapted to the needs of telecom service providers of different sizes in any country reducing your CAPEX and OPEX costs. 
 
 Load Balancing and Transparent Failover:::
   Multiple {this-platform} {this-application} nodes can be arranged in a cluster across one or more geographically distributed data centers to scale up throughput and provide various levels of redundancy, high availability and fault tolerance. 
@@ -114,7 +114,7 @@ HTTP interface:::
   HTTP interface is a commont interface that can be used for connection with service applications. 
 
 SIP interface:::
-  SIP interface is another interface that can be used for connection with service applications (following 24.390 specification: "Unstructured Supplementary Service Data (USSD) using IP Multimedia (IM) Core Network (CN) subsystem IMS"). This interface is used for interconnecting with Restcomm. 
+  SIP interface is another interface that can be used for connection with service applications (following 24.390 specification: "Unstructured Supplementary Service Data (USSD) using IP Multimedia (IM) Core Network (CN) subsystem IMS"). This interface is used for interconnecting with Restcomm Connect server.
 
 Easy Configuration and Management:::
 {this-platform} {this-application} comes with an efficient Command Line Interface (CLI) tool allowing you to completely configure the  Gateway at run-time and manage it using simple commands rather than do everything manually.
@@ -171,7 +171,7 @@ The third-party Application can be either of the following technologies on any O
 === SIP Transfer Mechanism
 
 The {this-platform} USSD Gateway makes use of SIP protocol between the gateway and the third-party applications (or Value Added Service Modules). 24.390 specification "Unstructured Supplementary Service Data (USSD) using IP Multimedia (IM) Core Network (CN) subsystem IMS" is implemented.
-SIP interface can be used for interconnection with Mobicents Restcomm application. 
+SIP interface can be used for interconnection with Restcomm Connect server. 
 
 {this-platform} USSD Gateway receives the USSD request from the subscriber's handset/device via the GSM Signaling network and then translates these requests to SIP depending on the rules  configured in the Gateway to route to a corresponding SIP Phone or third-party application.
  

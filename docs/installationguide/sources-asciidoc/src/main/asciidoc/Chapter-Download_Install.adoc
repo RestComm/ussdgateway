@@ -22,7 +22,7 @@ Downloads]$ unzip <filename>
 [[_dir_structure]]
 == Directory Structure
 
-When you download the binary release, you will notice that the top level directory is named `mobicents-ussdgateway-<version>` and immediately below this are five sub-directories as explained below: 
+When you download the binary release, you will notice that the top level directory is named `{this-folder}-ussdgateway-<version>` and immediately below this are five sub-directories as explained below: 
 
 * docs: Contains all relevant documentation in respective subfolders for JSLEE, jSS7, Management-HQ and USSD.
 * jboss-5.1.0.GA: The core server with two profiles "default" and "simulator". The "default" profile is a clean profile where you will have to start from scratch and configure the entire SS7 Stack and USSD Gateway.
@@ -31,9 +31,10 @@ When you download the binary release, you will notice that the top level directo
 * resources: Contains SLEE MAP, JDBC, http-client, http-servlet and SIP RA jars.
 * tools: Contains SLEE tools and jss7-simulator.
 
+[subs="attributes"]
 ----
 
-|- mobicents-ussdgateway-<version>
+|- {this-folder}-ussdgateway-<version>
 		|- docs
 				|+ jss7
 				|+ slee
@@ -58,8 +59,8 @@ When you download the binary release, you will notice that the top level directo
 				|+ jopr-plugin
 				|+ remote-slee-connection
 				|+ snmp
-				|+ Mobicents-jss7-simulator
-				|+ Mobicents-ussd-simulator
+				|+ {this-folder}-jss7-simulator
+				|+ {this-folder}-ussd-simulator
 				|+ twiddle
 ----
 

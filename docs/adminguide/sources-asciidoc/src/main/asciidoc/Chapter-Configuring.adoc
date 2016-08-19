@@ -14,7 +14,7 @@ This chapter will explain how to manage the Gateway effectively using both the G
 == Memory Settings
 
 You should fine tune the JVM memory settings based on your needs but we recommend you allocate a minimum of 3 GB for initial and maximum heap size.
-These settings are specified in the file[path]_mobicents-ussdgateway-/jboss-5.1.0.GA/bin/run.conf_. 
+These settings are specified in the file[path]_{this-folder}-ussdgateway-/jboss-5.1.0.GA/bin/run.conf_. 
 
 -Xms3072m::
   Initial heap size, set in megabytes
@@ -42,20 +42,20 @@ You must ensure that you delete this datasource and configure a production-frien
 [[_configure_datasource]]
 === Configuring an Alternate DataSource
 
-The example HSQLDB DataSource is bound to the JNDI name java:/DefaultDS and its descriptor is available in the file [path]_mobicents-ussdgateway-/jboss-5.1.0.GA/server/<profile>/deploy/hsqldb-ds.xml_.
+The example HSQLDB DataSource is bound to the JNDI name java:/DefaultDS and its descriptor is available in the file [path]_{this-folder}-ussdgateway/jboss-5.1.0.GA/server/<profile>/deploy/hsqldb-ds.xml_.
 You must delete this datasource and configure the Platform to use your choice of Database.
 For instructions on configuring an alternate DataSource with an example, please refer to <<_configuring_mysql>>.
 For detailed instructions and explanation please refer to the JBoss AS Getting Started Guide available https://community.jboss.org/wiki/JBossAS5InstallationAndGettingStartedGuide[here].
-You will also find a lot of examples in the folder [path]_mobicents-ussdgateway-/jboss-5.1.0.GA/docs/examples/jca/_. 
+You will also find a lot of examples in the folder [path]_{this-folder}-ussdgateway/jboss-5.1.0.GA/docs/examples/jca/_. 
 
 [[_configure_jslee_jdbc_ra]]
 === Configuring JSLEE JDBC RA
 
 {this-platform} {this-application} leverages JSLEE JDBC RA for persistence.
-Detailed JSLEE JDBC RA documentation is available in [path]_mobicents-ussdgateway-/docs/slee/Mobicents_SLEE_RA_JDBC_User_Guide.pdf_ that explains how to point to the new DataSource.
+Detailed JSLEE JDBC RA documentation is available in [path]_{this-folder}-ussdgateway/docs/slee/Mobicents_SLEE_RA_JDBC_User_Guide.pdf_ that explains how to point to the new DataSource.
 An example configuration is explained in this admin guide in the section <<_configuring_mysql>>.
 When you have completed configuring an alternate DataSource in JBoss AS, you can proceed to modify JSLEE configurations accordingly.
-You must change the Dialect in the file [path]_mobicents-ussdgateway-/jboss-5.1.0.GA/server/<profile>/deploy/mobicents-slee/META-INF/jboss-beans.xml_ to reflect your alternate DataSource. 
+You must change the Dialect in the file [path]_{this-folder}-ussdgateway/jboss-5.1.0.GA/server/<profile>/deploy/{this-folder}-slee/META-INF/jboss-beans.xml_ to reflect your alternate DataSource. 
 
 [[_table_structure]]
 === CDR Table Structure
@@ -240,7 +240,7 @@ SRI_MAP_ERROR_COMPONENT::
 
 {this-platform} {this-application} acts as a HTTP Client to achieve USSD pull by sending a HTTP POST request to third party applications (HTTP Server) for every dialled short code.
 You must configure the HTTP Client JSLEE Resource Adaptor's properties to suit your requirements.
-Please refer to the SLEE RA HTTP Client User Guide available in [path]_mobicents-ussdgateway-/docs/slee/Mobicents_SLEE_RA_HTTP_Client_User_Guide.pdf_. 
+Please refer to the SLEE RA HTTP Client User Guide available in [path]_{this-folder}-ussdgateway/docs/slee/Mobicents_SLEE_RA_HTTP_Client_User_Guide.pdf_. 
 
 For every Short Code Routing rule added in the USSD Gateway, you must ensure that there is a corresponding `MAX_CONNECTIONS_FOR_ROUTES` property appropriately configured in the HTTP Client JSLEE RA.
 
@@ -253,7 +253,7 @@ You must modify the `MAX_CONNECTIONS_FOR_ROUTES` property to meet your Short Cod
 {this-platform} {this-application} uses `Apache log4j` for logging.
 If you are not familiar with the `log4j` package, you can read more about it at the Jakarta http://jakarta.apache.org/log4j/[website]. 
 
-Logging is controlled from a central configuration file located at [path]_mobicents-ussdgateway-/jboss-5.1.0.GA/server/<profile>/conf/jboss-log4j.xml_, one for each JBoss AS configuration profile.
+Logging is controlled from a central configuration file located at [path]_{this-folder}-ussdgateway/jboss-5.1.0.GA/server/<profile>/conf/jboss-log4j.xml_, one for each JBoss AS configuration profile.
 This file defines a set of appenders specifying the log files, what categories of messages should go there, the message format and the level of filtering.
 For more details, please refer to Section 9.6.3, "Logging Service" in the JBoss AS Getting Started Guide available https://community.jboss.org/wiki/JBossAS5InstallationAndGettingStartedGuide[here]. 
 
@@ -264,8 +264,8 @@ We recommend that you set logging threshold to `WARN` and let the CDR appender b
 == Configuring the SS7 Stack
 
 You must configure the SS7 Stack prior to configuring USSD.
-For details on configuring the SS7 Stack please refer to the Mobicents SS7 Stack User Guide.
-The Mobicents SS7 Stack User Guide lists all available Shell commands and GUI operations to configure SS7.
+For details on configuring the SS7 Stack please refer to the {this-platform} SS7 Stack User Guide.
+The {this-platform} SS7 Stack User Guide lists all available Shell commands and GUI operations to configure SS7.
 In addition, help files are also available for every Shell command providing all details relevant to the command. 
 
 [[_configuring_ussd_gw]]
@@ -275,7 +275,7 @@ Once you have configured the SS7 Stack you can continue with USSD configuration 
 In order to use the CLI you must follow the instructions specified in <<_running_shell>> to run the shell and connect to the managed instance.
 Alternatively you can use the GUI to configure the USSD Gateway through simple GUI operations.
 The GUI will allow you to manage your USSD Gateway efficiently using an user-friendly interface.
-Open a Web Browser, navigate to http://localhost:8080/mobicents-management/ and switch to the 'USSD GW' tab.
+Open a Web Browser, navigate to http://localhost:8080/{this-folder}-management/ and switch to the 'USSD GW' tab.
  
 
 You must first set appropriate values for the below USSD parameters and then configure USSD Routing Rules for short codes.
@@ -707,7 +707,7 @@ EXAMPLES
 . In the GUI Management Console for USSD Gateway, click on 'Server Settings' in the left panel. 
 . The main panel will display the existing Server Settings (if any), segregated into three tabs: Error Messages, SS7 Settings, Various.
   Switch to the 'SS7 Settings' tab in the GUI. 
-. In the text field 'USSD Gateway subsystem number', you can set a value for USSD Sub System Number (SSN). Issuing this command in CLI will set the SSN value but you must ensure that the SSN value is properly configured in the TCAP Stack in the xml descriptor file [path]_mobicents-ussdgateway-version/jboss-5.1.0.GA/server/<profile>/deploy/mobicents-ussd-gateway/META-INF/jboss-beans.xml_.
+. In the text field 'USSD Gateway subsystem number', you can set a value for USSD Sub System Number (SSN). Issuing this command in CLI will set the SSN value but you must ensure that the SSN value is properly configured in the TCAP Stack in the xml descriptor file [path]_{this-folder}-ussdgateway-version/jboss-5.1.0.GA/server/<profile>/deploy/{this-folder}-ussd-gateway/META-INF/jboss-beans.xml_.
   For more details of this parameter, please refer to the description of the CLI command for the same in the preceding section. 
 . You must click on the button 'Apply Changes' to save your settings.
   If there is an error in setting the value, then you will find the details of the error in the Management Console Log section below. 

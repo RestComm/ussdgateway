@@ -29,7 +29,7 @@ If you are using maven to build your project define following dependencies to us
 .Note
 [NOTE]
 ====
-Mobicents maintains the archieve in private repository.
+{this-platform} maintains the archieve in private repository.
 please add the following in your pom's repositories tag 
 
 [source,xml]

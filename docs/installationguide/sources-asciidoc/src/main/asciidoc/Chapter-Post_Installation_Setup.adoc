@@ -17,10 +17,10 @@ Every transaction in the {this-platform} {this-application} is logged in a Datab
 By default, transactions are logged in the HSQLDB that comes bundled with JBoss AS and leverages the JBoss AS DataSource.
 However this is only made available to allow the platform to run "out of the box". You must configure a production ready Database prior to using the Gateway in a production environment. {this-platform} {this-application} has been tested with PostgreSQL and MySQL. 
 
-The example HSQLDB DataSource is bound to the JNDI name java:/DefaultDS and its descriptor is available in the file [path]_mobicents-ussdgateway-version>/jboss-5.1.0.GA/server/default/deploy/hsqldb-ds.xml_.
+The example HSQLDB DataSource is bound to the JNDI name java:/DefaultDS and its descriptor is available in the file [path]_{this-folder}-ussdgateway-version>/jboss-5.1.0.GA/server/default/deploy/hsqldb-ds.xml_.
 You must delete this datasource and configure the Platform to use your choice of Database.
 For instructions on configuring an alternate DataSource, please refer to Chapter 14, "Using Other Databases" in the JBoss AS Getting Started Guide available https://community.jboss.org/wiki/JBossAS5InstallationAndGettingStartedGuide[here].
-You will also find a lot of examples in the folder [path]_mobicents-ussdgateway-version>/jboss-5.1.0.GA/docs/examples/jca/_. 
+You will also find a lot of examples in the folder [path]_{this-folder}-ussdgateway-version>/jboss-5.1.0.GA/docs/examples/jca/_. 
 
 WARNING: HSQLDB must not be used in a production environment.
 You must ensure that you delete this datasource and configure a production-friendly Database like PostgreSQL or MySQL.
@@ -29,8 +29,8 @@ You must ensure that you delete this datasource and configure a production-frien
 == Configuring the Gateway
 
 Now that you have installed {this-platform} {this-application} to suit your needs, you can go ahead and configure the SS7 Stack and the USSD Gateway to meet your requirements.
-The {this-platform} jSS7 Stack User Guide in the [path]_mobicents-ussdgateway-<version>/docs/ss7/_ folder will assist you in configuring and managing the SS7 Stack.
+The {this-platform} jSS7 Stack User Guide in the [path]_{this-folder}-ussdgateway-<version>/docs/ss7/_ folder will assist you in configuring and managing the SS7 Stack.
 Only when you have completely configured the SS7 Stack to meet your requirements, you must go ahead with configuring the USSD Gateway.
-The {this-platform}  {this-application}  Admin Guide in the [path]_mobicents-ussdgateway-<version>/docs/ussd/_ folder will assist you in configuring and managing the USSD Gateway.
+The {this-platform}  {this-application}  Admin Guide in the [path]_{this-folder}-ussdgateway-<version>/docs/ussd/_ folder will assist you in configuring and managing the USSD Gateway.
 To configure and manage both the Stack and the Gateway you must use the Command Line Interface (CLI) tool that comes with the platform.
 For instructions on starting the Shell and help with commands, please refer to the {this-platform}  {this-application}  Admin Guide. 

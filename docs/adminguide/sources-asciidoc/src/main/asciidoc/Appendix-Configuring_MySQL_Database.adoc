@@ -15,10 +15,10 @@ In this section, you will find instructions for configuring MySQL database for C
 .Procedure: Configuring MySQL as datasource for CDR logging
 . Install MySQL and create a database where CDR data will be stored.
   In this example, a database named "test" is assumed to have been created. 
-. Copy the MySQL connector library ([path]_mysql-connector-java-5.1.27-bin.jar_) from "Connector/J" in the MySQL library into library folder of the JBoss Server ([path]_mobicents-ussdgateway-/jboss-5.1.0.GA/server/<profile>/lib_). 
+. Copy the MySQL connector library ([path]_mysql-connector-java-5.1.27-bin.jar_) from "Connector/J" in the MySQL library into library folder of the JBoss Server ([path]_{this-folder}-ussdgateway-/jboss-5.1.0.GA/server/<profile>/lib_). 
 . The example HSQLDB DataSource is bound to the JNDI name java:/DefaultDS and its descriptor is available in the file [path]_mobicents-ussdgateway-/jboss-5.1.0.GA/server/<profile>/deploy/hsqldb-ds.xml_.
   You must delete this datasource by removing this descriptor file. 
-. Copy the descriptor file for MySQL, [path]_mysql-ds.xml_, from [path]_mobicents-ussdgateway-/jboss-5.1.0.GA/docs/examples/jca/_ into  [path]_mobicents-ussdgateway-/jboss-5.1.0.GA/server/<profile>/deploy/_. 
+. Copy the descriptor file for MySQL, [path]_mysql-ds.xml_, from [path]_{this-folder}-ussdgateway-/jboss-5.1.0.GA/docs/examples/jca/_ into  [path]_{this-folder}-ussdgateway-/jboss-5.1.0.GA/server/<profile>/deploy/_. 
 . Update the MySQL descriptor file, [path]_mysql-ds.xml_, as required to suit your configuration.
 Below is an example configuration.
 You must update the tags <connection-url> with the host where a database can be found ('localhost' in this example) and the database name ('test' in this example). You must also update the username and password tags ('root' and '111111' in this example). 
@@ -55,8 +55,8 @@ http://www.mysql.com/downloads/api-jdbc-stable.html
 </datasources>
 ----
 +
-. Delete the HSQLDB file for messaging persistence [path]_mobicents-ussdgateway-/jboss-5.1.0.GA/server/<profile>/deploy/messaging/hsqldb-persistence-service.xml_. 
-. Copy the MySQL file for messaging persistence, [path]_mysql-persistence-service.xml_, from [path]_mobicents-ussdgateway-/jboss-5.1.0.GA/docs/examples/jms/_ into  [path]_mobicents-ussdgateway-/jboss-5.1.0.GA/server/<profile>/deploy/messaging_. 
+. Delete the HSQLDB file for messaging persistence [path]_{this-folder}-ussdgateway/jboss-5.1.0.GA/server/<profile>/deploy/messaging/hsqldb-persistence-service.xml_. 
+. Copy the MySQL file for messaging persistence, [path]_mysql-persistence-service.xml_, from [path]_{this-folder}-ussdgateway/jboss-5.1.0.GA/docs/examples/jms/_ into  [path]_{this-folder}-ussdgateway/jboss-5.1.0.GA/server/<profile>/deploy/messaging_. 
 . Update the below files to replace all "DefaultDS" values with "MySqlDS" in all occurrences in all these files. 
 
 * [path]_messaging/mysql-persistence-service.xml_		
@@ -66,7 +66,7 @@ http://www.mysql.com/downloads/api-jdbc-stable.html
 * [path]_uuid-key-generator.sar/META-INF/jboss-service.xml_			  
 . Open the file [path]_messaging/mysql-persistence-service.xml_, go the mbean definition <mbean code="org.jboss.messaging.core.jmx.MessagingPostOfficeService"> and locate the line <attribute name="Clustered">false</attribute>. Leave this attribute and comment out or remove all the lines after this till the end of this bean.
   Save all changes. 
-. Open the file [path]_mobicents-ussdgateway-/jboss-5.1.0.GA/server/<profile>/deploy/mobicents-slee/META-INF/jboss-beans.xml_ and locate the following bean: 
+. Open the file [path]_{this-folder}-ussdgateway/jboss-5.1.0.GA/server/<profile>/deploy/{this-folder}-slee/META-INF/jboss-beans.xml_ and locate the following bean: 
 +
 ----
 <bean name="Mobicents.JAINSLEE.Profiles.JPA.PostgreSQLConfig" class="org.mobicents.slee.container.deployment.profile.jpa.Configuration">
@@ -108,7 +108,7 @@ http://www.mysql.com/downloads/api-jdbc-stable.html
 ----	
 +
 . You must note that `mobicents-slee-ra-jdbc-DU-6.1.1.GA-Mobicents.jar` also refers to DataSource name.
-  You must change the value of `DATASOURCE_JNDI_NAME` (which is hardcoded in the library) in the file [path]_mobicents-ussdgateway-/jboss-5.1.0.GA/server/<profile>/deploy/mobicents-slee-ra-jdbc-DU-6.1.1.GA-Mobicents.jar/jars/mobicents-slee-ra-jdbc-ra-6.1.1.GA-Mobicents.jar/META-INF/resource-adaptor-jar.xml_ to `java:MySqlDS`. 
+  You must change the value of `DATASOURCE_JNDI_NAME` (which is hardcoded in the library) in the file [path]_{this-folder}-ussdgateway-/jboss-5.1.0.GA/server/<profile>/deploy/mobicents-slee-ra-jdbc-DU-6.1.1.GA-Mobicents.jar/jars/mobicents-slee-ra-jdbc-ra-6.1.1.GA-Mobicents.jar/META-INF/resource-adaptor-jar.xml_ to `java:MySqlDS`. 
 . Delete all tables from the MySql database you wish to use. 
 . When you run the Gateway now, you will find the `ussd_gw_cdrs` tables where all CDR will be stored. 
 

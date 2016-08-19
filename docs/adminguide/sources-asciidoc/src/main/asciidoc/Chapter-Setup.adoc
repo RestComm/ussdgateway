@@ -70,7 +70,7 @@ Use Maven to build the binary.
 				    [usr]$ mvn install
 ----
 +
-Once the process finishes you should have the `-/core/bootstrap/target/mobicents-ussd-gateway` directory,  if {this-platform}  JAIN SLEE is installed and environment variable JBOSS_HOME is pointing to its underlying &JEE.PLATFORM; directory, then the  `mobicents-ussd-gateway` will also be  deployed in the container.
+Once the process finishes you should have the `-/core/bootstrap/target/{this-folder}-ussd-gateway` directory,  if {this-platform}  JAIN SLEE is installed and environment variable JBOSS_HOME is pointing to its underlying &JEE.PLATFORM; directory, then the  `{this-folder}-ussd-gateway` will also be  deployed in the container.
 
 
 [[_trunk_source_building]]
@@ -81,7 +81,7 @@ Similar process as for <<_release_source_building>>, the only change is don't sw
 [[_strucure]]
 == Folder structure of {this-platform}  JAIN SLEE {this-application} 
 
-Installing Mobicents USSD Gateway creates a mobicents-ussd-gateway directory that contains gateway configuration,  libraries required for boot and running, example rules definition file (.drl) etc.
+Installing {this-platform} USSD Gateway creates a {this-folder}-ussd-gateway directory that contains gateway configuration,  libraries required for boot and running, example rules definition file (.drl) etc.
 You need to know your way around  the distribution layout to locate the drools file's to add new rules.
 The figure "view of Mobicens USSD Gateway"  illustrates the installation directory of the Gateway. 
 
@@ -252,7 +252,7 @@ Go to menu:Knowledge Base > Create New > Upload POJO Model Jar
 
 image::images/USSD-Guvnor-UploadModel.png[]
 +
-Browse in newly open window and point to [path]_${JBOSS.HOME}/server/default/deploy/mobicents-ussd-gateway/lib/ussdgateway-domain-x.y.z.jar
+Browse in newly open window and point to [path]_${JBOSS.HOME}/server/default/deploy/{this-folder}-ussd-gateway/lib/ussdgateway-domain-x.y.z.jar
 						_						. 
 
 . Edit your package configuration.

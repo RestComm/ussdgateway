@@ -14,9 +14,8 @@ It enables operators to offer real-time interactions to mobile subscribers and d
 The platform is easy-to-install and easy-to-deploy allowing you to have the Gateway set up and configured very quickly.
  
 
-{this-platform} {this-application} supports TDM hardware offered by major vendors in the market, namely Intel family boards (Dialogic) and  Zaptel/Dahdi (Digium, Sangoma). TeleStax also has in-house SS7 cards also known as Mobicents SS7 Cards.
-Mobicents SS7 cards have MTP2/3 support on-board and therefore the processing load on the server hosting the {this-platform} {this-application} platform will be low when you use these SS7 cards.
- 
+{this-platform} {this-application} supports TDM hardware offered by major vendors in the market, namely Intel family boards (Dialogic) and  Zaptel/Dahdi (Digium, Sangoma).
+
 
 {this-platform} {this-application} is based on the robust and proven {this-platform} JAIN SLEE 1.1 Server and {this-platform} jSS7 Stack. {this-platform} JAIN SLEE Server is a highly scalable event-driven application server with a robust component model and fault tolerant execution environment.
 It provides a set of connectors to a variety of networks elements: SS7 MAP, TCAP, INAP, ISUP, SMPP, XMPP, SIP, MGCP, HTTP, XDM, XCAP, Diameter and many others.
