@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.mobicents</groupId>
 		<artifactId>restcomm-parent</artifactId>
-		<version>2.27.32</version>
+		<version>2.27.32</version> <!-- parent pom version -->
 	</parent>
 
 	<groupId>org.mobicents.ussd</groupId>
@@ -17,6 +17,10 @@
 
 
 	<properties>
+		<restcomm.tools.mavenplugin.eclipse.version>
+			1.0.0.FINAL
+		</restcomm.tools.mavenplugin.eclipse.version>
+
 		<!-- RELEASE CONFIGURATION -->
 		<release.name>
 			${release.name.prefix}${project.parent.version}${release.name.suffix}
@@ -293,6 +297,9 @@
 				<enabled>true</enabled>
 			</releases>
 		</repository>
+
+		<!-- the place to extra repos -->
+
 	</repositories>
 
 </project>
