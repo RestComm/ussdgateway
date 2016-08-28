@@ -31,7 +31,7 @@
 	<bean name="Mtp3UserPart" class="org.mobicents.protocols.ss7.m3ua.impl.M3UAManagementImpl">
 		<constructor>
 			<parameter>Mtp3UserPart</parameter>
-			<parameter>Mobicents-USSD</parameter>
+			<parameter>RestComm-USSD</parameter>
 		</constructor>
 		<property name="persistDir">${jboss.server.data.dir}</property>
 		<property name="transportManagement">
@@ -208,9 +208,9 @@
 			<inject bean="UssdManagement" />
 		</property>
 	</bean>	
-	
+
 	<!-- ==================================================================== -->
-	<!-- Mobicents jSS7 Managemenet Service -->
+	<!-- RestComm jSS7 Managemenet Service -->
 	<!-- ==================================================================== -->
 	<bean name="Ss7Management" class="org.mobicents.protocols.ss7.oam.common.jmxss7.Ss7Management">
 		<annotation>@org.jboss.aop.microcontainer.aspects.jmx.JMX(name="org.mobicents.ss7:service=Ss7Management",exposedInterface=org.mobicents.protocols.ss7.oam.common.jmxss7.Ss7ManagementMBean.class,registerDirectly=true)
@@ -218,40 +218,40 @@
 		<property name="agentId">jboss</property>
 	</bean>
 
-	<bean name="MobicentsAlarmManagement" class="org.mobicents.protocols.ss7.oam.common.alarm.AlarmProvider">
+	<bean name="RestCommAlarmManagement" class="org.mobicents.protocols.ss7.oam.common.alarm.AlarmProvider">
 		<constructor>
 			<parameter><inject bean="Ss7Management" /></parameter>
 			<parameter><inject bean="Ss7Management" /></parameter>
 		</constructor>
 	</bean>	
 
-    <bean name="MobicentsStatisticManagement" class="org.mobicents.protocols.ss7.oam.common.statistics.CounterProviderManagement">
+    <bean name="RestCommStatisticManagement" class="org.mobicents.protocols.ss7.oam.common.statistics.CounterProviderManagement">
         <constructor>
             <parameter><inject bean="Ss7Management" /></parameter>
         </constructor>
         <property name="persistDir">${jboss.server.data.dir}</property>
     </bean>         
 
-	<bean name="MobicentsSctpManagement" class="org.mobicents.protocols.ss7.oam.common.sctp.SctpManagementJmx">
+	<bean name="RestCommSctpManagement" class="org.mobicents.protocols.ss7.oam.common.sctp.SctpManagementJmx">
 		<constructor>
 			<parameter><inject bean="Ss7Management" /></parameter>
 			<parameter><inject bean="SCTPManagement" /></parameter>
 		</constructor>
 	</bean>
 	
-	<bean name="MobicentsM3uaManagement" class="org.mobicents.protocols.ss7.oam.common.m3ua.M3uaManagementJmx">
+	<bean name="RestCommM3uaManagement" class="org.mobicents.protocols.ss7.oam.common.m3ua.M3uaManagementJmx">
 		<constructor>
 			<parameter><inject bean="Ss7Management" /></parameter>
 			<parameter><inject bean="Mtp3UserPart" /></parameter>
 		</constructor>
 	</bean>	
-	<bean name="MobicentsSccpManagement" class="org.mobicents.protocols.ss7.oam.common.sccp.SccpManagementJmx">
+	<bean name="RestCommSccpManagement" class="org.mobicents.protocols.ss7.oam.common.sccp.SccpManagementJmx">
 		<constructor>
 			<parameter><inject bean="Ss7Management" /></parameter>
 			<parameter><inject bean="SccpStack" /></parameter>
 		</constructor>
 	</bean>	
-    <bean name="MobicentsTcapManagement" class="org.mobicents.protocols.ss7.oam.common.tcap.TcapManagementJmx">
+    <bean name="RestCommTcapManagement" class="org.mobicents.protocols.ss7.oam.common.tcap.TcapManagementJmx">
         <constructor>
             <parameter><inject bean="Ss7Management" /></parameter>
             <parameter><inject bean="TcapStack" /></parameter>
