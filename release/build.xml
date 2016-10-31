@@ -29,20 +29,20 @@
 	<property name="restcomm-slee.build-number-2" value="2.8.31.65" />
 	<property name="restcomm-slee.version" value="${restcomm-slee.build-number-2}" />
 -->
-	<property name="restcomm-slee.ss7.map.ra.tag" value="7.0.53" />
+	<property name="restcomm-slee.ss7.map.ra.tag" value="7.1.57" />
 	<property name="restcomm-slee.http.ra.tag" value="2.8.5" />
 	<property name="restcomm-slee.jdbc.ra.tag" value="2.8.3" />
 
-	<property name="restcomm-jss7.build-number" value="1383" />
-	<property name="restcomm-jss7.version" value="7.0.${restcomm-jss7.build-number}" />
-	<property name="restcomm-jss7.release" value="7.0.1383" />
+	<property name="restcomm-jss7.build-number" value="1385" />
+	<property name="restcomm-jss7.version" value="7.1.${restcomm-jss7.build-number}" />
+	<property name="restcomm-jss7.release" value="7.1.1385" />
 <!--
 	<property name="restcomm-jss7.timestamp" value="1602171452" />
 -->
 
-	<property name="restcomm-map-ra.build-number" value="53" />
-	<property name="restcomm-map-ra.version" value="7.0.${restcomm-map-ra.build-number}" />
-	<property name="restcomm-map-ra.release" value="7.0.53" />
+	<property name="restcomm-map-ra.build-number" value="57" />
+	<property name="restcomm-map-ra.version" value="7.1.${restcomm-map-ra.build-number}" />
+	<property name="restcomm-map-ra.release" value="7.1.57" />
 
 	<!--GET Restcomm-Slee & Restcomm-jss7 - properties-->
 	<property name="cloudbees.url" value="https://mobicents.ci.cloudbees.com" />
