@@ -28,6 +28,7 @@ import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
 import org.jboss.system.ServiceMBeanSupport;
+import org.mobicents.applications.ussd.bootstrap.Version;
 
 /**
  * @author amit bhayani

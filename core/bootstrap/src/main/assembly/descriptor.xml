@@ -50,7 +50,12 @@
 				<include>org.mobicents.protocols.ss7.hardware:restcomm-dialogic</include>
 				<include>org.mobicents.protocols.ss7.congestion:congestion</include>
 
-                <include>org.mobicents.protocols.ss7.statistics:statistics</include>
+				<!-- RestComm statistics -->
+				<include>org.restcomm.commons:restcomm-statistics</include>
+				<include>org.apache.httpcomponents:httpclient</include>
+				<include>org.apache.httpcomponents:httpcore</include>
+				<include>com.google.code.gson:gson</include>
+				<include>com.codahale.metrics:metrics-core</include>
 
 				<!-- Mobicents SS7 Libs -->
 				<include>org.mobicents.protocols.ss7.oam.common:jmx</include>

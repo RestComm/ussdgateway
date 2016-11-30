@@ -32,6 +32,8 @@ import org.mobicents.protocols.ss7.statistics.api.StatDataCollection;
 import org.mobicents.protocols.ss7.statistics.api.StatDataCollectorType;
 import org.mobicents.protocols.ss7.statistics.api.StatResult;
 
+import com.codahale.metrics.Counter;
+
 /**
 *
 * @author sergey vetyutnev
@@ -48,8 +50,14 @@ public class UssdStatAggregator {
     private StatCollector statCollector = new StatCollector();
     private UUID sessionId = UUID.randomUUID();
 
+    private Counter counterMessages;
+
     public static UssdStatAggregator getInstance() {
         return instance;
+    }
+
+    public void setCounterMessages(Counter counterMessages) {
+        this.counterMessages = counterMessages;
     }
 
     public void reset() {
@@ -115,6 +123,9 @@ public class UssdStatAggregator {
 
     public void updateDialogsAllEstablished() {
         statCollector.dialogsAllEstablished.addAndGet(1);
+
+        if (counterMessages != null)
+            counterMessages.inc();
     }
 
     public long getDialogsAllFailed() {

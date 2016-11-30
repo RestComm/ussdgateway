@@ -231,6 +231,11 @@
             <groupId>org.mobicents.protocols.ss7.oam.common</groupId>
             <version>${jss7.restcomm.version}</version>
         </dependency>
+		<dependency>
+			<artifactId>linkset-oam</artifactId>
+			<groupId>org.mobicents.protocols.ss7.oam.common</groupId>
+			<version>${jss7.restcomm.version}</version>
+		</dependency>
 
 		<!-- SLEE DU -->
 		<dependency>
@@ -239,6 +244,32 @@
 			<version>${project.version}</version>
 		</dependency>
 
+		<!-- RestComm statistics -->
+		<dependency>
+			<groupId>org.restcomm.commons</groupId>
+			<artifactId>restcomm-statistics</artifactId>
+			<version>${restcomm.commons.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>${httpclient.version}</version>
+		</dependency>
+		<dependency>
+		<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+			<version>${httpcore.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>${gson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.codahale.metrics</groupId>
+			<artifactId>metrics-core</artifactId>
+			<version>${codahale-metrics.version}</version>
+		</dependency>
 	</dependencies>
 
 	<!-- -->

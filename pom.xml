@@ -20,6 +20,10 @@
 		<restcomm.tools.mavenplugin.eclipse.version>
 			1.0.0.FINAL
 		</restcomm.tools.mavenplugin.eclipse.version>
+		<restcomm.commons.version>2.0.145</restcomm.commons.version>
+		<httpclient.version>4.5.2</httpclient.version>
+		<httpcore.version>4.4.5</httpcore.version>
+		<gson.version>2.6.2</gson.version>
 
 		<!-- RELEASE CONFIGURATION -->
 		<release.name>
@@ -52,8 +56,11 @@
 		<stream.version>1.0.0.CR1</stream.version>
 		<sctp.version>1.7.8</sctp.version>
 		<commons.version>1.0.0.CR1</commons.version>
-		
+		<metrics.version>3.1.0</metrics.version>
+
 		<application.name>restcomm-ussd-gateway</application.name>
+		<restcomm.statistics.server>https://statistics.restcomm.com/rest/</restcomm.statistics.server>
+		<codahale-metrics.version>3.0.2</codahale-metrics.version>
 	</properties>
 
 	<modules>

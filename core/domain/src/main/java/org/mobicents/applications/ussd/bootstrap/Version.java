@@ -23,9 +23,9 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * Version class reads the version.properties packaged with media-server.jar for
- * run time display of Media Server Version
- * 
+ * Version class reads the version.properties packaged with for
+ * run time display of Version
+ *
  * @author amit.bhayani
  * 
  */
@@ -67,6 +67,51 @@ public final class Version {
 	public String getProperty(final String name) {
 		return props.getProperty(name);
 	}
+
+    public String getProjectName() {
+        String version = instance.getProperty("name");
+        if (version != null) {
+            return version;
+        } else {
+            return "???";
+        }
+    }
+
+    public String getProjectType() {
+        String version = instance.getProperty("version");
+        if (version != null) {
+            return version;
+        } else {
+            return "???";
+        }
+    }
+
+    public String getProjectVersion() {
+        String version = instance.getProperty("project.type");
+        if (version != null) {
+            return version;
+        } else {
+            return "???";
+        }
+    }
+
+    public String getStatisticsServer() {
+        String version = instance.getProperty("statistics.server");
+        if (version != null) {
+            return version;
+        } else {
+            return "https://statistics.restcomm.com/rest/";
+        }
+    }
+
+    public String getShortName() {
+        String version = instance.getProperty("short.name");
+        if (version != null) {
+            return version;
+        } else {
+            return "???";
+        }
+    }
 
 	/**
 	 * Returns the version information as a string.
