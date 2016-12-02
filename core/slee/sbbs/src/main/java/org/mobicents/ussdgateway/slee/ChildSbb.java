@@ -181,6 +181,9 @@ public abstract class ChildSbb extends USSDBaseSbb implements ChildInterface, Ch
 				this.logger.fine("Received UNSTRUCTURED_SS_RESPONSE_INDICATION for MAPDialog " + evt.getMAPDialog());
 			}
 
+			super.ussdStatAggregator.updateMessagesRecieved();
+            super.ussdStatAggregator.updateMessagesAll();
+
 			XmlMAPDialog dialog = this.getXmlMAPDialog();
 			dialog.reset();
 			String userObject = this.getUserObject();

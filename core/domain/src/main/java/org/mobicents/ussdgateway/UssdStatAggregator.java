@@ -200,6 +200,34 @@ public class UssdStatAggregator {
         statCollector.dialogsSipFailed.addAndGet(1);
     }
 
+    public long getMessagesRecieved() {
+        return statCollector.messagesRecieved.get();
+    }
+
+    public void updateMessagesRecieved() {
+        statCollector.messagesRecieved.addAndGet(1);
+    }
+
+    public long getMessagesSent() {
+        return statCollector.messagesSent.get();
+    }
+
+    public void updateMessagesSent() {
+        statCollector.messagesSent.addAndGet(1);
+    }
+
+    public long getMessagesAll() {
+        return statCollector.messagesAll.get();
+    }
+
+    public long getMessagesAllCumulative() {
+        return statCollector.messagesAll.get();
+    }
+
+    public void updateMessagesAll() {
+        statCollector.messagesAll.addAndGet(1);
+    }
+
     public long getDialogsAllEstablishedCumulative() {
         return statCollector.dialogsAllEstablished.get();
     }
@@ -341,6 +369,10 @@ public class UssdStatAggregator {
         private AtomicLong dialogsHttpFailed = new AtomicLong();
         private AtomicLong dialogsSipEstablished = new AtomicLong();
         private AtomicLong dialogsSipFailed = new AtomicLong();
+
+        private AtomicLong messagesRecieved = new AtomicLong();
+        private AtomicLong messagesSent = new AtomicLong();
+        private AtomicLong messagesAll = new AtomicLong();
 
         private AtomicLong processUssdRequestOperations = new AtomicLong();
         private AtomicLong ussdRequestOperations = new AtomicLong();

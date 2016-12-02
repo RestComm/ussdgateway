@@ -114,7 +114,10 @@ public abstract class ParentSbb extends USSDBaseSbb {
 
                 super.ussdStatAggregator.updateRequestsPerUssdCode(call.getShortCode());
 
-				if (call.getRuleType() == ScRoutingRuleType.HTTP) {
+                super.ussdStatAggregator.updateMessagesRecieved();
+                super.ussdStatAggregator.updateMessagesAll();
+
+                if (call.getRuleType() == ScRoutingRuleType.HTTP) {
 	                super.ussdStatAggregator.updateDialogsHttpEstablished();
 
 					// Create child of Http SBB and call local method

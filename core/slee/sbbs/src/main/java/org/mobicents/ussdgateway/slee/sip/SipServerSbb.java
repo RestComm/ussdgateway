@@ -265,6 +265,9 @@ public abstract class SipServerSbb extends ChildServerSbb implements SriParent {
 		if (logger.isFineEnabled())
 			logger.fine("Received UnstructuredSSResponse " + event);
 
+        super.ussdStatAggregator.updateMessagesRecieved();
+        super.ussdStatAggregator.updateMessagesAll();
+
 		try {
 			SipUssdMessage simMsg = new SipUssdMessage(event.getDataCodingScheme(), event.getUSSDString());
 			simMsg.setAnyExt(new AnyExt(MAPMessageType.unstructuredSSRequest_Response));
@@ -588,10 +591,14 @@ public abstract class SipServerSbb extends ChildServerSbb implements SriParent {
                 case unstructuredSSRequest_Request:
                     mapMessage = new UnstructuredSSRequestImpl(sipUssdMessage.getCBSDataCodingScheme(), ussdString, ALERTING_PATTERN, msisdn);
                     super.ussdStatAggregator.updateUssdRequestOperations();
+                    super.ussdStatAggregator.updateMessagesSent();
+                    super.ussdStatAggregator.updateMessagesAll();
                     break;
                 case unstructuredSSNotify_Request:
                     mapMessage = new UnstructuredSSNotifyRequestImpl(sipUssdMessage.getCBSDataCodingScheme(), ussdString, ALERTING_PATTERN, msisdn);
                     super.ussdStatAggregator.updateUssdNotifyOperations();
+                    super.ussdStatAggregator.updateMessagesSent();
+                    super.ussdStatAggregator.updateMessagesAll();
                     break;
                 default:
                     throw new Exception("SipUssdMessage MAPMessageType is not recognized \n" + sipUssdMessage);
@@ -763,10 +770,14 @@ public abstract class SipServerSbb extends ChildServerSbb implements SriParent {
                 case unstructuredSSRequest_Request:
                     mapDialogSupplementary.addUnstructuredSSRequest(cbsDataCodingScheme, ussdStr, null, null);
                     super.ussdStatAggregator.updateUssdRequestOperations();
+                    super.ussdStatAggregator.updateMessagesSent();
+                    super.ussdStatAggregator.updateMessagesAll();
                     break;
                 case unstructuredSSNotify_Request:
                     mapDialogSupplementary.addUnstructuredSSNotifyRequest(cbsDataCodingScheme, ussdStr, null, null);
                     super.ussdStatAggregator.updateUssdNotifyOperations();
+                    super.ussdStatAggregator.updateMessagesSent();
+                    super.ussdStatAggregator.updateMessagesAll();
                     break;
                 default:
                     throw new Exception("SipUssdMessage MAPMessageType is not recognized \n" + sipUssdMessage);

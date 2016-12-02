@@ -162,6 +162,15 @@ public class UssdStatProviderJmx implements UssdStatProviderJmxMBean, CounterMed
         cd = new CounterDefImpl(CounterType.Average, "DialogsAllFailedPerSec", "Dialogs failed at establishing or established phases all per second");
         cds.addCounterDef(cd);
 
+        cd = new CounterDefImpl(CounterType.Summary, "MessagesRecieved", "SS7 payload Messages received by USSD GW for both PULL / PULL cases");
+        cds.addCounterDef(cd);
+        cd = new CounterDefImpl(CounterType.Summary, "MessagesSent", "SS7 payload Messages sent by USSD GW for both PULL / PULL cases");
+        cds.addCounterDef(cd);
+        cd = new CounterDefImpl(CounterType.Summary, "MessagesAll", "SS7 payload Messages received and sent by USSD GW for both PULL / PULL cases");
+        cds.addCounterDef(cd);
+        cd = new CounterDefImpl(CounterType.Summary_Cumulative, "MessagesAllCumulative", "SS7 payload Messages received and sent by USSD GW for both PULL / PULL cases cumulative");
+        cds.addCounterDef(cd);
+
         cd = new CounterDefImpl(CounterType.Summary, "ProcessUssdRequestOperations", "ProcessUssdRequest operations count");
         cds.addCounterDef(cd);
         cd = new CounterDefImpl(CounterType.Summary_Cumulative, "ProcessUssdRequestOperationsCumulative", "ProcessUssdRequest operations count cumulative");
@@ -292,6 +301,16 @@ public class UssdStatProviderJmx implements UssdStatProviderJmxMBean, CounterMed
                     svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getDialogsSipEstablished());
                 } else if (cd.getCounterName().equals("DialogsSipFailed")) {
                     svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getDialogsSipFailed());
+
+                } else if (cd.getCounterName().equals("MessagesRecieved")) {
+                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getMessagesRecieved());
+                } else if (cd.getCounterName().equals("MessagesSent")) {
+                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getMessagesSent());
+                } else if (cd.getCounterName().equals("MessagesAll")) {
+                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getMessagesAll());
+                } else if (cd.getCounterName().equals("MessagesAllCumulative")) {
+                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getMessagesAllCumulative());
+
                 } else if (cd.getCounterName().equals("DialogsAllEstablishedCumulative")) {
                     svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getDialogsAllEstablishedCumulative());
                 } else if (cd.getCounterName().equals("DialogsAllFailedCumulative")) {

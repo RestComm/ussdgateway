@@ -280,6 +280,8 @@ public abstract class SipClientSbb extends ChildSbb {
 
 				mapDialogSupplementary.addUnstructuredSSRequest(cbsDataCodingScheme, ussdStr, null, null);
                 super.ussdStatAggregator.updateUssdRequestOperations();
+                super.ussdStatAggregator.updateMessagesSent();
+                super.ussdStatAggregator.updateMessagesAll();
 
 				mapDialogSupplementary.send();
 			} else {

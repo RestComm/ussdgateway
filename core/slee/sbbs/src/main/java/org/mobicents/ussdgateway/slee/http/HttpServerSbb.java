@@ -181,12 +181,16 @@ public abstract class HttpServerSbb extends ChildServerSbb implements SriParent 
 						msisdn = ussRequest.getMSISDNAddressString();
 						serviceCode = ussRequest.getUSSDString().getString(null);
 	                    super.ussdStatAggregator.updateUssdRequestOperations();
+                        super.ussdStatAggregator.updateMessagesSent();
+                        super.ussdStatAggregator.updateMessagesAll();
 						break;
 					case unstructuredSSNotify_Request:
 						final UnstructuredSSNotifyRequest ntfyReq = (UnstructuredSSNotifyRequest) rawMessage;
 						msisdn = ntfyReq.getMSISDNAddressString();
 						serviceCode = ntfyReq.getUSSDString().getString(null);
 	                    super.ussdStatAggregator.updateUssdNotifyOperations();
+                        super.ussdStatAggregator.updateMessagesSent();
+                        super.ussdStatAggregator.updateMessagesAll();
 						break;
 					case processUnstructuredSSRequest_Request:
 						final ProcessUnstructuredSSRequest processUnstrSSReq = (ProcessUnstructuredSSRequest) rawMessage;
@@ -346,9 +350,13 @@ public abstract class HttpServerSbb extends ChildServerSbb implements SriParent 
                     switch (messagetype) {
                     case unstructuredSSRequest_Request:
                         super.ussdStatAggregator.updateUssdRequestOperations();
+                        super.ussdStatAggregator.updateMessagesSent();
+                        super.ussdStatAggregator.updateMessagesAll();
                         break;
                     case unstructuredSSNotify_Request:
                         super.ussdStatAggregator.updateUssdNotifyOperations();
+                        super.ussdStatAggregator.updateMessagesSent();
+                        super.ussdStatAggregator.updateMessagesAll();
                         break;
                     }
                 }
@@ -532,6 +540,9 @@ public abstract class HttpServerSbb extends ChildServerSbb implements SriParent 
 			EventContext eventContext) {
 		if (logger.isFineEnabled())
 			logger.fine("Received UnstructuredSSResponse " + event);
+
+		super.ussdStatAggregator.updateMessagesRecieved();
+        super.ussdStatAggregator.updateMessagesAll();
 
 		this.processReceivedMAPEvent((MAPEvent) event);
 	}

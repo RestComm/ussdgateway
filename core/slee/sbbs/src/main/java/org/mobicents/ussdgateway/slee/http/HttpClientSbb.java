@@ -144,12 +144,20 @@ public abstract class HttpClientSbb extends ChildSbb {
                                 switch (n.getValue().getMessageType()) {
                                 case unstructuredSSRequest_Request:
                                     super.ussdStatAggregator.updateUssdRequestOperations();
+                                    super.ussdStatAggregator.updateMessagesSent();
+                                    super.ussdStatAggregator.updateMessagesAll();
                                     break;
                                 case unstructuredSSNotify_Request:
                                     super.ussdStatAggregator.updateUssdNotifyOperations();
+                                    super.ussdStatAggregator.updateMessagesSent();
+                                    super.ussdStatAggregator.updateMessagesAll();
                                     break;
                                 case processUnstructuredSSRequest_Request:
                                     super.ussdStatAggregator.updateProcessUssdRequestOperations();
+                                    break;
+                                case processUnstructuredSSRequest_Response:
+                                    super.ussdStatAggregator.updateMessagesSent();
+                                    super.ussdStatAggregator.updateMessagesAll();
                                     break;
                                 }
                             }
