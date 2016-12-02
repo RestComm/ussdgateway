@@ -69,6 +69,7 @@ public class UssdStatProviderJmx implements UssdStatProviderJmxMBean, CounterMed
 
     private RestcommStatsReporter statsReporter = RestcommStatsReporter.getRestcommStatsReporter();
     private MetricRegistry metrics = RestcommStatsReporter.getMetricRegistry();
+    private Counter counterDialogs = metrics.counter("ussd_dialogs");
     private Counter counterMessages = metrics.counter("messages");
 
     public UssdStatProviderJmx(MBeanHost ss7Management) {
@@ -105,6 +106,7 @@ public class UssdStatProviderJmx implements UssdStatProviderJmxMBean, CounterMed
         statsReporter.setVersion(projectVersion);
         statsReporter.start(86400, TimeUnit.SECONDS);
 
+        ussdStatAggregator.setCounterDialogs(counterDialogs);
         ussdStatAggregator.setCounterMessages(counterMessages);
 
         logger.info("UssdStatProviderJmx Started ...");

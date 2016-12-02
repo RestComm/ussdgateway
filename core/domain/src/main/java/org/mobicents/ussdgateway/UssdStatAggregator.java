@@ -50,10 +50,15 @@ public class UssdStatAggregator {
     private StatCollector statCollector = new StatCollector();
     private UUID sessionId = UUID.randomUUID();
 
+    private Counter counterDialogs;
     private Counter counterMessages;
 
     public static UssdStatAggregator getInstance() {
         return instance;
+    }
+
+    public void setCounterDialogs(Counter counterDialogs) {
+        this.counterDialogs = counterDialogs;
     }
 
     public void setCounterMessages(Counter counterMessages) {
@@ -124,8 +129,8 @@ public class UssdStatAggregator {
     public void updateDialogsAllEstablished() {
         statCollector.dialogsAllEstablished.addAndGet(1);
 
-        if (counterMessages != null)
-            counterMessages.inc();
+        if (counterDialogs != null)
+            counterDialogs.inc();
     }
 
     public long getDialogsAllFailed() {
@@ -226,6 +231,9 @@ public class UssdStatAggregator {
 
     public void updateMessagesAll() {
         statCollector.messagesAll.addAndGet(1);
+
+        if (counterMessages != null)
+            counterMessages.inc();
     }
 
     public long getDialogsAllEstablishedCumulative() {
