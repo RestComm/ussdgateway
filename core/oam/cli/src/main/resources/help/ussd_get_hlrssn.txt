@@ -6,6 +6,7 @@ SYNOPSIS
 
 DESCRIPTION
 	This command is used to get the value of HLR Sub System Number (SSN).
+	Default value: 6
 
 SEE ALSO
 	ussd get scgt, ussd set scgt, ussd get scssn, ussd set scssn, 

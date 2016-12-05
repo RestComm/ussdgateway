@@ -81,11 +81,11 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
     private String serverErrorMessage = "Server error, please try again after sometime";
     private String dialogTimeoutErrorMessage = "Request timeout please try again after sometime.";
 
-	private String ussdGwGt = null;
-	private FastMap<Integer, String> networkIdVsUssdGwGt = new FastMap<Integer, String>();
-    private int ussdGwSsn = -1;
-    private int hlrSsn = -1;
-    private int mscSsn = -1;
+    private String ussdGwGt = "00000000";
+    private FastMap<Integer, String> networkIdVsUssdGwGt = new FastMap<Integer, String>();
+    private int ussdGwSsn = 8;
+    private int hlrSsn = 6;
+    private int mscSsn = 8;
     private int maxMapVersion = 3;
 	/**
 	 * Dialog time out in milliseconds. Once HTTP request is sent, it expects

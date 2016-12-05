@@ -9,7 +9,8 @@ DESCRIPTION
 	this command in CLI will set the SSN value but you must ensure that the SSN value
 	is properly configured in the TCAP Stack in the xml descriptor file
 	'mobicents-ussdgateway-version/jboss-5.1.0.GA/server/default/deploy/
-	 mobicents-ussd-gateway/META-INF/jboss-beans.xml'
+	mobicents-ussd-gateway/META-INF/jboss-beans.xml'
+	Default value: 8
 
 EXAMPLES
 	ussd set ussdssn 6

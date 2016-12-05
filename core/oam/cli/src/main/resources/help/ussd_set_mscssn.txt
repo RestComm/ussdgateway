@@ -6,6 +6,7 @@ SYNOPSIS
 
 DESCRIPTION
 	This command is used to set the value for MSC Sub System Number (SSN). 
+	Default value: 8
 
 EXAMPLES
 	ussd set mscssn 8

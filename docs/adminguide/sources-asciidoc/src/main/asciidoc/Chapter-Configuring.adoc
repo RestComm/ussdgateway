@@ -634,6 +634,8 @@ DESCRIPTION
 	use "0" as Global Title value
 	(like "ussd set ussdgt 0 networkid <xxx>") -
 	this will just clear Global Title for an specified networkid.
+	Default value: "00000000" that means that we need to change
+    this value to a proper one.
 
 EXAMPLES
 	ussd set ussdgt 912020015
@@ -686,6 +688,7 @@ DESCRIPTION
 	is properly configured in the TCAP Stack in the xml descriptor file
 	'mobicents-ussdgateway-version/jboss-5.1.0.GA/server/<profile>/deploy/
 	 mobicents-ussd-gateway/META-INF/jboss-beans.xml'
+	 Default value: 8
 
 EXAMPLES
 	ussd set ussdssn 6
@@ -730,6 +733,7 @@ SYNOPSIS
 
 DESCRIPTION
 	This command is used to set the value for HLR Sub System Number (SSN). 
+	Default value: 6
 
 EXAMPLES
 	ussd set hlrssn 7
@@ -772,7 +776,8 @@ SYNOPSIS
 	ussd set mscssn <mscSubSystemNumber>
 
 DESCRIPTION
-	This command is used to set the value for MSC Sub System Number (SSN). 
+	This command is used to set the value for MSC Sub System Number (SSN).
+	Default value: 8
 
 EXAMPLES
 	ussd set mscssn 8
