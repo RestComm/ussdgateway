@@ -288,6 +288,7 @@ public class ServerTesterForm extends JDialog {
     private void clearLog() {
         tbLog.setText("");
         responseNum = 0;
+        cookie = null;
     }
 
     private class SockListener implements Runnable {
