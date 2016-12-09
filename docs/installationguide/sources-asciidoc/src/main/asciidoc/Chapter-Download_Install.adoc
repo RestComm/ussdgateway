@@ -7,7 +7,7 @@ You can either download the binary release or download the source code and set u
 [[_downloading_binary]]
 == Binary Download and Installation
 
-The binary release is available for download at TeleStax Customer Support Portal &THIS.RELEASE_BINARY_URL;link: 
+The binary release is available for download at TeleStax Customer Support Portal {this-release-binary-url} link: 
 
 .Procedure: Binary Download and Installation
 . Download the zip file `<filename>` to any folder of your choice. 
@@ -62,7 +62,21 @@ When you download the binary release, you will notice that the top level directo
 				|+ {this-folder}-jss7-simulator
 				|+ {this-folder}-ussd-simulator
 				|+ twiddle
+		|- template
+				|+ META-INF-dialogic
+				|+ META-INF-m3ua-dialogic
 ----
+
+[[_dialogic_setup]]
+== Extra setup when usage of Dialogic cards
+
+If you use only m3ua stack for communicating via SS7 network we can skip this chapter. If you use legacy dialogic cards with or without m3ua you need to follow actions from this chaper.
+
+.Procedure: Extra actions for dialogic card usage
+. Copy gct java lib: `gctApi.jar` from downloaded dialogic drivers (from folder `dpk/JAVA`) into the folder `jboss-5.1.0.GA/server/default/deploy/{this-folder}-ussd-gateway/lib`.
+. Copy native lib: `libgctjni.so` from downloaded dialogic drivers (from folder `dpk/64` or `dpk/32` depending on JAVA 64 or 32-bit version) into the folder `jboss-5.1.0.GA/bin/META-INF/lib/linux2/x64` for JAVA 64-bit or `jboss-5.1.0.GA/bin/META-INF/lib/linux2/x86` for JAVA 32-bit.
+. Copy jboss mbean config files: `jboss-beans.xml` and `jboss-structure.xml` files from `template/META-INF-dialogic` folder (if we use dialogic boards WITHOUT m3ua) or from `template/META-INF-m3ua-dialogic` folder (if we use dialogic boards WITH m3ua together) to folder `jboss-5.1.0.GA/server/default/deploy/{this-folder}-ussd-gateway/META-INF`
+. In the copied `jboss-beans.xml` file you need to find a bean with DialogicMtp3UserPart class and update properties `sourceModuleId` and `destinationModuleId` with modules ids that are configured in your dialogc board.
 
 [[_source_code]]
 == Setup from Source 
@@ -86,12 +100,13 @@ In addition you must have the following tools installed.
 
 . Downloading the source code
 +
-Use GIT to checkout a specific release source, the base URL is &THIS.TRUNK_SOURCE_CODE_URL;, then add the specific release version. 
+Use GIT to checkout a specific release source, the base URL is {this-trunk-source-code-url}, then add the specific release version. 
 +
 [source]
+[subs="attributes"]
 ----
 
-[usr]$ git clone &THIS.TRUNK_SOURCE_CODE_URL;
+[usr]$ git clone {this-trunk-source-code-url};
 [usr]$ cd ussdgateway
 [usr]$ git checkout <version>
 ----
