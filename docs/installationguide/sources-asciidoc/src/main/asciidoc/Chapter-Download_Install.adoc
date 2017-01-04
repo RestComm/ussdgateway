@@ -7,7 +7,7 @@ You can either download the binary release or download the source code and set u
 [[_downloading_binary]]
 == Binary Download and Installation
 
-The binary release is available for download at TeleStax Customer Support Portal {this-release-binary-url} link: 
+The binary release is available for download at the following link: {this-release-binary-url}
 
 .Procedure: Binary Download and Installation
 . Download the zip file `<filename>` to any folder of your choice. 
@@ -106,7 +106,7 @@ Use GIT to checkout a specific release source, the base URL is {this-trunk-sourc
 [subs="attributes"]
 ----
 
-[usr]$ git clone {this-trunk-source-code-url};
+[usr]$ git clone {this-trunk-source-code-url}.git
 [usr]$ cd ussdgateway
 [usr]$ git checkout <version>
 ----
