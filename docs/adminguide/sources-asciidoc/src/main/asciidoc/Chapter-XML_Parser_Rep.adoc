@@ -1,0 +1,39 @@
+[[_mvn_dependency]]
+== Maven dependency
+
+If you are using maven to build your project, define following dependencies to use XML Framework in your project 
+
+[source,xml,subs="verbatim,attributes"]
+----
+		<dependency>
+			<groupId>org.mobicents.ussd</groupId>
+			<artifactId>xml</artifactId>
+			<version>{project-version}</version>
+		</dependency>
+----
+
+.Note
+[NOTE]
+====
+Telestax maintains the archieve in sonatype repository. Please add the following in your pom's repositories tag.
+
+[source,xml,subs="verbatim,attributes"]
+----
+
+		<repository>
+			<id>mobicents-public-repository-group</id>
+			<name>Mobicens Public Maven Repository Group</name>
+			<url>https://oss.sonatype.org/content/groups/public/</url>
+			<layout>default</layout>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</snapshots>
+		</repository>
+----
+====
+

@@ -11,82 +11,9 @@
 So if you are using Java Servlets for your business logic, this framework will make it very easy to compose your business logic.
 However using this framework is not mandatory and you are free to create your own XML parser. 
 
-[[_mvn_dependency]]
-== Maven dependency
 
-If you are using maven to build your project define following dependencies to use XML Framework in your project 
+include::Chapter-XML_Parser_Rep.adoc[]
 
-[source,xml]
-----
-
-		<dependency>
-			<groupId>org.mobicents.ussd</groupId>
-			<artifactId>xml</artifactId>
-			<version>6.1.5.GA</version>
-		</dependency>
-----
-
-.Note
-[NOTE]
-====
-{this-platform} maintains the archieve in private repository.
-please add the following in your pom's repositories tag 
-
-[source,xml]
-----
-
-		<repository>
-		  <id>mobicents-releases-repository</id>
-		  <name>Mobicents Releases Repository</name>
-		  <url>http://telestax.artifactoryonline.com/telestax/releases</url>
-		  <releases>
-		    <enabled>true</enabled>
-		    <updatePolicy>never</updatePolicy>
-		  </releases>
-		  <snapshots>
-		    <enabled>false</enabled>
-		    <updatePolicy>never</updatePolicy>
-		  </snapshots>		  		  
-		</repository>
-		<repository>
-		  <id>mobicents-snapshots-repository</id>
-		  <name>Mobicents Snapshots Repository</name>
-		  <url>http://telestax.artifactoryonline.com/telestax/snapshots</url>
-		  <releases>
-		    <enabled>false</enabled>
-		    <updatePolicy>never</updatePolicy>
-		  </releases>
-		  <snapshots>
-		    <enabled>true</enabled>
-		    <updatePolicy>never</updatePolicy>
-		  </snapshots>		  		  
-		</repository>
-----
-====
-
-.Important
-[IMPORTANT]
-====
-Mobicents Releases and Snapshots Repository are password protected.
-Ask support to get your password.
-
-Once you have user name and password add following to your servers definition in your maven settings located in M2_HOME/conf/settings.xml
-
-[source,xml]
-----
-
- 	<server>
-      <id>mobicents-releases-repository</id>
-      <username>xxx</username>
-      <password>xxx</password>
-    </server>
-    <server>
-      <id>mobicents-snapshots-repository</id>
-      <username>xxx</username>
-      <password>xxx</password>
-    </server>
-----
-====
 
 [[_simple_tree_based_example]]
 == Simple example - Tree based Menu 
