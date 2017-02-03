@@ -78,7 +78,7 @@ public final class Version {
     }
 
     public String getProjectType() {
-        String version = instance.getProperty("version");
+        String version = instance.getProperty("project.type");
         if (version != null) {
             return version;
         } else {
@@ -87,7 +87,7 @@ public final class Version {
     }
 
     public String getProjectVersion() {
-        String version = instance.getProperty("project.type");
+        String version = instance.getProperty("version");
         if (version != null) {
             return version;
         } else {
