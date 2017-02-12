@@ -360,7 +360,7 @@ This is MSISDN of the user who originated this request.
 
 NOTE: If <msisdn> is not included in processUnstructuredSSRequest, originationReference will be included in the dialog and this will be the MSISDN of the user originating the request. 
 
-<alertingPattern> is also an optional attribute. 
+<alertingPattern> is also an optional attribute. It is used in Network Initiated or PUSH USSD for allowing the Mobile Network Operator associating distinctive audible warnings, used by the MSC to alert the user equipment in a specific manner.
 
 ==== processUnstructuredSSRequest_Response
 
