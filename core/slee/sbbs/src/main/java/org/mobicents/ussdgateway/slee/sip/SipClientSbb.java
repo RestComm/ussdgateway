@@ -240,7 +240,7 @@ public abstract class SipClientSbb extends ChildSbb {
 			byte[] rawContent = request.getRawContent();
 
 			if (logger.isInfoEnabled()) {
-				logger.info("Payload " + new String(rawContent));
+				logger.info("Payload " + rawContent);
 			}
 
 			if (rawContent == null || rawContent.length <= 0) {
@@ -272,9 +272,16 @@ public abstract class SipClientSbb extends ChildSbb {
 				return;
 			}
 
-			if (sipUssdMessage.isSuccessMessage()) {
+            MAPDialogSupplementary mapDialogSupplementary = this.getMAPDialog();
+            if (mapDialogSupplementary == null) {
+                logger.warning("Error while processing INFO event: no MAP dialog is found, terminating of SIP dialog");
+                abortSipDialog();
+                this.updateDialogFailureStat();
+                this.createCDRRecord(RecordStatus.FAILED_DIALOG_TIMEOUT);
+                return;
+            }
 
-				MAPDialogSupplementary mapDialogSupplementary = this.getMAPDialog();
+            if (sipUssdMessage.isSuccessMessage()) {
 				CBSDataCodingScheme cbsDataCodingScheme = sipUssdMessage.getCBSDataCodingScheme();
 				USSDStringImpl ussdStr = new USSDStringImpl(sipUssdMessage.getUssdString(), cbsDataCodingScheme, null);
 
@@ -330,9 +337,9 @@ public abstract class SipClientSbb extends ChildSbb {
 
 			byte[] rawContent = request.getRawContent();
 
-			if (logger.isInfoEnabled()) {
-				logger.info("Payload " + new String(rawContent));
-			}
+            if (logger.isInfoEnabled()) {
+                logger.info("Payload " + rawContent);
+            }
 
 			if (rawContent == null || rawContent.length <= 0) {
                 logger.severe("Received BYE but USSD Payload is null \n" + evt);
