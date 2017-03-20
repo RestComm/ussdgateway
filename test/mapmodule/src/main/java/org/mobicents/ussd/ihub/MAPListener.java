@@ -172,7 +172,7 @@ public class MAPListener implements MAPDialogListener, MAPServiceSmsListener, MA
 	}
 
 	@Override
-	public void onDialogRequestEricsson(MAPDialog arg0, AddressString arg1, AddressString arg2, IMSI arg3,
+	public void onDialogRequestEricsson(MAPDialog arg0, AddressString arg1, AddressString arg2, AddressString arg3,
 			AddressString arg4) {
 		logger.info("onDialogRequestEricsson " + arg0);
 	}

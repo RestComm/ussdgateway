@@ -47,7 +47,6 @@ import org.mobicents.protocols.ss7.map.api.dialog.Reason;
 import org.mobicents.protocols.ss7.map.api.dialog.ResourceUnavailableReason;
 import org.mobicents.protocols.ss7.map.api.errors.MAPErrorMessage;
 import org.mobicents.protocols.ss7.map.api.primitives.AddressString;
-import org.mobicents.protocols.ss7.map.api.primitives.IMSI;
 import org.mobicents.protocols.ss7.map.api.primitives.MAPExtensionContainer;
 import org.mobicents.protocols.ss7.map.api.service.supplementary.MAPDialogSupplementary;
 import org.mobicents.protocols.ss7.map.dialog.MAPUserAbortChoiceImpl;
@@ -197,7 +196,7 @@ public class XmlMAPDialog implements MAPDialog, XMLSerializable {
 	}
 
 	@Override
-	public void addEricssonData(IMSI arg0, AddressString arg1) {
+	public void addEricssonData(AddressString arg0, AddressString arg1) {
 		// TODO Auto-generated method stub
 
 	}
