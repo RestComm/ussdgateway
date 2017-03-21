@@ -35,6 +35,10 @@ public interface UssdPropertiesManagementMBean {
 
 	public void setNoRoutingRuleConfiguredMessage(String noRoutingRuleConfiguredMessage);
 
+    public String getServerOverloadedMessage();
+
+    public void setServerOverloadedMessage(String serverOverloadedMessage);
+
 	public String getServerErrorMessage();
 
 	public void setServerErrorMessage(String serverErrorMessage);
@@ -80,5 +84,9 @@ public interface UssdPropertiesManagementMBean {
     public void setHrHlrGt(String hrHlrGt);
 
     public String getHrHlrGt();
-    
+
+    public int getMaxActivityCount();
+
+    public void setMaxActivityCount(int maxActivityCount);
+
 }

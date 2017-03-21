@@ -74,6 +74,15 @@ public abstract class ParentSbb extends USSDBaseSbb {
 		dialog.setNetworkId(mapDialog.getNetworkId());
 
 		this.setDialog(dialog);
+
+        // !!!!-
+//        this.logger.warning("isEriStyle=" + evt.isEriStyle());
+//        this.logger.warning("EriMsisdn=" + evt.getEriMsisdn() + ", EriVlrNo=" + evt.getEriVlrNo());
+//        if (evt.isEriStyle()) {
+//            this.logger.warning("EriMsisdn=" + evt.getEriMsisdn() + ", EriVlrNo=" + evt.getEriVlrNo());
+//        }
+        // !!!!-
+
 	}
 
 	public void onDialogTimeout(org.mobicents.slee.resource.map.events.DialogTimeout evt, ActivityContextInterface aci) {
@@ -85,7 +94,21 @@ public abstract class ParentSbb extends USSDBaseSbb {
 	public void onProcessUnstructuredSSRequest(ProcessUnstructuredSSRequest evt, ActivityContextInterface aci) {
 
 		try {
-			USSDString ussdStrObj = evt.getUSSDString();
+	        if (!this.checkMaxActivityCount(ussdPropertiesManagement.getMaxActivityCount())) {
+                if (this.logger.isWarningEnabled()) {
+                    this.logger
+                            .warning(String
+                                    .format("ProcessUnstructuredSSRequest is received and rejected because of too many active dialogs, more then maxActivityCount=%d",
+                                            ussdPropertiesManagement.getMaxActivityCount()));
+                }
+                this.sendError(evt, ussdPropertiesManagement.getServerOverloadedMessage());
+
+                super.ussdStatAggregator.updateDialogsAllFailed();
+                super.ussdStatAggregator.updateDialogsPullFailed();
+                return;
+	        }
+
+	        USSDString ussdStrObj = evt.getUSSDString();
 			String shortCode = ussdStrObj.getString(null);
 
 			if (this.logger.isFineEnabled()) {
@@ -183,7 +206,7 @@ public abstract class ParentSbb extends USSDBaseSbb {
 
 	public void setSbbContext(SbbContext sbbContext) {
 		super.setSbbContext(sbbContext);
-		// overwrite loggeer
+		// overwrite logger
 		this.logger = sbbContext.getTracer("USSD-Parent-" + getClass().getName());
 		try {
 			super.mapAcif = (MAPContextInterfaceFactory) super.sbbContext

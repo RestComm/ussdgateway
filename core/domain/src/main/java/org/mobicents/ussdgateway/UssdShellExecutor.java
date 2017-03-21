@@ -329,8 +329,10 @@ public class UssdShellExecutor implements ShellExecutor {
 		String parName = options[2].toLowerCase();
 		if (parName.equals(UssdPropertiesManagement.NO_ROUTING_RULE_CONFIGURED_ERROR_MESSAGE)) {
 			ussdPropertiesManagement.setNoRoutingRuleConfiguredMessage(this.formFullMessage(options, 3));
-		} else if (parName.equals(UssdPropertiesManagement.DIALOG_TIMEOUT_ERROR_MESSAGE)) {
-			ussdPropertiesManagement.setDialogTimeoutErrorMessage(this.formFullMessage(options, 3));
+        } else if (parName.equals(UssdPropertiesManagement.DIALOG_TIMEOUT_ERROR_MESSAGE)) {
+            ussdPropertiesManagement.setDialogTimeoutErrorMessage(this.formFullMessage(options, 3));
+        } else if (parName.equals(UssdPropertiesManagement.SERVER_OVERLOADED_MESSAGE)) {
+            ussdPropertiesManagement.setServerOverloadedMessage(this.formFullMessage(options, 3));
 		} else if (parName.equals(UssdPropertiesManagement.SERVER_ERROR_MESSAGE)) {
 			ussdPropertiesManagement.setServerErrorMessage(this.formFullMessage(options, 3));
 		} else if (parName.equals(UssdPropertiesManagement.DIALOG_TIMEOUT)) {
@@ -343,8 +345,10 @@ public class UssdShellExecutor implements ShellExecutor {
             } else {
                 ussdPropertiesManagement.setUssdGt(gt);
             }
-		} else if (parName.equals(UssdPropertiesManagement.USSD_SSN)) {
-			ussdPropertiesManagement.setUssdSsn(Integer.parseInt(options[3]));
+        } else if (parName.equals(UssdPropertiesManagement.MAX_ACTIVITY_COUNT)) {
+            ussdPropertiesManagement.setMaxActivityCount(Integer.parseInt(options[3]));
+        } else if (parName.equals(UssdPropertiesManagement.USSD_SSN)) {
+            ussdPropertiesManagement.setUssdSsn(Integer.parseInt(options[3]));
 		} else if (parName.equals(UssdPropertiesManagement.HLR_SSN)) {
 			ussdPropertiesManagement.setHlrSsn(Integer.parseInt(options[3]));
 		} else if (parName.equals(UssdPropertiesManagement.MSC_SSN)) {
@@ -390,8 +394,10 @@ public class UssdShellExecutor implements ShellExecutor {
 			sb.append(" = ");
 			if (parName.equals(UssdPropertiesManagement.NO_ROUTING_RULE_CONFIGURED_ERROR_MESSAGE)) {
 				sb.append(ussdPropertiesManagement.getNoRoutingRuleConfiguredMessage());
-			} else if (parName.equals(UssdPropertiesManagement.DIALOG_TIMEOUT_ERROR_MESSAGE)) {
-				sb.append(ussdPropertiesManagement.getDialogTimeoutErrorMessage());
+            } else if (parName.equals(UssdPropertiesManagement.DIALOG_TIMEOUT_ERROR_MESSAGE)) {
+                sb.append(ussdPropertiesManagement.getDialogTimeoutErrorMessage());
+            } else if (parName.equals(UssdPropertiesManagement.SERVER_OVERLOADED_MESSAGE)) {
+                sb.append(ussdPropertiesManagement.getServerOverloadedMessage());
 			} else if (parName.equals(UssdPropertiesManagement.SERVER_ERROR_MESSAGE)) {
 				sb.append(ussdPropertiesManagement.getServerErrorMessage());
 			} else if (parName.equals(UssdPropertiesManagement.DIALOG_TIMEOUT)) {
@@ -405,6 +411,8 @@ public class UssdShellExecutor implements ShellExecutor {
                     sb.append(" - GT=");
                     sb.append(ussdPropertiesManagement.getNetworkIdVsUssdGwGt().get(key));
                 }
+            } else if (parName.equals(UssdPropertiesManagement.MAX_ACTIVITY_COUNT)) {
+                sb.append(ussdPropertiesManagement.getMaxActivityCount());
 			} else if (parName.equals(UssdPropertiesManagement.USSD_SSN)) {
 				sb.append(ussdPropertiesManagement.getUssdSsn());
 			} else if (parName.equals(UssdPropertiesManagement.HLR_SSN)) {
@@ -428,9 +436,13 @@ public class UssdShellExecutor implements ShellExecutor {
 			sb.append(ussdPropertiesManagement.getNoRoutingRuleConfiguredMessage());
 			sb.append("\n");
 
-			sb.append(UssdPropertiesManagement.DIALOG_TIMEOUT_ERROR_MESSAGE + " = ");
-			sb.append(ussdPropertiesManagement.getDialogTimeoutErrorMessage());
-			sb.append("\n");
+            sb.append(UssdPropertiesManagement.DIALOG_TIMEOUT_ERROR_MESSAGE + " = ");
+            sb.append(ussdPropertiesManagement.getDialogTimeoutErrorMessage());
+            sb.append("\n");
+
+            sb.append(UssdPropertiesManagement.SERVER_OVERLOADED_MESSAGE + " = ");
+            sb.append(ussdPropertiesManagement.getServerOverloadedMessage());
+            sb.append("\n");
 
 			sb.append(UssdPropertiesManagement.DIALOG_TIMEOUT + " = ");
 			sb.append(ussdPropertiesManagement.getDialogTimeout());
@@ -450,9 +462,13 @@ public class UssdShellExecutor implements ShellExecutor {
             }
 			sb.append("\n");
 
-			sb.append(UssdPropertiesManagement.USSD_SSN + " = ");
-			sb.append(ussdPropertiesManagement.getUssdSsn());
-			sb.append("\n");
+            sb.append(UssdPropertiesManagement.MAX_ACTIVITY_COUNT + " = ");
+            sb.append(ussdPropertiesManagement.getMaxActivityCount());
+            sb.append("\n");
+
+            sb.append(UssdPropertiesManagement.USSD_SSN + " = ");
+            sb.append(ussdPropertiesManagement.getUssdSsn());
+            sb.append("\n");
 
 			sb.append(UssdPropertiesManagement.HLR_SSN + " = ");
 			sb.append(ussdPropertiesManagement.getHlrSsn());

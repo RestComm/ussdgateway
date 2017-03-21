@@ -266,14 +266,11 @@ public class USSDBaseSbb implements Sbb {
 
 		return null;
 	}
-	
-//	protected void abort(MAPDialog mapDialog) throws MAPException {
-//		// TODO get the reason
-//
-//		MAPUserAbortChoice mapUserAbortChoice = this.mapParameterFactory.createMAPUserAbortChoice();
-//		// As of now hardcoded
-//		mapUserAbortChoice.setUserSpecificReason();
-//		mapDialog.abort(mapUserAbortChoice);
-//	}
+
+    protected boolean checkMaxActivityCount(int maxActivityCount) {
+        if (maxActivityCount <= 0)
+            return true;
+        return mapProvider.getCurrentDialogsCount() < maxActivityCount;
+    }
 
 }

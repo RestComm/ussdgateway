@@ -47,10 +47,9 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
 
 	private static final Logger logger = Logger.getLogger(UssdPropertiesManagement.class);
 
-	protected static final String NO_ROUTING_RULE_CONFIGURED_ERROR_MESSAGE = "noroutingruleconfigerrmssg";
-
+    protected static final String NO_ROUTING_RULE_CONFIGURED_ERROR_MESSAGE = "noroutingruleconfigerrmssg";
+    protected static final String SERVER_OVERLOADED_MESSAGE = "serveroverloadedmsg";
 	protected static final String SERVER_ERROR_MESSAGE = "servererrmssg";
-
 	protected static final String DIALOG_TIMEOUT_ERROR_MESSAGE = "dialogtimeouterrmssg";
 
 	protected static final String DIALOG_TIMEOUT = "dialogtimeout";
@@ -63,6 +62,7 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
 	protected static final String MAX_MAP_VERSION = "maxmapv";
     protected static final String HR_HLR_GT = "hrhlrgt";
     protected static final String CDR_LOGGING_TO = "cdrloggingto";
+    protected static final String MAX_ACTIVITY_COUNT = "maxactivitycount";
 
 	private static final String TAB_INDENT = "\t";
 	private static final String CLASS_ATTRIBUTE = "type";
@@ -78,6 +78,7 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
 	private final TextBuilder persistFile = TextBuilder.newInstance();
 
     private String noRoutingRuleConfiguredMessage = "Not valid short code. Please dial valid short code.";
+    private String serverOverloadedMessage = "Server is overloaded. Please try later";
     private String serverErrorMessage = "Server error, please try again after sometime";
     private String dialogTimeoutErrorMessage = "Request timeout please try again after sometime.";
 
@@ -100,6 +101,9 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
 
     private CdrLoggedType cdrLoggingTo = CdrLoggedType.Textfile;
 
+    // max count of TCAP Dialogs that are possible at the same time
+    private int maxActivityCount = 5000;
+
 	private UssdPropertiesManagement(String name) {
 		this.name = name;
 		binding.setClassAttribute(CLASS_ATTRIBUTE);
@@ -120,16 +124,27 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
 		return name;
 	}
 
-	@Override
-	public String getNoRoutingRuleConfiguredMessage() {
-		return this.noRoutingRuleConfiguredMessage;
-	}
+    @Override
+    public String getNoRoutingRuleConfiguredMessage() {
+        return this.noRoutingRuleConfiguredMessage;
+    }
 
-	@Override
-	public void setNoRoutingRuleConfiguredMessage(String noRoutingRuleConfiguredMessage) {
-		this.noRoutingRuleConfiguredMessage = noRoutingRuleConfiguredMessage;
-		this.store();
-	}
+    @Override
+    public void setNoRoutingRuleConfiguredMessage(String noRoutingRuleConfiguredMessage) {
+        this.noRoutingRuleConfiguredMessage = noRoutingRuleConfiguredMessage;
+        this.store();
+    }
+
+    @Override
+    public String getServerOverloadedMessage() {
+        return this.serverOverloadedMessage;
+    }
+
+    @Override
+    public void setServerOverloadedMessage(String serverOverloadedMessage) {
+        this.serverOverloadedMessage = serverOverloadedMessage;
+        this.store();
+    }
 
 	@Override
 	public String getServerErrorMessage() {
@@ -265,6 +280,17 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
         this.store();
     }
 
+    @Override
+    public int getMaxActivityCount() {
+        return maxActivityCount;
+    }
+
+    @Override
+    public void setMaxActivityCount(int maxActivityCount) {
+        this.maxActivityCount = maxActivityCount;
+        this.store();
+    }
+
 	public void start() throws Exception {
 
 		this.persistFile.clear();
@@ -319,12 +345,15 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
                 writer.write(al2, USSD_GT_LIST, UssdPropertiesManagement_ussdGwGtNetworkId.class);
             }
 
-			writer.write(this.noRoutingRuleConfiguredMessage, NO_ROUTING_RULE_CONFIGURED_ERROR_MESSAGE, String.class);
+            writer.write(this.noRoutingRuleConfiguredMessage, NO_ROUTING_RULE_CONFIGURED_ERROR_MESSAGE, String.class);
+            writer.write(this.serverOverloadedMessage, SERVER_OVERLOADED_MESSAGE, String.class);
 			writer.write(this.serverErrorMessage, SERVER_ERROR_MESSAGE, String.class);
 			writer.write(this.dialogTimeoutErrorMessage, DIALOG_TIMEOUT_ERROR_MESSAGE, String.class);
 			writer.write(this.dialogTimeout, DIALOG_TIMEOUT, Long.class);
             writer.write(this.hrHlrGt, HR_HLR_GT, String.class);
             writer.write(this.cdrLoggingTo.toString(), CDR_LOGGING_TO, String.class);
+
+            writer.write(this.maxActivityCount, MAX_ACTIVITY_COUNT, Integer.class);
 
 			writer.write(this.ussdGwGt, USSD_GT, String.class);
             writer.write(this.ussdGwSsn, USSD_SSN, Integer.class);
@@ -362,6 +391,9 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
             String s1 = reader.read(NO_ROUTING_RULE_CONFIGURED_ERROR_MESSAGE, String.class);
             if (s1 != null)
                 this.noRoutingRuleConfiguredMessage = s1;
+            s1 = reader.read(SERVER_OVERLOADED_MESSAGE, String.class);
+            if (s1 != null)
+                this.serverOverloadedMessage = s1;
             s1 = reader.read(SERVER_ERROR_MESSAGE, String.class);
             if (s1 != null)
                 this.serverErrorMessage = s1;
@@ -386,6 +418,10 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
             vals = reader.read("cdrLoggingTo", String.class);
             if (vals != null)
                 this.cdrLoggingTo = Enum.valueOf(CdrLoggedType.class, vals);
+
+            Integer val = reader.read(MAX_ACTIVITY_COUNT, Integer.class);
+            if (val != null)
+                this.maxActivityCount = val;
 
 			this.ussdGwGt = reader.read(USSD_GT, String.class);
             this.ussdGwSsn = reader.read(USSD_SSN, Integer.class);
