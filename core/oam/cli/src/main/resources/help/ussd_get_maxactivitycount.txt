@@ -1,0 +1,17 @@
+Name
+	ussd get maxactivitycount
+
+SYNOPSIS
+	ussd get maxactivitycount
+
+DESCRIPTION
+	This command is used to get the parameter maxactivitycount. If a count of
+	TCAP dialogs exceeds of this value then USSD GW will reject new incoming
+	PULL requests from subscribers with the message from serveroverloadedmsg
+	parameter.
+
+EXAMPLES
+	ussd get maxactivitycount
+
+SEE ALSO
+	ussd set, ussd get, ussd set maxactivitycount, ussd set serveroverloadedmsg

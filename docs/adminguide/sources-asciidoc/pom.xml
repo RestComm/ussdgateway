@@ -193,7 +193,7 @@
 										<this-trunk-source-code-url>${docs.this.trunk.source.code.url}</this-trunk-source-code-url>
 										<this-release-binary-url>${docs.this.release.binary.url}</this-release-binary-url>
 										<slee-binary-url>${docs.slee.binary.url}</slee-binary-url>
-										<toclevels-value>2</toclevels-value>
+										<toclevels-value>3</toclevels-value>
 									</attributes>
 								</configuration>
 							</execution>

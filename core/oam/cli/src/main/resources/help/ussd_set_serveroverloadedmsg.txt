@@ -1,0 +1,16 @@
+Name
+	ussd set serveroverloadedmsg
+
+SYNOPSIS
+	ussd set serveroverloadedmsg <message>
+
+DESCRIPTION
+	This command is used to set the error message to be displayed to the end user
+	when a request is rejected because of too many TCAP dialogs are in processing.
+
+EXAMPLES
+	ussd set serveroverloadedmsg Request timeout please try again after sometime.
+
+SEE ALSO
+	ussd set, ussd set maxactivitycount, ussd get serveroverloadedmsg, 
+	ussd set servererrmssg, ussd get

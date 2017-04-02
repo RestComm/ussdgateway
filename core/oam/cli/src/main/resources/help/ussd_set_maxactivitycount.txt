@@ -1,0 +1,18 @@
+Name
+	ussd set maxactivitycount
+
+SYNOPSIS
+	ussd set maxactivitycount <timeout-value>
+
+DESCRIPTION
+	This command is used to set the parameter maxactivitycount. If a count of
+	TCAP dialogs exceeds of this value then USSD GW will reject new incoming
+	PULL requests from subscribers with the message from serveroverloadedmsg
+	parameter. Setting of 0 value will turn off this value.
+	Default value: 5000
+
+EXAMPLES
+	ussd set maxactivitycount 5000
+
+SEE ALSO
+	ussd set, ussd get, ussd get maxactivitycount, ussd set serveroverloadedmsg

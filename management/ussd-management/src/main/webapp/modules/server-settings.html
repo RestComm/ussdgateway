@@ -43,6 +43,13 @@
 									<input id="servererrmssg" type="text" class="input-mini" style="width: 260px; margin-right: 12px; text-align: center;" value="0" />
 								</span>
 							</div>							
+
+							<div id="div-serveroverloadedmessage" class="control-group">
+								<span class="input-prepend" data-toggle="tooltip" data-placement="bottom" title="If USSD Gateway is overloaded (too many concurrent dialogs), this message will be shown to user">
+									<span class="add-on">Server overload message</span>
+									<input id="serveroverloadedmessage" type="text" class="input-mini" style="width: 260px; margin-right: 12px; text-align: center;" value="0" />
+								</span>
+							</div>							
 					  	</div>
                     
                         <div class="tab-pane" id="ss7settings">
@@ -114,6 +121,14 @@
 									<input id="dialogtimeout" type="text" class="input-mini" style="width: 120px; margin-right: 12px; text-align: center;" value="0" />
 								</span>                        
 							</div>
+
+                        	<div id="div-maxactivitycount" class="control-group">
+								<span class="input-prepend" data-toggle="tooltip" data-placement="bottom" title="If a count of TCAP dialogs exceeds of this value then USSD GW will reject new incoming PULL requests from subscribers with the message from serveroverloadedmsg parameter.">
+									<span class="add-on">Max activity count</span>
+									<input id="maxactivitycount" type="text" class="input-mini" style="width: 120px; margin-right: 12px; text-align: center;" value="0" />
+								</span>                        
+							</div>
+
                         	<h5 style="border-bottom: 1px solid #DDD;">CDR Configuration</h5>
                         	
                         	<div id="div-cdrgeneratedto" class="control-group">
@@ -145,8 +160,10 @@
 									function(response) {
 										$("#dialogtimeouterrmssg").val(response.value.DialogTimeoutErrorMessage);
 										$("#dialogtimeout").val(response.value.DialogTimeout);
+										$("#maxactivitycount").val(response.value.MaxActivityCount);
 										$("#noroutingruleconfigerrmssg").val(response.value.NoRoutingRuleConfiguredMessage);
 										$("#servererrmssg").val(response.value.ServerErrorMessage);
+										$("#serveroverloadedmessage").val(response.value.ServerOverloadedMessage);
 										$("#ussdgt").val(response.value.UssdGt);
 										$("#hrhlrgt").val(response.value.HrHlrGt);
 										$("#ussdssn").val(response.value.UssdSsn);
@@ -207,12 +224,28 @@
 			    			$("#div-dialogtimeout").removeClass("error");		
 			    		}
 						
+						var maxactivitycount = $("#maxactivitycount").val();
+						if(maxactivitycount.trim() == "") {
+			    			$("#div-maxactivitycount").addClass("error");					    			
+			    			formInvalid = true;
+			    		} else if($("#div-maxactivitycount").hasClass("error")) {
+			    			$("#div-maxactivitycount").removeClass("error");		
+			    		}
+
 						var servererrmssg = $("#servererrmssg").val();
 						if(servererrmssg.trim() == "") {
 			    			$("#div-servererrmssg").addClass("error");					    			
 			    			formInvalid = true;
 			    		} else if($("#div-servererrmssg").hasClass("error")) {
 			    			$("#div-servererrmssg").removeClass("error");		
+			    		}
+
+						var serveroverloadedmessage = $("#serveroverloadedmessage").val();
+						if(serveroverloadedmessage.trim() == "") {
+			    			$("#div-serveroverloadedmessage").addClass("error");					    			
+			    			formInvalid = true;
+			    		} else if($("#div-serveroverloadedmessage").hasClass("error")) {
+			    			$("#div-serveroverloadedmessage").removeClass("error");		
 			    		}
 						
 						
@@ -292,7 +325,9 @@
 									{ type: "write", mbean: mbeanSearch, attribute: "NoRoutingRuleConfiguredMessage", value: noroutingruleconfigerrmssg },
 									{ type: "write", mbean: mbeanSearch, attribute: "DialogTimeoutErrorMessage", value: dialogtimeouterrmssg },
 									{ type: "write", mbean: mbeanSearch, attribute: "DialogTimeout", value: dialogtimeout },
+									{ type: "write", mbean: mbeanSearch, attribute: "MaxActivityCount", value: maxactivitycount },
 									{ type: "write", mbean: mbeanSearch, attribute: "ServerErrorMessage", value: servererrmssg },
+									{ type: "write", mbean: mbeanSearch, attribute: "ServerOverloadedMessage", value: serveroverloadedmessage },
 									{ type: "write", mbean: mbeanSearch, attribute: "UssdSsn", value: ussdssn },
 									{ type: "write", mbean: mbeanSearch, attribute: "HlrSsn", value: hlrssn },
 									{ type: "write", mbean: mbeanSearch, attribute: "MscSsn", value: mscssn },

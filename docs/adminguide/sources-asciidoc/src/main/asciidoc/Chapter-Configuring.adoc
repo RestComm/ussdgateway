@@ -292,8 +292,14 @@ dialogtimeouterrmssg::
 servererrmssg::
   The error message shown to user when something goes wrong on the USSD gateway.
 
+serveroverloadedmsg::
+  The error message shown to user when a request is rejected because of too many TCAP dialogs are in processing.
+
 dialogtimeout::
-  The maximum time allowed by the Gateway for the	application to respond.
+  The maximum time allowed by the Gateway for the application to respond.
+
+maxactivitycount::
+  A count of TCAP dialogs allowed to process at the same time.
 
 cdrloggingto::
   If CDR should be logged to Database or Textfile		
@@ -471,6 +477,43 @@ EXAMPLES
 . You must click on the button 'Apply Changes' to save your settings.
   If there is an error in setting the value, then you will find the details of the error in the Management Console Log section below. 
 
+
+[[_set_serveroverloadedmsg]]
+=== Server Overload Message
+
+[[_set_serveroverloadedmsg_cli]]
+==== Using CLI
+
+You can set the 'Server Overload Message' by issuing the command `ussd set serveroverloadedmsg` with appropriate parameters as described below: 
+
+----
+Name
+	ussd set serveroverloadedmsg
+
+SYNOPSIS
+	ussd set serveroverloadedmsg <message>
+
+DESCRIPTION
+	This command is used to set the error message to be displayed to the end user
+	when a request is rejected because of too many TCAP dialogs are in processing.
+
+EXAMPLES
+	ussd set serveroverloadedmsg Request timeout please try again after sometime.
+----
+
+[[_set_serveroverloadedmsg_gui]]
+==== Using GUI
+
+.Procedure: Set Server Overload Message using the GUI
+. In the GUI Management Console for USSD Gateway, click on 'Server Settings' in the left panel. 
+. The main panel will display the existing Server Settings (if any), segregated into three tabs: Error Messages, SS7 Settings, Various.
+  Switch to the 'Error Messages' tab in the GUI. 
+. In the text field 'Server overload message', you can set the message to be displayed to the end user when USSD Gateway is overloaded.
+  For more details of this parameter, please refer to the description of the CLI command for the same in the preceding section.
+. You must click on the button 'Apply Changes' to save your settings.
+  If there is an error in setting the value, then you will find the details of the error in the Management Console Log section below. 
+
+
 [[_set_dialogtimeout]]
 === Dialog Timeout
 
@@ -526,6 +569,46 @@ EXAMPLES
   For more details of this parameter, please refer to the description of the CLI command for the same in the preceding section.
 . You must click on the button 'Apply Changes' to save your settings.
   If there is an error in setting the value, then you will find the details of the error in the Management Console Log section below. 
+
+
+[[_set_maxactivitycount]]
+=== Max activity count
+
+[[_set_maxactivitycount_cli]]
+==== Using CLI
+
+You can set the 'Max activity count' value by issuing the command `ussd set maxactivitycount` with appropriate parameters as described below: 
+
+----
+Name
+	ussd set maxactivitycount
+
+SYNOPSIS
+	ussd set maxactivitycount <timeout-value>
+
+DESCRIPTION
+	This command is used to set the parameter maxactivitycount. If a count of
+	TCAP dialogs exceeds of this value then USSD GW will reject new incoming
+	PULL requests from subscribers with the message from serveroverloadedmsg
+	parameter. Setting of 0 value will turn off this value.
+	Default value: 5000
+
+EXAMPLES
+	ussd set maxactivitycount 5000
+----
+
+[[_set_maxactivitycount_gui]]
+==== Using GUI
+
+.Procedure: Set Max activity count using the GUI
+. In the GUI Management Console for USSD Gateway, click on 'Server Settings' in the left panel. 
+. The main panel will display the existing Server Settings (if any), segregated into three tabs: Error Messages, SS7 Settings, Various.
+  Switch to the 'Various' tab in the GUI. 
+. In the text field 'Max activity count', you can set a needed value.
+  For more details of this parameter, please refer to the description of the CLI command for the same in the preceding section.
+. You must click on the button 'Apply Changes' to save your settings.
+  If there is an error in setting the value, then you will find the details of the error in the Management Console Log section below. 
+
 
 [[_set_hrhlrnumber]]
 === Special HLR addressing
