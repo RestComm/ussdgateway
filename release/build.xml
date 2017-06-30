@@ -19,11 +19,11 @@
 	<property name="release.http-servlet.dir" value="${base.dir}/checkout/http-servlet-release" />
 	<property name="restcomm.ussd.dir" value="${base.dir}/.." />
 
-	<property name="restcomm.ussd.release.version" value="7.0.0-SNAPSHOT" />
+	<property name="restcomm.ussd.release.version" value="7.1.0-SNAPSHOT" />
 
-	<property name="restcomm-slee.build-number" value="36.73" />
-	<property name="restcomm-slee.version" value="2.8" />
-	<property name="restcomm-slee.release" value="2.8.0.FINAL" />
+	<property name="restcomm-slee.build-number" value="128.93" />
+	<property name="restcomm-slee.version" value="2.9" />
+	<property name="restcomm-slee.release" value="2.9.128" />
 <!--
 	<property name="restcomm-slee.build-number-1" value="65" />
 	<property name="restcomm-slee.build-number-2" value="2.8.31.65" />
@@ -33,16 +33,16 @@
 	<property name="restcomm-slee.http.ra.tag" value="2.8.5" />
 	<property name="restcomm-slee.jdbc.ra.tag" value="2.8.3" />
 
-	<property name="restcomm-jss7.build-number" value="1387" />
-	<property name="restcomm-jss7.version" value="7.2.${restcomm-jss7.build-number}" />
-	<property name="restcomm-jss7.release" value="7.2.1387" />
+	<property name="restcomm-jss7.build-number" value="1398" />
+	<property name="restcomm-jss7.version" value="7.3.${restcomm-jss7.build-number}" />
+	<property name="restcomm-jss7.release" value="7.3.1398" />
 <!--
 	<property name="restcomm-jss7.timestamp" value="1602171452" />
 -->
 
-	<property name="restcomm-map-ra.build-number" value="57" />
-	<property name="restcomm-map-ra.version" value="7.1.${restcomm-map-ra.build-number}" />
-	<property name="restcomm-map-ra.release" value="7.1.57" />
+	<property name="restcomm-map-ra.build-number" value="72" />
+	<property name="restcomm-map-ra.version" value="7.3.${restcomm-map-ra.build-number}" />
+	<property name="restcomm-map-ra.release" value="7.3.72" />
 
 	<!--GET Restcomm-Slee & Restcomm-jss7 - properties-->
 	<property name="cloudbees.url" value="https://mobicents.ci.cloudbees.com" />
@@ -144,7 +144,7 @@
 		<delete dir="${checkout.restcomm-jss7-ra.dir}" failonerror="false" />
 		<delete dir="${checkout.restcomm-map-ra.dir}" failonerror="false" />
 		<unzip src="${restcomm-map-ra.distro.docs.path}" dest="${checkout.restcomm-jss7-ra.dir}"/>
-		<unzip src="${checkout.restcomm-jss7-ra.dir}/MAP/generated-docs.zip" dest="${checkout.restcomm-map-ra.dir}"/>
+		<unzip src="${checkout.restcomm-jss7-ra.dir}/RA_docs/MAP/generated-docs.zip" dest="${checkout.restcomm-map-ra.dir}"/>
 	</target>
 
 	<available file="${restcomm-map-ra.distro.jar.path}" property="got.restcomm-map-ra" />
