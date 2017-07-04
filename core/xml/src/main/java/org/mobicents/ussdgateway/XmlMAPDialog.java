@@ -627,7 +627,8 @@ public class XmlMAPDialog implements MAPDialog, XMLSerializable {
 	protected static final XMLFormat<XmlMAPDialog> USSR_XML = new XMLFormat<XmlMAPDialog>(XmlMAPDialog.class) {
 
 		public void write(XmlMAPDialog dialog, OutputElement xml) throws XMLStreamException {
-			xml.setAttribute(DIALOG_TYPE, dialog.messageType.name());
+            if (dialog.messageType != null)
+                xml.setAttribute(DIALOG_TYPE, dialog.messageType.name());
 
 			if (dialog.appCntx != null) {
 				xml.setAttribute(MAP_APPLN_CONTEXT, serializeMAPApplicationContext(dialog.appCntx));
