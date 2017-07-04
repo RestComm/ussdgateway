@@ -46,7 +46,7 @@ image::images/http-call-flow-USSD-Pull.png[]
 == HTTP Message Structure - USSD Push
 
 For USSD PUSH, the third party application should send a HTTP POST request to the {this-platform} {this-application} .
-The URL for sending this is http://bind_address:8080/mobicents.
+The URL for sending this is http://bind_address:8080/restcomm (for a public version) http://bind_address:8080/mobicents (for a Telscale version).
 The diagram below depicts an example message sequence (USSD Push) for interacting with the {this-platform} {this-application} HTTP API. 
 
 
