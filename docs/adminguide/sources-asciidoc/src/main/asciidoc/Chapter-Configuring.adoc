@@ -238,14 +238,23 @@ SRI_MAP_ERROR_COMPONENT::
 [[_http_client_ra]]
 == Configuring JSLEE http-client RA
 
-{this-platform} {this-application} acts as a HTTP Client to achieve USSD pull by sending a HTTP POST request to third party applications (HTTP Server) for every dialled short code.
+{this-platform} {this-application} acts as a HTTP Client to achieve USSD PULL by sending a HTTP POST request to third party applications (HTTP Server) for every dialled short code.
 You must configure the HTTP Client JSLEE Resource Adaptor's properties to suit your requirements.
-Please refer to the SLEE RA HTTP Client User Guide available in [path]_{this-folder}-ussdgateway/docs/slee/Mobicents_SLEE_RA_HTTP_Client_User_Guide.pdf_. 
+Please refer to the SLEE RA HTTP Client User Guide available in {this-folder}-ussdgateway/docs/resources/http-client.
 
 For every Short Code Routing rule added in the USSD Gateway, you must ensure that there is a corresponding `MAX_CONNECTIONS_FOR_ROUTES` property appropriately configured in the HTTP Client JSLEE RA.
 
 WARNING: HTTP Client JSLEE RA's default configuration allows the http-client to handle only two concurrent connections at a time.
 You must modify the `MAX_CONNECTIONS_FOR_ROUTES` property to meet your Short Code Routing Rules requirements in production.
+
+[[_http_server_ra]]
+== Configuring JSLEE http-servlet RA
+
+{this-platform} {this-application} acts as a HTTP Server to achieve USSD PUSH by accepting of a HTTP POST request from third party applications.
+You must configure the HTTP Servlet JSLEE Resource Adaptor's properties and the HTTP Tomcat server properties to suit your requirements.
+Please refer to the SLEE RA HTTP Servlet User Guide available in {this-folder}-ussdgateway/docs/resources/http-server and HTTP Tomcat server configuring in https://docs.jboss.org/jbossas/guides/webguide/r2/en/html/ch02.html.
+
+You must ensure to add a parameter like `maxThreads="500"` into {this-folder}-ussdgateway/jboss-5.1.0.GA/server/default/deploy/jbossweb.sar/server.xml file into `Connector` element to increase a count of concurrent PUSH requests.
 
 [[_logging]]
 == Configuring log4j Logging Service
