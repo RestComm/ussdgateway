@@ -59,6 +59,7 @@ import org.mobicents.protocols.ss7.indicator.RoutingIndicator;
 import org.mobicents.protocols.ss7.map.api.MAPApplicationContext;
 import org.mobicents.protocols.ss7.map.api.MAPApplicationContextName;
 import org.mobicents.protocols.ss7.map.api.MAPApplicationContextVersion;
+import org.mobicents.protocols.ss7.map.api.MAPDialog;
 import org.mobicents.protocols.ss7.map.api.MAPException;
 import org.mobicents.protocols.ss7.map.api.MAPMessage;
 import org.mobicents.protocols.ss7.map.api.MAPMessageType;
@@ -486,6 +487,16 @@ public abstract class SipServerSbb extends ChildServerSbb implements SriParent {
 		// action here.
 		if (super.logger.isWarningEnabled())
 			super.logger.warning("Dialog timeout received: " + evt);
+
+		MAPDialog mapDialog = evt.getMAPDialog();
+        mapDialog.keepAlive();
+        MAPUserAbortChoice mapUserAbortChoice = this.mapParameterFactory.createMAPUserAbortChoice();
+        mapUserAbortChoice.setProcedureCancellationReason(ProcedureCancellationReason.callRelease);
+        try {
+            mapDialog.abort(mapUserAbortChoice);
+        } catch (Exception e) {
+            super.logger.severe("Exception when sending of : abort in SipServerSbb" + e.toString(), e);
+        }
 
 //		XmlMAPDialog xmlMAPDialog = this.getXmlMAPDialog();
 //		xmlMAPDialog.reset();

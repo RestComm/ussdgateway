@@ -35,6 +35,7 @@ import javax.slee.facilities.TimerOptions;
 
 import javolution.xml.stream.XMLStreamException;
 
+import org.mobicents.protocols.ss7.map.api.MAPDialog;
 import org.mobicents.protocols.ss7.map.api.MAPException;
 import org.mobicents.protocols.ss7.map.api.MAPProvider;
 import org.mobicents.protocols.ss7.map.api.datacoding.CBSDataCodingScheme;
@@ -325,6 +326,12 @@ public abstract class ChildSbb extends USSDBaseSbb implements ChildInterface, Ch
 		}
 
 		try {
+		    MAPDialog mapDialog = evt.getMAPDialog();
+		    mapDialog.keepAlive();
+		    MAPUserAbortChoice mapUserAbortChoice = this.mapParameterFactory.createMAPUserAbortChoice();
+		    mapUserAbortChoice.setProcedureCancellationReason(ProcedureCancellationReason.callRelease);
+		    mapDialog.abort(mapUserAbortChoice);
+
 			XmlMAPDialog xmlMAPDialog = this.getXmlMAPDialog();
 			xmlMAPDialog.reset();
 			xmlMAPDialog.setDialogTimedOut(true);
