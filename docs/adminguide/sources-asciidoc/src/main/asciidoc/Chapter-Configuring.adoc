@@ -526,6 +526,16 @@ EXAMPLES
 [[_set_dialogtimeout]]
 === Dialog Timeout
 
+There is two possible timeout in USSD GW.
+
+* SS7 part - a USSD application sent a message to a mobile subscriber no response from a mobile subscriber (or an error in SS7 network) 
+* application part - no response from an application for a request from a mobile subscriber (no response from SIP or HTTP)
+
+When no response from a SS7 part there will be a TCAP dialog timeout. This parameter is configurable in JSS7 management console - see "TCAP stack properties - Dialog Idle Timeout" chapter.  
+When no response from an application part it will be triggered a timer that is described in this chapter.
+You need to be sure that the application timer is less that TCAP dialog timer.
+
+
 [[_set_dialogtimeout_cli]]
 ==== Using CLI
 

@@ -116,7 +116,7 @@
                         	<h5 style="border-bottom: 1px solid #DDD;">Dialog Configuration</h5>
                         	
                         	<div id="div-dialogtimeout" class="control-group">
-								<span class="input-prepend" data-toggle="tooltip" data-placement="bottom" title="3rd party application should revert back within configured Dialog Timeout value, else USSD Gw will send back error message configured for Dialog timeout">
+								<span class="input-prepend" data-toggle="tooltip" data-placement="bottom" title="3rd party application (HTTP or SIP) should revert back within configured Dialog Timeout value, else USSD Gw will send back error message configured for Dialog timeout. TCAP Dialog timeout (that is configurable from JSS7 management console) is responsible if no response from SS7 side. This timer must be less then TCAP Dialog timeout timer.">
 									<span class="add-on">Dialog Timeout</span>
 									<input id="dialogtimeout" type="text" class="input-mini" style="width: 120px; margin-right: 12px; text-align: center;" value="0" />
 								</span>                        

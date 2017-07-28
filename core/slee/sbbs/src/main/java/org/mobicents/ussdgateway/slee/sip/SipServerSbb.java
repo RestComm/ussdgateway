@@ -112,7 +112,6 @@ import org.mobicents.ussdgateway.EventsSerializeFactory;
 import org.mobicents.ussdgateway.SipUssdErrorCode;
 import org.mobicents.ussdgateway.SipUssdMessage;
 import org.mobicents.ussdgateway.UssdPropertiesManagement;
-import org.mobicents.ussdgateway.UssdPropertiesManagementMBean;
 import org.mobicents.ussdgateway.UssdStatAggregator;
 import org.mobicents.ussdgateway.XmlMAPDialog;
 import org.mobicents.ussdgateway.slee.ChildServerSbb;
@@ -154,8 +153,6 @@ public abstract class SipServerSbb extends ChildServerSbb implements SriParent {
 	protected MessageFactory messageFactory;
 	protected SipActivityContextInterfaceFactory sipActConIntFac;
 
-	protected UssdPropertiesManagementMBean ussdPropertiesManagement = null;
-
 	protected ParameterFactory sccpParameterFact;
 
 	/**
@@ -189,6 +186,8 @@ public abstract class SipServerSbb extends ChildServerSbb implements SriParent {
 
 			this.ussdPropertiesManagement = UssdPropertiesManagement.getInstance();
             this.sccpParameterFact = new ParameterFactoryImpl();
+
+            this.timerFacility = this.sbbContext.getTimerFacility();
 		} catch (Exception ne) {
 			logger.severe("Could not set SBB context:", ne);
 		}
@@ -250,15 +249,25 @@ public abstract class SipServerSbb extends ChildServerSbb implements SriParent {
 		if (logger.isFineEnabled())
 			logger.fine("Received UnstructuredSSNotifyResponse " + event);
 
-		try {
-			// TODO Hardcoded
-			SipUssdMessage simMsg = new SipUssdMessage("en", "");
-			simMsg.setAnyExt(new AnyExt(MAPMessageType.unstructuredSSNotify_Response));
+        try {
+            if (this.getFinalMessageSent()) {
+                // we have sent a final NITIFY message and already closed an application part. We just close TCAL dialog now
+                event.getMAPDialog().close(false);
+                return;
+            }
+        } catch (Exception e) {
+            logger.severe("Error while trying to send a final TC-END\n", e);
+        }
 
-			this.processReceivedMAPEvent((MAPEvent) event, simMsg);
-		} catch (Exception e) {
-			logger.severe("Error while trying to handle UnstructuredSSNotifyResponse \n" + event, e);
-		}
+        try {
+            // TODO Hardcoded
+            SipUssdMessage simMsg = new SipUssdMessage("en", "");
+            simMsg.setAnyExt(new AnyExt(MAPMessageType.unstructuredSSNotify_Response));
+
+            this.processReceivedMAPEvent((MAPEvent) event, simMsg);
+        } catch (Exception e) {
+            logger.severe("Error while trying to handle UnstructuredSSNotifyResponse \n" + event, e);
+        }
 	}
 
 	public void onUnstructuredSSResponse(UnstructuredSSResponse event, ActivityContextInterface aci,
@@ -274,6 +283,8 @@ public abstract class SipServerSbb extends ChildServerSbb implements SriParent {
 			simMsg.setAnyExt(new AnyExt(MAPMessageType.unstructuredSSRequest_Response));
 
 			this.processReceivedMAPEvent((MAPEvent) event, simMsg);
+
+			this.setTimer(aci);
 		} catch (Exception e) {
 			logger.severe("Error while trying to handle UnstructuredSSResponse \n" + event, e);
 		}
@@ -686,6 +697,8 @@ public abstract class SipServerSbb extends ChildServerSbb implements SriParent {
 			logger.info("Received Dialog BYE \n" + event);
 		}
 
+		this.cancelTimer();
+
 		Request request = event.getRequest();
 		try {
 			// send back ACK
@@ -731,6 +744,8 @@ public abstract class SipServerSbb extends ChildServerSbb implements SriParent {
 		if (logger.isInfoEnabled()) {
 			logger.info("Received INFO \n" + event);
 		}
+
+		this.cancelTimer();
 
 		Request request = event.getRequest();
 		try {
@@ -1303,5 +1318,21 @@ public abstract class SipServerSbb extends ChildServerSbb implements SriParent {
 		}
 		sipDialog.delete();
 	}
+
+    protected void terminateProtocolConnection() {
+        Dialog sipDialog = this.getSipDialog();
+
+        if (sipDialog == null) {
+            // Most probably the Dialog between the GW and application died!
+            return;
+        }
+        sipDialog.delete();
+    }
+
+    protected void updateDialogFailureStat() {
+        super.ussdStatAggregator.updateDialogsAllFailed();
+        super.ussdStatAggregator.updateDialogsPushFailed();
+        super.ussdStatAggregator.updateDialogsSipFailed();
+    }
 
 }

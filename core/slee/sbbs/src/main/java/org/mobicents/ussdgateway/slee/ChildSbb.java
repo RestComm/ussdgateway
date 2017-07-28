@@ -98,7 +98,7 @@ public abstract class ChildSbb extends USSDBaseSbb implements ChildInterface, Ch
 
 		if (super.logger.isWarningEnabled()) {
 			super.logger.warning(String.format(
-					"Application didn't revert in %d milliseconds. Sending back dialogtimeouterrmssg for MAPDialog %s",
+					"Application didn't revert in %d milliseconds for PULL case. Sending back dialogtimeouterrmssg for MAPDialog %s",
 					ussdPropertiesManagement.getDialogTimeout(), this.getMAPDialog()));
 		}
 

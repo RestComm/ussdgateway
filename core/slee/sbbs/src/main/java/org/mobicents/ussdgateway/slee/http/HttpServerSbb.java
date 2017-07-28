@@ -93,7 +93,6 @@ import org.mobicents.slee.resource.map.events.MAPEvent;
 import org.mobicents.slee.resource.map.events.RejectComponent;
 import org.mobicents.ussdgateway.EventsSerializeFactory;
 import org.mobicents.ussdgateway.UssdPropertiesManagement;
-import org.mobicents.ussdgateway.UssdPropertiesManagementMBean;
 import org.mobicents.ussdgateway.UssdStatAggregator;
 import org.mobicents.ussdgateway.XmlMAPDialog;
 import org.mobicents.ussdgateway.slee.ChildServerSbb;
@@ -124,7 +123,6 @@ public abstract class HttpServerSbb extends ChildServerSbb implements SriParent 
 	// -------------------------------------------------------------
 	// SS7 stuff:
 	// -------------------------------------------------------------
-	protected UssdPropertiesManagementMBean ussdPropertiesManagement = null;
 
 	// -------------------------------------------------------------
 	// USSD GW stuff
@@ -151,6 +149,8 @@ public abstract class HttpServerSbb extends ChildServerSbb implements SriParent 
 				super.logger.severe("Detected previous event context: " + getEventContextCMP());
 			return;
 		}
+
+		this.cancelTimer();
 
 		boolean success = false;
 		try {
@@ -334,6 +334,8 @@ public abstract class HttpServerSbb extends ChildServerSbb implements SriParent 
 			// TODO: send error
 			return;
 		}
+
+		this.cancelTimer();
 
         eventContext.suspendDelivery(EVENT_SUSPEND_TIMEOUT);
 		this.setEventContextCMP(eventContext);
@@ -534,6 +536,16 @@ public abstract class HttpServerSbb extends ChildServerSbb implements SriParent 
 		if (logger.isFineEnabled())
 			logger.fine("Received UnstructuredSSNotifyResponse " + event);
 
+        try {
+            if (this.getFinalMessageSent()) {
+                // we have sent a final NITIFY message and already closed an application part. We just close TCAL dialog now
+                event.getMAPDialog().close(false);
+                return;
+            }
+        } catch (Exception e) {
+            logger.severe("Error while trying to send a final TC-END\n", e);
+        }
+
 		this.processReceivedMAPEvent((MAPEvent) event);
 	}
 
@@ -546,6 +558,8 @@ public abstract class HttpServerSbb extends ChildServerSbb implements SriParent 
         super.ussdStatAggregator.updateMessagesAll();
 
 		this.processReceivedMAPEvent((MAPEvent) event);
+
+		this.setTimer(aci);
 	}
 
 	public void onInvokeTimeout(InvokeTimeout evt, ActivityContextInterface aci) {
@@ -958,6 +972,8 @@ public abstract class HttpServerSbb extends ChildServerSbb implements SriParent 
 					httpServerRATypeID, httpServerRaLink);
 			this.ussdPropertiesManagement = UssdPropertiesManagement.getInstance();
 			this.sccpParameterFact = new ParameterFactoryImpl();
+
+			this.timerFacility = this.sbbContext.getTimerFacility();
 		} catch (Exception ne) {
 			if (logger.isSevereEnabled())
 				super.logger.severe("Could not set SBB context:", ne);
@@ -1333,4 +1349,14 @@ public abstract class HttpServerSbb extends ChildServerSbb implements SriParent 
             }
         }
     }
+
+    protected void terminateProtocolConnection() {
+    }
+
+    protected void updateDialogFailureStat() {
+        super.ussdStatAggregator.updateDialogsAllFailed();
+        super.ussdStatAggregator.updateDialogsPushFailed();
+        super.ussdStatAggregator.updateDialogsHttpFailed();
+    }
+
 }
