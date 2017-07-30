@@ -99,21 +99,36 @@ public abstract class ChildSbb extends USSDBaseSbb implements ChildInterface, Ch
 					ussdPropertiesManagement.getDialogTimeout(), this.getMAPDialog()));
 		}
 
-        // try {
+        try {
 
-        String errorMssg = ussdPropertiesManagement.getDialogTimeoutErrorMessage();
-        this.sendErrorMessage(errorMssg);
+            String errorMssg = ussdPropertiesManagement.getDialogTimeoutErrorMessage();
+            this.sendErrorMessage(errorMssg);
 
-        // } finally {
+            if (isSip()) { // sending error message only in SIP case
+                XmlMAPDialog xmlMAPDialog = this.getXmlMAPDialog();
+                xmlMAPDialog.reset();
+                xmlMAPDialog.setDialogTimedOut(true);
+
+                // TODO : Hardcoding MessageType to Abort
+                xmlMAPDialog.setTCAPMessageType(MessageType.Abort);
+
+                this.sendUssdData(xmlMAPDialog);
+            }
+        } catch (Exception e) {
+            logger.severe("Error while sending an error message to a peer " + e.getMessage(), e);
+        }
+
         this.terminateProtocolConnection();
 
         this.ussdStatAggregator.updateAppTimeouts();
         this.updateDialogFailureStat();
 
         this.createCDRRecord(RecordStatus.FAILED_APP_TIMEOUT);
-
-        // }
 	}
+
+    protected abstract boolean isSip();
+    public abstract boolean getFinalMessageSent();
+    public abstract void setFinalMessageSent(boolean val);
 
 	// //////////////////////
 	// MAP Stuff handlers //
@@ -342,7 +357,11 @@ public abstract class ChildSbb extends USSDBaseSbb implements ChildInterface, Ch
 		}
 
 		// TODO : Should send any xml content?
-		this.terminateProtocolConnection();
+        if (this.isSip())
+            this.terminateProtocolConnection();
+        else {
+            this.setFinalMessageSent(true);
+        }
 
         this.ussdStatAggregator.updateMapDialogTimeouts();
         this.updateDialogFailureStat();

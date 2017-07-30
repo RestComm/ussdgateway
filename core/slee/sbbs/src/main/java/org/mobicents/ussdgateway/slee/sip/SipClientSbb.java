@@ -788,4 +788,8 @@ public abstract class SipClientSbb extends ChildSbb {
       }
       sipDialog.delete();
     }
+
+    protected boolean isSip() {
+        return true;
+    }
 }

@@ -83,6 +83,12 @@ public abstract class HttpClientSbb extends ChildSbb {
 		HttpResponse response = event.getHttpResponse();
 		HttpClientActivity httpClientActivity = ((HttpClientActivity) aci.getActivity());
 
+        if (this.getFinalMessageSent()) {
+            // dialog was already terminated
+            httpClientActivity.endActivity();
+            return;
+        }
+
 		MAPDialogSupplementary mapDialogSupplementary = this.getMAPDialog();
 
         try {
@@ -327,10 +333,10 @@ public abstract class HttpClientSbb extends ChildSbb {
 	protected void sendUssdData(XmlMAPDialog xmlMAPDialog /* byte[] data */) throws Exception {
 
 		String userData = this.getUserObject();
-		if(userData != null){
-			xmlMAPDialog.setUserObject(userData);
-		}
-		
+        if (userData != null) {
+            xmlMAPDialog.setUserObject(userData);
+        }
+
 		byte[] data = this.getEventsSerializeFactory().serialize(xmlMAPDialog);
 
 		HttpClientActivity httpClientActivity = this.getHTTPClientActivity();
@@ -402,4 +408,8 @@ public abstract class HttpClientSbb extends ChildSbb {
 			super.logger.severe("Could not set SBB context:", ne);
 		}
 	}
+
+    protected boolean isSip() {
+        return false;
+    }
 }

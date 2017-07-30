@@ -1224,7 +1224,7 @@ public abstract class SipServerSbb extends ChildServerSbb implements SriParent {
         }
     }
     
-    private void abortSipDialog() {
+    protected void abortSipDialog() {
 //        XmlMAPDialog xmlMAPDialog
 //        this.setXmlMAPDialog(xmlMAPDialog);
 
@@ -1330,6 +1330,10 @@ public abstract class SipServerSbb extends ChildServerSbb implements SriParent {
         super.ussdStatAggregator.updateDialogsAllFailed();
         super.ussdStatAggregator.updateDialogsPushFailed();
         super.ussdStatAggregator.updateDialogsSipFailed();
+    }
+
+    protected boolean isSip() {
+        return true;
     }
 
 }

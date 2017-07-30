@@ -811,7 +811,11 @@ public abstract class HttpServerSbb extends ChildServerSbb implements SriParent 
 			xmlMAPDialog.setTCAPMessageType(evt.getMAPDialog().getTCAPMessageType());
 		}
 
-		this.abortHttpDialog(xmlMAPDialog);
+        try {
+            this.abortHttpDialog(xmlMAPDialog);
+        } catch (Exception e) {
+            super.logger.severe("Exception when sending of : abortHttpDialog in HttpServerSbb" + e.toString(), e);
+        }
 
         super.ussdStatAggregator.updateMapDialogTimeouts();
         super.ussdStatAggregator.updateDialogsAllFailed();
@@ -1354,6 +1358,10 @@ public abstract class HttpServerSbb extends ChildServerSbb implements SriParent 
         super.ussdStatAggregator.updateDialogsAllFailed();
         super.ussdStatAggregator.updateDialogsPushFailed();
         super.ussdStatAggregator.updateDialogsHttpFailed();
+    }
+
+    protected boolean isSip() {
+        return false;
     }
 
 }

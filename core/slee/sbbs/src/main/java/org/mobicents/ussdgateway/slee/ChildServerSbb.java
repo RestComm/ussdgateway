@@ -32,9 +32,11 @@ import org.mobicents.protocols.ss7.map.api.datacoding.CBSDataCodingScheme;
 import org.mobicents.protocols.ss7.map.api.primitives.USSDString;
 import org.mobicents.protocols.ss7.map.api.service.supplementary.MAPDialogSupplementary;
 import org.mobicents.protocols.ss7.map.datacoding.CBSDataCodingSchemeImpl;
+import org.mobicents.protocols.ss7.tcap.api.MessageType;
 import org.mobicents.slee.ChildRelationExt;
 import org.mobicents.ussdgateway.UssdPropertiesManagement;
 import org.mobicents.ussdgateway.UssdPropertiesManagementMBean;
+import org.mobicents.ussdgateway.XmlMAPDialog;
 import org.mobicents.ussdgateway.slee.cdr.ChargeInterface;
 import org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent;
 import org.mobicents.ussdgateway.slee.cdr.RecordStatus;
@@ -66,6 +68,10 @@ public abstract class ChildServerSbb extends USSDBaseSbb implements ChargeInterf
         String errorMssg = ussdPropertiesManagement.getDialogTimeoutErrorMessage();
         this.sendErrorMessage(errorMssg);
 
+        if (isSip()) { // sending error message only in SIP case
+            abortSipDialog();
+        }
+
         this.terminateProtocolConnection();
 
         this.ussdStatAggregator.updateAppTimeouts();
@@ -73,6 +79,10 @@ public abstract class ChildServerSbb extends USSDBaseSbb implements ChargeInterf
 
         this.createCDRRecord(RecordStatus.FAILED_APP_TIMEOUT);
     }
+
+    protected abstract boolean isSip();
+
+    protected abstract void abortSipDialog();
 
     protected void sendErrorMessage(String errorMssg) {
         MAPDialogSupplementary mapDialogSupplementary = (MAPDialogSupplementary) this.getMAPDialog();

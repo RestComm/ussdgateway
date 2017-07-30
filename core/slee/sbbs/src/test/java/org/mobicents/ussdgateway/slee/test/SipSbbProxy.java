@@ -173,4 +173,16 @@ public class SipSbbProxy extends SipClientSbb {
         return null;
     }
 
+    @Override
+    public boolean getFinalMessageSent() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public void setFinalMessageSent(boolean val) {
+        // TODO Auto-generated method stub
+        
+    }
+
 }

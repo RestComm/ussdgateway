@@ -138,6 +138,9 @@
 				<cmp-field>
 					<cmp-field-name>userObject</cmp-field-name>
 				</cmp-field>
+				<cmp-field>
+					<cmp-field-name>finalMessageSent</cmp-field-name>
+				</cmp-field>
 				<get-child-relation-method>
 					<sbb-alias-ref>CDRSbb</sbb-alias-ref>
 					<get-child-relation-method-name>getCDRInterfaceChildRelation</get-child-relation-method-name>
@@ -376,6 +379,9 @@
 				</cmp-field>
 				<cmp-field>
 					<cmp-field-name>userObject</cmp-field-name>
+				</cmp-field>
+				<cmp-field>
+					<cmp-field-name>finalMessageSent</cmp-field-name>
 				</cmp-field>
 				<get-child-relation-method>
 					<sbb-alias-ref>CDRSbb</sbb-alias-ref>
