@@ -206,7 +206,6 @@ public class USSDBaseSbb implements Sbb {
 			MAPDialogSupplementary mapDialogSupplementary, Integer customInvokeTimeout) throws MAPException {
 		switch (mapMessage.getMessageType()) {
 		case unstructuredSSRequest_Request:
-//            this.ussdStatAggregator.updateUssdRequestOperations();
 			UnstructuredSSRequest unstructuredSSRequest = (UnstructuredSSRequest) mapMessage;
 			if (customInvokeTimeout != null) {
 				return mapDialogSupplementary.addUnstructuredSSRequest(customInvokeTimeout,
@@ -228,7 +227,6 @@ public class USSDBaseSbb implements Sbb {
 					processUnstructuredSSResponse.getDataCodingScheme(), processUnstructuredSSResponse.getUSSDString());
 			return processUnstructuredSSResponse.getInvokeId();
 		case unstructuredSSNotify_Request:
-//            this.ussdStatAggregator.updateUssdNotifyOperations();
 			// notify, this means dialog will end;
 			final UnstructuredSSNotifyRequest ntfyRequest = (UnstructuredSSNotifyRequest) mapMessage;
 			if (customInvokeTimeout != null) {
@@ -245,7 +243,6 @@ public class USSDBaseSbb implements Sbb {
 			mapDialogSupplementary.addUnstructuredSSNotifyResponse(ntfyResponse.getInvokeId());
 			break;
 		case processUnstructuredSSRequest_Request:
-//            this.ussdStatAggregator.updateProcessUssdRequestOperations();
 			ProcessUnstructuredSSRequest processUnstructuredSSRequest = (ProcessUnstructuredSSRequest) mapMessage;
 			if (customInvokeTimeout != null) {
 				return mapDialogSupplementary.addProcessUnstructuredSSRequest(customInvokeTimeout,

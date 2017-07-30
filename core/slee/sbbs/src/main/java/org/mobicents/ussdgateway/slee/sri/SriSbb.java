@@ -393,8 +393,6 @@ public abstract class SriSbb extends USSDBaseSbb implements SriChild {
 	public void sbbCreate() throws CreateException {
 		// TODO Auto-generated method stub
 		super.sbbCreate();
-//		this.setMaxMAPApplicationContextVersionCMP(MAPApplicationContextVersion
-//				.getInstance(this.ussdPropertiesManagement.getMaxMapVersion()));
 	}
 
 	// -------------------------------------------------------------
@@ -456,8 +454,6 @@ public abstract class SriSbb extends USSDBaseSbb implements SriChild {
 				NatureOfAddress.INTERNATIONAL);
 		return sccpParameterFact.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, gt, 0,
 				ussdPropertiesManagement.getHlrSsn());
-		// return new SccpAddress(RoutingIndicator.ROUTING_BASED_ON_DPC_AND_SSN,
-		// 2, null, sriPropertiesManagement.getMscSsn());
 	}
 
 	protected MAPApplicationContext getSriMAPApplicationContext() throws MAPException {
@@ -470,21 +466,6 @@ public abstract class SriSbb extends USSDBaseSbb implements SriChild {
                         + this.ussdPropertiesManagement.getMaxMapVersion());
             }
 
-            
-            
-//            ctx = MAPApplicationContext.getInstance(MAPApplicationContextName.shortMsgGatewayContext,
-//                    this.getMaxMAPApplicationContextVersionCMP());
-//            if (ctx == null) {
-//                throw new MAPException("Not suitable context: " + MAPApplicationContextName.shortMsgGatewayContext
-//                        + " for " + this.getMaxMAPApplicationContextVersionCMP());
-//            }
-
-//	      this.setMaxMAPApplicationContextVersionCMP(MAPApplicationContextVersion
-//          .getInstance(this.ussdPropertiesManagement.getMaxMapVersion()));
-			
-			
-			
-			
 			this.setMAPApplicationContextCMP(ctx);
 		}
 		return ctx;

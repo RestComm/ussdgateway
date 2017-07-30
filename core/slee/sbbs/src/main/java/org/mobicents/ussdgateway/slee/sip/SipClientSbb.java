@@ -90,9 +90,6 @@ public abstract class SipClientSbb extends ChildSbb {
 
 	public static final String FROM_DISPLAY_NAME = "MobicentsUSSDGateway";
 
-	// private static final String CONTENT_TYPE = "multipart";
-	// private static final String CONTENT_SUB_TYPE = "mixed";
-
 	private static final String CONTENT_TYPE = "application";
 	private static final String CONTENT_SUB_TYPE = "vnd.3gpp.ussd+xml";
 
@@ -581,18 +578,6 @@ public abstract class SipClientSbb extends ChildSbb {
 		}
 		destString = destString.replaceAll("#", "%23");
 
-		// !!!!: TODO: changing of To and SIP-URI to special USSD form
-		// SipURI toSipUri = addressFactory.createSipURI(destString,
-		// destString); // user, host
-		// toSipUri.setParameter("phone-context", call.getRuleUrl() + "@" +
-		// call.getRuleUrl());
-		// toSipUri.setParameter("user", "dialstring");
-		//
-		// SipURI toSipUri2 = addressFactory.createSipURI(null, destString);
-		// toSipUri2.setParameter("phone-context", call.getRuleUrl());
-		// toSipUri2.setParameter("user", "dialstring");
-		// Address toAddress = this.addressFactory.createAddress(toSipUri2);
-
 		SipURI toSipUri = addressFactory.createSipURI(destString, call.getSipProxy()); // user,
 																						// host
 
@@ -601,11 +586,6 @@ public abstract class SipClientSbb extends ChildSbb {
 
 		// To header:
 		ToHeader toHeader = headerFactory.createToHeader(toAddress, null);
-
-		// Address routeAddress =
-		// this.addressFactory.createAddress(call.getSipProxy());
-		// RouteHeader routeHeader =
-		// headerFactory.createRouteHeader(routeAddress);
 
 		// Locale x;
 
@@ -636,25 +616,6 @@ public abstract class SipClientSbb extends ChildSbb {
 
 		Request request = this.messageFactory.createRequest(toSipUri, Request.INVITE, callIdHeader, cseqHeader,
 				fromHeader, toHeader, viaHeadersList, maxForwardsHeader);
-		// request.setHeader(routeHeader);
-
-		// Header recvInfoHeader =
-		// headerFactory.createHeader(RECV_INFO_HEADER_NAME,
-		// RECV_INFO_HEADER_VALUE);
-		// request.setHeader(recvInfoHeader);
-
-		// TODO: we need here AcceptListHeader, not AcceptHeader but how to
-		// create it ????
-		// ACCEPT_HEADER_VALUE =
-		// "application/sdp; application/3gpp-ims+xml; application/vnd.3gpp.ussd+xml"
-		// AcceptHeader acceptHeader =
-		// headerFactory.createAcceptHeader("application", "sdp");
-		// request.setHeader(acceptHeader);
-
-		// ContentDispositionHeader contentDispositionHeader =
-		// headerFactory.createContentDispositionHeader(ACCEPT_HEADER_VALUE,
-		// null);
-		// request.setHeader(contentDispositionHeader);
 
 		ContactHeader contactHeader = createLocalContactHeader(fromMsisdnStr);
 		request.setHeader(contactHeader);
@@ -666,28 +627,6 @@ public abstract class SipClientSbb extends ChildSbb {
 		byte[] data = this.getEventsSerializeFactory().serializeSipUssdMessage(simMsg);
 		String content = new String(data);
 
-		// SessionDescription sdp = this.sdpFactory.createSessionDescription();
-		//
-		// ContentTypeHeader contentTypeHeader = this.headerFactory
-		// .createContentTypeHeader(CONTENT_TYPE, CONTENT_SUB_TYPE);
-		// contentTypeHeader.setParameter("boundary", "outer");
-		//
-		// String content2[] = new String[2];
-		// content2[0] = sdp.toString();
-		// content2[1] = content;
-		// String type[] = { "application", "application" };
-		// String subtype[] = { "sdp", "vnd.3gpp.ussd+xml" };
-		// MultipartMimeContent mmc =
-		// messageFactoryExt.createMultipartMimeContent(contentTypeHeader, type,
-		// subtype,
-		// content2);
-		// String cont2 = mmc.toString();
-		//
-		// request.setContent(cont2, contentTypeHeader);
-		// ContentLengthHeader contentLengthHeader =
-		// headerFactory.createContentLengthHeader(cont2.length());
-		// request.setContentLength(contentLengthHeader);
-
 		// Set Content
 		ContentTypeHeader contentTypeHeader = this.headerFactory
 				.createContentTypeHeader(CONTENT_TYPE, CONTENT_SUB_TYPE);
@@ -697,17 +636,6 @@ public abstract class SipClientSbb extends ChildSbb {
 		request.setContentLength(contentLengthHeader);
 
 		return request;
-
-		// byte[] imageBytes = new byte[10];
-		// MultipartMimeContent mmc =
-		// headerFactory.createMultipartMimeContent(cth, type, subtype,
-		// content2);
-		// invite.setContent(mmc, cth);
-		// dialog.sendRequest(invite);
-		//
-		// byte[] image = getImageBytes();
-		// byte[] content = sdp.getBytes() + image;
-		// invite.setContent(content, contentHeader);
 	}
 
 	private DialogActivity getDialog() {
@@ -778,8 +706,6 @@ public abstract class SipClientSbb extends ChildSbb {
 
     @Override
     protected void terminateProtocolConnection() {
-//        this.abortSipDialog();
-      
       Dialog sipDialog = this.getDialog();
 
       if (sipDialog == null) {

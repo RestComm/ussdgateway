@@ -64,9 +64,6 @@ public abstract class CDRGeneratorSbb extends USSDBaseSbb implements ChargeInter
     public void init(final boolean reset) {
         //noop
     	super.logger.info("Setting CDR_GENERATED_TO to "+CDR_GENERATED_TO);
-    	
-//        UssdPropertiesManagement ussdPropertiesManagement = UssdPropertiesManagement.getInstance();
-//        ussdPropertiesManagement.setCdrLoggedTo(CDR_GENERATED_TO);
     }
 
     /* (non-Javadoc)

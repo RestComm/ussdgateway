@@ -63,10 +63,7 @@ public abstract class CDRGeneratorSbb extends USSDBaseSbb implements ChargeInter
         if(this.logger.isFineEnabled()){
             this.logger.fine("Generating table");
         }
-        
-//        UssdPropertiesManagement ussdPropertiesManagement = UssdPropertiesManagement.getInstance();
-//        ussdPropertiesManagement.setCdrLoggedTo(CDR_GENERATED_TO);
-        
+
         CDRTableCreateTask task = new CDRTableCreateTask(this.logger, reset);
         executeTask(task);
     }
@@ -299,50 +296,5 @@ public abstract class CDRGeneratorSbb extends USSDBaseSbb implements ChargeInter
         super.jdbcACIF = (JdbcActivityContextInterfaceFactory) super.sbbContext
                 .getActivityContextInterfaceFactory(JDBC_RESOURCE_ADAPTOR_ID);
     }
-
-
-    // /*
-    // * (non-Javadoc)
-    // *
-    // * @see org.mobicents.slee.SbbExt#sbbConfigurationUpdate(org.mobicents.slee.ConfigProperties)
-    // */
-    // @Override
-    // public void sbbConfigurationUpdate(ConfigProperties arg0) {
-    // // TODO Auto-generated method stub
-    //
-    // }
-    //
-    // /*
-    // * (non-Javadoc)
-    // *
-    // * @see org.mobicents.slee.SbbExt#sbbConfigure(org.mobicents.slee.ConfigProperties)
-    // */
-    // @Override
-    // public void sbbConfigure(ConfigProperties arg0) {
-    // // TODO Auto-generated method stub
-    //
-    // }
-    //
-    // /*
-    // * (non-Javadoc)
-    // *
-    // * @see org.mobicents.slee.SbbExt#sbbUnconfigure()
-    // */
-    // @Override
-    // public void sbbUnconfigure() {
-    // // TODO Auto-generated method stub
-    //
-    // }
-    //
-    // /*
-    // * (non-Javadoc)
-    // *
-    // * @see org.mobicents.slee.SbbExt#sbbVerifyConfiguration(org.mobicents.slee.ConfigProperties)
-    // */
-    // @Override
-    // public void sbbVerifyConfiguration(ConfigProperties arg0) throws InvalidConfigurationException {
-    // // TODO Auto-generated method stub
-    //
-    // }
 
 }

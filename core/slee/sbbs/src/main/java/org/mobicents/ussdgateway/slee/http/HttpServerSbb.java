@@ -235,53 +235,6 @@ public abstract class HttpServerSbb extends ChildServerSbb implements SriParent 
             }
 
             getSRI().performSRIQuery(msisdn.getAddress(), xmlMAPDialog);
-				
-//			} else {
-//				// If this is redirect we take all the details from XML Payload
-//
-//				// this is GW sccp address
-//				SccpAddress origAddress = xmlMAPDialog.getLocalAddress();
-//				if (origAddress == null) {
-//					origAddress = getUssdGwSccpAddress(xmlMAPDialog.getNetworkId());
-//				}
-//
-//				// this must be provided by client, number of operator of
-//				// something
-//				AddressString origReference = xmlMAPDialog.getReceivedOrigReference();
-//				if (origReference == null) {
-//					origReference = getUssdGwReference(xmlMAPDialog.getNetworkId());
-//				}
-//
-//				final SccpAddress destAddress = xmlMAPDialog.getRemoteAddress();
-//				final AddressString destReference = xmlMAPDialog.getReceivedDestReference();
-//
-//				MAPDialogSupplementary mapDialog = this.mapProvider.getMAPServiceSupplementary().createNewDialog(
-//						getUSSDMAPApplicationContext(), origAddress, origReference, destAddress, destReference);
-//				mapDialog.setReturnMessageOnError(xmlMAPDialog.getReturnMessageOnError());
-//
-//				ActivityContextInterface mapDialogAci = super.mapAcif.getActivityContextInterface(mapDialog);
-//				mapDialogAci.attach(super.sbbContext.getSbbLocalObject());
-//
-//                // CDR
-//                ChargeInterface cdrInterface = this.getCDRChargeInterface();
-//				USSDCDRState state = cdrInterface.getState();
-//                if (!state.isInitialized()) {
-//                    state.init(mapDialog.getLocalDialogId(), serviceCode, destReference, origReference, msisdn, origAddress, destAddress);
-//                    state.setUssdType(USSDType.PUSH);
-//                    cdrInterface.setState(state);
-//
-//                    // attach, in case impl wants to use more of dialog.
-//                    SbbLocalObject sbbLO = (SbbLocalObject) cdrInterface;
-//                    aci.attach(sbbLO);
-//                }
-//
-//				if (xmlMAPDialog.getEmptyDialogHandshake() != null && xmlMAPDialog.getEmptyDialogHandshake()) {
-//					// Lets do handshake only
-//					mapDialog.send();
-//				} else {
-//					pushToDevice(mapDialog);
-//				}
-//			}
 
             super.ussdStatAggregator.addDialogsInProcess();
 
@@ -361,24 +314,6 @@ public abstract class HttpServerSbb extends ChildServerSbb implements SriParent 
                     }
                 }
             }
-
-//            // we need to check if MAP Dialog is alive
-//            MAPDialogSupplementary mapDialogSupplementary = (MAPDialogSupplementary) this.getMAPDialog();
-//            if (mapDialogSupplementary == null || mapDialogSupplementary.getState() == MAPDialogState.EXPUNGED) {
-//                if (super.logger.isWarningEnabled())
-//                    super.logger.warning("Session Post has been received but MAPDialog is closed already: " + event);
-//
-//                xmlMAPDialog.reset();
-//
-//                MAPUserAbortChoiceImpl abortChoice = new MAPUserAbortChoiceImpl();
-//                abortChoice.setProcedureCancellationReason(ProcedureCancellationReason.associatedProcedureFailure);
-//
-//                xmlMAPDialog.abort(abortChoice);
-//                xmlMAPDialog.setTCAPMessageType(MessageType.Abort);
-//
-//                this.abortHttpDialog(xmlMAPDialog);
-//                return;
-//            }
 
             this.setXmlMAPDialog(xmlMAPDialog);
             pushToDevice();
@@ -571,17 +506,6 @@ public abstract class HttpServerSbb extends ChildServerSbb implements SriParent 
         } catch (MAPException e1) {
             logger.severe("Error while trying to send Abort MAP Dialog", e1);
         }
-
-//			MAPDialog mapDialog = evt.getMAPDialog();
-//			if (mapDialog.getState() == MAPDialogState.INITIAL_SENT) {
-//				// Dialog is not yet established, can't Abort this Dialog
-//				logger.warning("Received Invoke timeout but MAP Dialog state is INITIAL_SENT. Set emptyDialogHandshake to true if you want to automatically Abort such Dialog's.\nMAP Dialog = "
-//						+ evt.getMAPDialog());
-//				return;
-//			}
-//
-//			// If User is taking too long to respond, lets Abort the Dialog
-//			this.abort(mapDialog);
 
         try {
             XmlMAPDialog xmlMAPDialog = this.getXmlMAPDialog();
@@ -890,9 +814,6 @@ public abstract class HttpServerSbb extends ChildServerSbb implements SriParent 
 					origAddress, origReference, destAddress, destReference);
 			mapDialog.setReturnMessageOnError(xmlMAPDialog.getReturnMessageOnError());
 			mapDialog.setNetworkId(xmlMAPDialog.getNetworkId());
-			// mapDialog =
-			// this.mapProvider.getMAPServiceSupplementary().createNewDialog(getUSSDMAPApplicationContext(),
-			// origAddress, null, destAddress, null);
 			ActivityContextInterface mapDialogAci = super.mapAcif.getActivityContextInterface(mapDialog);
 			mapDialogAci.attach(super.sbbContext.getSbbLocalObject());
 

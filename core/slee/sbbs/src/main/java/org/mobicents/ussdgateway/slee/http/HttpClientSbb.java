@@ -357,13 +357,6 @@ public abstract class HttpClientSbb extends ChildSbb {
 		ScRoutingRule call = this.getCall();
 		String url = call.getRuleUrl();
 
-		// If this is MAP Abort sending to client, we don't care for response so
-		// better to detach
-//		if (xmlMAPDialog.getTCAPMessageType() == MessageType.Abort) {
-//			ActivityContextInterface aci = getHttpClientActivityContextInterface();
-//			aci.detach(this.sbbContext.getSbbLocalObject());
-//		}
-
 		doPost(httpClientActivity, url, data);
 	}
 

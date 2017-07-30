@@ -71,15 +71,6 @@ public abstract class ParentSbb extends USSDBaseSbb {
 		dialog.setNetworkId(mapDialog.getNetworkId());
 
 		this.setDialog(dialog);
-
-        // !!!!-
-//        this.logger.warning("isEriStyle=" + evt.isEriStyle());
-//        this.logger.warning("EriMsisdn=" + evt.getEriMsisdn() + ", EriVlrNo=" + evt.getEriVlrNo());
-//        if (evt.isEriStyle()) {
-//            this.logger.warning("EriMsisdn=" + evt.getEriMsisdn() + ", EriVlrNo=" + evt.getEriVlrNo());
-//        }
-        // !!!!-
-
 	}
 
 	public void onDialogTimeout(org.mobicents.slee.resource.map.events.DialogTimeout evt, ActivityContextInterface aci) {

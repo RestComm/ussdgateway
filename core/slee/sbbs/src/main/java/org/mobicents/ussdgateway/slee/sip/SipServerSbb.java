@@ -298,14 +298,6 @@ public abstract class SipServerSbb extends ChildServerSbb implements SriParent {
             abortChoice.setProcedureCancellationReason(ProcedureCancellationReason.associatedProcedureFailure);
             this.abortMapDialog(abortChoice);
 
-
-//			this.abort(this.getMAPDialog());
-//
-//				XmlMAPDialog xmlMAPDialog = this.getXmlMAPDialog();
-//				xmlMAPDialog.reset();
-//				xmlMAPDialog.setInvokeTimedOut(evt.getInvokeId());
-//				xmlMAPDialog.setTCAPMessageType(MessageType.Abort);
-
 		} catch (MAPException e1) {
 			logger.severe("Error while trying to send Abort MAP Dialog", e1);
 		}
@@ -324,18 +316,8 @@ public abstract class SipServerSbb extends ChildServerSbb implements SriParent {
 	public void onErrorComponent(ErrorComponent event, ActivityContextInterface aci) {
         if (super.logger.isInfoEnabled())
             super.logger.info("Error component received:" + event);
-//		try {
-
-//			XmlMAPDialog xmlMAPDialog = this.getXmlMAPDialog();
-//			xmlMAPDialog.reset();
-//			xmlMAPDialog.sendErrorComponent(event.getInvokeId(), event.getMAPErrorMessage());
-//			xmlMAPDialog.setTCAPMessageType(event.getMAPDialog().getTCAPMessageType());
 
         this.abortSipDialog();		
-
-//		} catch (MAPException e) {
-//			logger.severe("Error while trying to send ErrorComponent to HTTP App", e);
-//		}
 
         switch ((int) (long) (event.getMAPErrorMessage().getErrorCode())) {
         case MAPErrorCode.absentSubscriber:
@@ -401,22 +383,8 @@ public abstract class SipServerSbb extends ChildServerSbb implements SriParent {
 					mapDialog.release();
 				}
 
-//				try {
-
-//					MAPUserAbortChoiceImpl abortChoice = new MAPUserAbortChoiceImpl();
-//					abortChoice.setProcedureCancellationReason(ProcedureCancellationReason.associatedProcedureFailure);
-//
-//					xmlMAPDialog = this.getXmlMAPDialog();
-//					xmlMAPDialog.reset();
-//					xmlMAPDialog.abort(abortChoice);
-//					xmlMAPDialog.setTCAPMessageType(MessageType.Abort);
-
                 this.abortSipDialog();
-					
-//				} catch (Exception e1) {
-//					logger.severe("Error while trying to send abort to HTTP App", e1);
-//				}
-				
+
 				this.createCDRRecord(RecordStatus.FAILED_SYSTEM_FAILURE);
 
 		        super.ussdStatAggregator.updateDialogsAllFailed();
@@ -437,10 +405,6 @@ public abstract class SipServerSbb extends ChildServerSbb implements SriParent {
 		if (super.logger.isWarningEnabled())
 			super.logger.warning("Dialog reject received: " + evt);
 
-//		XmlMAPDialog xmlMAPDialog = this.getXmlMAPDialog();
-//		xmlMAPDialog.reset();
-//		xmlMAPDialog.setMapRefuseReason(evt.getRefuseReason());
-//		xmlMAPDialog.setTCAPMessageType(evt.getMAPDialog().getTCAPMessageType());
 		this.abortSipDialog();
 
 		this.createCDRRecord(RecordStatus.FAILED_DIALOG_REJECTED);
@@ -453,17 +417,8 @@ public abstract class SipServerSbb extends ChildServerSbb implements SriParent {
 	public void onDialogUserAbort(DialogUserAbort evt, ActivityContextInterface aci) {
 		if (super.logger.isWarningEnabled())
 			super.logger.warning("User abort received: " + evt);
-//		try {
-//			XmlMAPDialog xmlMAPDialog = this.getXmlMAPDialog();
-//			xmlMAPDialog.reset();
-//			xmlMAPDialog.abort(evt.getUserReason());
-//			xmlMAPDialog.setTCAPMessageType(evt.getMAPDialog().getTCAPMessageType());
 
         this.abortSipDialog();
-
-//		} catch (MAPException e) {
-//			logger.severe("Error wile trying to send back MAPUserAbortChoice to HTTP App", e);
-//		}
 
         this.createCDRRecord(RecordStatus.FAILED_DIALOG_USER_ABORT);
 
@@ -475,11 +430,6 @@ public abstract class SipServerSbb extends ChildServerSbb implements SriParent {
 	public void onDialogProviderAbort(DialogProviderAbort evt, ActivityContextInterface aci) {
 		if (super.logger.isWarningEnabled())
 			super.logger.warning("Provider abort received: " + evt);
-
-//		XmlMAPDialog xmlMAPDialog = this.getXmlMAPDialog();
-//		xmlMAPDialog.reset();
-//		xmlMAPDialog.setMapAbortProviderReason(evt.getAbortProviderReason());
-//		xmlMAPDialog.setTCAPMessageType(evt.getMAPDialog().getTCAPMessageType());
 
 		this.abortSipDialog();
 		
@@ -505,15 +455,6 @@ public abstract class SipServerSbb extends ChildServerSbb implements SriParent {
         } catch (Exception e) {
             super.logger.severe("Exception when sending of : abort in SipServerSbb" + e.toString(), e);
         }
-
-//		XmlMAPDialog xmlMAPDialog = this.getXmlMAPDialog();
-//		xmlMAPDialog.reset();
-//		xmlMAPDialog.setDialogTimedOut(true);
-//		if (evt.getMAPDialog().getTCAPMessageType() != null) {
-//			// TODO : MAP RA is setting MessaegType to null if Dialog is sent
-//			// and remote side never responded, fix this in RA
-//			xmlMAPDialog.setTCAPMessageType(evt.getMAPDialog().getTCAPMessageType());
-//		}
 
 		this.abortSipDialog();
 
@@ -774,12 +715,6 @@ public abstract class SipServerSbb extends ChildServerSbb implements SriParent {
 
 				MAPDialogSupplementary mapDialogSupplementary = this.getMAPDialog();
 
-//	            // we need to check if MAP Dialog is alive
-//                if (mapDialogSupplementary == null || mapDialogSupplementary.getState() == MAPDialogState.EXPUNGED) {
-//                    this.abortSipDialog();
-//                    return;
-//                }
-
 				CBSDataCodingScheme cbsDataCodingScheme = sipUssdMessage.getCBSDataCodingScheme();
 				USSDStringImpl ussdStr = new USSDStringImpl(sipUssdMessage.getUssdString(), cbsDataCodingScheme, null);
 
@@ -818,19 +753,10 @@ public abstract class SipServerSbb extends ChildServerSbb implements SriParent {
             this.abortSipDialog();
 
 			try {
-//				XmlMAPDialog xmlMAPDialog = this.getXmlMAPDialog();
-//				xmlMAPDialog.reset();
-
                 MAPUserAbortChoiceImpl abortChoice = new MAPUserAbortChoiceImpl();
                 abortChoice.setProcedureCancellationReason(ProcedureCancellationReason.associatedProcedureFailure);
 
-//				xmlMAPDialog.abort(abortChoice);
-//				xmlMAPDialog.setTCAPMessageType(MessageType.Abort);
-
 				this.abortMapDialog(abortChoice);
-
-//				SipUssdMessage simMsg = new SipUssdMessage(SipUssdErrorCode.errorUnspecified);
-//				this.sendBye(simMsg);
 			} catch (MAPException e1) {
 				logger.severe("Error while trying to send abort to HTTP App and abort MAPDialog", e1);
 			}
@@ -1003,20 +929,7 @@ public abstract class SipServerSbb extends ChildServerSbb implements SriParent {
                 super.ussdStatAggregator.removeDialogsInProcess();
             }
 
-//			try {
-
-//				MAPUserAbortChoiceImpl abortChoice = new MAPUserAbortChoiceImpl();
-//				abortChoice.setProcedureCancellationReason(ProcedureCancellationReason.associatedProcedureFailure);
-//
-//				xmlMAPDialog.reset();
-//				xmlMAPDialog.abort(abortChoice);
-//				xmlMAPDialog.setTCAPMessageType(MessageType.Abort);
-
             this.abortSipDialog();				
-
-//			} catch (Exception e1) {
-//				logger.severe("Error while trying to send abort to HTTP App", e1);
-//			}
 
 	        super.ussdStatAggregator.updateDialogsAllFailed();
 	        super.ussdStatAggregator.updateDialogsPushFailed();
@@ -1181,15 +1094,6 @@ public abstract class SipServerSbb extends ChildServerSbb implements SriParent {
 
 		this.processXmlMAPDialog(xmlMapDialog, dialog);
         dialog.send();
-
-//      Boolean prearrangedEnd = xmlMapDialog.getPrearrangedEnd();
-//		if (prearrangedEnd != null) {
-//			dialog.close(prearrangedEnd);
-//
-//			// TODO : prearrangedEnd is always null ,isn't it?
-//		} else {
-//			dialog.send();
-//		}
 	}
 
     private void abortMapDialog(MAPUserAbortChoice abortChoice) throws MAPException {
@@ -1209,13 +1113,6 @@ public abstract class SipServerSbb extends ChildServerSbb implements SriParent {
     private void processReceivedMAPEvent(MAPEvent event, SipUssdMessage simMsg) throws Exception {
         MessageType messageType = event.getMAPDialog().getTCAPMessageType();
 
-//      XmlMAPDialog dialog = this.getXmlMAPDialog();
-//      dialog.reset();
-//      dialog.addMAPMessage(event.getWrappedEvent());
-//
-//      dialog.setTCAPMessageType(messageType);
-//      setXmlMAPDialog(dialog);
-
         if (messageType == MessageType.Continue) {
             this.sendSipInfo(simMsg);
 
@@ -1225,9 +1122,6 @@ public abstract class SipServerSbb extends ChildServerSbb implements SriParent {
     }
     
     protected void abortSipDialog() {
-//        XmlMAPDialog xmlMAPDialog
-//        this.setXmlMAPDialog(xmlMAPDialog);
-
         SipUssdMessage simMsg = new SipUssdMessage(SipUssdErrorCode.errorUnspecified);
         this.sendSipBye(simMsg);
     }
