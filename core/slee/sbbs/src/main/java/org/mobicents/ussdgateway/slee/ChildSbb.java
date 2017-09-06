@@ -32,6 +32,7 @@ import javax.slee.facilities.TimerOptions;
 
 import javolution.xml.stream.XMLStreamException;
 
+import org.joda.time.DateTime;
 import org.mobicents.protocols.ss7.map.api.MAPDialog;
 import org.mobicents.protocols.ss7.map.api.MAPException;
 import org.mobicents.protocols.ss7.map.api.MAPProvider;
@@ -159,6 +160,7 @@ public abstract class ChildSbb extends USSDBaseSbb implements ChildInterface, Ch
 				state.init(dialog.getLocalDialogId(), serviceCode, dialog.getReceivedDestReference(), dialog
 						.getReceivedOrigReference(), evt.getMSISDNAddressString(),
 						evt.getMAPDialog().getLocalAddress(), evt.getMAPDialog().getRemoteAddress());
+				state.setDialogStartTime(DateTime.now());
 				state.setRemoteDialogId(evt.getMAPDialog().getRemoteDialogId());
 				cdrInterface.setState(state);
 
