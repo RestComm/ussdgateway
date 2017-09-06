@@ -51,6 +51,7 @@ import net.java.slee.resource.sip.DialogActivity;
 import net.java.slee.resource.sip.SipActivityContextInterfaceFactory;
 import net.java.slee.resource.sip.SleeSipProvider;
 
+import org.joda.time.DateTime;
 import org.mobicents.protocols.ss7.indicator.NatureOfAddress;
 import org.mobicents.protocols.ss7.indicator.RoutingIndicator;
 import org.mobicents.protocols.ss7.map.api.MAPApplicationContext;
@@ -577,6 +578,7 @@ public abstract class SipServerSbb extends ChildServerSbb implements SriParent {
                 USSDCDRState state = cdrInterface.getState();
                 if (!state.isInitialized()) {
                     state.init(null, serviceCode, null, null, msisdn, null, null);
+                    state.setDialogStartTime(DateTime.now());
                     state.setUssdType(USSDType.PUSH);
                     cdrInterface.setState(state);
 

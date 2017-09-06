@@ -20,6 +20,7 @@
 
 				<!-- Not strictly SS7, But needed by SS7 -->
 				<include>javolution:javolution</include>
+				<include>joda-time:joda-time</include>
 				<include>org.mobicents.protocols.sctp:sctp-api</include>
 				<include>org.mobicents.protocols.sctp:sctp-impl</include>
 				<include>org.mobicents.commons:commons</include>
