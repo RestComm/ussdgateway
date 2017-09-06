@@ -26,6 +26,7 @@ import javax.slee.CreateException;
 import javax.slee.SbbContext;
 
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
 import org.mobicents.protocols.ss7.indicator.AddressIndicator;
 import org.mobicents.protocols.ss7.map.api.primitives.AddressString;
 import org.mobicents.protocols.ss7.map.api.primitives.IMSI;
@@ -78,6 +79,13 @@ public abstract class CDRGeneratorSbb extends USSDBaseSbb implements ChargeInter
         }else{
             if(super.logger.isFineEnabled()){
                 super.logger.fine("Generating record, status '"+outcome+"' for '"+state+"'");
+            }
+            DateTime startTime = state.getDialogStartTime();
+            if(startTime!=null){
+                DateTime endTime = DateTime.now();
+                Long duration = endTime.getMillis() - startTime.getMillis();
+                state.setDialogEndTime(endTime);
+                state.setDialogDuration(duration);
             }
             state.setRecordStatus(outcome);
             state.setGenerated(true);
@@ -322,7 +330,15 @@ public abstract class CDRGeneratorSbb extends USSDBaseSbb implements ChargeInter
 //        _COLUMN_LOCAL_DIALOG_ID+","+
       sb.append(state.getLocalDialogId()).append(SEPARATOR);
 //    _COLUMN_REMOTE_DIALOG_ID+","+
-      sb.append(state.getRemoteDialogId()).append(SEPARATOR);      
+      sb.append(state.getRemoteDialogId()).append(SEPARATOR);
+      Long dialogDuration = state.getDialogDuration();
+      if(dialogDuration != null){
+//    _COLUMN_DIALOG_DURATION
+          //TODO: output as millis or?
+          sb.append(sb.append(dialogDuration).append(SEPARATOR));
+      }else{
+          sb.append(SEPARATOR);
+      }
 //        _COLUMN_TSTAMP+","+
       sb.append(tstamp).append(SEPARATOR);
 //        _COLUMN_STATUS+ <-- null - create record

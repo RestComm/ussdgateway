@@ -26,6 +26,7 @@ import javax.slee.CreateException;
 import javax.slee.RolledBackContext;
 import javax.slee.SbbContext;
 
+import org.joda.time.DateTime;
 import org.mobicents.slee.resource.jdbc.JdbcActivity;
 import org.mobicents.slee.resource.jdbc.JdbcActivityContextInterfaceFactory;
 import org.mobicents.slee.resource.jdbc.JdbcResourceAdaptorSbbInterface;
@@ -80,6 +81,14 @@ public abstract class CDRGeneratorSbb extends USSDBaseSbb implements ChargeInter
         }else{
             if(this.logger.isFineEnabled()){
                 this.logger.fine("Generating record, status '"+outcome+"' for '"+state+"'");
+            }
+
+            DateTime startTime = state.getDialogStartTime();
+            if(startTime!=null){
+                DateTime endTime = DateTime.now();
+                Long duration = endTime.getMillis() - startTime.getMillis();
+                state.setDialogEndTime(endTime);
+                state.setDialogDuration(duration);
             }
             state.setRecordStatus(outcome);
             state.setGenerated(true);
