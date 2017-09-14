@@ -83,11 +83,19 @@ public class CDRTableCreateTask extends CDRTaskBase {
                 if(tracer.isFineEnabled()){
                     tracer.fine("Dropping DB: "+Schema._QUERY_DROP);
                 }
+                if(tracer.isFineEnabled()){
+                    tracer.fine("Creating DB: "+Schema._QUERY_CREATE);
+                }
+                statement.execute(Schema._QUERY_CREATE);
+            }else{
+                //TODO:how to manage multiple schema updates/schema versioning?
+                boolean res;
+                res = statement.execute(Schema._QUERY_CHECK_VERSION_0_0_1);
+
+                if(!res){
+                    statement.execute(Schema._QUERY_ALTER_0_0_1);
+                }
             }
-            if(tracer.isFineEnabled()){
-                tracer.fine("Creating DB: "+Schema._QUERY_CREATE);
-            }
-            statement.execute(Schema._QUERY_CREATE);
         } catch (Exception e) {
             super.tracer.severe("Failed at execute!", e);
             throw new CDRCreateException(e);
