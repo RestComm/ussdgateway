@@ -154,7 +154,14 @@ final class Schema {
             + _COLUMN_REMOTE_DIALOG_ID + " "+_TYPE_COLUMN_REMOTE_DIALOG_ID +", "
             + _COLUMN_DIALOG_DURATION + " "+_TYPE_COLUMN_DIALOG_DURATION
              + ", PRIMARY KEY(" + _COLUMN_ID + ","+_COLUMN_TSTAMP+")" + ");";
-    
+
+    public static final String _QUERY_CHECK_VERSION_0_0_1 = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.COLUMNS "
+            + " WHERE TABLE_NAME = "+_TABLE_NAME
+            + " AND COLUMN_NAME = "+_COLUMN_DIALOG_DURATION;
+
+    public static final String _QUERY_ALTER_0_0_1 = "ALTER TABLE "+_TABLE_NAME
+            + " ADD COLUMN "+_COLUMN_DIALOG_DURATION + " " + _TYPE_COLUMN_DIALOG_DURATION;
+
     public static final String _QUERY_INSERT ="INSERT INTO "+_TABLE_NAME
             +" ( " +
                 _COLUMN_L_SPC+","+
@@ -198,8 +205,8 @@ final class Schema {
                      "?,?,?,?," +
                      "?,?,?,?," +
                      "?,?,?);";
-    
+
     public static void main(String[] args){
-    	System.out.println(_QUERY_CREATE);
+        System.out.println(_QUERY_CREATE);
     }
 }
