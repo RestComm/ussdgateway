@@ -61,6 +61,8 @@ public class USSDCDRState implements Serializable {
 
 	private USSDType ussdType = USSDType.PULL;
 
+	private String ussdString;
+
 	/**
 	 * @return the destReference
 	 */
@@ -291,6 +293,16 @@ public class USSDCDRState implements Serializable {
 		this.ussdType = ussdType;
 	}
 
+	public String getUssdString() {
+		// TODO Auto-generated method stub
+		return this.ussdString;
+	}
+
+	public void setUssdString(String ussdString) {
+		// TODO Auto-generated method stub
+		this.ussdString = ussdString;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -415,5 +427,6 @@ public class USSDCDRState implements Serializable {
 				+ ", remoteDialogId=" + remoteDialogId + ", id=" + id + ", recordStatus=" + recordStatus
 				+ ", ussdType=" + ussdType + " ]@" + super.hashCode();
 	}
+
 
 }

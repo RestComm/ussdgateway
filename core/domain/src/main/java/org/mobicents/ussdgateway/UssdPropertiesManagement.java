@@ -102,6 +102,8 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
     // max count of TCAP Dialogs that are possible at the same time
     private int maxActivityCount = 5000;
 
+	private boolean cdrNavigationSave;
+
 	private UssdPropertiesManagement(String name) {
 		this.name = name;
 		binding.setClassAttribute(CLASS_ATTRIBUTE);
@@ -275,6 +277,15 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
 
     public void setCdrLoggingTo(CdrLoggedType cdrLoggingTo) {
         this.cdrLoggingTo = cdrLoggingTo;
+        this.store();
+    }
+
+    public boolean getCdrNavigationSave() {
+        return cdrNavigationSave;
+    }
+
+    public void getCdrNavigationSave(boolean cdrNavigationSave) {
+        this.cdrNavigationSave = cdrNavigationSave;
         this.store();
     }
 
