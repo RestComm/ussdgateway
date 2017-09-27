@@ -67,6 +67,8 @@ public class USSDCDRState implements Serializable {
 
 	private USSDType ussdType = USSDType.PULL;
 
+    protected String ussdString;
+
 	/**
 	 * @return the destReference
 	 */
@@ -322,6 +324,14 @@ public class USSDCDRState implements Serializable {
 	public void setUssdType(USSDType ussdType) {
 		this.ussdType = ussdType;
 	}
+
+    public String getUssdString() {
+        return this.ussdString;
+    }
+
+    public void setUssdString(String ussdString) {
+        this.ussdString = ussdString;
+    }
 
 	/*
 	 * (non-Javadoc)
