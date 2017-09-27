@@ -127,19 +127,17 @@ public abstract class CDRTaskBase extends SimpleJdbcTask {
           }
 
           //_COLUMN_DIALOG_DURATION
-          Long dialogDuration = state.getDialogDuration();
-          if(dialogDuration != null){
-              //TODO: output as millis or?
-              preparedStatement.setLong(27, dialogDuration);
-          }else{
-              preparedStatement.setNull(27, Types.BIGINT);
-          }
+          preparedStatement.setNull(27, Types.BIGINT);
+
+          //_COLUMN_USSD_STRING
+          preparedStatement.setNull(28, Types.VARCHAR);
+
 //            _COLUMN_TSTAMP+","+
-          preparedStatement.setTimestamp(28, tstamp);
+          preparedStatement.setTimestamp(29, tstamp);
 //        _COLUMN_STATUS+ <-- null - create record
-          preparedStatement.setString(29,RecordStatus.FAILED_CORRUPTED_MESSAGE.toString());
+          preparedStatement.setString(30,RecordStatus.FAILED_CORRUPTED_MESSAGE.toString());
 //        _COLUMN_ID
-          preparedStatement.setString(30,this.state.getId());
+          preparedStatement.setString(31,this.state.getId());
           preparedStatement.execute();
         } catch (Exception e) {
             this.tracer.severe("Failed at execute!", e);

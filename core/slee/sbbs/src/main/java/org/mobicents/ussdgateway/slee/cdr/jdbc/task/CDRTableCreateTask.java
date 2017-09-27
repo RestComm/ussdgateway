@@ -95,6 +95,12 @@ public class CDRTableCreateTask extends CDRTaskBase {
                 if(!res){
                     statement.execute(Schema._QUERY_ALTER_0_0_1);
                 }
+                //FIXME: better to put the updates into a table/list
+                res = statement.execute(Schema._QUERY_CHECK_VERSION_0_0_2);
+
+                if(!res){
+                    statement.execute(Schema._QUERY_ALTER_0_0_2);
+                }
             }
         } catch (Exception e) {
             super.tracer.severe("Failed at execute!", e);

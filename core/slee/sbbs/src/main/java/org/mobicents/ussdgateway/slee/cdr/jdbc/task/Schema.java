@@ -41,6 +41,7 @@ final class Schema {
     //   | ISDN_NATURE | ISDN_PLAN | ISDN_DIGITS 
     //   | VLR_NATURE | VLR_PLAN | VLR_DIGITS 
     //   | IMSI | LOCAL_DIALOG_ID | REMOTE_DIALOG_ID | DIALOG_DURATION
+    //   | USSD_STRING
     //   | TSTAMP | STATUS
     // lets define some statics for table and queries in one place.
     
@@ -73,6 +74,7 @@ final class Schema {
     public static final String _COLUMN_LOCAL_DIALOG_ID = "LOCAL_DIALOG_ID";
     public static final String _COLUMN_REMOTE_DIALOG_ID = "REMOTE_DIALOG_ID";
     public static final String _COLUMN_DIALOG_DURATION = "DIALOG_DURATION";
+    public static final String _COLUMN_USSD_STRING = "USSD_STRING";
     public static final String _COLUMN_TSTAMP = "TSTAMP";
     public static final String _COLUMN_STATUS = "STATUS";
     public static final String _COLUMN_TYPE = "TYPE";
@@ -113,6 +115,8 @@ final class Schema {
     public static final String _TYPE_COLUMN_LOCAL_DIALOG_ID = "BIGINT";
     public static final String _TYPE_COLUMN_REMOTE_DIALOG_ID = "BIGINT";
     public static final String _TYPE_COLUMN_DIALOG_DURATION = "BIGINT";
+    //FIXME: what size should the column be?
+    public static final String _TYPE_COLUMN_USSD_STRING = "VARCHAR(255)";
 
 
     // SQL queries.
@@ -152,15 +156,21 @@ final class Schema {
             + _COLUMN_TSTAMP + " "+_TYPE_COLUMN_TSTAMP+"  NOT NULL , "
             + _COLUMN_LOCAL_DIALOG_ID + " "+_TYPE_COLUMN_LOCAL_DIALOG_ID +", " 
             + _COLUMN_REMOTE_DIALOG_ID + " "+_TYPE_COLUMN_REMOTE_DIALOG_ID +", "
-            + _COLUMN_DIALOG_DURATION + " "+_TYPE_COLUMN_DIALOG_DURATION
+            + _COLUMN_DIALOG_DURATION + " "+_TYPE_COLUMN_DIALOG_DURATION +","
+            + _COLUMN_USSD_STRING + " "+_TYPE_COLUMN_USSD_STRING
              + ", PRIMARY KEY(" + _COLUMN_ID + ","+_COLUMN_TSTAMP+")" + ");";
 
     public static final String _QUERY_CHECK_VERSION_0_0_1 = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.COLUMNS "
             + " WHERE TABLE_NAME = "+_TABLE_NAME
             + " AND COLUMN_NAME = "+_COLUMN_DIALOG_DURATION;
+    public static final String _QUERY_CHECK_VERSION_0_0_2 = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.COLUMNS "
+            + " WHERE TABLE_NAME = "+_TABLE_NAME
+            + " AND COLUMN_NAME = "+_COLUMN_USSD_STRING;
 
     public static final String _QUERY_ALTER_0_0_1 = "ALTER TABLE "+_TABLE_NAME
             + " ADD COLUMN "+_COLUMN_DIALOG_DURATION + " " + _TYPE_COLUMN_DIALOG_DURATION;
+    public static final String _QUERY_ALTER_0_0_2 = "ALTER TABLE "+_TABLE_NAME
+            + " ADD COLUMN "+_COLUMN_USSD_STRING + " " + _TYPE_COLUMN_USSD_STRING;
 
     public static final String _QUERY_INSERT ="INSERT INTO "+_TABLE_NAME
             +" ( " +
@@ -191,6 +201,7 @@ final class Schema {
                 _COLUMN_LOCAL_DIALOG_ID+","+
                 _COLUMN_REMOTE_DIALOG_ID+","+
                 _COLUMN_DIALOG_DURATION+","+
+                _COLUMN_USSD_STRING+","+
                 _COLUMN_TSTAMP+","+
                 _COLUMN_STATUS+","+
                 _COLUMN_TYPE+","+
@@ -204,7 +215,7 @@ final class Schema {
                      "?,?,?,?," +
                      "?,?,?,?," +
                      "?,?,?,?," +
-                     "?,?,?);";
+                     "?,?,?,?);";
 
     public static void main(String[] args){
         System.out.println(_QUERY_CREATE);

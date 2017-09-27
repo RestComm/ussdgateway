@@ -281,14 +281,22 @@ public class CDRCreateTask extends CDRTaskBase {
                 preparedStatement.setNull(27, Types.BIGINT);
             }
 
-			// _COLUMN_TSTAMP+","+
-			preparedStatement.setTimestamp(28, tstamp);
-			// _COLUMN_TERMINATD+ <-- null - create record
-			preparedStatement.setString(29, super.state.getRecordStatus().toString());
+            //_COLUMN_USSD_STRING
+            String ussdString = state.getUssdString();
+            if(!ussdString.isEmpty()){
+                preparedStatement.setString(28, ussdString);
+            }else{
+                preparedStatement.setNull(28, Types.VARCHAR);
+            }
 
-			preparedStatement.setString(30, super.state.getUssdType().toString());
+			// _COLUMN_TSTAMP+","+
+			preparedStatement.setTimestamp(29, tstamp);
+			// _COLUMN_TERMINATD+ <-- null - create record
+			preparedStatement.setString(30, super.state.getRecordStatus().toString());
+
+			preparedStatement.setString(31, super.state.getUssdType().toString());
 			// _COLUMN_ID
-			preparedStatement.setString(31, super.state.getId());
+			preparedStatement.setString(32, super.state.getId());
 			preparedStatement.execute();
 
 		} catch (SQLException e) {
