@@ -119,12 +119,25 @@ public abstract class CDRTaskBase extends SimpleJdbcTask {
           } else {
               preparedStatement.setNull(25, Types.BIGINT);
           }
+          //REMOTE dialog??
+          if (this.state.getRemoteDialogId() != null) {
+              preparedStatement.setLong(26, this.state.getRemoteDialogId());
+          } else {
+              preparedStatement.setNull(26, Types.BIGINT);
+          }
+
+          //_COLUMN_DIALOG_DURATION
+          preparedStatement.setNull(27, Types.BIGINT);
+
+          //_COLUMN_USSD_STRING
+          preparedStatement.setNull(28, Types.VARCHAR);
+
 //            _COLUMN_TSTAMP+","+
-          preparedStatement.setTimestamp(26, tstamp);
+          preparedStatement.setTimestamp(29, tstamp);
 //        _COLUMN_STATUS+ <-- null - create record
-          preparedStatement.setString(27,RecordStatus.FAILED_CORRUPTED_MESSAGE.toString());
+          preparedStatement.setString(30,RecordStatus.FAILED_CORRUPTED_MESSAGE.toString());
 //        _COLUMN_ID
-          preparedStatement.setString(28,this.state.getId());
+          preparedStatement.setString(31,this.state.getId());
           preparedStatement.execute();
         } catch (Exception e) {
             this.tracer.severe("Failed at execute!", e);

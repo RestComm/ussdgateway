@@ -32,6 +32,7 @@ import javax.slee.facilities.TimerOptions;
 
 import javolution.xml.stream.XMLStreamException;
 
+import org.joda.time.DateTime;
 import org.mobicents.protocols.ss7.map.api.MAPDialog;
 import org.mobicents.protocols.ss7.map.api.MAPException;
 import org.mobicents.protocols.ss7.map.api.MAPProvider;
@@ -83,6 +84,8 @@ public abstract class ChildSbb extends USSDBaseSbb implements ChildInterface, Ch
 	private TimerFacility timerFacility = null;
 
 	protected static final UssdPropertiesManagement ussdPropertiesManagement = UssdPropertiesManagement.getInstance();
+
+    private static final String USSD_STRING_SEPARATOR = ",";
 
 	public ChildSbb(String loggerName) {
 		super(loggerName);
@@ -159,6 +162,7 @@ public abstract class ChildSbb extends USSDBaseSbb implements ChildInterface, Ch
 				state.init(dialog.getLocalDialogId(), serviceCode, dialog.getReceivedDestReference(), dialog
 						.getReceivedOrigReference(), evt.getMSISDNAddressString(),
 						evt.getMAPDialog().getLocalAddress(), evt.getMAPDialog().getRemoteAddress());
+				state.setDialogStartTime(DateTime.now());
 				state.setRemoteDialogId(evt.getMAPDialog().getRemoteDialogId());
 				cdrInterface.setState(state);
 
@@ -206,6 +210,14 @@ public abstract class ChildSbb extends USSDBaseSbb implements ChildInterface, Ch
 			dialog.setTCAPMessageType(evt.getMAPDialog().getTCAPMessageType());
 			dialog.addMAPMessage(((MAPEvent) evt).getWrappedEvent());
 			EventsSerializeFactory factory = this.getEventsSerializeFactory();
+
+            ChargeInterface cdrInterface = this.getCDRChargeInterface();
+            USSDCDRState state = cdrInterface.getState();
+
+            if(state.isInitialized()){
+                String ussdString = evt.getUSSDString().getString(null);
+                state.setUssdString(state.getUssdString()+USSD_STRING_SEPARATOR+ussdString);
+            }
 
 			this.sendUssdData(dialog);
 

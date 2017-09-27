@@ -22,6 +22,7 @@ package org.mobicents.ussdgateway.slee.cdr;
 import java.io.Serializable;
 import java.util.UUID;
 
+import org.joda.time.DateTime;
 import org.mobicents.protocols.ss7.map.api.primitives.AddressString;
 import org.mobicents.protocols.ss7.map.api.primitives.IMSI;
 import org.mobicents.protocols.ss7.map.api.primitives.ISDNAddressString;
@@ -55,11 +56,18 @@ public class USSDCDRState implements Serializable {
 	protected Long localDialogId;
 	protected Long remoteDialogId;
 
+	//NB: once we update to JDK8, we should revert to using standard java.time package
+    protected DateTime dialogStartTime;
+    protected DateTime dialogEndTime;
+    protected Long dialogDuration;
+
 	protected String id;
 
 	protected RecordStatus recordStatus;
 
 	private USSDType ussdType = USSDType.PULL;
+
+    protected String ussdString;
 
 	/**
 	 * @return the destReference
@@ -144,6 +152,10 @@ public class USSDCDRState implements Serializable {
 		this.isdnAddressString = isdnAddressString;
 		// This should be enough to be unique
 		this.id = UUID.randomUUID().toString();
+
+        this.dialogStartTime = null;
+        this.dialogEndTime = null;
+        this.dialogDuration =null;
 	}
 
 	/**
@@ -186,6 +198,28 @@ public class USSDCDRState implements Serializable {
 
 	public void setRemoteDialogId(Long remoteDialogId) {
 		this.remoteDialogId = remoteDialogId;
+	}
+
+	public void setDialogStartTime(DateTime startTime) {
+		this.dialogStartTime = startTime;
+	}
+	public DateTime getDialogStartTime() {
+		return this.dialogStartTime;
+	}
+
+	public void setDialogEndTime(DateTime endTime) {
+		this.dialogEndTime = endTime;
+	}
+
+	public DateTime getDialogEndTime() {
+		return this.dialogEndTime;
+	}
+
+	public void setDialogDuration(Long duration) {
+		this.dialogDuration = duration;
+	}
+	public Long getDialogDuration() {
+		return this.dialogDuration;
 	}
 
 	/**
@@ -290,6 +324,14 @@ public class USSDCDRState implements Serializable {
 	public void setUssdType(USSDType ussdType) {
 		this.ussdType = ussdType;
 	}
+
+    public String getUssdString() {
+        return this.ussdString;
+    }
+
+    public void setUssdString(String ussdString) {
+        this.ussdString = ussdString;
+    }
 
 	/*
 	 * (non-Javadoc)

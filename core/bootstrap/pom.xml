@@ -45,6 +45,12 @@
 			<artifactId>javolution</artifactId>
 			<version>${javolution.version}</version>
 		</dependency>
+		<!-- jodatime -->
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>${jodatime.version}</version>
+		</dependency>
 		<!-- ASN -->
 		<dependency>
 			<groupId>org.mobicents.protocols.asn</groupId>

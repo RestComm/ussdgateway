@@ -271,14 +271,32 @@ public class CDRCreateTask extends CDRTaskBase {
 			} else {
 				preparedStatement.setNull(26, Types.BIGINT);
 			}
-			// _COLUMN_TSTAMP+","+
-			preparedStatement.setTimestamp(27, tstamp);
-			// _COLUMN_TERMINATD+ <-- null - create record
-			preparedStatement.setString(28, super.state.getRecordStatus().toString());
 
-			preparedStatement.setString(29, super.state.getUssdType().toString());
+            //_COLUMN_DIALOG_DURATION
+            Long dialogDuration = state.getDialogDuration();
+            if(dialogDuration != null){
+                //TODO: output as millis or?
+                preparedStatement.setLong(27, dialogDuration);
+            }else{
+                preparedStatement.setNull(27, Types.BIGINT);
+            }
+
+            //_COLUMN_USSD_STRING
+            String ussdString = state.getUssdString();
+            if(!ussdString.isEmpty()){
+                preparedStatement.setString(28, ussdString);
+            }else{
+                preparedStatement.setNull(28, Types.VARCHAR);
+            }
+
+			// _COLUMN_TSTAMP+","+
+			preparedStatement.setTimestamp(29, tstamp);
+			// _COLUMN_TERMINATD+ <-- null - create record
+			preparedStatement.setString(30, super.state.getRecordStatus().toString());
+
+			preparedStatement.setString(31, super.state.getUssdType().toString());
 			// _COLUMN_ID
-			preparedStatement.setString(30, super.state.getId());
+			preparedStatement.setString(32, super.state.getId());
 			preparedStatement.execute();
 
 		} catch (SQLException e) {
