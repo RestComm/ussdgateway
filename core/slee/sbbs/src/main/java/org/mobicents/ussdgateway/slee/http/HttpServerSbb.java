@@ -491,6 +491,22 @@ public abstract class HttpServerSbb extends ChildServerSbb implements SriParent 
 		super.ussdStatAggregator.updateMessagesRecieved();
         super.ussdStatAggregator.updateMessagesAll();
 
+        ChargeInterface cdrInterface = this.getCDRChargeInterface();
+        USSDCDRState state = cdrInterface.getState();
+
+        try {
+            if (state.isInitialized()) {
+                String ussdString = event.getUSSDString().getString(null);
+                if (state.getUssdString() == null) {
+                    state.setUssdString(ussdString);
+                } else {
+                    state.setUssdString(state.getUssdString() + USSDCDRState.USSD_STRING_SEPARATOR + ussdString);
+                }
+            }
+        } catch (Exception e) {
+            logger.warning("Exception when setting of UssdString CDR parameter in HttpServerSbb" + e.getMessage(), e);
+        }
+
 		this.processReceivedMAPEvent((MAPEvent) event);
 
 		this.setTimer(aci);

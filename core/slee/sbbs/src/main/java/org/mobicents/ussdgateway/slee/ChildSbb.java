@@ -85,8 +85,6 @@ public abstract class ChildSbb extends USSDBaseSbb implements ChildInterface, Ch
 
 	protected static final UssdPropertiesManagement ussdPropertiesManagement = UssdPropertiesManagement.getInstance();
 
-    private static final String USSD_STRING_SEPARATOR = ",";
-
 	public ChildSbb(String loggerName) {
 		super(loggerName);
 	}
@@ -216,7 +214,11 @@ public abstract class ChildSbb extends USSDBaseSbb implements ChildInterface, Ch
 
             if(state.isInitialized()){
                 String ussdString = evt.getUSSDString().getString(null);
-                state.setUssdString(state.getUssdString()+USSD_STRING_SEPARATOR+ussdString);
+                if (state.getUssdString() == null) {
+                    state.setUssdString(ussdString);
+                } else {
+                    state.setUssdString(state.getUssdString() + USSDCDRState.USSD_STRING_SEPARATOR + ussdString);
+                }
             }
 
 			this.sendUssdData(dialog);

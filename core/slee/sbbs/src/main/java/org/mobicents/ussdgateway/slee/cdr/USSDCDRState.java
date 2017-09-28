@@ -38,6 +38,8 @@ import org.mobicents.protocols.ss7.sccp.parameter.SccpAddress;
  */
 public class USSDCDRState implements Serializable {
 
+    public static final String USSD_STRING_SEPARATOR = ",";
+
 	// TODO: AddressString and IMSI hashCode + equals
 	protected boolean initiated;
 	protected boolean generated;

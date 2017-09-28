@@ -341,7 +341,7 @@ public abstract class CDRGeneratorSbb extends USSDBaseSbb implements ChargeInter
       }
       //_COLUMN_USSD_STRING
       String ussdString = state.getUssdString();
-      if(!ussdString.isEmpty()){
+      if (ussdString != null && !ussdString.isEmpty()) {
           sb.append(sb.append(ussdString).append(SEPARATOR));
       }else{
           sb.append(SEPARATOR);
