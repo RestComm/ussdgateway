@@ -6,17 +6,17 @@
 	<parent>
 		<artifactId>restcomm-ussd-installguide</artifactId>
 		<groupId>org.mobicents.ussd.docs.installguide</groupId>
-		<version>7.1.0-SNAPSHOT</version>
+		<version>7.1.0-27</version>
 	</parent>
 
 	<artifactId>restcomm-ussd-installguide-sources-asciidoc</artifactId>
 	<name>Restcomm USSD :: Docs :: Install Guide :: Sources :: ${pom.artifactId}</name>
 
 	<properties>
-		<asciidoctor.maven.plugin.version>1.5.3</asciidoctor.maven.plugin.version>
-		<asciidoctorj.pdf.version>1.5.0-alpha.11</asciidoctorj.pdf.version>
-		<asciidoctorj.version>1.5.4</asciidoctorj.version>
-		<jruby.version>1.7.21</jruby.version>
+		<asciidoctor.maven.plugin.version>1.5.5</asciidoctor.maven.plugin.version>
+		<asciidoctorj.pdf.version>1.5.0-alpha.15</asciidoctorj.pdf.version>
+		<asciidoctorj.version>1.5.5</asciidoctorj.version>
+		<jruby.version>1.7.25</jruby.version>
 	</properties>
 
 	<build>
