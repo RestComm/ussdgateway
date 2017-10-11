@@ -283,7 +283,7 @@ public class CDRCreateTask extends CDRTaskBase {
 
             //_COLUMN_USSD_STRING
             String ussdString = state.getUssdString();
-            if(!ussdString.isEmpty()){
+            if(ussdString != null && !ussdString.isEmpty()){
                 preparedStatement.setString(28, ussdString);
             }else{
                 preparedStatement.setNull(28, Types.VARCHAR);
