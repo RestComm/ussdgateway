@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.mobicents.ussd</groupId>
 		<artifactId>tools</artifactId>
-		<version>7.1.0-SNAPSHOT</version>
+		<version>7.1.0-69</version>
 	</parent>
 
 	<artifactId>http-simulator-parent</artifactId>
