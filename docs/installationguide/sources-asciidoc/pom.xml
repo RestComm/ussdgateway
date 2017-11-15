@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>restcomm-ussd-installguide</artifactId>
 		<groupId>org.mobicents.ussd.docs.installguide</groupId>
-		<version>7.1.0-SNAPSHOT</version>
+		<version>7.1.0-72</version>
 	</parent>
 
 	<artifactId>restcomm-ussd-installguide-sources-asciidoc</artifactId>
