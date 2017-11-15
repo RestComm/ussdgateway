@@ -25,8 +25,8 @@ import java.sql.Types;
 
 import javax.slee.facilities.Tracer;
 
-import org.mobicents.slee.resource.jdbc.task.JdbcTaskContext;
-import org.mobicents.slee.resource.jdbc.task.simple.SimpleJdbcTask;
+import org.restcomm.slee.resource.jdbc.task.JdbcTaskContext;
+import org.restcomm.slee.resource.jdbc.task.simple.SimpleJdbcTask;
 import org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent;
 import org.mobicents.ussdgateway.slee.cdr.RecordStatus;
 import org.mobicents.ussdgateway.slee.cdr.USSDCDRState;

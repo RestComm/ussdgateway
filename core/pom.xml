@@ -18,5 +18,6 @@
 		<module>oam/cli</module>
 		<module>slee</module>
 		<module>bootstrap</module>
+		<module>bootstrap-wildfly</module>
 	</modules>
 </project>

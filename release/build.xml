@@ -21,22 +21,22 @@
 
 	<property name="restcomm.ussd.release.version" value="7.1.0-SNAPSHOT" />
 
-	<property name="restcomm-slee.build-number" value="148.102" />
-	<property name="restcomm-slee.version" value="2.9" />
-	<property name="restcomm-slee.release" value="2.9.148" />
+	<property name="restcomm-slee.build-number" value="83.87" />
+	<property name="restcomm-slee.version" value="7.1" />
+	<property name="restcomm-slee.release" value="7.1.83.87" />
 
-	<property name="restcomm-slee.ss7.map.ra.tag" value="7.4.0-55" />
-	<property name="restcomm-slee.http.ra.tag" value="2.8.5" />
-	<property name="restcomm-slee.jdbc.ra.tag" value="2.8.3" />
+	<property name="restcomm-slee.ss7.map.ra.tag" value="7.4.0-17" />
+	<property name="restcomm-slee.http.ra.tag" value="7.1.24" />
+	<property name="restcomm-slee.jdbc.ra.tag" value="7.1.15" />
 
-	<property name="restcomm-jss7.build-number" value="50" />
+	<property name="restcomm-jss7.build-number" value="65" />
 	<property name="restcomm-jss7.version" value="7.4.0-${restcomm-jss7.build-number}" />
 <!--
 	<property name="restcomm-jss7.release" value="7.3.1398" />
 	<property name="restcomm-jss7.timestamp" value="1602171452" />
 -->
 
-	<property name="restcomm-map-ra.build-number" value="55" />
+	<property name="restcomm-map-ra.build-number" value="71" />
 	<property name="restcomm-map-ra.version" value="7.4.0-${restcomm-map-ra.build-number}" />
 <!--
 	<property name="restcomm-map-ra.release" value="7.3.72" />
@@ -48,7 +48,7 @@
 
 	<property name="restcomm-jss7.tag" value="${restcomm-jss7.version}" />
 	<property name="restcomm-slee.ss7.tag" value="${restcomm-map-ra.version}" />
-	<property name="restcomm-slee.download.distro.name" value="restcomm-slee-${restcomm-slee.version}.${restcomm-slee.build-number}" />
+	<property name="restcomm-slee.download.distro.name" value="restcomm-slee-${restcomm-slee.version}.${restcomm-slee.build-number}-wildfly-10.1.0.Final" />
 	<property name="restcomm-slee.download.distro.file" value="${restcomm-slee.download.distro.name}.zip" />
 	<property name="restcomm-slee.download.url" value="${github.url}/jain-slee/releases/download/${restcomm-slee.release}/${restcomm-slee.download.distro.file}" />
 	<property name="restcomm-slee.distro.zip.path" value="${checkout.dir}/${restcomm-slee.download.distro.file}" />
@@ -66,7 +66,9 @@
 	<property name="release.build.goals" value="clean install" />
 	<property name="release.ts.deploy.goals" value="clean deploy" />
 
-
+	<property name="wildfly.home.relative.path" value="wildfly-10.1.0.Final"/>
+    	<property name="jboss.home" value ="${release.dir}/${wildfly.home.relative.path}/"/>
+	<property name="deploy.dir" value="${jboss.home}/standalone/deployments" />
 
 	<condition property="mvn.executable" value="${sys.M2_HOME}\bin\mvn.bat" else="mvn">
 		<os family="windows" />
@@ -111,17 +113,14 @@
 		<delete dir="${checkout.restcomm-slee.dir}" failonerror="false" />
 		<unzip src="${restcomm-slee.distro.zip.path}" dest="${release.dir}"/>
         <copy todir="${release.dir}" failonerror="true">
-                <fileset dir="${release.dir}/restcomm-slee-${restcomm-slee.version}.${restcomm-slee.build-number}">
+                <fileset dir="${release.dir}/${restcomm-slee.download.distro.name}">
                         <include name="**/*" />
                 </fileset>
         </copy>
-		<delete dir="${release.dir}/restcomm-slee-${restcomm-slee.version}.${restcomm-slee.build-number}" includeemptydirs="true" failonerror="false" verbose="false"/>
-<!--
-		<delete dir="${checkout.restcomm-slee.dir}/jboss-5.1.0.GA/server/all" includeemptydirs="true" failonerror="false" verbose="false"/>
--->
+		<delete dir="${release.dir}/${restcomm-slee.download.distro.name}" includeemptydirs="true" failonerror="false" verbose="false"/>
 	</target>
 
-	<available file="${restcomm-jss7.download.distro.file}" property="got.restcomm-jss7" />
+	<available file="${restcomm-jss7.distro.zip.path}" property="got.restcomm-jss7" />
 	<target name="get-restcomm-jss7" unless="got.restcomm-jss7">
 		<echo>Is restcomm jss7 : ${restcomm-jss7.distro.zip.path} present ${got.restcomm-jss7}</echo>
 		<echo>Downloading restcomm jss7 version: ${restcomm-jss7.version}</echo>
@@ -241,13 +240,6 @@
 
 
 	<target name="clean-up-restcomm-slee">
-		<mkdir dir="${release.dir}/jboss-5.1.0.GA/server/simulator" />
-		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator" failonerror="true">
-			<fileset dir="${release.dir}/jboss-5.1.0.GA/server/default">
-				<include name="**" />
-			</fileset>
-		</copy>
-		<delete dir="${release.dir}/jboss-5.1.0.GA/server/all" includeemptydirs="true" failonerror="true" />
 		<delete includeemptydirs="true" failonerror="true">
 			<fileset dir="${release.dir}/docs/resources">
 				<include name="**" />
@@ -268,31 +260,20 @@
 				<exclude name="**/jdbc/*"/>
 			</fileset>
 		</delete>
-		<delete failonerror="true">
-			<fileset dir="${release.dir}/jboss-5.1.0.GA/server/simulator/lib">
+		<delete includeemptydirs="true" failonerror="true">
+			<fileset dir="${release.dir}/extra">
 				<include name="**" />
+				<exclude name="**/restcomm-http/**"/>
 			</fileset>
 		</delete>
-		<delete dir="${release.dir}/extra" includeemptydirs="true" failonerror="true" />
 		<delete dir="${release.dir}/enablers" includeemptydirs="true" failonerror="true" />
 		<delete dir="${release.dir}/examples" includeemptydirs="true" failonerror="true" />
 		<delete file="${release.dir}/readme.txt" failonerror="true" />
 		<delete file="${release.dir}/sources.zip" failonerror="true" />
-		<delete dir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy/cluster" includeemptydirs="true" failonerror="true" />
-		<delete dir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy/deploy.last" includeemptydirs="true" failonerror="true" />
-		<delete dir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy/snmp-adaptor.sar" includeemptydirs="true" failonerror="true" />
-		<delete dir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy/juddi-service.sar" includeemptydirs="true" failonerror="true" />
-		<delete file="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy/restcomm-slee/profiles-external-ds.xml" failonerror="true" />
-		<delete file="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy/restcomm-slee/META-INF/jboss-cache-config.xml" failonerror="true" />
-		<delete file="${release.dir}/jboss-5.1.0.GA/server/simulator/iiop-service.xml" failonerror="true" />
-		<delete file="${release.dir}/jboss-5.1.0.GA/server/simulator/conf/jacorb.properties" failonerror="true" />
-		<delete file="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy/iiop-service.xml" failonerror="true" />
-		<delete dir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy-hasingleton/" includeemptydirs="true" failonerror="true" />
-		<delete dir="${release.dir}/jboss-5.1.0.GA/server/simulator/farm/" includeemptydirs="true" failonerror="true" />
 	</target>
 
 	<target name="build-ussd">
-		<exec failonerror="true" executable="${mvn.executable}" dir="${base.dir}/../">
+		<exec failonerror="true" executable="${mvn.executable}" dir="${restcomm.ussd.dir}">
 			<arg line="${release.build.goals}" />
 		</exec>
 	</target>
@@ -326,137 +307,85 @@
 -->
 
 	<target name="copy-ussd">
+		
+		<echo>Copy USSD GW server</echo>
+
+		<mkdir dir="${release.dir}/extra" />
+		
+		<echo>Copy SS7</echo>
+		<mkdir dir="${release.dir}/extra/restcomm-ss7/restcomm-jss7-${restcomm-jss7.version}" />
+		<copy todir="${release.dir}/extra/restcomm-ss7/restcomm-jss7-${restcomm-jss7.version}" >  
+		        <fileset dir="${checkout.restcomm-jss7.dir}/restcomm-jss7-${restcomm-jss7.version}" includes="**"/>  
+		 </copy>
+		<ant antfile="${release.dir}/extra/restcomm-ss7/restcomm-jss7-${restcomm-jss7.version}/ss7-wildfly/build.xml" target="deploy">
+			<property name="basedir" value="${release.dir}/extra/restcomm-ss7/restcomm-jss7-${restcomm-jss7.version}/ss7-wildfly" />	
+		</ant>
+		
+		<echo>Copy HTTP Servlet</echo>
+		<ant antfile="${release.dir}/extra/restcomm-http/build.xml" target="deploy">
+			<property name="basedir" value="${release.dir}/extra/restcomm-http" />	
+		</ant>
+		
+		<echo>Copy USSD extensions</echo>
+		<mkdir dir="${release.dir}/extra/ussd" />
+		<copy todir="${release.dir}/extra/ussd/module" failonerror="true">
+            		<fileset dir="${restcomm.ussd.dir}/core/bootstrap-wildfly/target/module">
+                		<include name="**" />
+           		 </fileset>
+        	</copy>
+		<copy file="${restcomm.ussd.dir}/release/extensions-build.xml" todir="${release.dir}/extra/ussd" failonerror="true" />
+		<copy file="${restcomm.ussd.dir}/release/wildfly-ussd-subsystem.txt" todir="${release.dir}/extra/ussd" failonerror="true" />
+		<copy file="${restcomm.ussd.dir}/release/ussd-logging.txt" todir="${release.dir}/extra/ussd" failonerror="true" />
+		<copy file="${restcomm.ussd.dir}/release/xmltask.jar" todir="${release.dir}/extra/ussd" failonerror="true" />
+		<ant antfile="${release.dir}/extra/ussd/extensions-build.xml" target="deploy">
+			<property name="basedir" value="${release.dir}/extra/ussd" />	
+		</ant>
+		<delete dir="${release.dir}/extra/ussd" />
+
+		<copy file="${restcomm.ussd.dir}/core/slee/services-du/target/services-DU-${restcomm.ussd.release.version}.jar" todir="${deploy.dir}" failonerror="true" />
+		<copy file="${restcomm.ussd.dir}/management/ussd-management/target/ussd-management.war" todir="${deploy.dir}" failonerror="true" />
+
 		<echo>Copy restcomm Map RA</echo>
 		<copy todir="${release.dir}/resources/map" failonerror="true">
 			<fileset dir="${checkout.dir}">
 				<include name="${restcomm-map-ra.download.jar.file}" />
 			</fileset>
 		</copy>
-
-<!--
-		<echo>Copy restcomm http-client RA</echo>
-		<copy todir="${release.dir}/resources" failonerror="true">
-			<fileset dir="${release.http-client.dir}/resources">
-				<include name="**" />
-			</fileset>
-		</copy>
-
-		<echo>Copy restcomm http-servlet RA</echo>
-		<copy todir="${release.dir}/resources" failonerror="true">
-			<fileset dir="${release.http-servlet.dir}/resources">
-				<include name="**" />
-			</fileset>
-		</copy>
-
-		<echo>Copy restcomm JDBC RA</echo>
-		<copy todir="${release.dir}/resources" failonerror="true">
-			<fileset dir="${release.jdbc.dir}/resources">
-				<include name="**" />
-			</fileset>
-		</copy>
--->
-		
-		<echo>Copy USSD GW server</echo>
-
-		<!--default-->
-		<copy todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy/restcomm-ussd-gateway" failonerror="true">
-			<fileset dir="${restcomm.ussd.dir}/core/bootstrap/target/restcomm-ussd-gateway">
-				<include name="**" />
-			</fileset>
-		</copy>
-		
-		<copy file="${restcomm.ussd.dir}/core/slee/services-du/target/services-DU-${restcomm.ussd.release.version}.jar" todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true" />
-		<copy file="${restcomm.ussd.dir}/management/ussd-management/target/ussd-management.war" todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true" />
-
-		<copy todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true">
+		<copy todir="${deploy.dir}" failonerror="true">
 			<fileset dir="${release.dir}/resources/map">
 				<exclude name="*.xml" />
 			</fileset>
 		</copy>
 
-		<copy todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true">
+		<copy todir="${deploy.dir}" failonerror="true">
 			<fileset dir="${release.dir}/resources/sip11">
 				<exclude name="*.xml" />
 			</fileset>
 		</copy>
 
-		<copy todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true">
+		<copy todir="${deploy.dir}" failonerror="true">
 			<fileset dir="${release.dir}/resources/http-client">
 				<exclude name="*.xml" />
 			</fileset>
 		</copy>
 
-		<copy todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true">
+		<copy todir="${deploy.dir}" failonerror="true">
 			<fileset dir="${release.dir}/resources/http-servlet">
 				<exclude name="*.xml" />
 			</fileset>
 		</copy>
 
-		<copy todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true">
+		<copy todir="${deploy.dir}" failonerror="true">
 			<fileset dir="${release.dir}/resources/jdbc">
 				<exclude name="*.xml" />
 			</fileset>
 		</copy>
 
-		<mkdir dir="${release.dir}/jboss-5.1.0.GA/server/default/data" />
-
-		<copy todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true">
+		<copy todir="${deploy.dir}" failonerror="true">
 			<fileset dir="${checkout.restcomm-jss7.dir}/restcomm-jss7-${restcomm-jss7.version}/oam/new-ui">
 				<include name="**" />
 			</fileset>
 		</copy>		
-
-		<!--simulator-->
-		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy/restcomm-ussd-gateway" failonerror="true">
-			<fileset dir="${restcomm.ussd.dir}/core/bootstrap/target/restcomm-ussd-gateway">
-				<include name="**" />
-			</fileset>
-		</copy>
-		
-		<copy file="${restcomm.ussd.dir}/core/slee/services-du/target/services-DU-${restcomm.ussd.release.version}.jar" todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true" />
-		<copy file="${restcomm.ussd.dir}/management/ussd-management/target/ussd-management.war" todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true" />
-		
-		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true">
-			<fileset dir="${release.dir}/resources/map">
-				<exclude name="*.xml" />
-			</fileset>
-		</copy>
-
-		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true">
-			<fileset dir="${release.dir}/resources/sip11">
-				<exclude name="*.xml" />
-			</fileset>
-		</copy>
-		
-		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true">
-			<fileset dir="${release.dir}/resources/http-client">
-				<exclude name="*.xml" />
-			</fileset>
-		</copy>
-
-		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true">
-			<fileset dir="${release.dir}/resources/http-servlet">
-				<exclude name="*.xml" />
-			</fileset>
-		</copy>
-
-		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true">
-			<fileset dir="${release.dir}/resources/jdbc">
-				<exclude name="*.xml" />
-			</fileset>
-		</copy>
-		
-		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator/data" failonerror="true">
-			<fileset dir="${restcomm.ussd.dir}/core/bootstrap/src/main/config/data">
-				<include name="**" />
-			</fileset>
-		</copy>
-		
-		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true">
-			<fileset dir="${checkout.restcomm-jss7.dir}/restcomm-jss7-${restcomm-jss7.version}/oam/new-ui">
-				<include name="**" />
-			</fileset>
-		</copy>
 
 		<!--tools-->
 		<copy todir="${release.dir}/tools/restcomm-jss7-simulator" failonerror="true">
@@ -464,8 +393,8 @@
 				<include name="**" />
 			</fileset>
 		</copy>
-        <copy file="${restcomm.ussd.dir}/core/bootstrap/src/main/config/ss7-simulator/main_simulator2.xml" todir="${release.dir}/tools/restcomm-jss7-simulator/data" failonerror="true" />
-        <copy file="${restcomm.ussd.dir}/core/bootstrap/src/main/config/ss7-simulator/win_simulator2.xml" todir="${release.dir}/tools/restcomm-jss7-simulator/data" failonerror="true" />
+        	<copy file="${restcomm.ussd.dir}/core/bootstrap/src/main/config/ss7-simulator/main_simulator2.xml" todir="${release.dir}/tools/restcomm-jss7-simulator/data" failonerror="true" />
+        	<copy file="${restcomm.ussd.dir}/core/bootstrap/src/main/config/ss7-simulator/win_simulator2.xml" todir="${release.dir}/tools/restcomm-jss7-simulator/data" failonerror="true" />
 
 		<copy todir="${release.dir}/tools/restcomm-ussd-simulator" failonerror="true">
 			<fileset dir="${restcomm.ussd.dir}/test/bootstrap/target/ussd-server">
@@ -474,53 +403,35 @@
 		</copy>
 
 		<!--CLI-->
-		<copy file="${restcomm.ussd.dir}/core/oam/cli/target/ussd-cli-${restcomm.ussd.release.version}.jar" todir="${release.dir}/jboss-5.1.0.GA/lib" failonerror="true" />
-		<copy todir="${release.dir}/jboss-5.1.0.GA/" failonerror="true">
+		<copy file="${restcomm.ussd.dir}/core/oam/cli/target/ussd-cli-${restcomm.ussd.release.version}.jar" todir="${jboss.home}/lib" failonerror="true" />
+		<copy todir="${jboss.home}/" failonerror="true">
 			<fileset dir="${checkout.restcomm-jss7.dir}/restcomm-jss7-${restcomm-jss7.version}/ss7/shell">
 				<include name="**/*" />
 			</fileset>
 		</copy>
-
-    	<!--logs-->
-		<echo>Copy jboss-log4j*.xml</echo>
-		<copy todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy/restcomm-ussd-gateway/log4j-templates" failonerror="true">
-		        <fileset dir="${restcomm.ussd.dir}/core/bootstrap/src/main/config/log4j">
-		                <include name="**/*" />
-		        </fileset>
-		</copy>
-		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy/restcomm-ussd-gateway/log4j-templates" failonerror="true">
-		        <fileset dir="${restcomm.ussd.dir}/core/bootstrap/src/main/config/log4j">
-		                <include name="**/*" />
-		        </fileset>
-		</copy>
-
-    	<copy file="${restcomm.ussd.dir}/core/bootstrap/src/main/config/log4j/jboss-log4j-default.xml" tofile="${release.dir}/jboss-5.1.0.GA/server/default/conf/jboss-log4j.xml" overwrite="true"></copy>
-    	<copy file="${restcomm.ussd.dir}/core/bootstrap/src/main/config/log4j/jboss-log4j-default.xml" tofile="${release.dir}/jboss-5.1.0.GA/server/simulator/conf/jboss-log4j.xml" overwrite="true"></copy>
-
-		<!--jboss-mbeans.xml templates-->
-		<copy todir="${release.dir}/template/META-INF-dialogic/" failonerror="true">
-			<fileset dir="${restcomm.ussd.dir}/core/bootstrap/src/main/config/META-INF-dialogic">
+		
+		<!-- prepare simulator profile -->
+		<mkdir dir="${jboss.home}/simulator" />
+        	<copy todir="${jboss.home}/simulator" failonerror="true">
+            		<fileset dir="${jboss.home}/standalone">
+                		<include name="**" />
+            		</fileset>
+       		</copy>
+		<mkdir dir="${jboss.home}/simulator/data" />
+        	<copy todir="${jboss.home}/simulator/data" failonerror="true">
+           		<fileset dir="${restcomm.ussd.dir}/core/bootstrap/src/main/config/data">
 				<include name="**" />
 			</fileset>
-		</copy>
-		<copy todir="${release.dir}/template/META-INF-m3ua-dialogic/" failonerror="true">
-			<fileset dir="${restcomm.ussd.dir}/core/bootstrap/src/main/config/META-INF-m3ua-dialogic">
-				<include name="**" />
-			</fileset>
-		</copy>
-
-		<!-- Copy http pull and push example to simulator-->
-		<echo>Copy http-push-example to simulator/deploy</echo>
-		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy/http-push-example" failonerror="true">
+        	</copy>
+		<echo>Copy http-push-example to simulator</echo>
+		<copy todir="${jboss.home}/lib" failonerror="true">
 			<fileset dir="${restcomm.ussd.dir}/examples/http-push/target/http-push-example">
 				<include name="**" />
 			</fileset>
 		</copy>	
 
-		<echo>Copy ussdhttpdemo.war to simulator/deploy</echo>
-		<copy file="${restcomm.ussd.dir}/examples/http/target/ussdhttpdemo.war" todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true" />
-
-
+		<echo>Copy ussdhttpdemo.war to simulator</echo>
+		<copy file="${restcomm.ussd.dir}/examples/http/target/ussdhttpdemo.war" todir="${jboss.home}/simulator/deployments" failonerror="true" />
 	</target>
 
 	<target name="build-docs">
@@ -602,7 +513,6 @@
 				<include name="*.pdf" />
 			</fileset>
 		</copy>
-
 	</target>
 
 
@@ -705,7 +615,6 @@
 
 	<target name="clean">
 		<delete dir="${release.dir}" />
-		<delete dir="${base.dir}/checkout"/>
 		<delete dir="${base.dir}/docs-bundle"/>
 		<delete>
 			<fileset dir="${base.dir}">

@@ -45,8 +45,8 @@ import org.mobicents.protocols.ss7.map.api.service.supplementary.UnstructuredSSN
 import org.mobicents.protocols.ss7.map.api.service.supplementary.UnstructuredSSRequest;
 import org.mobicents.protocols.ss7.map.api.service.supplementary.UnstructuredSSResponse;
 import org.mobicents.slee.SbbContextExt;
-import org.mobicents.slee.resource.jdbc.JdbcActivityContextInterfaceFactory;
-import org.mobicents.slee.resource.jdbc.JdbcResourceAdaptorSbbInterface;
+import org.restcomm.slee.resource.jdbc.JdbcActivityContextInterfaceFactory;
+import org.restcomm.slee.resource.jdbc.JdbcResourceAdaptorSbbInterface;
 import org.mobicents.slee.resource.map.MAPContextInterfaceFactory;
 import org.mobicents.ussdgateway.UssdStatAggregator;
 import org.mobicents.ussdgateway.XmlMAPDialog;
@@ -96,7 +96,7 @@ public class USSDBaseSbb implements Sbb {
 	// HTTP Client RA STUFF
 	// -------------------------------------------------------------
 	protected static final ResourceAdaptorTypeID httpClientRATypeID = new ResourceAdaptorTypeID(
-			"HttpClientResourceAdaptorType", "org.mobicents", "4.0");
+			"HttpClientResourceAdaptorType", "org.restcomm", "4.0");
 	protected static final String httpClientRaLink = "HttpClientResourceAdaptor";
 
 	protected HttpClientActivityContextInterfaceFactory httpClientActivityContextInterfaceFactory;
@@ -106,7 +106,7 @@ public class USSDBaseSbb implements Sbb {
 	// HTTP Server RA STUFF
 	// -------------------------------------------------------------
 	protected static final ResourceAdaptorTypeID httpServerRATypeID = new ResourceAdaptorTypeID(
-			"HttpServletResourceAdaptorType", "org.mobicents", "1.0");
+			"HttpServletResourceAdaptorType", "org.restcomm", "1.0");
 	protected static final String httpServerRaLink = "HttpServletRA";
 
 	protected HttpServletRaSbbInterface httpServletProvider;

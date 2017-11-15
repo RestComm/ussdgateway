@@ -19,18 +19,21 @@
 
 package org.mobicents.ussdgateway;
 
+import java.lang.management.ManagementFactory;
+import java.util.List;
+
 import javax.management.MBeanServer;
+import javax.management.MBeanServerFactory;
 import javax.management.ObjectName;
 import javax.management.StandardMBean;
 
 import org.apache.log4j.Logger;
-import org.jboss.mx.util.MBeanServerLocator;
 
 /**
  * @author amit bhayani
  * 
  */
-public class UssdManagement {
+public class UssdManagement implements UssdManagementMBean {
 	private static final Logger logger = Logger.getLogger(UssdManagement.class);
 
 	public static final String JMX_DOMAIN = "org.mobicents.ussdgateway";
@@ -46,10 +49,25 @@ public class UssdManagement {
 
 	private MBeanServer mbeanServer = null;
 
+	private static UssdManagement instance = null;
+	
+	private boolean isStarted = false;
+	
 	public UssdManagement(String name) {
 		this.name = name;
 	}
 
+	public static UssdManagement getInstance(String name) {
+		if (instance == null) {
+			instance = new UssdManagement(name);
+		}
+		return instance;
+	}
+
+	public static UssdManagement getInstance() {
+		return instance;
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -62,6 +80,10 @@ public class UssdManagement {
 		this.persistDir = persistDir;
 	}
 
+	public boolean isStarted() {
+		return isStarted;
+	}
+	
 	public void start() throws Exception {
         UssdStatAggregator.getInstance().clearDialogsInProcess();
 
@@ -74,8 +96,27 @@ public class UssdManagement {
 		this.shortCodeRoutingRuleManagement.start();
 
 		// Register the MBeans
-		this.mbeanServer = MBeanServerLocator.locateJBoss();
+		boolean servFound = false;
+        String agentId = "jboss";
+        List<MBeanServer> servers = MBeanServerFactory.findMBeanServer(null);
+        if (servers != null && servers.size() > 0) {
+            for (MBeanServer server : servers) {
+                String defaultDomain = server.getDefaultDomain();
 
+                if (defaultDomain != null && defaultDomain.equals(agentId)) {
+                    mbeanServer = server;
+                    servFound = true;
+                    logger.info(String.format("Found MBeanServer matching for agentId=%s", agentId));
+                } else {
+                    logger.warn(String.format("Found non-matching MBeanServer with default domian = %s", defaultDomain));
+                }
+            }
+        }
+
+        if (!servFound) {
+            this.mbeanServer = ManagementFactory.getPlatformMBeanServer();
+        }            
+		
 		ObjectName ussdPropObjNname = new ObjectName(UssdManagement.JMX_DOMAIN + ":name=UssdPropertiesManagement");
 		StandardMBean ussdPropMxBean = new StandardMBean(this.ussdPropertiesManagement,
 				UssdPropertiesManagementMBean.class, true);
@@ -87,6 +128,8 @@ public class UssdManagement {
 				ShortCodeRoutingRuleManagementMBean.class, true);
 		this.mbeanServer.registerMBean(ussdScRuleMxBean, ussdScRuleObjNname);
 
+		this.isStarted = true;
+		
 		logger.info("Started UssdManagement");
 	}
 

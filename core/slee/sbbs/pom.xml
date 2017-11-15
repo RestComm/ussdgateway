@@ -39,7 +39,7 @@
         </dependency>
 		<dependency>
 		    <artifactId>restcomm-slee-ra-jdbc-ratype</artifactId>
-		    <groupId>org.mobicents.resources</groupId>
+		    <groupId>org.restcomm.resources</groupId>
 		    <version>${restcomm.resources.jdbc.version}</version>
        	</dependency>
         <dependency>

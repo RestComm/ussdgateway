@@ -1,0 +1,97 @@
+<periodic-rotating-file-handler name="CDR" autoflush="true">
+    <formatter>
+        <named-formatter name="PATTERN" />
+    </formatter>
+    <file relative-to="jboss.server.log.dir" path="cdr.log" />
+    <suffix value=".yyyy-MM-dd" />
+    <append value="true" />
+</periodic-rotating-file-handler>
+<periodic-rotating-file-handler name="STATS" autoflush="true">
+    <formatter>
+        <named-formatter name="PATTERN" />
+    </formatter>
+    <file relative-to="jboss.server.log.dir" path="stats.log" />
+    <suffix value=".yyyy-MM-dd" />
+    <append value="true" />
+</periodic-rotating-file-handler>
+<periodic-rotating-file-handler name="CSVSTATS" autoflush="true">
+    <formatter>
+        <named-formatter name="PATTERN" />
+    </formatter>
+    <file relative-to="jboss.server.log.dir" path="csvstats.log" />
+    <suffix value=".yyyy-MM-dd" />
+    <append value="true" />
+</periodic-rotating-file-handler>
+<logger category="org.mobicents.ussdgateway.slee.cdr.plain.CDRGeneratorSbb" use-parent-handlers="false">
+    <level name="DEBUG" />
+    <handlers>
+        <handler name="CDR" />
+    </handlers>
+</logger>
+<logger category="org.mobicents.protocols.ss7.oam.common.statistics.StatsPrinter" use-parent-handlers="false">
+    <level name="DEBUG" />
+    <handlers>
+        <handler name="STATS" />
+    </handlers>
+</logger>
+<logger category="org.mobicents.protocols.ss7.oam.common.statistics.CsvStatsPrinter" use-parent-handlers="false">
+    <level name="DEBUG" />
+    <handlers>
+        <handler name="CSVSTATS" />
+    </handlers>
+</logger>
+<!-- mobicents-ussdgateway-cdr-plain -->
+<logger category="javax.slee.SbbNotification[service=ServiceID[name=mobicents-ussdgateway-cdr-plain,vendor=org.mobicents,version=1.0],sbb=SbbID[name=CDRSbbPlain,vendor=org.mobicents,version=1.0]]">
+    <level name="DEBUG" />
+</logger>
+<!-- mobicents-ussdgateway -->
+<logger category="javax.slee.SbbNotification[service=ServiceID[name=mobicents-ussdgateway,vendor=org.mobicents,version=1.0],sbb=SbbID[name=ParentSbb,vendor=org.mobicents,version=1.0]]">
+    <level name="DEBUG" />
+</logger>
+<logger category="javax.slee.SbbNotification[service=ServiceID[name=mobicents-ussdgateway,vendor=org.mobicents,version=1.0],sbb=SbbID[name=HttpClientSbb,vendor=org.mobicents,version=1.0]]">
+    <level name="DEBUG" />
+</logger>
+<logger category="javax.slee.SbbNotification[service=ServiceID[name=mobicents-ussdgateway,vendor=org.mobicents,version=1.0],sbb=SbbID[name=SipSbb,vendor=org.mobicents,version=1.0]]">
+    <level name="DEBUG" />
+</logger>
+<logger category="javax.slee.SbbNotification[service=ServiceID[name=mobicents-ussdgateway,vendor=org.mobicents,version=1.0],sbb=SbbID[name=CDRSbb,vendor=org.mobicents,version=1.0]]">
+    <level name="DEBUG" />
+</logger>
+<logger category="javax.slee.SbbNotification[service=ServiceID[name=mobicents-ussdgateway,vendor=org.mobicents,version=1.0],sbb=SbbID[name=CDRSbbPlain,vendor=org.mobicents,version=1.0]]">
+    <level name="DEBUG" />
+</logger>
+<!-- mobicents-ussdgateway-server-http -->
+<logger category="javax.slee.SbbNotification[service=ServiceID[name=mobicents-ussdgateway-server-http,vendor=org.mobicents,version=1.0],sbb=SbbID[name=HttpServerSbb,vendor=org.mobicents,version=1.0]]">
+    <level name="DEBUG" />
+</logger>
+<logger category="javax.slee.SbbNotification[service=ServiceID[name=mobicents-ussdgateway-server-http,vendor=org.mobicents,version=1.0],sbb=SbbID[name=SriSbb,vendor=org.mobicents,version=1.0]]">
+    <level name="DEBUG" />
+</logger>
+<logger category="javax.slee.SbbNotification[service=ServiceID[name=mobicents-ussdgateway-server-http,vendor=org.mobicents,version=1.0],sbb=SbbID[name=CDRSbb,vendor=org.mobicents,version=1.0]]">
+    <level name="DEBUG" />
+</logger>
+<logger category="javax.slee.SbbNotification[service=ServiceID[name=mobicents-ussdgateway-server-http,vendor=org.mobicents,version=1.0],sbb=SbbID[name=CDRSbbPlain,vendor=org.mobicents,version=1.0]]">
+    <level name="DEBUG" />
+</logger>
+<!-- mobicents-ussdgateway-server-sip -->
+<logger category="javax.slee.SbbNotification[service=ServiceID[name=mobicents-ussdgateway-server-sip,vendor=org.mobicents,version=1.0],sbb=SbbID[name=SipServerSbb,vendor=org.mobicents,version=1.0]]">
+    <level name="DEBUG" />
+</logger>
+<logger category="javax.slee.SbbNotification[service=ServiceID[name=mobicents-ussdgateway-server-sip,vendor=org.mobicents,version=1.0],sbb=SbbID[name=SriSbb,vendor=org.mobicents,version=1.0]]">
+    <level name="DEBUG" />
+</logger>
+<logger category="javax.slee.SbbNotification[service=ServiceID[name=mobicents-ussdgateway-server-sip,vendor=org.mobicents,version=1.0],sbb=SbbID[name=CDRSbb,vendor=org.mobicents,version=1.0]]">
+    <level name="DEBUG" />
+</logger>
+<logger category="javax.slee.SbbNotification[service=ServiceID[name=mobicents-ussdgateway-server-sip,vendor=org.mobicents,version=1.0],sbb=SbbID[name=CDRSbbPlain,vendor=org.mobicents,version=1.0]]">
+    <level name="DEBUG" />
+</logger>
+<logger category="javax.slee">
+    <level name="INFO" />
+</logger>
+<logger category="org.mobicents">
+    <level name="INFO" />
+</logger>
+<logger category="gov.nist">
+    <level name="WARN" />
+</logger>
