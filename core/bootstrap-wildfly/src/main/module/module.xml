@@ -9,6 +9,7 @@
         <resource-root path="gson-${gson.version}.jar"/>
         <resource-root path="restcomm-statistics-${restcomm.commons.version}.jar"/>
         <resource-root path="metrics-core-${codahale-metrics.version}.jar"/>
+        <resource-root path="joda-time-${jodatime.version}.jar"/>
     </resources>
 
     <dependencies>

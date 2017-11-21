@@ -132,7 +132,13 @@
 			<artifactId>metrics-core</artifactId>
 			<version>${codahale-metrics.version}</version>
 		</dependency>
-
+	
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>${jodatime.version}</version>
+		</dependency>
+		
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

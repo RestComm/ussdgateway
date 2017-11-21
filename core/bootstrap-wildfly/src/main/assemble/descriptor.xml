@@ -26,12 +26,14 @@
 				<!-- USSD libraris -->
 				<include>org.mobicents.ussd:bootstrap-wildfly</include>
 				<include>org.mobicents.ussd:domain</include>
-
+				
 				<!-- RestComm statistics -->
 				<include>org.apache.httpcomponents:httpclient</include>
 				<include>org.apache.httpcomponents:httpcore</include>
 				<include>com.google.code.gson:gson</include>
 				<include>org.restcomm.commons:restcomm-statistics</include>
+				
+				<include>joda-time:joda-time</include>
 			</includes>
 		</dependencySet>
 	</dependencySets>
