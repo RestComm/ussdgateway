@@ -1,0 +1,165 @@
+
+1. How to test HTTP PULL
+
+1) "Configure - Listerning port" configuring value must be same that a HTTP port in USSD GW server routing rule
+(http host also must refers to a host where HTTP Simulator is running). 
+2) "Run test - Start listerning" - then HTTP Simulator will start of port listerning
+3) Paste into "Request / Response content" window the http payload that will be sent to USSD GW.
+If we have dialog with several responses then we need to separate responses by one empty line.
+You can find examples in a "HTTP PULL examples:" section.
+4) Send SS7 processUnstructuredSSRequest from SS7 Simulator
+5) If we have several dialog responses then after next response you need to send UnstructeredResponse from SS7 Simulator
+6) The upper window of HTTP Simulator will contain traffic content of a dialog.
+After a dialog has completed and you want to test another dialog you need to push "Clear log" before starting of next dialog session. 
+
+
+2. How to test HTTP PUSH
+
+1) "Configure - Calling host", "Calling port" and "URL" configuring value must be configured to an actual USSD GW server settings 
+"URL" is usually "/restcomm" for a community USSD GW version and "/mobicents" for a Telscale version.
+2) Open "Run test" window
+3) Paste into "Request / Response content" window the http payload that will be sent to USSD GW.
+If we have dialog with several responses then we need to separate responses by one empty line.
+You can find examples in a "HTTP PUSH examples:" section.
+You need to take into account that in the PUSH case we need to send empty TC-END to finish a dialog with a following payload
+"<?xml version="1.0" encoding="UTF-8" ?>
+<dialog type="End" mapMessagesSize="0" prearrangedEnd="false">
+</dialog>"
+4) Push "Send request" this will initiate a first HTTP request to USSD GW server
+4) UnstructuredSSRequest or Notify should come to SS7 Simulator. In UnstructuredSSRequest you need to send UnstructuredSSResponse in short time.
+HTTP Simulator in PUSH mode waits only a limited little time for reponse.
+5) If we have several dialog requests then after next response you need to push "Send request" button from HTTP Simulator
+(and then send UnstructuredResponse from SS7 Simulator)
+6) The upper window of HTTP Simulator will contain traffic content of a dialog.
+After a dialog has completed and you want to test another dialog you need to push "Clear log" before starting of next dialog session. 
+
+
+3. HTTP PULL examples
+
+ processUnstructuredSS response -----------------------
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<dialog mapMessagesSize="1" prearrangedEnd="false">
+	<processUnstructuredSSRequest_Response invokeId="0" dataCodingScheme="15" string="Your balance is 1 USD"/>
+</dialog>
+
+unstucturedRequest and then processUnstructuredSS response -----------------------
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<dialog mapMessagesSize="1" userObject="123456789">
+	<unstructuredSSRequest_Request dataCodingScheme="15" string="Press 1 for paying or press 2 for aborting"/>
+</dialog>
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<dialog mapMessagesSize="1" prearrangedEnd="false">
+	<processUnstructuredSSRequest_Response invokeId="0" dataCodingScheme="15" string="Your balance is 1 USD"/>
+</dialog>
+
+long dialog: unstucturedRequest 6 times then processUnstructuredSS response -----------------------
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<dialog mapMessagesSize="1" userObject="123456789">
+	<unstructuredSSRequest_Request dataCodingScheme="15" string="Answer 1"/>
+</dialog>
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<dialog mapMessagesSize="1">
+	<unstructuredSSRequest_Request dataCodingScheme="15" string="Answer 2"/>
+</dialog>
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<dialog mapMessagesSize="1">
+	<unstructuredSSRequest_Request dataCodingScheme="15" string="Answer 3"/>
+</dialog>
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<dialog mapMessagesSize="1">
+	<unstructuredSSRequest_Request dataCodingScheme="15" string="Answer 4"/>
+</dialog>
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<dialog mapMessagesSize="1">
+	<unstructuredSSRequest_Request dataCodingScheme="15" string="Answer 5"/>
+</dialog>
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<dialog mapMessagesSize="1">
+	<unstructuredSSRequest_Request dataCodingScheme="15" string="Answer 6"/>
+</dialog>
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<dialog mapMessagesSize="1" prearrangedEnd="false">
+	<processUnstructuredSSRequest_Response invokeId="0" dataCodingScheme="15" string="Your balance is 1 USD"/>
+</dialog>
+
+
+4. HTTP PUSH examples
+
+ussdNotify only ------------------------
+<?xml version="1.0" encoding="UTF-8" ?>
+<dialog mapMessagesSize="1" networkId="0">
+	<unstructuredSSNotify_Request dataCodingScheme="15" string="Your new balance is 34.38 AFN and expires on 30.07.2012. Cost of last event was 0.50 AFN.">
+		<msisdn nai="international_number" npi="ISDN" number="79273605819"/>
+	</unstructuredSSNotify_Request>
+</dialog>
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<dialog type="End" mapMessagesSize="0" prearrangedEnd="false">
+</dialog>
+
+2 ussdRequests ------------------------
+<?xml version="1.0" encoding="UTF-8" ?>
+<dialog mapMessagesSize="1">
+	<unstructuredSSRequest_Request dataCodingScheme="15" string="Press 1 for paying or press 2 for aborting">
+		<msisdn nai="international_number" npi="ISDN" number="5444444444"/>
+	</unstructuredSSRequest_Request>
+</dialog>
+
+<dialog mapMessagesSize="1">
+	<unstructuredSSRequest_Request dataCodingScheme="15" string="Press 11 for paying or press 22 for aborting">
+	</unstructuredSSRequest_Request>
+</dialog>
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<dialog mapMessagesSize="0" prearrangedEnd="false">
+</dialog>
+
+4 ussdRequests ------------------------
+<?xml version="1.0" encoding="UTF-8" ?>
+<dialog mapMessagesSize="1">
+	<unstructuredSSRequest_Request dataCodingScheme="15" string="Press 1 for paying or press 2 for aborting">
+		<msisdn nai="international_number" npi="ISDN" number="5444444444"/>
+	</unstructuredSSRequest_Request>
+</dialog>
+
+<dialog mapMessagesSize="1">
+	<unstructuredSSRequest_Request dataCodingScheme="15" string="Press 000001">
+	</unstructuredSSRequest_Request>
+</dialog>
+
+<dialog mapMessagesSize="1">
+	<unstructuredSSRequest_Request dataCodingScheme="15" string="Press 000002">
+	</unstructuredSSRequest_Request>
+</dialog>
+
+<dialog mapMessagesSize="1">
+	<unstructuredSSRequest_Request dataCodingScheme="15" string="Press 000003">
+	</unstructuredSSRequest_Request>
+</dialog>
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<dialog mapMessagesSize="0" prearrangedEnd="false">
+</dialog>
+
+1 ussdRequest + empty handshake simulation ------------------------
+<?xml version="1.0" encoding="UTF-8" ?>
+<dialog mapMessagesSize="1" emptyDialogHandshake="true">
+	<unstructuredSSRequest_Request dataCodingScheme="15" string="Press 1 for paying or press 2 for aborting">
+		<msisdn nai="international_number" npi="ISDN" number="5444444444"/>
+	</unstructuredSSRequest_Request>
+</dialog>
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<dialog mapMessagesSize="0" prearrangedEnd="false">
+</dialog>
+

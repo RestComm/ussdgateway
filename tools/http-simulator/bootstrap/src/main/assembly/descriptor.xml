@@ -1,0 +1,41 @@
+<assembly>
+	<id>http</id>
+	<formats>
+		<format>dir</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+
+	<files>
+		<file>
+			<source>src/main/config/run.bat</source>
+			<destName>bin/run.bat</destName>
+		</file>
+		<file>
+			<source>src/main/config/run.sh</source>
+			<destName>bin/run.sh</destName>
+		</file>
+		<file>
+			<source>src/main/examples/examples.txt</source>
+			<destName>examples/examples.txt</destName>
+		</file>
+	</files>
+	<dependencySets>
+		<dependencySet>
+			<outputDirectory>/lib</outputDirectory>
+			<unpack>false</unpack>
+			<scope>runtime</scope>
+			<includes>
+				<!-- simulator libraris -->
+				<include>org.mobicents.ussd:http-simulator</include>
+
+				<!-- Common libraries -->
+				<include>log4j:log4j</include>
+			</includes>
+		</dependencySet>
+	</dependencySets>
+	<componentDescriptors>
+		<componentDescriptor>
+			src/main/assembly/common.xml
+		</componentDescriptor>
+	</componentDescriptors>
+</assembly>

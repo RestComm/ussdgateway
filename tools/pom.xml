@@ -11,7 +11,7 @@
 	<name>Restcomm USSD :: Tools :: Parent</name>
 
 	<modules>
-		<module>htpp-simulator</module>
+		<module>http-simulator</module>
 	</modules>
 
 	<build>

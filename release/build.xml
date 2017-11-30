@@ -38,7 +38,7 @@
 	<property name="restcomm-jss7.timestamp" value="1602171452" />
 -->
 
-	<property name="restcomm-map-ra.build-number" value="71" />
+	<property name="restcomm-map-ra.build-number" value="97" />
 	<property name="restcomm-map-ra.version" value="7.4.0-${restcomm-map-ra.build-number}" />
 <!--
 	<property name="restcomm-map-ra.release" value="7.3.72" />
@@ -471,6 +471,12 @@
 
 		<copy todir="${release.dir}/tools/restcomm-ussd-simulator" failonerror="true">
 			<fileset dir="${restcomm.ussd.dir}/test/bootstrap/target/ussd-server">
+				<include name="**" />
+			</fileset>
+		</copy>
+
+		<copy todir="${release.dir}/tools/restcomm-http-simulator" failonerror="true">
+			<fileset dir="${restcomm.ussd.dir}/tools/http-simulator/bootstrap/target/simulator-http">
 				<include name="**" />
 			</fileset>
 		</copy>
