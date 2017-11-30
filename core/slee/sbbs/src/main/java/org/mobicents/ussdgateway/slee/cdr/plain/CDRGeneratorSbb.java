@@ -326,34 +326,37 @@ public abstract class CDRGeneratorSbb extends USSDBaseSbb implements ChargeInter
       }else{
           sb.append(SEPARATOR);
       }
-          
-//        _COLUMN_LOCAL_DIALOG_ID+","+
-      sb.append(state.getLocalDialogId()).append(SEPARATOR);
-//    _COLUMN_REMOTE_DIALOG_ID+","+
-      sb.append(state.getRemoteDialogId()).append(SEPARATOR);
-      Long dialogDuration = state.getDialogDuration();
-      if(dialogDuration != null){
-//    _COLUMN_DIALOG_DURATION
-          //TODO: output as millis or?
-          sb.append(sb.append(dialogDuration).append(SEPARATOR));
-      }else{
-          sb.append(SEPARATOR);
-      }
-      //_COLUMN_USSD_STRING
-      String ussdString = state.getUssdString();
-      if (ussdString != null && !ussdString.isEmpty()) {
-          sb.append(sb.append(ussdString).append(SEPARATOR));
-      }else{
-          sb.append(SEPARATOR);
-      }
-//        _COLUMN_TSTAMP+","+
-      sb.append(tstamp).append(SEPARATOR);
-//        _COLUMN_STATUS+ <-- null - create record
-      sb.append(state.getRecordStatus().toString()).append(SEPARATOR);
-      // _COLUMN_TYPE
-      sb.append(state.getUssdType().toString()).append(SEPARATOR);
-//    _COLUMN_ID
-      sb.append(state.getId());
+
+        // _COLUMN_STATUS+ <-- null - create record
+        sb.append(state.getRecordStatus().toString()).append(SEPARATOR);
+        // _COLUMN_TYPE
+        sb.append(state.getUssdType().toString()).append(SEPARATOR);
+        // _COLUMN_TSTAMP+","+
+        sb.append(tstamp).append(SEPARATOR);
+
+        // _COLUMN_LOCAL_DIALOG_ID+","+
+        sb.append(state.getLocalDialogId()).append(SEPARATOR);
+        // _COLUMN_REMOTE_DIALOG_ID+","+
+        sb.append(state.getRemoteDialogId()).append(SEPARATOR);
+        Long dialogDuration = state.getDialogDuration();
+        if (dialogDuration != null) {
+            // _COLUMN_DIALOG_DURATION
+            // TODO: output as millis or?
+            sb.append(dialogDuration).append(SEPARATOR);
+        } else {
+            sb.append(SEPARATOR);
+        }
+        // _COLUMN_USSD_STRING
+        String ussdString = state.getUssdString();
+        if (ussdString != null && !ussdString.isEmpty()) {
+            sb.append(ussdString).append(SEPARATOR);
+        } else {
+            sb.append(SEPARATOR);
+        }
+
+        // _COLUMN_ID
+        sb.append(state.getId());
+
         return sb.toString();
     }
 }
