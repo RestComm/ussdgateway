@@ -138,7 +138,7 @@ public abstract class HttpServerSbb extends ChildServerSbb implements SriParent 
 	// HTTP Server RA events
 	// -------------------------------------------------------------
 	public void onPost(HttpServletRequestEvent event, ActivityContextInterface aci, EventContext eventContext) {
-		if (super.logger.isFineEnabled())
+        if (super.logger.isFineEnabled())
 			super.logger.fine("Received POST");
 
 		if (this.getEventContextCMP() != null) {
@@ -258,7 +258,12 @@ public abstract class HttpServerSbb extends ChildServerSbb implements SriParent 
 
 						this.abortHttpDialog(xmlMAPDialog);
 					} else {
-						this.resumeHttpEventContext();
+			            EventContext httpEventContext = this.resumeHttpEventContext();
+			            if (httpEventContext != null) {
+			                HttpServletRequestEvent httpRequest = (HttpServletRequestEvent) httpEventContext.getEvent();
+			                HttpServletResponse response = httpRequest.getResponse();
+			                response.setStatus(HttpServletResponse.SC_OK);
+			            }
 					}
 
 					MAPDialogSupplementary mapDialogSupplementary = (MAPDialogSupplementary) this.getMAPDialog();
@@ -277,7 +282,7 @@ public abstract class HttpServerSbb extends ChildServerSbb implements SriParent 
 	}
 
 	public void onSessionPost(HttpServletRequestEvent event, ActivityContextInterface aci, EventContext eventContext) {
-		if (super.logger.isFineEnabled())
+        if (super.logger.isFineEnabled())
 			super.logger.fine("Received insession POST");
 
 		if (this.getEventContextCMP() != null) {
@@ -1182,7 +1187,12 @@ public abstract class HttpServerSbb extends ChildServerSbb implements SriParent 
         MAPUserAbortChoice capUserAbortReason = xmlMAPDialog.getMAPUserAbortChoice();
         if (capUserAbortReason != null) {
             dialog.abort(capUserAbortReason);
-            this.resumeHttpEventContext();
+            EventContext httpEventContext = this.resumeHttpEventContext();
+            if (httpEventContext != null) {
+                HttpServletRequestEvent httpRequest = (HttpServletRequestEvent) httpEventContext.getEvent();
+                HttpServletResponse response = httpRequest.getResponse();
+                response.setStatus(HttpServletResponse.SC_OK);
+            }
             this.endHttpSessionActivity();
             return;
         }
@@ -1196,7 +1206,12 @@ public abstract class HttpServerSbb extends ChildServerSbb implements SriParent 
 
             // If prearrangedEnd is not null means, no more MAP messages are
             // expected. Lets clear HTTP resources
-            this.resumeHttpEventContext();
+            EventContext httpEventContext = this.resumeHttpEventContext();
+            if (httpEventContext != null) {
+                HttpServletRequestEvent httpRequest = (HttpServletRequestEvent) httpEventContext.getEvent();
+                HttpServletResponse response = httpRequest.getResponse();
+                response.setStatus(HttpServletResponse.SC_OK);
+            }
             this.endHttpSessionActivity();
         } else {
             dialog.send();
