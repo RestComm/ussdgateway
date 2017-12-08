@@ -1,0 +1,43 @@
+
+:sectnums!:
+
+[appendix]
+[[_configuring_mysql-wildfly]]
+= Configuring MySQL as datasource (Wildfly)
+
+If you configure the Gateway to log CDR to a Database, then every transaction of the Gateway is logged in the HSQLDB that comes bundled with JBoss AS and leverages the JBoss AS DataSource.
+However this is only made available to allow the platform to run "out of the box". You must configure a production ready Database prior to using the Gateway in a production environment.
+ 
+
+{this-platform} {this-application} has been tested with PostgreSQL and MySQL.
+In this section, you will find instructions for configuring MySQL database for CDR logging. 
+
+.Procedure: Configuring MySQL as datasource for CDR logging
+. Install MySQL and create a database where CDR data will be stored.
+  In this example, a database named "test" is assumed to have been created. 
+. The example HSQLDB DataSource and its descriptor is available in the file [path]_mobicents-ussdgateway-/wildfly-10.1.0.Final/standalone/configuration/standalone.xml_.
+  You must delete modify this datasource. 
+Below is an example configuration.
+You must update the tags <connection-url> with the host where a database can be found ('localhost' in this example). You must also update the username and password tags in security tag ('root' and '111111' in this example). 
++
+----
+<subsystem xmlns="urn:jboss:domain:datasources:4.0">
+            <datasources>
+                <datasource enabled="true" jndi-name="java:jboss/datasources/ExampleDS" pool-name="ExampleDS" use-java-context="true">
+                    <connection-url>jdbc:h2:~/test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</connection-url>
+                    <driver>h2</driver>
+                    <security>
+                        <user-name>sa</user-name>
+                        <password>sa</password>
+                    </security>
+                </datasource>
+                <drivers>
+                    <driver module="com.h2database.h2" name="h2">
+                        <xa-datasource-class>org.h2.jdbcx.JdbcDataSource</xa-datasource-class>
+                    </driver>
+                </drivers>
+            </datasources>
+        </subsystem>
+----
++
+:sectnums:
