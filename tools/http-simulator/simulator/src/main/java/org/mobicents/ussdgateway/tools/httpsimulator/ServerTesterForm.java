@@ -31,6 +31,7 @@ import javax.swing.JButton;
 import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
@@ -40,6 +41,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.Charset;
+import java.util.Date;
 
 /**
  *
@@ -189,13 +191,14 @@ public class ServerTesterForm extends JDialog {
             sout.write(buf);
             sout.flush();
 
-            tbLog.setText(tbLog.getText() + "\n----------------------------------------------\n");
+            tbLog.setText(tbLog.getText() + "\n----------------------------------------------" + new Date() + "\n");
             tbLog.setText(tbLog.getText() + sb.toString());
 
             tbLog.setText(tbLog.getText() + "\n===================\n");
 
             StringBuilder resp = new StringBuilder();
-            for (int i0 = 0; i0 < 50; i0++) {
+            int respRecieved = 0;
+            for (int i0 = 0; i0 < 1200; i0++) {
                 Thread.sleep(100);
                 if (sin.available() > 0) {
                     int i1 = sin.read(buf);
@@ -204,8 +207,13 @@ public class ServerTesterForm extends JDialog {
                     String s = new String(buf2, utf8);
                     resp.append(s);
                     tbLog.setText(tbLog.getText() + s);
+                    respRecieved = 1;
+                } else {
+                    if (respRecieved != 0)
+                        break;
                 }
             }
+            tbLog.setText(tbLog.getText() + "\n----------------------------------------------" + new Date() + "\n");
 
             String[] ss = resp.toString().split("\r\n");
             for (String sa : ss) {
