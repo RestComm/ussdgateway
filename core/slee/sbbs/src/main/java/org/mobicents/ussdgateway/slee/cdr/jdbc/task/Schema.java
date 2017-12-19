@@ -172,6 +172,20 @@ final class Schema {
     public static final String _QUERY_ALTER_0_0_2 = "ALTER TABLE "+_TABLE_NAME
             + " ADD COLUMN "+_COLUMN_USSD_STRING + " " + _TYPE_COLUMN_USSD_STRING;
 
+    //FIXME: we should populate this externally 
+    public static final String[] upgrades = new String[] { 
+        "0_0_1",
+        "0_0_2"
+    };
+    public static final String[] upgradeChecks = new String[] { 
+        _QUERY_CHECK_VERSION_0_0_1, 
+        _QUERY_CHECK_VERSION_0_0_2
+    };
+    public static final String[] upgradeModifications = new String[] { 
+        _QUERY_ALTER_0_0_1,
+        _QUERY_ALTER_0_0_2 
+    };
+
     public static final String _QUERY_INSERT ="INSERT INTO "+_TABLE_NAME
             +" ( " +
                 _COLUMN_L_SPC+","+
