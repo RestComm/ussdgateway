@@ -61,6 +61,11 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
     protected static final String HR_HLR_GT = "hrhlrgt";
     protected static final String CDR_LOGGING_TO = "cdrloggingto";
     protected static final String MAX_ACTIVITY_COUNT = "maxactivitycount";
+    protected static final String DB_BACKUP_PRE_UPGRADE = "dbbackuppreupgrade";
+    protected static final String DB_BACKUP_DIRECTORY = "dbbackupdirectory";
+    protected static final String DB_LOGIN = "dblogin";
+    protected static final String DB_PASSWORD = "dbpassword";
+    protected static final String DB_SCHEMA_NAME = "dbschemaname";
 
 	private static final String TAB_INDENT = "\t";
 	private static final String CLASS_ATTRIBUTE = "type";
@@ -101,6 +106,13 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
 
     // max count of TCAP Dialogs that are possible at the same time
     private int maxActivityCount = 5000;
+
+    //db upgrade, backup properties
+    private boolean dbBackupFlag = false;
+    private String dbBackupDir;
+    private String dbLogin;
+    private String dbPassword;
+    private String dbSchemaName;
 
 	private UssdPropertiesManagement(String name) {
 		this.name = name;
@@ -278,6 +290,46 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
         this.store();
     }
 
+    public String getDbBackupDir() {
+        return this.dbBackupDir;
+    }
+
+    public void setDbBackupDir(String dbBackupDir) {
+        this.dbBackupDir = dbBackupDir;
+    }
+
+    public String getDbLogin() {
+        return this.dbLogin;
+    }
+
+    public void setDbLogin(String dbLogin) {
+        this.dbLogin = dbLogin;
+    }
+
+    public String getDbPassword() {
+        return this.dbPassword;
+    }
+
+    public void setDbPassword(String dbPassword) {
+        this.dbPassword = dbPassword;
+    }
+
+    public String getDbSchemaName() {
+        return this.dbSchemaName;
+    }
+
+    public void setDbSchemaName(String dbSchemaName) {
+        this.dbSchemaName = dbSchemaName;
+    }
+
+    public boolean isDbBackup() {
+        return dbBackupFlag;
+    }
+
+    public void setDbBackupFlag(boolean dbBackupFlag) {
+        this.dbBackupFlag = dbBackupFlag;
+    }
+
     @Override
     public int getMaxActivityCount() {
         return maxActivityCount;
@@ -353,6 +405,12 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
 
             writer.write(this.maxActivityCount, MAX_ACTIVITY_COUNT, Integer.class);
 
+            writer.write(this.dbBackupFlag, DB_BACKUP_PRE_UPGRADE, Boolean.class);
+            writer.write(this.dbBackupDir, DB_BACKUP_DIRECTORY, String.class);
+            writer.write(this.dbLogin, DB_LOGIN, String.class);
+            writer.write(this.dbPassword, DB_PASSWORD, String.class);
+            writer.write(this.dbSchemaName, DB_SCHEMA_NAME, String.class);
+
 			writer.write(this.ussdGwGt, USSD_GT, String.class);
             writer.write(this.ussdGwSsn, USSD_SSN, Integer.class);
             writer.write(this.hlrSsn, HLR_SSN, Integer.class);
@@ -420,6 +478,27 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
             Integer val = reader.read(MAX_ACTIVITY_COUNT, Integer.class);
             if (val != null)
                 this.maxActivityCount = val;
+
+            Boolean backupFlag = reader.read(DB_BACKUP_PRE_UPGRADE, Boolean.class);
+            if (backupFlag != null) {
+                this.dbBackupFlag = backupFlag;
+            }
+            vals = reader.read(DB_BACKUP_DIRECTORY, String.class);
+            if (vals != null) {
+                this.dbBackupDir = vals;
+            }
+            vals = reader.read(DB_LOGIN, String.class);
+            if (vals != null) {
+                this.dbLogin = vals;
+            }
+            vals = reader.read(DB_PASSWORD, String.class);
+            if (vals != null) {
+                this.dbPassword = vals;
+            }
+            vals = reader.read(DB_SCHEMA_NAME, String.class);
+            if (vals != null) {
+                this.dbSchemaName = vals;
+            }
 
 			this.ussdGwGt = reader.read(USSD_GT, String.class);
             this.ussdGwSsn = reader.read(USSD_SSN, Integer.class);

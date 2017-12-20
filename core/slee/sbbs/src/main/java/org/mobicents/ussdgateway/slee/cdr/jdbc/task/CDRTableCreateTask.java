@@ -26,6 +26,7 @@ import java.sql.Statement;
 import javax.slee.facilities.Tracer;
 
 import org.mobicents.slee.resource.jdbc.task.JdbcTaskContext;
+import org.mobicents.ussdgateway.UssdPropertiesManagement;
 import org.mobicents.ussdgateway.slee.cdr.CDRCreateException;
 import org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent;
 
@@ -34,6 +35,8 @@ import org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent;
  * 
  */
 public class CDRTableCreateTask extends CDRTaskBase {
+
+    protected static final UssdPropertiesManagement ussdPropertiesManagement = UssdPropertiesManagement.getInstance();
 
     private final boolean reset;
 
@@ -94,14 +97,15 @@ public class CDRTableCreateTask extends CDRTaskBase {
                 int dest = 0;
                 checkUpgradePath(statement, src, dest);
                 String backupFilename = "preupgrade_" + Schema.upgrades[src] + "_to_" + Schema.upgrades[dest] + ".bak";
-                String backupDir = "";
-                String dbLogin = "";
-                String dbPassword = "";
-                String dbName = "";
+                String backupDir = ussdPropertiesManagement.getDbBackupDir();
+                String dbLogin = ussdPropertiesManagement.getDbLogin();
+                String dbPassword = ussdPropertiesManagement.getDbPassword();
+                String dbName = ussdPropertiesManagement.getDbSchemaName();
                 // check flag
-                backupDatabase(backupDir + "/" + backupFilename, dbLogin, dbPassword, dbName);
+                if(ussdPropertiesManagement.isDbBackup()) {
+                    backupDatabase(backupDir + "/" + backupFilename, dbLogin, dbPassword, dbName);
+                }
                 upgradeDatabase(statement, src, dest);
-
             }
         } catch (Exception e) {
             super.tracer.severe("Failed at execute!", e);
