@@ -9,3 +9,8 @@
 <hlrssn value="6"/>
 <mscssn value="8"/>
 <maxmapv value="3"/>
+<dbbackuppreupgrade value="false"/>
+<dbbackupdirectory value="/backup"/>
+<dblogin value="root"/>
+<dbpassword value="root"/>
+<dbschemaname value="ussd"/>

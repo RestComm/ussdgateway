@@ -19,11 +19,14 @@
 
 package org.mobicents.ussdgateway.slee.cdr.jdbc.task;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 import javax.slee.facilities.Tracer;
 
 import org.mobicents.slee.resource.jdbc.task.JdbcTaskContext;
+import org.mobicents.ussdgateway.UssdPropertiesManagement;
 import org.mobicents.ussdgateway.slee.cdr.CDRCreateException;
 import org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent;
 
@@ -32,6 +35,8 @@ import org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent;
  * 
  */
 public class CDRTableCreateTask extends CDRTaskBase {
+
+    protected static final UssdPropertiesManagement ussdPropertiesManagement = UssdPropertiesManagement.getInstance();
 
     private final boolean reset;
 
@@ -88,19 +93,19 @@ public class CDRTableCreateTask extends CDRTaskBase {
                 }
                 statement.execute(Schema._QUERY_CREATE);
             }else{
-                //TODO:how to manage multiple schema updates/schema versioning?
-                boolean res;
-                res = statement.execute(Schema._QUERY_CHECK_VERSION_0_0_1);
-
-                if(!res){
-                    statement.execute(Schema._QUERY_ALTER_0_0_1);
+                int src = 0;
+                int dest = 0;
+                checkUpgradePath(statement, src, dest);
+                String backupFilename = "preupgrade_" + Schema.upgrades[src] + "_to_" + Schema.upgrades[dest] + ".bak";
+                String backupDir = ussdPropertiesManagement.getDbBackupDir();
+                String dbLogin = ussdPropertiesManagement.getDbLogin();
+                String dbPassword = ussdPropertiesManagement.getDbPassword();
+                String dbName = ussdPropertiesManagement.getDbSchemaName();
+                // check flag
+                if(ussdPropertiesManagement.isDbBackup()) {
+                    backupDatabase(backupDir + "/" + backupFilename, dbLogin, dbPassword, dbName);
                 }
-                //FIXME: better to put the updates into a table/list
-                res = statement.execute(Schema._QUERY_CHECK_VERSION_0_0_2);
-
-                if(!res){
-                    statement.execute(Schema._QUERY_ALTER_0_0_2);
-                }
+                upgradeDatabase(statement, src, dest);
             }
         } catch (Exception e) {
             super.tracer.severe("Failed at execute!", e);
@@ -109,4 +114,38 @@ public class CDRTableCreateTask extends CDRTaskBase {
         return this;
     }
 
+    private void upgradeDatabase(Statement statement, int src, int dest)
+            throws SQLException {
+        for (int i = src; i < dest; ++i) {
+            // FIXME: do savepoint
+            // FIXME: actually check and handle failure
+            statement.execute(Schema.upgradeModifications[i]);
+        }
+    }
+
+    private void checkUpgradePath(Statement statement, int src, int dest)
+            throws SQLException {
+        for (int i = 0; i < Schema.upgradeChecks.length; ++i) {
+            // if check failed, means that the current db version is older than
+            // the current modification
+            // if check was successful, the db is already at the current loop
+            // iteration version
+            if (!statement.execute(Schema.upgradeChecks[i])) {
+                src = i;
+                break;
+            }
+        }
+        // TODO: will we ever want to do partial upgrade?
+        dest = Schema.upgradeChecks.length;
+    }
+
+    // TODO: ideally we should split up the backup to schema and data
+    // TODO: currently this is mysql specific, we should create spi and have
+    // various implementations, mysql, hsqldb, etc
+    private void backupDatabase(String backupPath, String dbLogin,
+            String dbPassword, String dbName) throws IOException {
+        Runtime.getRuntime().exec(
+                "mysqldump -u " + dbLogin + " -p" + dbPassword + " " + dbName
+                        + " > " + backupPath);
+    }
 }
