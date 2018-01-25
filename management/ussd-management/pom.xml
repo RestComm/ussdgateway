@@ -17,14 +17,23 @@
 	<properties>
 	</properties>
 
-	 <build>
-                <finalName>ussd-management</finalName>
-                <plugins>
-                    <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-war-plugin</artifactId>
-                            <version>2.3</version>
-                    </plugin>
+	<build>
+		<finalName>ussd-management</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.3</version>
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<profile>
+			<!-- Adds the files to JBoss AS -->
+			<id>deploy-module-jboss5</id>
+			<build>
+				<plugins>
 					<plugin>
 						<artifactId>maven-antrun-plugin</artifactId>
 						<executions>
@@ -57,6 +66,49 @@
 							</execution>
 						</executions>
 					</plugin>                        
-                </plugins>
-        </build>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<!-- Adds the files to WildFly server -->
+			<id>deploy-module-wildfly</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>deploy</id>
+								<phase>install</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<echo>
+											${jboss.home}server/default/deploy
+										</echo>
+										<copy file="${project.build.directory}/ussd-management.war" todir="${jboss.home}/standalone/deployments" />
+									</tasks>
+								</configuration>
+							</execution>
+							<execution>
+								<id>undeploy</id>
+								<phase>clean</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<delete failonerror="false" file="${jboss.home}/standalone/deployments/ussd-management.war" />
+									</tasks>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>                        
+				</plugins>
+			</build>
+		</profile>
+	</profiles>		
 </project>

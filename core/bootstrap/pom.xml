@@ -306,47 +306,7 @@
 				</executions>
 			</plugin>
 
-			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>deploy</id>
-						<phase>install</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<tasks>
-								<echo>
-									${jboss.home}server/default/deploy
-								</echo>
-								<echo>
-									${project.build.directory}/restcomm-ussd-gateway
-								</echo>
-								<copy todir="${jboss.home}/server/${node}/deploy/restcomm-ussd-gateway">
-									<fileset dir="${project.build.directory}/restcomm-ussd-gateway">
-
-									</fileset>
-								</copy>
-							</tasks>
-						</configuration>
-					</execution>
-					<execution>
-						<id>undeploy</id>
-						<phase>clean</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<tasks>
-								<delete failonerror="false" includeemptydirs="true">
-									<fileset dir="${jboss.home}/server/${node}/deploy/restcomm-ussd-gateway" />
-								</delete>
-							</tasks>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+<!--
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
@@ -377,7 +337,58 @@
 					</execution>
 				</executions>
 			</plugin>
+-->
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>deploy-module-jboss5</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>deploy</id>
+								<phase>install</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<echo>
+											${jboss.home}server/default/deploy
+										</echo>
+										<echo>
+											${project.build.directory}/restcomm-ussd-gateway
+										</echo>
+										<copy todir="${jboss.home}/server/${node}/deploy/restcomm-ussd-gateway">
+											<fileset dir="${project.build.directory}/restcomm-ussd-gateway">
+											</fileset>
+										</copy>
+									</tasks>
+								</configuration>
+							</execution>
+							<execution>
+								<id>undeploy</id>
+								<phase>clean</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<delete failonerror="false" includeemptydirs="true">
+											<fileset dir="${jboss.home}/server/${node}/deploy/restcomm-ussd-gateway" />
+										</delete>
+									</tasks>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>
