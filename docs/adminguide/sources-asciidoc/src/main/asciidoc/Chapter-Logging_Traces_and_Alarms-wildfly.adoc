@@ -1,0 +1,114 @@
+[[_logging_traces_and_alarms-wildfly]]
+= Monitoring (Wildfly)
+:doctype: book
+:sectnums:
+:toc: left
+:icons: font
+:experimental:
+:sourcedir: .
+
+== Tracers
+
+{this-application} {this-application} Application creates following tracers:
+
+.{this-application}  Application Tracer and Log Categories
+[cols="1,1,1", frame="all", options="header"]
+|===
+| Sbb | Tracer name | LOG4J category
+| ParentSbb | USSD-Parent | javax.slee.SbbNotification [service=ServiceID[name=mobicents-ussdgateway,vendor=org.mobicents, version=1.0],sbb=SbbID[name=ParentSbb, vendor=org.mobicents,version=1.0]].USSD-Parent
+| SipSbb | USSD-CHILD-SipSbb | javax.slee.SbbNotification [service=ServiceID[name=mobicents-ussdgateway,vendor=org.mobicents, version=1.0],sbb=SbbID[name=SipSbb, vendor=org.mobicents,version=1.0]].USSD-CHILD-SipSbb
+| HttpClientSbb | USSD-CHILD-HttpClientSbb | javax.slee.SbbNotification [service=ServiceID[name=mobicents-ussdgateway,vendor=org.mobicents, version=1.0],sbb=SbbID[name=HttpClientSbb,vendor=org.mobicents,version=1.0]].USSD-CHILD-HttpClientSbb
+
+
+|===
+
+IMPORTANT: Spaces where introduced in `LOG4J category`  column values, to correctly render the table.
+Please remove them when using copy/paste.
+
+== Statistics
+
+[[_view_stats]]
+=== View USSD Statistics using the GUI
+
+You can view USSD statistics in the GUI Management Console by following the procedure below.
+
+.Procedure: View USSD Statistics in the GUI
+. In the GUI Management Console for USSD Gateway, click on 'Manage Campaigns' in the left panel. 
+. If there are no statistics campaigns created yet, press the "Create Statistics Campaign" button.
+. Set the value of "Counter Definition Set Name" to "USSD GW-USSD-Main". You can set the 'Duration' value to any desired statistic interval as required.
+  USSD Gateway will collect statistics for selected duration and then reset all to zero and start over again.
+  However stats of type cumulative will not be reset to 0.
+  Enter any unique name for "Campaign Name" (eg.
+  "camp1"). 
+. Open the newly created campaign and click on the tag "Counter value". You will now be able to observe the current set of counter values.
+  Whenever you wish to see the current counter values set, you can view them here by clicking on the tag "Counter value". 
+. For multiple counters, you can also view in the form of time histograms.
+  To view this, you must click on "Metrics" in the left panel of the GUI.
+. The main panel will display the current statistics and the details of the parameters.
+  This page get auto-refreshed for every "Refresh Rate" seconds and therefore the statistics are refreshed automatically.
+  It makes sense to select refresh rate same as duration value for which USSD Gateway is collecting stats. 
+
+Statistics info is also written by default into the log file ([path]_{this-folder}-ussdgateway/wildfly-10.1.0.Final/standalone/log/stats.log_). File format is plain text and easy to understand.
+This log file can achieve a big size if your statistic duration is short.
+If you do not need that statistic data will be written into stats.log file, you can remove the section from [path]_{this-folder}-ussdgateway/wildfly-10.1.0.Final/standalone/configuration/standalone.xml_	 | That contains the appender:  
+----
+
+	<periodic-rotating-file-handler xmlns="" autoflush="true" name="STATS">
+    .....
+    .....
+    .....
+	</periodic-rotating-file-handler>
+----		
+
+=== USSD Counters
+
+The table below lists the USSD counters along with their description.
+
+.USSD Counters
+[cols="1,1", frame="all", options="header"]
+|===
+| Name | Description
+| MinDialogsInProcess | A minimal count of dialogs that are in progress during a statistic period.
+| MaxDialogsInProcess | A maximum count of dialogs that are in progress during a statistic period.
+| DialogsAllEstablished | A count of successfully established Dialogs for all dialog cases. A PULL Dialog is established if ProcessUnstructuredSSRequest has come to the USSD Gateway and a Short Code from the request is configured as USSD GW side and USSD request has routed to a HTTP or SIP application. A PUSH Dialog is established if the USSD Gateway has sent an UnstructuredSSRequest or UnstructuredSSNotifyRequest to the SS7 network and a non-error response from a mobile station has been received.
+| DialogsAllFailed | A count of the Dialogs failed at establishing or established phases for all dialog cases. The most common case of failure at establishing phases is in the PUSH case when a USSD request has failed due to bad subscriber number, absent or busy subscriber. If there is an incoming ProcessUnstructuredSSRequest with a wrong short code, this Dialog is not registerd into the DialogsAllFailed counter. Instead it is registered into the UssdPullNoRoutingRule counter. A Dialog can be registered in the DialogsAllFailed counter only if it failed at establishing phase. It can be registered in both DialogsAllEstablished and DialogsAllFailed counters if it failed in the established phase.
+| DialogsPullEstablished | A count of successfully established PULL Dialogs. It is similar to the counter DialogsAllEstablished but used only for PULL dialogs.
+| DialogsPullFailed | A count of the PULL Dialogs failed at establishing or established phases. It is similar to the counter DialogsAllFailed but used only for PULL dialogs.
+| DialogsPushEstablished | A count of successfully established PUSH Dialogs. It is similar to the counter DialogsAllEstablished but used only for PUSH dialogs.
+| DialogsPushFailed | A count of the PUSH Dialogs failed at establishing or established phases. It is similar to the counter DialogsAllFailed but used only for PUSH dialogs.
+| DialogsHttpEstablished | A count of successfully established HTTP Dialogs. It is similar to the counter DialogsAllEstablished but used only for HTTP dialogs.
+| DialogsHttpFailed | A count of the HTTP Dialogs failed at establishing or established phases. It is similar to the counter DialogsAllFailed but used only for HTTP dialogs.
+| DialogsSipEstablished | A count of successfully established SIP Dialogs. It is similar to the counter DialogsAllEstablished but used only for SIP dialogs.
+| DialogsSipFailed | A count of the SIP Dialogs failed at establishing or established phases. It is similar to the counter DialogsAllFailed but used only for SIP dialogs.
+| DialogsAllEstablishedCumulative | This counter contains a cumulative value of DialogsAllEstablished counter from the time the USSD GW was started.
+| DialogsAllFailedCumulative | This counter contains a cumulative value of DialogsAllFailed counter from the time the USSD GW was started.
+| DialogsAllEstablishedPerSec | A count of the successfully established Dialogs per second, for all dialog cases.
+| DialogsAllFailedPerSec | A count of the Dialogs failed per second at establishing or established phases, for all dialog cases.
+| ProcessUssdRequestOperations | A count of all requested ProcessUnstructuredSSRequest.
+| ProcessUssdRequestOperationsCumulative | This counter contains a cumulative value of ProcessUssdRequestOperations counter from the time the USSD GW was started.
+| UssdRequestOperations | A count of all requested UnstructuredSSRequest.
+| UssdRequestOperationsCumulative | This counter contains a cumulative value of UssdRequestOperations counter from the time the USSD GW was started.
+| UssdNotifyOperations | A count of all requested UnstructuredSSNotifyRequest.
+| UssdNotifyOperationsCumulative | This counter contains a cumulative value of UssdNotifyOperations counter from the time the USSD GW was started.
+| UssdPullNoRoutingRule | A count of incoming PULL requests for Short Codes that are not configured in the USSD GW and are therefore rejected.
+| UssdPullNoRoutingRuleCumulative | This counter contains a cumulative value of UssdPullNoRoutingRule counter from the time the USSD GW was started.
+| MapErrorAbsentSubscribers | A count of MAP error message AbsentSubscribers received from the HLR/MSC (PUSH case).
+| MapErrorAbsentSubscribersCumulative | This counter contains a cumulative value of MapErrorAbsentSubscribers counter from the time the USSD GW was started.
+| MapErrorCallBarred | A count of MAP error message CallBarred received from the HLR (PUSH case).
+| MapErrorCallBarredCumulative | This counter contains a cumulative value of MapErrorCallBarred counter from the time the USSD GW was started.
+| MapErrorTeleserviceNotProvisioned | A count of MAP error message TeleserviceNotProvisioned received from the HLR (PUSH case).
+| MapErrorTeleserviceNotProvisionedCumulative | This counter contains a cumulative value of MapErrorTeleserviceNotProvisioned counter from the time the USSD GW was started.
+| MapErrorUnknownSubscriber | A count of MAP error message UnknownSubscriber received from the HLR (PUSH case).
+| MapErrorUnknownSubscriberCumulative | This counter contains a cumulative value of MapErrorUnknownSubscriber counter from the time the USSD GW was started.
+| MapErrorUssdBusy | A count of MAP error message UssdBusy received from the MSC (PUSH case).
+| MapErrorUssdBusyCumulative | This counter contains a cumulative value of MapErrorUssdBusy counter from the time the USSD GW was started.
+| MapErrorComponentOther | A count of all other MAP error messages received from the HRL/MSC (PUSH case).
+| MapErrorComponentOtherCumulative | This counter contains a cumulative value of MapErrorComponentOther counter from the time the USSD GW was started.
+| MapDialogTimeouts | A count of all MAP Dialog timeouts. This is the case when a mobile subscriber does not respond for a long time after the MAP Dialog is established.
+| MapDialogTimeoutsCumulative | This counter contains a cumulative value of MapDialogTimeouts counter from the time the USSD GW was started.
+| MapInvokeTimeouts | A count of all MAP Invoke timeouts. This is the case when a mobile subscriber does not respond for a long time for the Invoke from USSD GW.
+| MapInvokeTimeoutsCumulative | This counter contains a cumulative value of MapInvokeTimeouts counter from the time the USSD GW was started.
+| AppTimeouts | A count of all HTTP / SIP Application timeouts. This is the case when a HTTP / SIP application does not respond for a long time (PULL cases only).
+| AppTimeoutsCumulative | This counter contains a cumulative value of AppTimeouts counter from the time the USSD GW was started.
+| RequestsPerUssdCode | A count of ProcessUnstructuredSSRequest requests per Short Code. This value is a complex value and there may be several values for several Short Codes inside the counter. Only the Short Codes for which there were requests during this time interval are present.
+|===

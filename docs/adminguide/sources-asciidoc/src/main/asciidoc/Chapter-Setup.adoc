@@ -252,7 +252,7 @@ Go to menu:Knowledge Base > Create New > Upload POJO Model Jar
 
 image::images/USSD-Guvnor-UploadModel.png[]
 +
-Browse in newly open window and point to [path]_${JBOSS.HOME}/server/default/deploy/{this-folder}-ussd-gateway/lib/ussdgateway-domain-x.y.z.jar
+Browse in newly open window and point to [path]_${JBOSS.HOME}/server/default/deploy/{this-folder}-ussd-gateway/lib/ussdgateway-domain-x.y.z.jar for JBoss AS or ${JBOSS.HOME}/modules/system/layers/base/org/mobicents/ussd/bootstrap/main/ussdgateway-domain-x.y.z.jar for Wildfly 10
 						_						. 
 
 . Edit your package configuration.

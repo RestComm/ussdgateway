@@ -23,7 +23,7 @@ import java.sql.Statement;
 
 import javax.slee.facilities.Tracer;
 
-import org.mobicents.slee.resource.jdbc.task.JdbcTaskContext;
+import org.restcomm.slee.resource.jdbc.task.JdbcTaskContext;
 import org.mobicents.ussdgateway.slee.cdr.CDRCreateException;
 import org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent;
 

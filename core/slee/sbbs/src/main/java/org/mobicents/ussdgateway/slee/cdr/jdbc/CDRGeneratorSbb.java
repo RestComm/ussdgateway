@@ -27,11 +27,11 @@ import javax.slee.RolledBackContext;
 import javax.slee.SbbContext;
 
 import org.joda.time.DateTime;
-import org.mobicents.slee.resource.jdbc.JdbcActivity;
-import org.mobicents.slee.resource.jdbc.JdbcActivityContextInterfaceFactory;
-import org.mobicents.slee.resource.jdbc.JdbcResourceAdaptorSbbInterface;
-import org.mobicents.slee.resource.jdbc.event.JdbcTaskExecutionThrowableEvent;
-import org.mobicents.slee.resource.jdbc.task.simple.SimpleJdbcTaskResultEvent;
+import org.restcomm.slee.resource.jdbc.JdbcActivity;
+import org.restcomm.slee.resource.jdbc.JdbcActivityContextInterfaceFactory;
+import org.restcomm.slee.resource.jdbc.JdbcResourceAdaptorSbbInterface;
+import org.restcomm.slee.resource.jdbc.event.JdbcTaskExecutionThrowableEvent;
+import org.restcomm.slee.resource.jdbc.task.simple.SimpleJdbcTaskResultEvent;
 import org.mobicents.ussdgateway.slee.USSDBaseSbb;
 import org.mobicents.ussdgateway.slee.cdr.ChargeInterface;
 import org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent;
