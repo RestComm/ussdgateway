@@ -26,9 +26,9 @@ import java.util.Map;
 
 import javax.slee.ActivityContextInterface;
 import javax.slee.SbbContext;
+import javax.slee.resource.ResourceAdaptorTypeID;
 
 import javolution.util.FastList;
-
 import net.java.client.slee.resource.http.HttpClientActivity;
 import net.java.client.slee.resource.http.HttpClientActivityContextInterfaceFactory;
 import net.java.client.slee.resource.http.HttpClientResourceAdaptorSbbInterface;
@@ -392,8 +392,17 @@ public abstract class HttpClientSbb extends ChildSbb {
 	public void setSbbContext(SbbContext sbbContext) {
 		super.setSbbContext(sbbContext);
 		try {
-			super.httpClientActivityContextInterfaceFactory = (HttpClientActivityContextInterfaceFactory) super.sbbContext
-					.getActivityContextInterfaceFactory(httpClientRATypeID);
+            if (httpClientRATypeID == null)
+                httpClientRATypeID = new ResourceAdaptorTypeID("HttpClientResourceAdaptorType", "org.restcomm", "4.0");
+            try {
+                super.httpClientActivityContextInterfaceFactory = (HttpClientActivityContextInterfaceFactory) super.sbbContext
+                        .getActivityContextInterfaceFactory(httpClientRATypeID);
+            } catch (Exception e) {
+                httpClientRATypeID = new ResourceAdaptorTypeID("HttpClientResourceAdaptorType", "org.mobicents", "4.0");
+                logger.info("Trying to use HttpClientResourceAdaptorType - org.mobicents");
+                super.httpClientActivityContextInterfaceFactory = (HttpClientActivityContextInterfaceFactory) super.sbbContext
+                        .getActivityContextInterfaceFactory(httpClientRATypeID);
+            }
 			super.httpClientProvider = (HttpClientResourceAdaptorSbbInterface) super.sbbContext
 					.getResourceAdaptorInterface(httpClientRATypeID, httpClientRaLink);
 

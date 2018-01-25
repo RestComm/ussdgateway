@@ -95,8 +95,7 @@ public class USSDBaseSbb implements Sbb {
 	// -------------------------------------------------------------
 	// HTTP Client RA STUFF
 	// -------------------------------------------------------------
-	protected static final ResourceAdaptorTypeID httpClientRATypeID = new ResourceAdaptorTypeID(
-			"HttpClientResourceAdaptorType", "org.restcomm", "4.0");
+	protected static ResourceAdaptorTypeID httpClientRATypeID;
 	protected static final String httpClientRaLink = "HttpClientResourceAdaptor";
 
 	protected HttpClientActivityContextInterfaceFactory httpClientActivityContextInterfaceFactory;
@@ -105,8 +104,7 @@ public class USSDBaseSbb implements Sbb {
 	// -------------------------------------------------------------
 	// HTTP Server RA STUFF
 	// -------------------------------------------------------------
-	protected static final ResourceAdaptorTypeID httpServerRATypeID = new ResourceAdaptorTypeID(
-			"HttpServletResourceAdaptorType", "org.restcomm", "1.0");
+	protected static ResourceAdaptorTypeID httpServerRATypeID;
 	protected static final String httpServerRaLink = "HttpServletRA";
 
 	protected HttpServletRaSbbInterface httpServletProvider;

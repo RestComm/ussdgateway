@@ -312,7 +312,7 @@
 		<resource-adaptor-type-binding>
 			<resource-adaptor-type-ref>
 				<resource-adaptor-type-name>HttpClientResourceAdaptorType</resource-adaptor-type-name>
-				<resource-adaptor-type-vendor>org.restcomm</resource-adaptor-type-vendor>
+				<resource-adaptor-type-vendor>org.restcomm</resource-adaptor-type-vendor><!--HTTP RESOURCE ADAPTOR type-vendor-->
 				<resource-adaptor-type-version>4.0</resource-adaptor-type-version>
 			</resource-adaptor-type-ref>
 			<activity-context-interface-factory-name>slee/resources/http-client/acifactory</activity-context-interface-factory-name>
@@ -1130,7 +1130,7 @@
 		<resource-adaptor-type-binding>
 			<resource-adaptor-type-ref>
 				<resource-adaptor-type-name>HttpServletResourceAdaptorType</resource-adaptor-type-name>
-				<resource-adaptor-type-vendor>org.restcomm</resource-adaptor-type-vendor>
+				<resource-adaptor-type-vendor>org.restcomm</resource-adaptor-type-vendor><!--HTTP RESOURCE ADAPTOR type-vendor-->
 				<resource-adaptor-type-version>1.0</resource-adaptor-type-version>
 			</resource-adaptor-type-ref>
 			<activity-context-interface-factory-name>slee/resources/mobicents/httpservlet/acifactory</activity-context-interface-factory-name>

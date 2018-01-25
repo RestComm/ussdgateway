@@ -35,6 +35,7 @@ import javax.slee.SLEEException;
 import javax.slee.SbbContext;
 import javax.slee.SbbLocalObject;
 import javax.slee.TransactionRequiredLocalException;
+import javax.slee.resource.ResourceAdaptorTypeID;
 
 import javolution.util.FastList;
 import javolution.xml.stream.XMLStreamException;
@@ -911,8 +912,17 @@ public abstract class HttpServerSbb extends ChildServerSbb implements SriParent 
 			super.mapParameterFactory = super.mapProvider.getMAPParameterFactory();
             super.ussdStatAggregator = UssdStatAggregator.getInstance();
 
-			super.httpServletRaActivityContextInterfaceFactory = (HttpServletRaActivityContextInterfaceFactory) super.sbbContext
-					.getActivityContextInterfaceFactory(httpServerRATypeID);
+            if (httpServerRATypeID != null)
+                httpServerRATypeID = new ResourceAdaptorTypeID("HttpServletResourceAdaptorType", "org.restcomm", "1.0");
+            try {
+                super.httpServletRaActivityContextInterfaceFactory = (HttpServletRaActivityContextInterfaceFactory) super.sbbContext
+                        .getActivityContextInterfaceFactory(httpServerRATypeID);
+            } catch (Exception e) {
+                httpServerRATypeID = new ResourceAdaptorTypeID("HttpServletResourceAdaptorType", "org.mobicents", "1.0");
+                logger.info("Trying to use HttpServletResourceAdaptorType - org.mobicents");
+                super.httpServletRaActivityContextInterfaceFactory = (HttpServletRaActivityContextInterfaceFactory) super.sbbContext
+                        .getActivityContextInterfaceFactory(httpServerRATypeID);
+            }
 			super.httpServletProvider = (HttpServletRaSbbInterface) super.sbbContext.getResourceAdaptorInterface(
 					httpServerRATypeID, httpServerRaLink);
 			this.ussdPropertiesManagement = UssdPropertiesManagement.getInstance();
