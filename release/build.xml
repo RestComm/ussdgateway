@@ -21,7 +21,7 @@
 
 	<property name="restcomm.ussd.release.version" value="7.1.0-SNAPSHOT" />
 
-	<property name="restcomm-slee.build-number" value="148.102" />
+	<property name="restcomm-slee.build-number" value="148.102" /> <!-- 148.102 / 128.93 -->
 	<property name="restcomm-slee.version" value="2.9" />
 	<property name="restcomm-slee.release" value="2.9.148" />
 
@@ -31,18 +31,18 @@
 	<property name="restcomm-slee.http.ra.tag" value="2.8.5" />
 	<property name="restcomm-slee.jdbc.ra.tag" value="2.8.3" />
 
-	<property name="restcomm-jss7.build-number" value="65" />
+	<property name="restcomm-jss7.build-number" value="102" />
 	<property name="restcomm-jss7.version" value="7.4.0-${restcomm-jss7.build-number}" />
 <!--
 	<property name="restcomm-jss7.release" value="7.3.1398" />
 	<property name="restcomm-jss7.timestamp" value="1602171452" />
 -->
 
-	<property name="restcomm-map-ra.build-number" value="97" />
+	<property name="restcomm-map-ra.build-number" value="177" />
 	<property name="restcomm-map-ra.version" value="7.4.0-${restcomm-map-ra.build-number}" />
-<!--
-	<property name="restcomm-map-ra.release" value="7.3.72" />
--->
+
+	<property name="restcomm-jdbc-ra.build-number" value="111" />
+	<property name="restcomm-jdbc-ra.version" value="2.10.0-${restcomm-jdbc-ra.build-number}" />
 
 	<!--GET Restcomm-Slee & Restcomm-jss7 - properties-->
 	<property name="cloudbees.url" value="https://mobicents.ci.cloudbees.com" />
@@ -58,12 +58,17 @@
 	<property name="restcomm-jss7.download.distro.file" value="restcomm-jss7-${restcomm-jss7.version}.zip" />
 	<property name="restcomm-jss7.download.url" value="${github.url}/jss7/releases/download/${restcomm-jss7.version}/${restcomm-jss7.download.distro.file}" />
 	<property name="restcomm-jss7.distro.zip.path" value="${checkout.dir}/${restcomm-jss7.download.distro.file}" />
-	<property name="restcomm-map-ra.download.jar.file" value="restcomm-slee-ra-map-du-${restcomm-map-ra.version}.jar" />
+	<property name="restcomm-map-ra.download.jar.file" value="restcomm-slee-ra-map-du-jboss-${restcomm-map-ra.version}.jar" />
 	<property name="restcomm-map-ra.download.docs.file" value="RA_docs.zip" />
 	<property name="restcomm-map-ra.download.jar.url" value="${github.url}/jain-slee.ss7/releases/download/${restcomm-map-ra.version}/${restcomm-map-ra.download.jar.file}" />
 	<property name="restcomm-map-ra.download.docs.url" value="${github.url}/jain-slee.ss7/releases/download/${restcomm-map-ra.version}/${restcomm-map-ra.download.docs.file}" />
 	<property name="restcomm-map-ra.distro.jar.path" value="${checkout.dir}/${restcomm-map-ra.download.jar.file}" />
 	<property name="restcomm-map-ra.distro.docs.path" value="${checkout.dir}/${restcomm-map-ra.download.docs.file}" />
+
+	<property name="restcomm-jdbc-ra.download.jar.file" value="restcomm-slee-ra-jdbc-DU-${restcomm-jdbc-ra.version}.jar" />
+	<property name="restcomm-jdbc-ra.download.jar.url" value="${github.url}/jain-slee.jdbc/releases/download/${restcomm-jdbc-ra.version}/${restcomm-jdbc-ra.download.jar.file}" />
+	<property name="restcomm-jdbc-ra.distro.jar.path" value="${checkout.dir}/${restcomm-jdbc-ra.download.jar.file}" />
+	<property name="restcomm-jdbc-ra.distro.docs.path" value="${checkout.dir}/${restcomm-jdbc-ra.download.docs.file}" />
 
 	<property name="release.build.goals" value="clean install" />
 	<property name="release.ts.deploy.goals" value="clean deploy" />
@@ -96,17 +101,18 @@
 	<target name="get-map" depends="checkout-ss7-map,build-ss7-map" />
 	<target name="get-deps" depends="get-restcomm-slee,get-restcomm-jss7,checkout-ss7-map,build-ss7-map,checkout-http,build-http-client,build-http-servlet,checkout-jdbc,build-jdbc" />
 -->
-	<target name="get-deps" depends="get-restcomm-slee,get-restcomm-jss7,get-restcomm-map-ra,get-restcomm-map-ra-docs" />
+	<target name="get-deps" depends="get-restcomm-slee,get-restcomm-jss7,get-restcomm-map-ra,get-restcomm-map-ra-docs,get-restcomm-jdbc-ra" />
 	<target name="extract-deps" depends="extract-restcomm-slee,extract-restcomm-jss7,extract-restcomm-map-ra-docs" />
 
 	<available file="${restcomm-slee.distro.zip.path}" property="got.restcomm-slee" />
 	<target name="get-restcomm-slee" unless="got.restcomm-slee">
-		<echo>Downloading Restcomm Slee version: ${restcomm-slee.version}</echo>
+		<echo>Downloading RestComm Slee version: ${restcomm-slee.version}</echo>
 		<exec failonerror="true" executable="wget">
-			<arg value="${restcomm-slee.download.url}" />
-			<arg value="--output-document=${restcomm-slee.download.distro.file}" />
+		    <arg value="${restcomm-slee.download.url}" />
+		    <arg value="--output-document=${restcomm-slee.download.distro.file}" />
+		    <arg value="--no-check-certificate" />
 		</exec>
-		<move file="${base.dir}/${restcomm-slee.download.distro.file}" todir="${checkout.dir}" />
+		<move file="${base.dir}/${restcomm-slee.download.distro.file}" todir="${checkout.dir}"/>
 	</target>
 
 	<target name="extract-restcomm-slee" depends="get-restcomm-slee">
@@ -165,6 +171,16 @@
 			<arg value="--output-document=${restcomm-map-ra.download.docs.file}" />
 		</exec>
 		<move file="${base.dir}/${restcomm-map-ra.download.docs.file}" todir="${checkout.dir}"/>
+	</target>
+
+	<available file="${restcomm-jdbc-ra.distro.jar.path}" property="got.restcomm-jdbc-ra" />
+	<target name="get-restcomm-jdbc-ra" unless="got.restcomm-jdbc-ra">
+		<echo>Downloading RestComm JDBC RA version: ${restcomm-jdbc-ra.version}</echo>
+		<exec failonerror="true" executable="wget">
+			<arg value="${restcomm-jdbc-ra.download.jar.url}" />
+			<arg value="--output-document=${restcomm-jdbc-ra.download.jar.file}" />
+		</exec>
+		<move file="${base.dir}/${restcomm-jdbc-ra.download.jar.file}" todir="${checkout.dir}"/>
 	</target>
 
 <!--
@@ -256,7 +272,6 @@
 				<exclude name="**/sip11/**"/>
 				<exclude name="**/http-client/**"/>
 				<exclude name="**/http-servlet/**"/>
-				<exclude name="**/jdbc/**"/>
 			</fileset>
 		</delete>
 		<delete dir="${release.dir}/docs/enablers" includeemptydirs="true" failonerror="true" />
@@ -267,7 +282,6 @@
 				<exclude name="**/sip11/*"/>
 				<exclude name="**/http-client/*"/>
 				<exclude name="**/http-servlet/*"/>
-				<exclude name="**/jdbc/*"/>
 			</fileset>
 		</delete>
 		<delete failonerror="true">
@@ -335,6 +349,13 @@
 			</fileset>
 		</copy>
 
+		<echo>Copy restcomm JDBC RA</echo>
+		<copy todir="${release.dir}/resources/jdbc" failonerror="true">
+			<fileset dir="${checkout.dir}">
+				<include name="${restcomm-jdbc-ra.download.jar.file}" />
+			</fileset>
+		</copy>
+
 <!--
 		<echo>Copy restcomm http-client RA</echo>
 		<copy todir="${release.dir}/resources" failonerror="true">
@@ -367,7 +388,7 @@
 			</fileset>
 		</copy>
 		
-		<copy file="${restcomm.ussd.dir}/core/slee/services-du/target/services-DU-${restcomm.ussd.release.version}.jar" todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true" />
+		<copy file="${restcomm.ussd.dir}/core/slee/services-du/target/services-DU-jboss-${restcomm.ussd.release.version}.jar" todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true" />
 		<copy file="${restcomm.ussd.dir}/management/ussd-management/target/ussd-management.war" todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true" />
 
 		<copy todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true">
@@ -415,7 +436,7 @@
 			</fileset>
 		</copy>
 		
-		<copy file="${restcomm.ussd.dir}/core/slee/services-du/target/services-DU-${restcomm.ussd.release.version}.jar" todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true" />
+		<copy file="${restcomm.ussd.dir}/core/slee/services-du/target/services-DU-jboss-${restcomm.ussd.release.version}.jar" todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true" />
 		<copy file="${restcomm.ussd.dir}/management/ussd-management/target/ussd-management.war" todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true" />
 		
 		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true">
