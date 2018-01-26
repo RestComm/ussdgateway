@@ -1,3 +1,18 @@
+<subsystem xmlns="urn:jboss:domain:logging:3.0">
+<console-handler name="CONSOLE">
+    <level name="INFO"/>
+    <formatter>
+        <named-formatter name="COLOR-PATTERN"/>
+    </formatter>
+</console-handler>
+<periodic-rotating-file-handler autoflush="true" name="FILE">
+	<formatter>
+		<named-formatter name="PATTERN"/>
+	</formatter>
+	<file path="server.log" relative-to="jboss.server.log.dir"/>
+	<suffix value=".yyyy-MM-dd"/>
+	<append value="true"/>
+</periodic-rotating-file-handler>
 <periodic-rotating-file-handler name="CDR" autoflush="true">
     <formatter>
         <named-formatter name="PATTERN" />
@@ -95,3 +110,17 @@
 <logger category="gov.nist">
     <level name="WARN" />
 </logger>
+<root-logger>
+	<level name="INFO"/>
+	<handlers>
+		<handler name="CONSOLE"/>
+		<handler name="FILE"/>
+	</handlers>
+</root-logger>
+<formatter name="PATTERN">
+	<pattern-formatter pattern="%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p [%c] (%t) %s%e%n"/>
+</formatter>
+<formatter name="COLOR-PATTERN">
+	<pattern-formatter pattern="%K{level}%d{HH:mm:ss,SSS} %-5p [%c] (%t) %s%e%n"/>
+</formatter>
+</subsystem>

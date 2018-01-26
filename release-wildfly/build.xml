@@ -29,14 +29,14 @@
 	<property name="restcomm-slee.http.ra.tag" value="7.1.24" />
 	<property name="restcomm-slee.jdbc.ra.tag" value="7.1.15" />
 
-	<property name="restcomm-jss7.build-number" value="65" />
+	<property name="restcomm-jss7.build-number" value="102" />
 	<property name="restcomm-jss7.version" value="7.4.0-${restcomm-jss7.build-number}" />
 <!--
 	<property name="restcomm-jss7.release" value="7.3.1398" />
 	<property name="restcomm-jss7.timestamp" value="1602171452" />
 -->
 
-	<property name="restcomm-map-ra.build-number" value="116" />
+	<property name="restcomm-map-ra.build-number" value="177" />
 	<property name="restcomm-map-ra.version" value="7.4.0-${restcomm-map-ra.build-number}" />
 <!--
 	<property name="restcomm-map-ra.release" value="7.3.72" />
@@ -82,8 +82,8 @@
 		</classpath>
 	</taskdef>
 
-	<target name="release" depends="clean,get-deps,extract-deps,clean-up-restcomm-slee,build-map-ra,build-ussd,copy-ussd,build-docs,copy-docs,make-final-zip,bundle-documentation" />
-	<target name="release-no-clean" depends="get-deps,extract-deps,clean-up-restcomm-slee,build-map-ra,build-ussd,copy-ussd,build-docs,copy-docs,make-final-zip,bundle-documentation" />
+	<target name="release" depends="clean,get-deps,extract-deps,clean-up-restcomm-slee,build-ussd,copy-ussd,build-docs,copy-docs,make-final-zip,bundle-documentation" />
+	<target name="release-no-clean" depends="get-deps,extract-deps,clean-up-restcomm-slee,build-ussd,copy-ussd,build-docs,copy-docs,make-final-zip,bundle-documentation" />
 
 	<target name="deploy">
 		<ant antfile="${ant.file.restcomm.ussdgw.release}" target="release">
@@ -151,9 +151,9 @@
 		<echo>Downloading RestComm MAP RA version: ${restcomm-map-ra.version}</echo>
 		<exec failonerror="true" executable="wget">
 			<arg value="${restcomm-map-ra.download.jar.url}" />
-			<arg value="--output-document=${restcomm-ss7-ra.download.zip.file}" />
+			<arg value="--output-document=${restcomm-map-ra.download.jar.file}" />
 		</exec>
-		<unzip src="${restcomm-ss7-ra.download.zip.file}" dest="${checkout.dir}/${restcomm-ss7-ra.download}" />
+		<move file="${base.dir}/${restcomm-map-ra.download.jar.file}" todir="${checkout.dir}"/>
 	</target>
 
 	<available file="${restcomm-map-ra.distro.docs.path}" property="got.restcomm-map-ra-docs" />
@@ -346,6 +346,7 @@
            		 </fileset>
         	</copy>
 		<copy file="${restcomm.ussd.dir}/release-wildfly/extensions-build.xml" todir="${release.dir}/extra/ussd" failonerror="true" />
+		<copy file="${restcomm.ussd.dir}/release-wildfly/wildfly-jss7-subsystem.txt" todir="${release.dir}/extra/ussd" failonerror="true" />
 		<copy file="${restcomm.ussd.dir}/release-wildfly/wildfly-ussd-subsystem.txt" todir="${release.dir}/extra/ussd" failonerror="true" />
 		<copy file="${restcomm.ussd.dir}/release-wildfly/ussd-logging.txt" todir="${release.dir}/extra/ussd" failonerror="true" />
 		<copy file="${restcomm.ussd.dir}/release-wildfly/xmltask.jar" todir="${release.dir}/extra/ussd" failonerror="true" />
@@ -356,7 +357,7 @@
 
 		<copy file="${restcomm.ussd.dir}/core/slee/services-du/target/services-DU-${restcomm.ussd.release.version}.jar" todir="${deploy.dir}" failonerror="true" />
 		<copy file="${restcomm.ussd.dir}/management/ussd-management/target/ussd-management.war" todir="${deploy.dir}" failonerror="true" />
-		<copy file="${release.dir}/resources/map/${restcomm-map-ra.download.jar.file}" todir="${deploy.dir}" failonerror="true" />
+		<copy file="${checkout.dir}/${restcomm-map-ra.download.jar.file}" todir="${deploy.dir}" failonerror="true" />
 
 		<copy todir="${deploy.dir}" failonerror="true">
 			<fileset dir="${release.dir}/resources/sip11">
@@ -616,6 +617,7 @@
 
 	<target name="clean">
 		<delete dir="${release.dir}" />
+		<delete dir="${base.dir}/checkout"/>
 		<delete dir="${base.dir}/docs-bundle"/>
 		<delete>
 			<fileset dir="${base.dir}">

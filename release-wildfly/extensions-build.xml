@@ -29,6 +29,7 @@
 
 	<target name="deploy">
 
+		<!-- Reference to ussd module from SLEE -->
 		<xmltask source="${jboss.modules.path}/org/restcomm/slee/container/lib/main/module.xml" dest="${jboss.modules.path}/org/restcomm/slee/container/lib/main/module.xml">
 			<remove path="/:module/:dependencies/:module[@name='org.mobicents.ussd.bootstrap']" />
 			<insert path="/:module/:dependencies/:module[last()]" position="after">
@@ -39,20 +40,28 @@
 		<xmlproperty file="${jboss.standalone.path}/configuration/standalone.xml" keeproot="true" />
 		<property name="serverXmlns" value="${server(xmlns)}" />
 
+		<!-- Adding of ussd extension -->
 		<xmltask source="${jboss.standalone.path}/configuration/standalone.xml" dest="${jboss.standalone.path}/configuration/standalone.xml">
 			<insert path="/:server/:extensions/:extension[last()]" position="after">
 				<![CDATA[<extension xmlns="${serverXmlns}" module="org.mobicents.ussd.bootstrap"/>]]>
 			</insert>
 		</xmltask>
 
+		<!-- Updating of subsystem ss7-wildfly with needed by USSD stack set -->
 		<xmltask source="${jboss.standalone.path}/configuration/standalone.xml" dest="${jboss.standalone.path}/configuration/standalone.xml">
-			<remove path="/:server/:profile/*[local-name()='subsystem'][namespace-uri()='urn:org.restcomm:ss7-wildfly:1.0']/*[local-name()='mbean'][@name='ShellExecutor']" />
+			<remove path="/:server/:profile/*[local-name()='subsystem'][*[local-name()='mbean'][namespace-uri()='urn:org.restcomm:ss7-wildfly:1.0'][@reflection]]" />
+			<insert path="/:server/:profile/*[local-name()='subsystem'][last()]" position="after" file="wildfly-jss7-subsystem.txt">
+			</insert>
 		</xmltask>
-		
+
+		<!-- Updating of domain:logging for USSD settings -->
 		<xmltask source="${jboss.standalone.path}/configuration/standalone.xml" dest="${jboss.standalone.path}/configuration/standalone.xml">
-			<insert path="/:server/:profile/*[local-name()='subsystem'][*[namespace-uri()='urn:jboss:domain:logging:3.0']]" position="under" file="ussd-logging.txt" />
+			<remove path="/:server/:profile/*[local-name()='subsystem'][*[namespace-uri()='urn:jboss:domain:logging:3.0']]" />
+			<insert path="/:server/:profile/*[local-name()='subsystem'][last()]" position="after" file="ussd-logging.txt">
+			</insert>
 		</xmltask>
-		
+
+		<!-- Adding of subsystem ussd-extensions -->
 		<xmltask source="${jboss.standalone.path}/configuration/standalone.xml" dest="${jboss.standalone.path}/configuration/standalone.xml">
 			<remove path="/:server/:profile/*[local-name()='subsystem'][*[local-name()='mbean'][namespace-uri()='urn:org.mobicents:ussd-extensions:1.0'][@reflection]]" />
 			<insert path="/:server/:profile/*[local-name()='subsystem'][last()]" position="after" file="wildfly-ussd-subsystem.txt">
@@ -75,8 +84,6 @@
 	</target>
 
 	<target name="undeploy">
-		
-		<delete dir="${restcomm-ussd.path}" />
 
 		<xmltask source="${jboss.modules.path}/org/restcomm/slee/container/lib/main/module.xml" dest="${jboss.modules.path}/org/restcomm/slee/container/lib/main/module.xml">
 			<remove path="/:module/:dependencies/:module[@name='org.mobicents.ussd.bootstrap']" />
@@ -87,7 +94,15 @@
 		</xmltask>
 
 		<xmltask source="${jboss.standalone.path}/configuration/standalone.xml" dest="${jboss.standalone.path}/configuration/standalone.xml">
+			<remove path="/:server/:profile/*[local-name()='subsystem'][*[local-name()='mbean'][namespace-uri()='urn:org.restcomm:ss7-wildfly:1.0'][@reflection]]" />
+		</xmltask>
+
+		<xmltask source="${jboss.standalone.path}/configuration/standalone.xml" dest="${jboss.standalone.path}/configuration/standalone.xml">
 			<remove path="/:server/:profile/*[local-name()='subsystem'][*[local-name()='mbean'][namespace-uri()='urn:org.mobicents:ussd-extensions:1.0']]" />
+		</xmltask>
+
+		<xmltask source="${jboss.standalone.path}/configuration/standalone.xml" dest="${jboss.standalone.path}/configuration/standalone.xml">
+			<remove path="/:server/:profile/*[local-name()='subsystem'][*[namespace-uri()='urn:jboss:domain:logging:3.0']]" />
 		</xmltask>
 
 		<delete dir="${restcomm-ussd.path}" />
