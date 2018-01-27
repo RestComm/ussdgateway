@@ -31,11 +31,11 @@ public class HttpSimulatorParameters {
     private int callingPort = 8080;
     private String url = "/restcomm";
 
-    public int getListerningPort() {
+    public int getListeningPort() {
         return listerningPort;
     }
 
-    public void setListerningPort(int listerningPort) {
+    public void setListeningPort(int listerningPort) {
         this.listerningPort = listerningPort;
     }
 
