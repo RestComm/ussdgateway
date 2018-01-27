@@ -231,7 +231,7 @@ public class ServerTesterForm extends JDialog {
 
     private void start() {
         try {
-            socket = new ServerSocket(param.getListerningPort());
+            socket = new ServerSocket(param.getListeningPort());
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

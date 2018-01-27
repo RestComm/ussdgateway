@@ -39,7 +39,7 @@ import java.awt.event.ActionEvent;
 public class HttpParametersForm extends JDialog {
 
     private HttpSimulatorParameters data;
-    private JTextField tbListerningPort;
+    private JTextField tbListeningPort;
     private JTextField tbCallingHost;
     private JTextField tbCallingPort;
     private JTextField tbUrl;
@@ -56,14 +56,14 @@ public class HttpParametersForm extends JDialog {
         getContentPane().add(panel, BorderLayout.CENTER);
         panel.setLayout(null);
         
-        JLabel lblListerningPort = new JLabel("Listerning port");
-        lblListerningPort.setBounds(10, 14, 401, 14);
-        panel.add(lblListerningPort);
-        
-        tbListerningPort = new JTextField();
-        tbListerningPort.setColumns(10);
-        tbListerningPort.setBounds(424, 11, 180, 20);
-        panel.add(tbListerningPort);
+        JLabel lblListeningPort = new JLabel("Listening port");
+        lblListeningPort.setBounds(10, 14, 401, 14);
+        panel.add(lblListeningPort);
+
+        tbListeningPort = new JTextField();
+        tbListeningPort.setColumns(10);
+        tbListeningPort.setBounds(424, 11, 180, 20);
+        panel.add(tbListeningPort);
         
         JButton btOK = new JButton("OK");
         btOK.addActionListener(new ActionListener() {
@@ -114,7 +114,7 @@ public class HttpParametersForm extends JDialog {
     public void setData(HttpSimulatorParameters data) {
         this.data = data;
 
-        this.tbListerningPort.setText(((Integer) data.getListerningPort()).toString());
+        this.tbListeningPort.setText(((Integer) data.getListeningPort()).toString());
         this.tbCallingHost.setText(data.getCallingHost());
         this.tbCallingPort.setText(((Integer) data.getCallingPort()).toString());
         this.tbUrl.setText(data.getUrl());
@@ -127,10 +127,10 @@ public class HttpParametersForm extends JDialog {
     private void doOK() {
         int intVal = 0;
         try {
-            intVal = Integer.parseInt(this.tbListerningPort.getText());
-            this.data.setListerningPort(intVal);
+            intVal = Integer.parseInt(this.tbListeningPort.getText());
+            this.data.setListeningPort(intVal);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Exception when parsing ListerningPort value: " + e.toString());
+            JOptionPane.showMessageDialog(this, "Exception when parsing ListeningPort value: " + e.toString());
             return;
         }
         this.data.setCallingHost(this.tbCallingHost.getText());
