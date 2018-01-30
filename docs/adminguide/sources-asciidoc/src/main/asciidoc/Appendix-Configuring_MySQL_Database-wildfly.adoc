@@ -5,9 +5,9 @@
 [[_configuring_mysql-wildfly]]
 = Configuring MySQL as datasource (Wildfly)
 
-If you configure the Gateway to log CDR to a Database, then every transaction of the Gateway is logged in the HSQLDB that comes bundled with JBoss AS and leverages the JBoss AS DataSource.
+If you configure the Gateway to log CDR to a Database, then every transaction of the Gateway is logged in the HSQLDB that comes bundled with WildFly AS and leverages the WildFly AS DataSource.
 However this is only made available to allow the platform to run "out of the box". You must configure a production ready Database prior to using the Gateway in a production environment.
- 
+
 
 {this-platform} {this-application} has been tested with PostgreSQL and MySQL.
 In this section, you will find instructions for configuring MySQL database for CDR logging. 
@@ -15,29 +15,56 @@ In this section, you will find instructions for configuring MySQL database for C
 .Procedure: Configuring MySQL as datasource for CDR logging
 . Install MySQL and create a database where CDR data will be stored.
   In this example, a database named "test" is assumed to have been created. 
-. The example HSQLDB DataSource and its descriptor is available in the file [path]_mobicents-ussdgateway-/wildfly-10.1.0.Final/standalone/configuration/standalone.xml_.
-  You must delete modify this datasource. 
-Below is an example configuration.
+. Create a folder [path]_{this-folder}-ussdgateway/wildfly-10.1.0.Final/modules/system/layers/base/mysql/mysql-connector-java/main_ and copy there the MySQL connector library (_mysql-connector-java-5.1.45.jar_) from http://repo1.maven.org/maven2/mysql/mysql-connector-java/5.1.45/
+. Create a new file _module.xml_ in the same folder with following content:
++
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="urn:jboss:module:1.1" 
+        name="mysql.mysql-connector-java">
+    <resources>
+        <resource-root path="mysql-connector-java-5.1.45.jar"/>
+    </resources>
+    <dependencies>
+        <module name="javax.api"/>
+        <module name="javax.transaction.api"/>
+        <module name="javax.servlet.api" optional="true"/>
+    </dependencies>
+</module>
+----
+. Find a sybststem `<subsystem xmlns="urn:jboss:domain:datasources:4.0">` in the file [path]_{this-folder}-ussdgateway/wildfly-10.1.0.Final/standalone/configuration/standalone.xml_ and update it to fit yur MySQL settings.
 You must update the tags <connection-url> with the host where a database can be found ('localhost' in this example). You must also update the username and password tags in security tag ('root' and '111111' in this example). 
 +
 ----
-<subsystem xmlns="urn:jboss:domain:datasources:4.0">
-            <datasources>
-                <datasource enabled="true" jndi-name="java:jboss/datasources/ExampleDS" pool-name="ExampleDS" use-java-context="true">
-                    <connection-url>jdbc:h2:~/test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</connection-url>
-                    <driver>h2</driver>
-                    <security>
-                        <user-name>sa</user-name>
-                        <password>sa</password>
-                    </security>
-                </datasource>
-                <drivers>
-                    <driver module="com.h2database.h2" name="h2">
-                        <xa-datasource-class>org.h2.jdbcx.JdbcDataSource</xa-datasource-class>
-                    </driver>
-                </drivers>
-            </datasources>
+        <subsystem xmlns="urn:jboss:domain:datasources:4.0">
+		<datasources>
+			<datasource enabled="true" jndi-name="java:jboss/datasources/ExampleDS" pool-name="ExampleDS" use-java-context="true">
+				<connection-url>jdbc:mysql://localhost:3306/test?useSSL=false</connection-url>
+				<driver>com.mysql</driver>
+				<transaction-isolation>TRANSACTION_READ_COMMITTED</transaction-isolation>
+				<pool>
+					<min-pool-size>10</min-pool-size>
+					<max-pool-size>100</max-pool-size>
+					<prefill>true</prefill>
+				</pool>
+				<security>
+					<user-name>root</user-name>
+					<password>111111</password>
+				</security>
+				<statement>
+					<prepared-statement-cache-size>32</prepared-statement-cache-size>
+					<share-prepared-statements>true</share-prepared-statements>
+				</statement>
+			</datasource>
+			<drivers>
+				<driver name="com.mysql" module="mysql.mysql-connector-java">
+					<xa-datasource-class>com.mysql.jdbc.jdbc2.optional.MysqlXADataSource</xa-datasource-class>
+				</driver>
+			</drivers>
+		</datasources>
         </subsystem>
 ----
+. Find a mbean `<mbean name="H2DBConfig">` in the file [path]_{this-folder}-ussdgateway/wildfly-10.1.0.Final/standalone/configuration/standalone.xml_ and update `"hibernateDialect"` property to `<property name="hibernateDialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/>`
+
 +
 :sectnums:
