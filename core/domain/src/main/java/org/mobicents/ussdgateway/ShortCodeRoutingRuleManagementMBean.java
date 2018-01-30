@@ -60,10 +60,10 @@ public interface ShortCodeRoutingRuleManagementMBean {
 	@Deprecated
 	ScRoutingRule createScRoutingRule(String shortCode, String url, boolean exactMatch) throws Exception;
 
-	ScRoutingRule createScRoutingRule(String shortCode, ScRoutingRuleType routingRuleType, String urlOrsipProxy,
-			boolean exactMatch, int networkId) throws Exception;
+	ScRoutingRule createScRoutingRule(String shortCode, String routingRuleType, String urlOrsipProxy,
+			boolean exactMatch, int networkId) throws Exception; // ScRoutingRuleType
 	
-	ScRoutingRule modifyScRoutingRule(String shortCode, ScRoutingRuleType routingRuleType, String urlOrsipProxy,
+	ScRoutingRule modifyScRoutingRule(String shortCode, String routingRuleType, String urlOrsipProxy,
 			boolean exactMatch, int networkId) throws Exception;	
 
 	ScRoutingRule deleteScRoutingRule(String shortCode, int networkId) throws Exception;
