@@ -15,7 +15,7 @@ Read the [Online SIP Servlets Documentation](http://docs.telestax.com/ussd-homep
 
 ## Downloads
 
-Download source code and build from [here](https://github.com/RestComm/ussdgateway/releases) or Continuous Delivery binary from [CloudBees](https://mobicents.ci.cloudbees.com/job/RestComm-USSD-Gateway/)
+Download the latest binary from the [Restcomm site Downloads section](https://www.restcomm.com/downloads/), or clone this repo and build from source.
 
 ## Want to Contribute ? 
 
