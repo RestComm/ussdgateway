@@ -115,7 +115,7 @@ public class ShortCodeRoutingRuleManagement implements ShortCodeRoutingRuleManag
 	}
 
 	@Override
-	public ScRoutingRule createScRoutingRule(String shortCode, ScRoutingRuleType routingRuleType, String urlOrsipProxy,
+	public ScRoutingRule createScRoutingRule(String shortCode, String routingRuleTypeStr, String urlOrsipProxy,
 			boolean exactMatch, int networkId) throws Exception {
 		if (shortCode == null || shortCode.equals("")) {
 			throw new Exception(UssdOAMMessages.INVALID_SC);
@@ -126,6 +126,7 @@ public class ShortCodeRoutingRuleManagement implements ShortCodeRoutingRuleManag
 			throw new Exception(UssdOAMMessages.CREATE_SC_RULE_FAIL_ALREADY_EXIST);
 		}
 
+		ScRoutingRuleType routingRuleType = ScRoutingRuleType.valueOf(routingRuleTypeStr);
 		if (routingRuleType == null) {
 			throw new Exception(UssdOAMMessages.NULL_RULE_TYPE);
 		}
@@ -163,7 +164,7 @@ public class ShortCodeRoutingRuleManagement implements ShortCodeRoutingRuleManag
 	}
 	
 	@Override
-	public ScRoutingRule modifyScRoutingRule(String shortCode, ScRoutingRuleType routingRuleType, String urlOrsipProxy,
+	public ScRoutingRule modifyScRoutingRule(String shortCode, String routingRuleTypeStr, String urlOrsipProxy,
 			boolean exactMatch, int networkId) throws Exception {
 		if (shortCode == null || shortCode.equals("")) {
 			throw new Exception(UssdOAMMessages.INVALID_SC);
@@ -174,6 +175,7 @@ public class ShortCodeRoutingRuleManagement implements ShortCodeRoutingRuleManag
 			throw new Exception(String.format(UssdOAMMessages.DELETE_SC_RULE_FAILED_NO_SC_RULE_FOUND, shortCode, networkId));
 		}
 
+        ScRoutingRuleType routingRuleType = ScRoutingRuleType.valueOf(routingRuleTypeStr);
 		if (routingRuleType == null) {
 			throw new Exception(UssdOAMMessages.NULL_RULE_TYPE);
 		}
@@ -203,7 +205,7 @@ public class ShortCodeRoutingRuleManagement implements ShortCodeRoutingRuleManag
 	@Override
 	@Deprecated
 	public ScRoutingRule createScRoutingRule(String shortCode, String url, boolean exactMatch) throws Exception {
-		return this.createScRoutingRule(shortCode, ScRoutingRuleType.HTTP, url, exactMatch, 0);
+		return this.createScRoutingRule(shortCode, ScRoutingRuleType.HTTP.toString(), url, exactMatch, 0);
 	}
 
 	@Override

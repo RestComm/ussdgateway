@@ -259,6 +259,11 @@
 
 
 	<target name="clean-up-restcomm-slee">
+		<delete includeemptydirs="true" failonerror="true">
+			<fileset dir="${release.dir}/jboss-5.1.0.GA/server/default/deploy">
+				<include name="restcomm-slee-ra-statistics-DU-*.jar" />
+			</fileset>
+		</delete>
 		<mkdir dir="${release.dir}/jboss-5.1.0.GA/server/simulator" />
 		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator" failonerror="true">
 			<fileset dir="${release.dir}/jboss-5.1.0.GA/server/default">

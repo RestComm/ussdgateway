@@ -68,7 +68,7 @@ public class ShortCodeRoutingRuleManagementTest {
 	public void testSerialization() throws Exception {
 
 		ScRoutingRule sr1 = scrm.createScRoutingRule("*123#", "http://localhost:8080/ussddemo/test", true);
-		ScRoutingRule sr2 = scrm.createScRoutingRule("*456#", ScRoutingRuleType.SIP, "127.0.0.1:5060", true,0);
+		ScRoutingRule sr2 = scrm.createScRoutingRule("*456#", ScRoutingRuleType.SIP.toString(), "127.0.0.1:5060", true,0);
 
 		scrm.stop();
 

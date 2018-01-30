@@ -273,8 +273,20 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
         return cdrLoggingTo;
     }
 
+    public String getCdrLoggingToStr() {
+        if (cdrLoggingTo != null)
+            return cdrLoggingTo.toString();
+        else
+            return null;
+    }
+
     public void setCdrLoggingTo(CdrLoggedType cdrLoggingTo) {
         this.cdrLoggingTo = cdrLoggingTo;
+        this.store();
+    }
+
+    public void setCdrLoggingToStr(String cdrLoggingTo) {
+        this.cdrLoggingTo = CdrLoggedType.valueOf(cdrLoggingTo);
         this.store();
     }
 
@@ -448,4 +460,5 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
         }
 
     }
+
 }

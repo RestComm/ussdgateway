@@ -137,7 +137,7 @@ public class UssdShellExecutor implements ShellExecutor {
 		String shortCode = commands[3];
 		String url = commands[4];
 
-		ScRoutingRuleType ruleType = ScRoutingRuleType.HTTP;
+		String ruleType = ScRoutingRuleType.HTTP.toString();
 		boolean exactmatch = true;
 		int networkId = 0;
 
@@ -146,7 +146,7 @@ public class UssdShellExecutor implements ShellExecutor {
 			if (args6.equals("true") || args6.equals("false")) {
 				exactmatch = Boolean.parseBoolean(args6);
 			} else if (args6.equals("HTTP") || args6.equals("SIP")) {
-				ruleType = ScRoutingRuleType.valueOf(args6);
+				ruleType = args6;
 			} else {
 				networkId = Integer.parseInt(args6);
 			}
@@ -157,7 +157,7 @@ public class UssdShellExecutor implements ShellExecutor {
 			if (args7.equals("true") || args7.equals("false")) {
 				exactmatch = Boolean.parseBoolean(args7);
 			} else if (args7.equals("HTTP") || args7.equals("SIP")) {
-				ruleType = ScRoutingRuleType.valueOf(args7);
+				ruleType = args7;
 			} else {
 				networkId = Integer.parseInt(args7);
 			}
@@ -168,7 +168,7 @@ public class UssdShellExecutor implements ShellExecutor {
 			if (args8.equals("true") || args8.equals("false")) {
 				exactmatch = Boolean.parseBoolean(args8);
 			} else if (args8.equals("HTTP") || args8.equals("SIP")) {
-				ruleType = ScRoutingRuleType.valueOf(args8);
+				ruleType = args8;
 			} else {
 				networkId = Integer.parseInt(args8);
 			}
@@ -209,7 +209,7 @@ public class UssdShellExecutor implements ShellExecutor {
 		String shortCode = commands[3];
 		String url = commands[4];
 
-		ScRoutingRuleType ruleType = ScRoutingRuleType.HTTP;
+		String ruleType = ScRoutingRuleType.HTTP.toString();
 		boolean exactmatch = true;
 		int networkId = 0;
 
@@ -218,7 +218,7 @@ public class UssdShellExecutor implements ShellExecutor {
 			if (args6.equals("true") || args6.equals("false")) {
 				exactmatch = Boolean.parseBoolean(args6);
 			} else if (args6.equals("HTTP") || args6.equals("SIP")) {
-				ruleType = ScRoutingRuleType.valueOf(args6);
+				ruleType = args6;
 			} else {
 				networkId = Integer.parseInt(args6);
 			}
@@ -229,7 +229,7 @@ public class UssdShellExecutor implements ShellExecutor {
 			if (args7.equals("true") || args7.equals("false")) {
 				exactmatch = Boolean.parseBoolean(args7);
 			} else if (args7.equals("HTTP") || args7.equals("SIP")) {
-				ruleType = ScRoutingRuleType.valueOf(args7);
+				ruleType = args7;
 			} else {
 				networkId = Integer.parseInt(args7);
 			}
@@ -240,7 +240,7 @@ public class UssdShellExecutor implements ShellExecutor {
 			if (args8.equals("true") || args8.equals("false")) {
 				exactmatch = Boolean.parseBoolean(args8);
 			} else if (args8.equals("HTTP") || args8.equals("SIP")) {
-				ruleType = ScRoutingRuleType.valueOf(args8);
+				ruleType = args8;
 			} else {
 				networkId = Integer.parseInt(args8);
 			}
@@ -362,9 +362,8 @@ public class UssdShellExecutor implements ShellExecutor {
 				ussdPropertiesManagement.setHrHlrGt(options[3]);
 			}
 		} else if (parName.equals(UssdPropertiesManagement.CDR_LOGGING_TO)) {
-			UssdPropertiesManagement.CdrLoggedType cdrLoggedType = Enum.valueOf(
-					UssdPropertiesManagement.CdrLoggedType.class, options[3]);
-			ussdPropertiesManagement.setCdrLoggingTo(cdrLoggedType);
+			String cdrLoggedType = options[3];
+			ussdPropertiesManagement.setCdrLoggingToStr(cdrLoggedType);
 		} else {
 			return UssdOAMMessages.INVALID_COMMAND;
 		}
