@@ -11,7 +11,7 @@ Once you complete setting up the Gateway you must configure the SS7 Stack, USSD 
 While the CLI tool allows complete configuration and control of the Gateway, the GUI-based management enhances the usability of the Gateway and gives you the ability to configure and manage the USSD Gateway dynamically.
 This chapter will explain how to manage the Gateway effectively using both the GUI and the CLI. 
 
-== Memory Settings
+== Memory Settings (JBOSS 5)
 
 You should fine tune the JVM memory settings based on your needs but we recommend you allocate a minimum of 3 GB for initial and maximum heap size.
 These settings are specified in the file[path]_{this-folder}-ussdgateway-/jboss-5.1.0.GA/bin/run.conf_. 
@@ -21,6 +21,19 @@ These settings are specified in the file[path]_{this-folder}-ussdgateway-/jboss-
 
 -Xmx3072m::
   Maximum heap size, set in megabytes
+
+
+== Memory Settings (Wildfly)
+
+You should fine tune the JVM memory settings based on your needs but we recommend you allocate a minimum of 3 GB for initial and maximum heap size.
+These settings are specified in the file[path]_{this-folder}-ussdgateway-/wildfly-10.1.0.Final/bin/standalone.conf_. 
+
+-Xms3072m::
+  Initial heap size, set in megabytes
+
+-Xmx3072m::
+  Maximum heap size, set in megabytes
+
 
 == CDR Logging Settings
 
@@ -40,7 +53,7 @@ WARNING: HSQLDB must not be used in a production environment.
 You must ensure that you delete this datasource and configure a production-friendly Database like PostgreSQL or MySQL.
 
 [[_configure_datasource]]
-=== Configuring an Alternate DataSource
+=== Configuring an Alternate DataSource (JBOSS 5)
 
 The example HSQLDB DataSource is bound to the JNDI name java:/DefaultDS and its descriptor is available in the file [path]_{this-folder}-ussdgateway/jboss-5.1.0.GA/server/<profile>/deploy/hsqldb-ds.xml_.
 You must delete this datasource and configure the Platform to use your choice of Database.
@@ -49,13 +62,32 @@ For detailed instructions and explanation please refer to the JBoss AS Getting S
 You will also find a lot of examples in the folder [path]_{this-folder}-ussdgateway/jboss-5.1.0.GA/docs/examples/jca/_. 
 
 [[_configure_jslee_jdbc_ra]]
-=== Configuring JSLEE JDBC RA
+=== Configuring JSLEE JDBC RA (JBOSS 5)
 
 {this-platform} {this-application} leverages JSLEE JDBC RA for persistence.
 Detailed JSLEE JDBC RA documentation is available in [path]_{this-folder}-ussdgateway/docs/slee/Mobicents_SLEE_RA_JDBC_User_Guide.pdf_ that explains how to point to the new DataSource.
 An example configuration is explained in this admin guide in the section <<_configuring_mysql>>.
 When you have completed configuring an alternate DataSource in JBoss AS, you can proceed to modify JSLEE configurations accordingly.
 You must change the Dialect in the file [path]_{this-folder}-ussdgateway/jboss-5.1.0.GA/server/<profile>/deploy/{this-folder}-slee/META-INF/jboss-beans.xml_ to reflect your alternate DataSource. 
+
+[[_configure_datasource_wildfly]]
+=== Configuring an Alternate DataSource (Wildfly)
+
+HSQLDB DataSource is configured in [path]_{this-folder}-ussdgateway/standalone/configuration/standalone.xml in
+"urn:jboss:domain:datasources:4.0" subsystem.
+You must delete this datasource and configure the Platform to use your choice of Database.
+For instructions on configuring an alternate DataSource with an example, please refer to <<_configuring_mysql-wildfly>>.
+For detailed instructions and explanation please refer to Wildfly 10 documentation available https://docs.jboss.org/author/display/WFLY10/DataSource+configuration[here].
+You will also find a lot of examples in the folder [path]_{this-folder}-ussdgateway/wildfly-10.1.0.Final/docs/examples/configs/_. 
+
+[[_configure_jslee_jdbc_ra_wildfly]]
+=== Configuring JSLEE JDBC RA (Wildfly)
+
+{this-platform} {this-application} leverages JSLEE JDBC RA for persistence.
+Detailed JSLEE JDBC RA documentation is available in [path]_{this-folder}-ussdgateway/docs/resources/jdbc/user-guide/en-US/pdf/JAIN_SLEE_JDBC_RA_User_Guide.pdf_ that explains how to point to the new DataSource.
+An example configuration is explained in this admin guide in the section <<_configuring_mysql-wildfly>>.
+When you have completed configuring an alternate DataSource, you can proceed to modify JSLEE configurations accordingly.
+
 
 [[_table_structure]]
 === CDR Table Structure
@@ -258,10 +290,10 @@ You must modify the `MAX_CONNECTIONS_FOR_ROUTES` property to meet your Short Cod
 You must configure the HTTP Servlet JSLEE Resource Adaptor's properties and the HTTP Tomcat server properties to suit your requirements.
 Please refer to the SLEE RA HTTP Servlet User Guide available in {this-folder}-ussdgateway/docs/resources/http-server and HTTP Tomcat server configuring in https://docs.jboss.org/jbossas/guides/webguide/r2/en/html/ch02.html.
 
-You must ensure to add a parameter like `maxThreads="500"` into {this-folder}-ussdgateway/jboss-5.1.0.GA/server/default/deploy/jbossweb.sar/server.xml file into `Connector` element to increase a count of concurrent PUSH requests.
+For JBOSS 5 server you must ensure to add a parameter like `maxThreads="500"` into {this-folder}-ussdgateway/jboss-5.1.0.GA/server/default/deploy/jbossweb.sar/server.xml file into `Connector` element to increase a count of concurrent PUSH requests.
 
 [[_logging]]
-== Configuring log4j Logging Service
+== Configuring log4j Logging Service (JBOSS 5)
 
 {this-platform} {this-application} uses `Apache log4j` for logging.
 If you are not familiar with the `log4j` package, you can read more about it at the Jakarta http://jakarta.apache.org/log4j/[website]. 
@@ -269,6 +301,19 @@ If you are not familiar with the `log4j` package, you can read more about it at 
 Logging is controlled from a central configuration file located at [path]_{this-folder}-ussdgateway/jboss-5.1.0.GA/server/<profile>/conf/jboss-log4j.xml_, one for each JBoss AS configuration profile.
 This file defines a set of appenders specifying the log files, what categories of messages should go there, the message format and the level of filtering.
 For more details, please refer to Section 9.6.3, "Logging Service" in the JBoss AS Getting Started Guide available https://community.jboss.org/wiki/JBossAS5InstallationAndGettingStartedGuide[here]. 
+
+You must make sure `log4j` is fine tuned for optimal performance in production.
+We recommend that you set logging threshold to `WARN` and let the CDR appender be `DEBUG`.
+
+[[_logging_wildfly]]
+== Configuring log4j Logging Service (Wildfly)
+
+{this-platform} {this-application} uses `Apache log4j` for logging.
+If you are not familiar with the `log4j` package, you can read more about it at the Jakarta http://jakarta.apache.org/log4j/[website]. 
+
+Logging is controlled from a central configuration file located at [path]_{this-folder}-ussdgateway/wildfly-10.1.0.Final/standalone/configuration/standalone.xml_.
+This file defines a set of appenders specifying the log files, what categories of messages should go there, the message format and the level of filtering.
+For more details, please refer to "Logging Configuration" section in the Wildfly 10 documentation available  https://docs.jboss.org/author/display/WFLY10/Logging+Configuration[here]. 
 
 You must make sure `log4j` is fine tuned for optimal performance in production.
 We recommend that you set logging threshold to `WARN` and let the CDR appender be `DEBUG`.

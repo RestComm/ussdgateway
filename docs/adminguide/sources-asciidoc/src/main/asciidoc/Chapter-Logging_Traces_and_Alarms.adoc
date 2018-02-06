@@ -48,6 +48,9 @@ You can view USSD statistics in the GUI Management Console by following the proc
   This page get auto-refreshed for every "Refresh Rate" seconds and therefore the statistics are refreshed automatically.
   It makes sense to select refresh rate same as duration value for which USSD Gateway is collecting stats. 
 
+
+==== JBOSS 5 server settings
+
 Statistics info is also written by default into the log file ([path]_{this-folder}-ussdgateway/jboss-5.1.0.GA/server/default/log/stats.log_). File format is plain text and easy to understand.
 This log file can achieve a big size if your statistic duration is short.
 If you do not need that statistic data will be written into stats.log file, you can remove the section from [path]_{this-folder}-ussdgateway/jboss-5.1.0.GA/server/default/conf/jboss-log4j.xml_	 | That contains the appender:  
@@ -58,6 +61,21 @@ If you do not need that statistic data will be written into stats.log file, you 
 		...... 
 		...... 
 	</appender>
+----		
+
+
+==== Wildfly server settings
+
+Statistics info is also written by default into the log file ([path]_{this-folder}-ussdgateway/wildfly-10.1.0.Final/standalone/log/stats.log_). File format is plain text and easy to understand.
+This log file can achieve a big size if your statistic duration is short.
+If you do not need that statistic data will be written into stats.log file, you can remove the section from [path]_{this-folder}-ussdgateway/wildfly-10.1.0.Final/standalone/configuration/standalone.xml_	 | That contains the appender:  
+----
+
+	<periodic-rotating-file-handler xmlns="" autoflush="true" name="STATS">
+    .....
+    .....
+    .....
+	</periodic-rotating-file-handler>
 ----		
 
 === USSD Counters

@@ -52,19 +52,7 @@ include::Chapter-Running.adoc[]
 
 :leveloffset: 1
 
-include::Chapter-Running-wildfly.adoc[]
-
-:leveloffset: 0
-
-:leveloffset: 1
-
 include::Chapter-Configuring.adoc[]
-
-:leveloffset: 0
-
-:leveloffset: 1
-
-include::Chapter-Configuring-wildfly.adoc[]
 
 :leveloffset: 0
 
@@ -89,12 +77,6 @@ include::Chapter-XML_Parser.adoc[]
 :leveloffset: 1
 
 include::Chapter-Logging_Traces_and_Alarms.adoc[]
-
-:leveloffset: 0
-
-:leveloffset: 1
-
-include::Chapter-Logging_Traces_and_Alarms-wildfly.adoc[]
 
 :leveloffset: 0
 

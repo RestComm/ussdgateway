@@ -46,12 +46,6 @@ include::Chapter-Download_Install.adoc[]
 
 :leveloffset: 1
 
-include::Chapter-Download_Install-wildfly.adoc[]
-
-:leveloffset: 0
-
-:leveloffset: 1
-
 include::Chapter-Post_Installation_Configuration.adoc[]
 
 :leveloffset: 0
