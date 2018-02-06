@@ -100,6 +100,30 @@
 	<build>
 		<finalName>ussdhttpdemo</finalName>
 		<plugins>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>prepare-jboss-jar</id>
+						<phase>package</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<unzip overwrite="true" src="target/${project.build.finalName}.war" dest="target/jboss-pack" />
+								<replace file="target/jboss-pack/WEB-INF/jboss-web.xml"
+									value=""
+									token="&lt;!-- class-loading insertion" />
+								<replace file="target/jboss-pack/WEB-INF/jboss-web.xml"
+									value=""
+									token="class-loading insertion --&gt;" />
+								<zip basedir="target/jboss-pack" destfile="target/ussdhttpdemo-jboss.war" />
+							</tasks>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -123,7 +147,7 @@
 										<echo>
 											${jboss.home}server/default/deploy
 										</echo>
-										<copy file="${project.build.directory}/ussdhttpdemo.war" todir="${jboss.home}/server/${node}/deploy" />
+										<copy file="${project.build.directory}/ussdhttpdemo-jboss.war" todir="${jboss.home}/server/${node}/deploy" />
 									</tasks>
 								</configuration>
 							</execution>
@@ -135,7 +159,7 @@
 								</goals>
 								<configuration>
 									<tasks>
-										<delete file="${jboss.home}/server/${node}/deploy/ussdhttpdemo.war" failonerror="false">
+										<delete file="${jboss.home}/server/${node}/deploy/ussdhttpdemo-jboss.war" failonerror="false">
 										</delete>
 									</tasks>
 								</configuration>
