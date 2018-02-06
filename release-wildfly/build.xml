@@ -426,11 +426,13 @@
 			</fileset>
         	</copy>
 		<echo>Copy http-push-example to simulator</echo>
+<!--
 		<copy todir="${jboss.home}/lib" failonerror="true">
 			<fileset dir="${restcomm.ussd.dir}/examples/http-push/target/http-push-example">
 				<include name="**" />
 			</fileset>
 		</copy>	
+-->
 
 		<echo>Copy ussdhttpdemo.war to simulator</echo>
 		<copy file="${restcomm.ussd.dir}/examples/http/target/ussdhttpdemo.war" todir="${jboss.home}/simulator/deployments" failonerror="true" />

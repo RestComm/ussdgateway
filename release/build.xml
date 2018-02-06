@@ -552,7 +552,7 @@
 		</copy>	
 
 		<echo>Copy ussdhttpdemo.war to simulator/deploy</echo>
-		<copy file="${restcomm.ussd.dir}/examples/http/target/ussdhttpdemo.war" todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true" />
+		<copy file="${restcomm.ussd.dir}/examples/http/target/ussdhttpdemo-jboss.war" todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true" />
 
 
 	</target>
