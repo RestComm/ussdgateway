@@ -33,18 +33,12 @@ Please ask your question on [StackOverflow](http://stackoverflow.com/questions/t
 
 RestComm USSD Gateway is lead by [TeleStax](http://www.telestax.com/), Inc. and developed collaboratively by a community of individual and enterprise contributors.
 
-RestComm USSD Gateway is licensed under dual license policy. The default license is the Free Open Source GNU Affero GPL v3.0. Alternatively a commercial license can be obtained from Telestax ([contact form](http://www.telestax.com/contactus/#InquiryForm))
-
+RestComm USSD Gateway is licensed under dual license policy. The default license is the Free Open Source GNU Affero GPL v3.0. Alternatively a commercial license can be obtained from Telestax ([contact form](https://www.restcomm.com/contact/))
 
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bhttps%3A%2F%2Fgithub.com%2FRestComm%2Fussdgateway.svg?type=large)](https://app.fossa.io/projects/git%2Bhttps%3A%2F%2Fgithub.com%2FRestComm%2Fussdgateway?ref=badge_large)
 
-## Continuous Integration and Delivery
-
-[![RestComm USSD Gateway Continuous Job](http://www.cloudbees.com/sites/default/files/Button-Built-on-CB-1.png)](https://mobicents.ci.cloudbees.com/job/RestComm-USSD-Gateway//)
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bhttps%3A%2F%2Fgithub.com%2FRestComm%2Fussdgateway.svg?type=shield)](https://app.fossa.io/projects/git%2Bhttps%3A%2F%2Fgithub.com%2FRestComm%2Fussdgateway?ref=badge_shield)
-
 ## Acknowledgements
-[See who has been contributing to RestComm](http://www.telestax.com/opensource/acknowledgments/)
+[See who has been contributing to RestComm](https://www.restcomm.com/acknowledgements/)
 
 ## Maven Repository
 
