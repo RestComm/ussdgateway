@@ -35,6 +35,30 @@ These settings are specified in the file[path]_{this-folder}-ussdgateway-/wildfl
   Maximum heap size, set in megabytes
 
 
+[[_active_active]]
+== Configuring of SS7 Active-Active mode with {this-platform} SS7 FEP before SS7 network
+
+.Note
+[NOTE]
+====
+SS7 Active-Active mode is a Telscale feature, available only in our commercial version.
+====
+
+This chapter introduces a description how Telestax USSD GW Active-Active can be configured. See below an example of a configuration with 2 FEP and 2 USSD GW nodes.
+
+image::images/USSD-FEP-schema.png[]
+
+Two USSD GWs ("USSD 1" and "USSD 2") can be deployed at different physical servers (server 1 and server 2). Front-End-Processors ("FEP 1" and "FEP 2") plays a role of SS7 load balancers. "FEP 1" and "FEP 2" can be deployed to same physical servers as "USSD 1" and "USSD 2" (server 1 and server 2). "FEP 1" and "FEP 2" are connected by SS7 links to remote STP node(s).
+
+A remote originated TCAP dialogs are loadshared by FEP nodes between existing USSD nodes. Then FEP nodes are responsible for resending of TCAP dialog messages to a proper USSD node. This guarantees that all SS7 dialogs will be processed by a same USSD GW node and USSD GW nodes does not demand processing of SS7 dialogs from another node. This means that USSD GW nodes still process messages independently. FEP nodes are needed to delivery of SS7 messages to a proper USSD GW node.
+
+When you use several FEP / USSD GW nodes in a way that is described at a picture you can turn off any of FEP / USSD GW node for maintanance or for other reasons. All traffic then will be processed by alive nodes.
+
+USSD GW supports of a graceful shutdown procedure. See more in a chapter <<_gsd_settings>>. A graceful shutdown procedure is initiated by a GUI / CLI interface. USSD GW will make a server shutdown when all USSD dialogs have completed. FEP nodes will prevent of sending new dialogs to a SS7 node that is gracefully shutting down. USSD GW node even after a graceful shutdown start will aceept and process of new incoming dialogs from application interfaces (HTTP, SIP). A user must stop of initiating of new dialogs via these interfeces before of a graceful shutdown start.
+
+We need to make special configuring procedures of SS7 part before USSD GW / FEP will be able to work in a load-balancing mode. This configuring is described in a manual "Restcomm Load Balancer User Guide", check a chapter "Integration Load Balancer SS7 (FEP) with USSD and SMSC servers".
+
+
 == CDR Logging Settings
 
 Every transaction in the {this-platform} {this-application} is logged either in a Textfile or a Database as per the configuration.
@@ -684,7 +708,7 @@ EXAMPLES
 [[_set_hrhlrnumber_cli]]
 ==== Using CLI
 
-You can set the 'HLR address' (for SRI) to be used if SMSC is also present and configured in Home Routing mode, by issuing the command `ussd set hrhlrnumber` with appropriate parameters as described below: 
+You can set the 'HLR address' (for SRI) to be used if USSD is also present and configured in Home Routing mode, by issuing the command `ussd set hrhlrnumber` with appropriate parameters as described below: 
 
 ----
 
@@ -698,7 +722,7 @@ DESCRIPTION
 	This command is used to set the HLR address to be used, instead of MSISDN, to
 	be included in the 'calledPartyAddress' field of the SCCP address in the
 	'SendRoutingInfo' message (PUSH mode). This parameter is required in scenarios 
-	when the SMSC GW is also configured, specifically in Home Routing mode. 
+	when the USSD GW is also configured, specifically in Home Routing mode. 
 	If this parameter is not set the default value is '-1' implying MSISDN address 
 	will be used. 
 	
@@ -1292,6 +1316,131 @@ EXAMPLES
 . Locate the row corresponding to the Short Code Routing Rule you wish to delete. 
 . Click on the 'x' (delete) button in the Actions column of the row corresponding to the Rule you wish to delete.
   If there is an error in deleting the Rule, then you will find the details of the error in the Management Console Log section below. 
+
+
+[[_gsd_settings]]
+=== Graceful shutdown
+
+.Note
+[NOTE]
+====
+Graceful shutdown mode is a Telscale feature, available only in our commercial version.
+====
+
+A graceful shutdown is a functionality for shutting down of a server after all USSD dialogs are completed. But the server continue of new dialogs accepting from application interfaces (HTTP, SIP). This means that a user needs to stop of initiating of new ussd dialogs to the server, then the server will finish all existing dialogs and force a server shutdown after it.
+
+A graceful shutdown procedure has parameters `Minimum graceful shutdown time` and `Maximum graceful shutdown time`. The first parameter specifies the time  during at least this time a server will wait before as server shutdown start even no pending dialogs more. The second parameter specifies the time duration after which a server will make shutdown even if even there are still pending dialogs. Shortly: actual shutdown will be performed from `Minimum graceful shutdown time` to `Maximum graceful shutdown time` after a procedure initiating time.
+
+[[_gsd_force]]
+==== Force a graceful shutdown
+
+[[_gsd_force_cli]]
+===== Using CLI
+
+You can force a server graceful shutdown by issuing the command ussd gsd as described below.
+
+----
+
+Name
+	ussd gsd
+
+SYNOPSIS
+	ussd gsd
+
+DESCRIPTION
+	This command is used to start a graceful shutdown procedure
+	for a server. This procedure means that a server will continue
+	the work till all existing dialogs are completed. At the graceful
+	shutdown procedure start the server sends announsements to
+	a load-balancer server that the node is going to shutdown soon.  
+
+EXAMPLES
+	ussd gsd
+----
+
+[[_gsd_force_gui]]
+===== Using GUI
+
+
+. In the GUI Management Console for USSD Gateway, click on 'Graceful shutdown' in the left panel.
+. Press a button "Force graceful shutdown".
+. A graceful shutdown sever procedure will be started.
+
+
+[[_gsd_min_time]]
+==== Minimum graceful shutdown time.
+
+[[_gsd_min_time_cli]]
+===== Using CLI
+
+You can set the 'Minimum graceful shutdown time' by issuing the command `ussd set mingracefulshutdowntime` with appropriate parameters as described below.
+You can verify this by issuing the command `ussd get mingracefulshutdowntime` which will display the value set for this property.
+
+----
+
+SYNOPSIS
+	ussd set mingracefulshutdowntime <minGracefulShutDownTime-value>
+
+DESCRIPTION
+	This command is used to set the mingracefulshutdowntime value.
+	When a graceful shutdown procedure has started the server will
+	wait before shutdown start at least minGracefulShutDownTime time
+	(in seconds).
+	Default value is 20 (seconds).
+
+EXAMPLES
+	ussd set mingracefulshutdowntime 20
+----
+
+[[_gsd_min_time_gui]]
+===== Using GUI
+
+. In the GUI Management Console for USSD Gateway, click on 'Graceful shutdown' in the left panel.
+. The main panel will display the existing Settings.
+. You can specify the Minimum graceful shutdown time (in seconds) by entering the value in the text field 'Minimum graceful shutdown time (in seconds)'. For more details of this parameter, please refer to the description of the CLI command for the same in the preceding section.
+. You must click on the button 'Save' at the right of the window to save your settings.
+  If there is an error in setting the value, then you will find the details of the error in the Management Console Log section below.
+
+
+[[_gsd_max_time]]
+==== Maximum graceful shutdown time.
+
+[[_gsd_max_time_cli]]
+===== Using CLI
+
+You can set the 'Maximum graceful shutdown time' by issuing the command `ussd set maxngracefulshutdowntime` with appropriate parameters as described below.
+You can verify this by issuing the command `ussd get maxngracefulshutdowntime` which will display the value set for this property.
+
+----
+
+Name
+	ussd set maxngracefulshutdowntime
+
+SYNOPSIS
+	ussd set maxngracefulshutdowntime <maxGracefulShutDownTime-value>
+
+DESCRIPTION
+	This command is used to set the maxngracefulshutdowntime value.
+	When a graceful shutdown procedure has started the server will
+	wait before all dialogs are completed. This waiting will not
+	more then maxGracefulShutDownTime time (in seconds). When
+	maxGracefulShutDownTime from a graceful shutdown begin
+	the server will be brought down even there are pending dialogs.
+	Default value is 90 (seconds).
+
+EXAMPLES
+	ussd set maxngracefulshutdowntime 90
+----
+
+[[_gsd_max_time_gui]]
+===== Using GUI
+
+. In the GUI Management Console for USSD Gateway, click on 'Graceful shutdown' in the left panel.
+. The main panel will display the existing Settings.
+. You can specify the Maximum graceful shutdown time (in seconds) by entering the value in the text field 'Maximum graceful shutdown time (in seconds)'. For more details of this parameter, please refer to the description of the CLI command for the same in the preceding section.
+. You must click on the button 'Save' at the right of the window to save your settings.
+  If there is an error in setting the value, then you will find the details of the error in the Management Console Log section below.
+
 
 [[_configuring_ussd_simulator_profile]]
 == Simulator Profile
