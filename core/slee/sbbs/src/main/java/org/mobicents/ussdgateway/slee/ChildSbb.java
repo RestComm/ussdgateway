@@ -68,7 +68,6 @@ import org.mobicents.ussdgateway.UssdStatAggregator;
 import org.mobicents.ussdgateway.XmlMAPDialog;
 import org.mobicents.ussdgateway.rules.ScRoutingRule;
 import org.mobicents.ussdgateway.slee.cdr.ChargeInterface;
-import org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent;
 import org.mobicents.ussdgateway.slee.cdr.RecordStatus;
 import org.mobicents.ussdgateway.slee.cdr.USSDCDRState;
 
@@ -77,7 +76,7 @@ import org.mobicents.ussdgateway.slee.cdr.USSDCDRState;
  * @author amit bhayani
  * @author baranowb
  */
-public abstract class ChildSbb extends USSDBaseSbb implements ChildInterface, ChargeInterfaceParent {
+public abstract class ChildSbb extends USSDBaseSbb implements ChildInterface {
 
 	private EventsSerializeFactory eventsSerializeFactory = null;
 
@@ -665,77 +664,77 @@ public abstract class ChildSbb extends USSDBaseSbb implements ChildInterface, Ch
 		this.setCall(call);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent#
-	 * recordGenerationSucessed
-	 * (org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent.RecordType)
-	 */
-	@Override
-	public void recordGenerationSucessed() {
-		if (this.logger.isFineEnabled()) {
-			this.logger.fine("Generated CDR for Status: " + getCDRChargeInterface().getState());
-		}
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent#
-	 * recordGenerationFailed(java.lang.String)
-	 */
-	@Override
-	public void recordGenerationFailed(String message) {
-		if (this.logger.isSevereEnabled()) {
-			this.logger.severe("Failed to generate CDR! Message: '" + message + "'");
-			this.logger.severe("Status: " + getCDRChargeInterface().getState());
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent#
-	 * recordGenerationFailed(java.lang.String, java.lang.Throwable)
-	 */
-	@Override
-	public void recordGenerationFailed(String message, Throwable t) {
-		if (this.logger.isSevereEnabled()) {
-			this.logger.severe("Failed to generate CDR! Message: '" + message + "'", t);
-			this.logger.severe("Status: " + getCDRChargeInterface().getState());
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent#initFailed(java
-	 * .lang.String, java.lang.Throwable)
-	 */
-	@Override
-	public void initFailed(String message, Throwable t) {
-		if (this.logger.isSevereEnabled()) {
-			this.logger.severe("Failed to initializee CDR Database! Message: '" + message + "'", t);
-		}
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent#initSuccessed()
-	 */
-	@Override
-	public void initSuccessed() {
-		if (this.logger.isFineEnabled()) {
-			this.logger.fine("CDR Database has been initialized!");
-		}
-
-	}
+//	/*
+//	 * (non-Javadoc)
+//	 * 
+//	 * @see org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent#
+//	 * recordGenerationSucessed
+//	 * (org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent.RecordType)
+//	 */
+//	@Override
+//	public void recordGenerationSucessed() {
+//		if (this.logger.isFineEnabled()) {
+//			this.logger.fine("Generated CDR for Status: " + getCDRChargeInterface().getState());
+//		}
+//
+//	}
+//
+//	/*
+//	 * (non-Javadoc)
+//	 * 
+//	 * @see org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent#
+//	 * recordGenerationFailed(java.lang.String)
+//	 */
+//	@Override
+//	public void recordGenerationFailed(String message) {
+//		if (this.logger.isSevereEnabled()) {
+//			this.logger.severe("Failed to generate CDR! Message: '" + message + "'");
+//			this.logger.severe("Status: " + getCDRChargeInterface().getState());
+//		}
+//	}
+//
+//	/*
+//	 * (non-Javadoc)
+//	 * 
+//	 * @see org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent#
+//	 * recordGenerationFailed(java.lang.String, java.lang.Throwable)
+//	 */
+//	@Override
+//	public void recordGenerationFailed(String message, Throwable t) {
+//		if (this.logger.isSevereEnabled()) {
+//			this.logger.severe("Failed to generate CDR! Message: '" + message + "'", t);
+//			this.logger.severe("Status: " + getCDRChargeInterface().getState());
+//		}
+//	}
+//
+//	/*
+//	 * (non-Javadoc)
+//	 * 
+//	 * @see
+//	 * org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent#initFailed(java
+//	 * .lang.String, java.lang.Throwable)
+//	 */
+//	@Override
+//	public void initFailed(String message, Throwable t) {
+//		if (this.logger.isSevereEnabled()) {
+//			this.logger.severe("Failed to initializee CDR Database! Message: '" + message + "'", t);
+//		}
+//
+//	}
+//
+//	/*
+//	 * (non-Javadoc)
+//	 * 
+//	 * @see
+//	 * org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent#initSuccessed()
+//	 */
+//	@Override
+//	public void initSuccessed() {
+//		if (this.logger.isFineEnabled()) {
+//			this.logger.fine("CDR Database has been initialized!");
+//		}
+//
+//	}
 
 	// ///////////////////////////////////////////////
 	// protected child stuff, to be used in parent //

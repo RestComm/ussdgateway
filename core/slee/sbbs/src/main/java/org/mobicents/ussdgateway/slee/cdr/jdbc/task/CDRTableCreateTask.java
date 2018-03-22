@@ -25,7 +25,7 @@ import javax.slee.facilities.Tracer;
 
 import org.restcomm.slee.resource.jdbc.task.JdbcTaskContext;
 import org.mobicents.ussdgateway.slee.cdr.CDRCreateException;
-import org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent;
+import org.mobicents.ussdgateway.slee.cdr.USSDCDRState;
 
 /**
  * @author baranowb
@@ -50,9 +50,11 @@ public class CDRTableCreateTask extends CDRTaskBase {
      * ChargeInterfaceParent, java.lang.String, java.lang.Throwable)
      */
     @Override
-    public void callParentOnFailure(final ChargeInterfaceParent parent, final String message, final Throwable t) {
-        if(parent!=null)
-            parent.initFailed(message, t);
+    public void callParentOnFailure(USSDCDRState state, final String message, final Throwable t) {
+        this.tracer.severe("Failed to initializee CDR Database! Message: '" + message + "'", t);
+
+//        if(parent!=null)
+//            parent.initFailed(message, t);
     }
 
     /*
@@ -62,9 +64,13 @@ public class CDRTableCreateTask extends CDRTaskBase {
      * ChargeInterfaceParent)
      */
     @Override
-    public void callParentOnSuccess(ChargeInterfaceParent parent) {
-        if(parent!=null)
-            parent.initSuccessed();
+    public void callParentOnSuccess(USSDCDRState state) {
+        if (this.tracer.isFineEnabled()) {
+            this.tracer.fine("CDR Database has been initialized!");
+        }
+
+//        if(parent!=null)
+//            parent.initSuccessed();
     }
 
     /*

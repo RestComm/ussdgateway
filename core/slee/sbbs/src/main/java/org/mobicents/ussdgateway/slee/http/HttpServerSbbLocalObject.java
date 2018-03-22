@@ -20,13 +20,12 @@
 package org.mobicents.ussdgateway.slee.http;
 
 import org.mobicents.slee.SbbLocalObjectExt;
-import org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent;
 import org.mobicents.ussdgateway.slee.sri.SriParent;
 
 /**
  * @author baranowb
  *
  */
-public interface HttpServerSbbLocalObject extends SbbLocalObjectExt, SriParent, ChargeInterfaceParent {
+public interface HttpServerSbbLocalObject extends SbbLocalObjectExt, SriParent {
 
 }

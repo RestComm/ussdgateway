@@ -27,7 +27,6 @@ import javax.slee.facilities.Tracer;
 
 import org.restcomm.slee.resource.jdbc.task.JdbcTaskContext;
 import org.restcomm.slee.resource.jdbc.task.simple.SimpleJdbcTask;
-import org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent;
 import org.mobicents.ussdgateway.slee.cdr.RecordStatus;
 import org.mobicents.ussdgateway.slee.cdr.USSDCDRState;
 
@@ -50,9 +49,9 @@ public abstract class CDRTaskBase extends SimpleJdbcTask {
         //now decompose to basics
     }
 
-    public abstract void callParentOnFailure(ChargeInterfaceParent parent, String message, Throwable t);
+    public abstract void callParentOnFailure(USSDCDRState state, String message, Throwable t);
 
-    public abstract void callParentOnSuccess(ChargeInterfaceParent parent);
+    public abstract void callParentOnSuccess(USSDCDRState state);
     
     protected void markRecordCorrupted(JdbcTaskContext ctx){
         try {

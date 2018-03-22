@@ -34,7 +34,6 @@ import org.mobicents.protocols.ss7.sccp.parameter.GlobalTitle;
 import org.mobicents.protocols.ss7.sccp.parameter.SccpAddress;
 import org.restcomm.slee.resource.jdbc.task.JdbcTaskContext;
 import org.mobicents.ussdgateway.slee.cdr.CDRCreateException;
-import org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent;
 import org.mobicents.ussdgateway.slee.cdr.USSDCDRState;
 
 /**
@@ -61,9 +60,12 @@ public class CDRCreateTask extends CDRTaskBase {
 	 * java.lang.String, java.lang.Throwable)
 	 */
 	@Override
-	public void callParentOnFailure(final ChargeInterfaceParent parent, final String message, final Throwable t) {
-		if (parent != null)
-			parent.recordGenerationFailed(message, t);
+	public void callParentOnFailure(USSDCDRState state, final String message, final Throwable t) {
+        this.tracer.severe("Failed to generate CDR! Message: '" + message + "'");
+        this.tracer.severe("Status: " + state);
+
+//		if (parent != null)
+//			parent.recordGenerationFailed(message, t);
 	}
 
 	/*
@@ -74,9 +76,15 @@ public class CDRCreateTask extends CDRTaskBase {
 	 * (org.mobicents.ussdgateway.slee.cdr. ChargeInterfaceParent)
 	 */
 	@Override
-	public void callParentOnSuccess(ChargeInterfaceParent parent) {
-		if (parent != null)
-			parent.recordGenerationSucessed();
+	public void callParentOnSuccess(USSDCDRState state) {
+        if (this.tracer.isFineEnabled()) {
+            this.tracer.fine("Generated CDR for Status: " + state);
+        }
+
+//        getCDRChargeInterface().getState()
+
+//	    if (parent != null)
+//			parent.recordGenerationSucessed();
 	}
 
 	/*

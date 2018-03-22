@@ -34,7 +34,6 @@ import org.restcomm.slee.resource.jdbc.event.JdbcTaskExecutionThrowableEvent;
 import org.restcomm.slee.resource.jdbc.task.simple.SimpleJdbcTaskResultEvent;
 import org.mobicents.ussdgateway.slee.USSDBaseSbb;
 import org.mobicents.ussdgateway.slee.cdr.ChargeInterface;
-import org.mobicents.ussdgateway.slee.cdr.ChargeInterfaceParent;
 import org.mobicents.ussdgateway.slee.cdr.RecordStatus;
 import org.mobicents.ussdgateway.slee.cdr.USSDCDRState;
 import org.mobicents.ussdgateway.slee.cdr.jdbc.task.CDRCreateTask;
@@ -156,9 +155,9 @@ public abstract class CDRGeneratorSbb extends USSDBaseSbb implements ChargeInter
         final JdbcActivity activity = (JdbcActivity) aci.getActivity();
         activity.endActivity();
         // call back parent
-        final ChargeInterfaceParent parent = (ChargeInterfaceParent) super.sbbContext.getSbbLocalObject().getParent();
+//        final ChargeInterfaceParent parent = (ChargeInterfaceParent) super.sbbContext.getSbbLocalObject().getParent();
         final CDRTaskBase jdbcTask = (CDRTaskBase) event.getTask();
-        jdbcTask.callParentOnFailure(parent, null, event.getThrowable());
+        jdbcTask.callParentOnFailure(this.getState(), null, event.getThrowable());
 
     }
 
@@ -172,9 +171,9 @@ public abstract class CDRGeneratorSbb extends USSDBaseSbb implements ChargeInter
         final JdbcActivity activity = (JdbcActivity) aci.getActivity();
         activity.endActivity();
         // call back parent
-        final ChargeInterfaceParent parent = (ChargeInterfaceParent) super.sbbContext.getSbbLocalObject().getParent();
+//        final ChargeInterfaceParent parent = (ChargeInterfaceParent) super.sbbContext.getSbbLocalObject().getParent();
         final CDRTaskBase jdbcTask = (CDRTaskBase) event.getTask();
-        jdbcTask.callParentOnSuccess(parent);
+        jdbcTask.callParentOnSuccess(this.getState());
 
     }
 
