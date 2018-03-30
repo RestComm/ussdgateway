@@ -21,6 +21,7 @@ package org.mobicents.ussdgateway;
 
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.mobicents.protocols.ss7.statistics.StatDataCollectionImpl;
@@ -45,10 +46,12 @@ public class UssdStatAggregator {
 
     private final static UssdStatAggregator instance = new UssdStatAggregator();
     private StatCollector statCollector = new StatCollector();
+    private TimeAggregator minutesAggregator = TimeAggregator.forMinutes();
     private UUID sessionId = UUID.randomUUID();
 
     private Counter counterDialogs;
     private Counter counterMessages;
+    private Counter counterDialogMinutes;
 
     public static UssdStatAggregator getInstance() {
         return instance;
@@ -60,6 +63,10 @@ public class UssdStatAggregator {
 
     public void setCounterMessages(Counter counterMessages) {
         this.counterMessages = counterMessages;
+    }
+
+    public void setCounterDialogMinutes(Counter counterDialogMinutes) {
+        this.counterDialogMinutes = counterDialogMinutes;
     }
 
     public void reset() {
@@ -83,6 +90,22 @@ public class UssdStatAggregator {
         updateMaxDialogsInProcess(newVal);
     }
 
+    public long getDialogsMinutes() {
+    	return this.statCollector.dialogsMinutes.get();
+    }
+    
+    public void addDialogMunites(Long duration) {
+    	long diffInMinutes = minutesAggregator.updateReturnUnitDelta(duration);
+    	if(diffInMinutes > 0) {
+    		long newValue = this.statCollector.dialogsMinutes.addAndGet(diffInMinutes);
+    		System.out.println("adding dialog minutes:" + diffInMinutes + ",newValue:" + newValue);
+    		if(counterDialogMinutes != null) {
+        		System.out.println("incrementing dialogMinutes counter...");
+    			this.counterDialogMinutes.inc(diffInMinutes);
+        	}
+    	}
+    }
+    
     public void clearDialogsInProcess() {
         this.statCollector.dialogsCnt.set(0);
         updateMinDialogsInProcess(0);
@@ -374,6 +397,7 @@ public class UssdStatAggregator {
         private AtomicLong dialogsHttpFailed = new AtomicLong();
         private AtomicLong dialogsSipEstablished = new AtomicLong();
         private AtomicLong dialogsSipFailed = new AtomicLong();
+        private AtomicLong dialogsMinutes = new AtomicLong();
 
         private AtomicLong messagesRecieved = new AtomicLong();
         private AtomicLong messagesSent = new AtomicLong();
@@ -401,4 +425,29 @@ public class UssdStatAggregator {
         }
     }
 
+    public static class TimeAggregator
+	{
+		private TimeUnit unit;
+		public long totalMillis;
+		public long currUnits;
+
+		private TimeAggregator(TimeUnit unit) {
+			this.unit = unit;
+		}
+
+		public synchronized long updateReturnUnitDelta(long millis) {
+			long diff = 0L;
+			if(millis > 0) {
+				this.totalMillis += millis;
+				long newUnits = this.unit.convert(this.totalMillis, TimeUnit.MILLISECONDS);
+				diff = newUnits - this.currUnits;
+				this.currUnits = newUnits;
+			}
+			return diff;			
+		}
+
+		public static TimeAggregator forMinutes() {
+			return new TimeAggregator(TimeUnit.MINUTES);
+		}
+	}
 }

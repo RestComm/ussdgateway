@@ -483,6 +483,7 @@ public abstract class ChildSbb extends USSDBaseSbb implements ChildInterface {
 
     public void onDialogRelease(DialogRelease evt, ActivityContextInterface aci) {
         super.ussdStatAggregator.removeDialogsInProcess();
+        super.ussdStatAggregator.addDialogMunites(System.currentTimeMillis() - evt.getMAPDialog().getStartTimeDialog());
     }
 
 	// //////////////////////////

@@ -169,6 +169,8 @@ public class XmlMAPDialog implements MAPDialog, XMLSerializable {
 
 	private String userObject = null;
 
+	private long startTimeDialog = System.currentTimeMillis();
+	
 	public XmlMAPDialog() {
 		super();
 	}
@@ -188,6 +190,12 @@ public class XmlMAPDialog implements MAPDialog, XMLSerializable {
 		this.origReference = origReference;
 	}
 
+	public XmlMAPDialog(MAPApplicationContext appCntx, SccpAddress localAddress, SccpAddress remoteAddress,
+			Long localId, Long remoteId, AddressString destReference, AddressString origReference, long startTimeDialog) {
+		this(appCntx, localAddress, remoteAddress, localId, remoteId, destReference, origReference);
+		this.startTimeDialog = startTimeDialog;
+	}
+	
 	@Override
 	public void abort(MAPUserAbortChoice mapUserAbortChoice) throws MAPException {
 		this.mapUserAbortChoice = mapUserAbortChoice;
@@ -872,5 +880,9 @@ public class XmlMAPDialog implements MAPDialog, XMLSerializable {
 			}
 		}
 	};
+
+	public long getStartTimeDialog() {
+		return this.startTimeDialog;
+	}
 
 }

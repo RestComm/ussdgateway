@@ -68,6 +68,7 @@ public class UssdStatProviderJmx implements UssdStatProviderJmxMBean, CounterMed
     private MetricRegistry metrics = RestcommStatsReporter.getMetricRegistry();
     private Counter counterDialogs = metrics.counter("ussd_dialogs");
     private Counter counterMessages = metrics.counter("messages");
+    private Counter counterDialogMinutes = metrics.counter("dialog_minutes");
 
     public UssdStatProviderJmx(MBeanHost ss7Management) {
         this.ss7Management = ss7Management;
@@ -105,6 +106,7 @@ public class UssdStatProviderJmx implements UssdStatProviderJmxMBean, CounterMed
 
         ussdStatAggregator.setCounterDialogs(counterDialogs);
         ussdStatAggregator.setCounterMessages(counterMessages);
+        ussdStatAggregator.setCounterDialogMinutes(counterDialogMinutes);
 
         logger.info("UssdStatProviderJmx Started ...");
     }
@@ -300,7 +302,8 @@ public class UssdStatProviderJmx implements UssdStatProviderJmxMBean, CounterMed
                     svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getDialogsSipEstablished());
                 } else if (cd.getCounterName().equals("DialogsSipFailed")) {
                     svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getDialogsSipFailed());
-
+                } else if (cd.getCounterName().equals("DialogsMinutes")) {
+                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getDialogsMinutes());
                 } else if (cd.getCounterName().equals("MessagesRecieved")) {
                     svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getMessagesRecieved());
                 } else if (cd.getCounterName().equals("MessagesSent")) {

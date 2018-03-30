@@ -31,7 +31,7 @@
 	<property name="restcomm-slee.http.ra.tag" value="2.8.5" />
 	<property name="restcomm-slee.jdbc.ra.tag" value="2.8.3" />
 
-	<property name="restcomm-jss7.build-number" value="102" />
+	<property name="restcomm-jss7.build-number" value="144" />
 	<property name="restcomm-jss7.version" value="7.4.0-${restcomm-jss7.build-number}" />
 <!--
 	<property name="restcomm-jss7.release" value="7.3.1398" />

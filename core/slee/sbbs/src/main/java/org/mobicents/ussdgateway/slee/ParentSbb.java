@@ -65,7 +65,7 @@ public abstract class ParentSbb extends USSDBaseSbb {
 
 		XmlMAPDialog dialog = new XmlMAPDialog(mapDialog.getApplicationContext(), mapDialog.getLocalAddress(),
 				mapDialog.getRemoteAddress(), mapDialog.getLocalDialogId(), mapDialog.getRemoteDialogId(),
-				evt.getDestReference(), evt.getOrigReference());
+				evt.getDestReference(), evt.getOrigReference(), mapDialog.getStartTimeDialog());
 		dialog.setReturnMessageOnError(mapDialog.getReturnMessageOnError());
 		dialog.setTCAPMessageType(mapDialog.getTCAPMessageType());
 		dialog.setNetworkId(mapDialog.getNetworkId());

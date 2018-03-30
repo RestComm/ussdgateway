@@ -485,6 +485,7 @@ public abstract class SipServerSbb extends ChildServerSbb implements SriParent {
 
     public void onDialogRelease(DialogRelease evt, ActivityContextInterface aci) {
         super.ussdStatAggregator.removeDialogsInProcess();
+        super.ussdStatAggregator.addDialogMunites(System.currentTimeMillis() - evt.getMAPDialog().getStartTimeDialog());
     }
 
 	// -------------------------------------------------------------
