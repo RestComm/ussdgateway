@@ -488,17 +488,10 @@
 			</fileset>
 		</copy>
 		
-		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true">
-			<fileset dir="${release.dir}/resources/http-client">
-				<exclude name="*.xml" />
-			</fileset>
-		</copy>
-
-		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true">
-			<fileset dir="${release.dir}/resources/http-servlet">
-				<exclude name="*.xml" />
-			</fileset>
-		</copy>
+		<copy file="${restcomm-http-client-ra.distro.jar.path}" todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true" />
+		<copy file="${restcomm-http-servlet-ra.distro.jar.path}" todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true" />
+		<copy file="${restcomm-http-servlet-common.distro.jar.path}" todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true" />
+		<copy file="${restcomm-http-servlet-war.distro.jar.path}" todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true" />
 
 		<copy todir="${release.dir}/jboss-5.1.0.GA/server/simulator/deploy" failonerror="true">
 			<fileset dir="${release.dir}/resources/jdbc">
