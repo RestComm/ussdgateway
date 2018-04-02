@@ -114,7 +114,7 @@
 	<target name="get-map" depends="checkout-ss7-map,build-ss7-map" />
 	<target name="get-deps" depends="get-restcomm-slee,get-restcomm-jss7,checkout-ss7-map,build-ss7-map,checkout-http,build-http-client,build-http-servlet,checkout-jdbc,build-jdbc" />
 -->
-	<target name="get-deps" depends="get-restcomm-slee,get-restcomm-jss7,get-restcomm-map-ra,get-restcomm-map-ra-docs,get-restcomm-jdbc-ra" />
+	<target name="get-deps" depends="get-restcomm-slee,get-restcomm-jss7,get-restcomm-map-ra,get-restcomm-map-ra-docs,get-restcomm-jdbc-ra,get-restcomm-http-client-ra,get-restcomm-http-servlet-ra" />
 	<target name="extract-deps" depends="extract-restcomm-slee,extract-restcomm-jss7,extract-restcomm-map-ra-docs" />
 
 	<available file="${restcomm-slee.distro.zip.path}" property="got.restcomm-slee" />
