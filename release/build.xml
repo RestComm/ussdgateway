@@ -218,7 +218,7 @@
 			<arg value="${restcomm-http-servlet-common.download.jar.url}" />
 			<arg value="--output-document=${restcomm-http-servlet-common.download.jar.file}" />
 		</exec>
-		<move file="${base.dir}/${restcomm-http-servlet-war.download.jar.file}" todir="${checkout.dir}"/>
+		<move file="${base.dir}/${restcomm-http-servlet-common.download.jar.file}" todir="${checkout.dir}"/>
 		<exec failonerror="true" executable="wget">
 			<arg value="${restcomm-http-servlet-war.download.jar.url}" />
 			<arg value="--output-document=${restcomm-http-servlet-war.download.jar.file}" />
