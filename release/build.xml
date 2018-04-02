@@ -38,14 +38,16 @@
 	<property name="restcomm-jss7.timestamp" value="1602171452" />
 -->
 
-	<property name="restcomm-map-ra.build-number" value="177" />
+	<property name="restcomm-map-ra.build-number" value="203" />
 	<property name="restcomm-map-ra.version" value="7.4.0-${restcomm-map-ra.build-number}" />
 
 	<property name="restcomm-jdbc-ra.build-number" value="111" />
 	<property name="restcomm-jdbc-ra.version" value="2.10.0-${restcomm-jdbc-ra.build-number}" />
 
+	<property name="restcomm-http-ra.build-number" value="115" />
+	<property name="restcomm-http-ra.version" value="2.10.0-${restcomm-http-ra.build-number}" />
+	
 	<!--GET Restcomm-Slee & Restcomm-jss7 - properties-->
-	<property name="cloudbees.url" value="https://mobicents.ci.cloudbees.com" />
 	<property name="github.url" value="https://github.com/RestComm" />
 
 	<property name="restcomm-jss7.tag" value="${restcomm-jss7.version}" />
@@ -70,10 +72,21 @@
 	<property name="restcomm-jdbc-ra.distro.jar.path" value="${checkout.dir}/${restcomm-jdbc-ra.download.jar.file}" />
 	<property name="restcomm-jdbc-ra.distro.docs.path" value="${checkout.dir}/${restcomm-jdbc-ra.download.docs.file}" />
 
+	<property name="restcomm-http-client-ra.download.jar.file" value="http-client-ra-DU-${restcomm-http-ra.version}.jar" />
+	<property name="restcomm-http-client-ra.download.jar.url" value="${github.url}/jain-slee.http/releases/download/${restcomm-http-ra.version}/${restcomm-http-client-ra.download.jar.file}" />
+	<property name="restcomm-http-client-ra.distro.jar.path" value="${checkout.dir}/${restcomm-http-client-ra.download.jar.file}" />
+	<property name="restcomm-http-servlet-ra.download.jar.file" value="restcomm-slee-ra-http-servlet-DU-${restcomm-http-ra.version}.jar" />
+	<property name="restcomm-http-servlet-ra.download.jar.url" value="${github.url}/jain-slee.http/releases/download/${restcomm-http-ra.version}/${restcomm-http-servlet-ra.download.jar.file}" />
+	<property name="restcomm-http-servlet-ra.distro.jar.path" value="${checkout.dir}/${restcomm-http-servlet-ra.download.jar.file}" />
+	<property name="restcomm-http-servlet-common.download.jar.file" value="restcomm-slee-ra-http-servlet-common.jar" />
+	<property name="restcomm-http-servlet-common.download.jar.url" value="${github.url}/jain-slee.http/releases/download/${restcomm-http-ra.version}/${restcomm-http-servlet-common.download.jar.file}" />
+	<property name="restcomm-http-servlet-common.distro.jar.path" value="${checkout.dir}/${restcomm-http-servlet-common.download.jar.file}" />
+	<property name="restcomm-http-servlet-war.download.jar.file" value="restcomm.war" />
+	<property name="restcomm-http-servlet-war.download.jar.url" value="${github.url}/jain-slee.http/releases/download/${restcomm-http-ra.version}/${restcomm-http-servlet-war.download.jar.file}" />
+	<property name="restcomm-http-servlet-war.distro.jar.path" value="${checkout.dir}/${restcomm-http-servlet-war.download.jar.file}" />
+	
 	<property name="release.build.goals" value="clean install" />
 	<property name="release.ts.deploy.goals" value="clean deploy" />
-
-
 
 	<condition property="mvn.executable" value="${sys.M2_HOME}\bin\mvn.bat" else="mvn">
 		<os family="windows" />
@@ -183,6 +196,36 @@
 		<move file="${base.dir}/${restcomm-jdbc-ra.download.jar.file}" todir="${checkout.dir}"/>
 	</target>
 
+	<available file="${restcomm-http-client-ra.distro.jar.path}" property="got.restcomm-http-client-ra" />
+	<target name="get-restcomm-http-client-ra" unless="got.restcomm-http-client-ra">
+		<echo>Downloading RestComm HTTP Client RA version: ${restcomm-http-ra.version}</echo>
+		<exec failonerror="true" executable="wget">
+			<arg value="${restcomm-http-client-ra.download.jar.url}" />
+			<arg value="--output-document=${restcomm-http-client-ra.download.jar.file}" />
+		</exec>
+		<move file="${base.dir}/${restcomm-http-client-ra.download.jar.file}" todir="${checkout.dir}"/>
+	</target>
+	
+	<available file="${restcomm-http-servlet-ra.distro.jar.path}" property="got.restcomm-http-servlet-ra" />
+	<target name="get-restcomm-http-servlet-ra" unless="got.restcomm-http-servlet-ra">
+		<echo>Downloading RestComm HTTP Servlet RA version: ${restcomm-http-ra.version}</echo>
+		<exec failonerror="true" executable="wget">
+			<arg value="${restcomm-http-servlet-ra.download.jar.url}" />
+			<arg value="--output-document=${restcomm-http-servlet-ra.download.jar.file}" />
+		</exec>
+		<move file="${base.dir}/${restcomm-http-servlet-ra.download.jar.file}" todir="${checkout.dir}"/>
+		<exec failonerror="true" executable="wget">
+			<arg value="${restcomm-http-servlet-common.download.jar.url}" />
+			<arg value="--output-document=${restcomm-http-servlet-common.download.jar.file}" />
+		</exec>
+		<move file="${base.dir}/${restcomm-http-servlet-war.download.jar.file}" todir="${checkout.dir}"/>
+		<exec failonerror="true" executable="wget">
+			<arg value="${restcomm-http-servlet-war.download.jar.url}" />
+			<arg value="--output-document=${restcomm-http-servlet-war.download.jar.file}" />
+		</exec>
+		<move file="${base.dir}/${restcomm-http-servlet-war.download.jar.file}" todir="${checkout.dir}"/>
+	</target>
+	
 <!--
 	<target name="checkout-ss7-map">
 		<echo>Checking out Map resource</echo>
@@ -275,8 +318,6 @@
 			<fileset dir="${release.dir}/docs/resources">
 				<include name="**" />
 				<exclude name="**/sip11/**"/>
-				<exclude name="**/http-client/**"/>
-				<exclude name="**/http-servlet/**"/>
 			</fileset>
 		</delete>
 		<delete dir="${release.dir}/docs/enablers" includeemptydirs="true" failonerror="true" />
@@ -285,8 +326,6 @@
 			<fileset dir="${release.dir}/resources">
 				<include name="**" />
 				<exclude name="**/sip11/*"/>
-				<exclude name="**/http-client/*"/>
-				<exclude name="**/http-servlet/*"/>
 			</fileset>
 		</delete>
 		<delete failonerror="true">
@@ -408,18 +447,11 @@
 			</fileset>
 		</copy>
 
-		<copy todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true">
-			<fileset dir="${release.dir}/resources/http-client">
-				<exclude name="*.xml" />
-			</fileset>
-		</copy>
-
-		<copy todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true">
-			<fileset dir="${release.dir}/resources/http-servlet">
-				<exclude name="*.xml" />
-			</fileset>
-		</copy>
-
+		<copy file="${restcomm-http-client-ra.distro.jar.path}" todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true" />
+		<copy file="${restcomm-http-servlet-ra.distro.jar.path}" todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true" />
+		<copy file="${restcomm-http-servlet-common.distro.jar.path}" todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true" />
+		<copy file="${restcomm-http-servlet-war.distro.jar.path}" todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true" />
+			
 		<copy todir="${release.dir}/jboss-5.1.0.GA/server/default/deploy" failonerror="true">
 			<fileset dir="${release.dir}/resources/jdbc">
 				<exclude name="*.xml" />
