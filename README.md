@@ -37,8 +37,13 @@ RestComm USSD Gateway is licensed under dual license policy. The default license
 
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bhttps%3A%2F%2Fgithub.com%2FRestComm%2Fussdgateway.svg?type=large)](https://app.fossa.io/projects/git%2Bhttps%3A%2F%2Fgithub.com%2FRestComm%2Fussdgateway?ref=badge_large)
 
-## Acknowledgements
-[See who has been contributing to RestComm](https://www.restcomm.com/acknowledgements/)
+Acknowledgements
+========
+
+* [![JProfiler](https://www.ej-technologies.com/images/product_banners/jprofiler_large.png)](https://www.ej-technologies.com/products/jprofiler/overview.html) JProfiler Open Source License
+
+---
+We also maintain a list of [all Restcomm contributors](http://www.telestax.com/opensource/acknowledgments/) on the Restcomm website, to acknowledge contributions by the broad open source community.
 
 ## Maven Repository
 
