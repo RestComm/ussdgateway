@@ -44,7 +44,7 @@
 	<property name="restcomm-jdbc-ra.build-number" value="111" />
 	<property name="restcomm-jdbc-ra.version" value="2.10.0-${restcomm-jdbc-ra.build-number}" />
 
-	<property name="restcomm-http-ra.build-number" value="115" />
+	<property name="restcomm-http-ra.build-number" value="116" />
 	<property name="restcomm-http-ra.version" value="2.10.0-${restcomm-http-ra.build-number}" />
 	
 	<!--GET Restcomm-Slee & Restcomm-jss7 - properties-->
