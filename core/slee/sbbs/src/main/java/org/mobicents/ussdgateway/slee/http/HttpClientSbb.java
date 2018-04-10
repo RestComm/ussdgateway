@@ -398,8 +398,8 @@ public abstract class HttpClientSbb extends ChildSbb {
                 super.httpClientActivityContextInterfaceFactory = (HttpClientActivityContextInterfaceFactory) super.sbbContext
                         .getActivityContextInterfaceFactory(httpClientRATypeID);
             } catch (Exception e) {
-                httpClientRATypeID = new ResourceAdaptorTypeID("HttpClientResourceAdaptorType", "org.mobicents", "4.0");
-                logger.info("Trying to use HttpClientResourceAdaptorType - org.mobicents");
+                httpClientRATypeID = new ResourceAdaptorTypeID("HttpClientResourceAdaptorType", "org.restcomm", "4.0");
+                logger.info("Trying to use HttpClientResourceAdaptorType - org.restcomm");
                 super.httpClientActivityContextInterfaceFactory = (HttpClientActivityContextInterfaceFactory) super.sbbContext
                         .getActivityContextInterfaceFactory(httpClientRATypeID);
             }

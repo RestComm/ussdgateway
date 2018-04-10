@@ -919,8 +919,8 @@ public abstract class HttpServerSbb extends ChildServerSbb implements SriParent 
                 super.httpServletRaActivityContextInterfaceFactory = (HttpServletRaActivityContextInterfaceFactory) super.sbbContext
                         .getActivityContextInterfaceFactory(httpServerRATypeID);
             } catch (Exception e) {
-                httpServerRATypeID = new ResourceAdaptorTypeID("HttpServletResourceAdaptorType", "org.mobicents", "1.0");
-                logger.info("Trying to use HttpServletResourceAdaptorType - org.mobicents");
+                httpServerRATypeID = new ResourceAdaptorTypeID("HttpServletResourceAdaptorType", "org.restcomm", "1.0");
+                logger.info("Trying to use HttpServletResourceAdaptorType - org.restcomm");
                 super.httpServletRaActivityContextInterfaceFactory = (HttpServletRaActivityContextInterfaceFactory) super.sbbContext
                         .getActivityContextInterfaceFactory(httpServerRATypeID);
             }
