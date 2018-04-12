@@ -97,10 +97,8 @@ public class UssdStatAggregator {
     public void addDialogMunites(Long duration) {
     	long diffInMinutes = minutesAggregator.updateReturnUnitDelta(duration);
     	if(diffInMinutes > 0) {
-    		long newValue = this.statCollector.dialogsMinutes.addAndGet(diffInMinutes);
-    		System.out.println("adding dialog minutes:" + diffInMinutes + ",newValue:" + newValue);
+    		this.statCollector.dialogsMinutes.addAndGet(diffInMinutes);
     		if(counterDialogMinutes != null) {
-        		System.out.println("incrementing dialogMinutes counter...");
     			this.counterDialogMinutes.inc(diffInMinutes);
         	}
     	}
