@@ -68,7 +68,7 @@ public class UssdStatProviderJmx implements UssdStatProviderJmxMBean, CounterMed
     private MetricRegistry metrics = RestcommStatsReporter.getMetricRegistry();
     private Counter counterDialogs = metrics.counter("ussd_dialogs");
     private Counter counterMessages = metrics.counter("messages");
-    private Counter counterDialogMinutes = metrics.counter("dialog_minutes");
+    private Counter counterDialogMinutes = metrics.counter("minutes");
 
     public UssdStatProviderJmx(MBeanHost ss7Management) {
         this.ss7Management = ss7Management;
