@@ -83,6 +83,10 @@ public interface UssdPropertiesManagementMBean {
 
     public void setCdrLoggingToStr(String cdrLogging);
 
+    public String getCdrSeparator();
+
+    public void setCdrSeparator(String cdrSeparator);
+
     public void setHrHlrGt(String hrHlrGt);
 
     public String getHrHlrGt();

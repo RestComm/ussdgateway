@@ -8,6 +8,6 @@ DESCRIPTION
 	This command is used to set CDR logging to either Database or Textfile. 
 	By default, the value is Textfile and all transactions are logged to a
 	plain text file.	
-SEE ALSO
-	ussd get cdrloggingto
 
+SEE ALSO
+	ussd get cdrloggingto, ussd set cdrseparator

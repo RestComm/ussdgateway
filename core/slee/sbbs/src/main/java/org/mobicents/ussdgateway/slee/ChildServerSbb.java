@@ -32,11 +32,9 @@ import org.mobicents.protocols.ss7.map.api.datacoding.CBSDataCodingScheme;
 import org.mobicents.protocols.ss7.map.api.primitives.USSDString;
 import org.mobicents.protocols.ss7.map.api.service.supplementary.MAPDialogSupplementary;
 import org.mobicents.protocols.ss7.map.datacoding.CBSDataCodingSchemeImpl;
-import org.mobicents.protocols.ss7.tcap.api.MessageType;
 import org.mobicents.slee.ChildRelationExt;
 import org.mobicents.ussdgateway.UssdPropertiesManagement;
 import org.mobicents.ussdgateway.UssdPropertiesManagementMBean;
-import org.mobicents.ussdgateway.XmlMAPDialog;
 import org.mobicents.ussdgateway.slee.cdr.ChargeInterface;
 import org.mobicents.ussdgateway.slee.cdr.RecordStatus;
 

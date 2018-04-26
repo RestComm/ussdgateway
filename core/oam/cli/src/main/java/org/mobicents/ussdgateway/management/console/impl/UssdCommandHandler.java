@@ -50,6 +50,7 @@ public class UssdCommandHandler extends CommandHandlerWithHelp {
         set.addChild("mscssn");
         set.addChild("maxmapv");
         set.addChild("cdrloggingto");
+        set.addChild("cdrseparator");
         set.addChild("hrhlrgt");
 
         Node get = parent.addChild("get");
@@ -62,6 +63,7 @@ public class UssdCommandHandler extends CommandHandlerWithHelp {
         get.addChild("mscssn");
         get.addChild("maxmapv");
         get.addChild("cdrloggingto");
+        get.addChild("cdrseparator");
         get.addChild("hrhlrgt");
 
 	};

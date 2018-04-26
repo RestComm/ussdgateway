@@ -140,6 +140,13 @@
 									</select>
 								</span>    
 							</div>                    							
+
+                        	<div id="div-cdrseparator" class="control-group">
+								<span class="input-prepend" data-toggle="tooltip" data-placement="bottom" title="A fields separator for text CDR files.">
+									<span class="add-on">CDR fields separator</span>
+									<input id="cdrseparator" type="text" class="input-mini" style="width: 120px; margin-right: 12px; text-align: center;" value="0" />
+								</span>                        
+							</div>
                         </div>                        					  	
 					</div>	
 					</span>					 
@@ -161,6 +168,7 @@
 										$("#dialogtimeouterrmssg").val(response.value.DialogTimeoutErrorMessage);
 										$("#dialogtimeout").val(response.value.DialogTimeout);
 										$("#maxactivitycount").val(response.value.MaxActivityCount);
+										$("#cdrseparator").val(response.value.CdrSeparator);
 										$("#noroutingruleconfigerrmssg").val(response.value.NoRoutingRuleConfiguredMessage);
 										$("#servererrmssg").val(response.value.ServerErrorMessage);
 										$("#serveroverloadedmessage").val(response.value.ServerOverloadedMessage);
@@ -230,6 +238,14 @@
 			    			formInvalid = true;
 			    		} else if($("#div-maxactivitycount").hasClass("error")) {
 			    			$("#div-maxactivitycount").removeClass("error");		
+			    		}
+						
+						var cdrseparator = $("#cdrseparator").val();
+						if(cdrseparator.trim() == "") {
+			    			$("#div-cdrseparator").addClass("error");					    			
+			    			formInvalid = true;
+			    		} else if($("#div-cdrseparator").hasClass("error")) {
+			    			$("#div-cdrseparator").removeClass("error");		
 			    		}
 
 						var servererrmssg = $("#servererrmssg").val();
@@ -326,6 +342,7 @@
 									{ type: "write", mbean: mbeanSearch, attribute: "DialogTimeoutErrorMessage", value: dialogtimeouterrmssg },
 									{ type: "write", mbean: mbeanSearch, attribute: "DialogTimeout", value: dialogtimeout },
 									{ type: "write", mbean: mbeanSearch, attribute: "MaxActivityCount", value: maxactivitycount },
+									{ type: "write", mbean: mbeanSearch, attribute: "CdrSeparator", value: cdrseparator },
 									{ type: "write", mbean: mbeanSearch, attribute: "ServerErrorMessage", value: servererrmssg },
 									{ type: "write", mbean: mbeanSearch, attribute: "ServerOverloadedMessage", value: serveroverloadedmessage },
 									{ type: "write", mbean: mbeanSearch, attribute: "UssdSsn", value: ussdssn },

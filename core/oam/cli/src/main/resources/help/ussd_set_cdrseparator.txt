@@ -1,0 +1,12 @@
+Name
+	ussd set cdrseparator
+
+SYNOPSIS
+	ussd set cdrseparator <cdr separator>
+
+DESCRIPTION
+	This command is used to set a CDR TextFile logging fields separator.
+	Default value is ":".
+		
+SEE ALSO
+	ussd set cdrloggingto, ussd get cdrseparator

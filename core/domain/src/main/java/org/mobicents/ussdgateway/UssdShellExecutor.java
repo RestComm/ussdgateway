@@ -362,9 +362,13 @@ public class UssdShellExecutor implements ShellExecutor {
 				ussdPropertiesManagement.setHrHlrGt(options[3]);
 			}
 		} else if (parName.equals(UssdPropertiesManagement.CDR_LOGGING_TO)) {
-			String cdrLoggedType = options[3];
-			ussdPropertiesManagement.setCdrLoggingToStr(cdrLoggedType);
-		} else {
+            String cdrLoggedType = options[3];
+            ussdPropertiesManagement.setCdrLoggingToStr(cdrLoggedType);
+        } else if (parName.equals("cdrseparator")) {
+            String cdrSeparator = options[3];
+            ussdPropertiesManagement.setCdrSeparator(cdrSeparator);
+
+        } else {
 			return UssdOAMMessages.INVALID_COMMAND;
 		}
 
@@ -420,9 +424,12 @@ public class UssdShellExecutor implements ShellExecutor {
 				sb.append(ussdPropertiesManagement.getMaxMapVersion());
 			} else if (parName.equals(UssdPropertiesManagement.HR_HLR_GT)) {
 				sb.append(ussdPropertiesManagement.getHrHlrGt());
-			} else if (parName.equals(UssdPropertiesManagement.CDR_LOGGING_TO)) {
-				sb.append(ussdPropertiesManagement.getCdrLoggingTo());
-			} else {
+            } else if (parName.equals(UssdPropertiesManagement.CDR_LOGGING_TO)) {
+                sb.append(ussdPropertiesManagement.getCdrLoggingTo());
+            } else if (parName.equals("cdrseparator")) {
+                sb.append(ussdPropertiesManagement.getCdrSeparator());
+
+            } else {
 				return UssdOAMMessages.INVALID_COMMAND;
 			}
 
@@ -483,9 +490,13 @@ public class UssdShellExecutor implements ShellExecutor {
 			sb.append(ussdPropertiesManagement.getHrHlrGt());
 			sb.append("\n");
 
-			sb.append(UssdPropertiesManagement.CDR_LOGGING_TO + " = ");
-			sb.append(ussdPropertiesManagement.getCdrLoggingTo());
-			sb.append("\n");
+            sb.append(UssdPropertiesManagement.CDR_LOGGING_TO + " = ");
+            sb.append(ussdPropertiesManagement.getCdrLoggingTo());
+            sb.append("\n");
+
+            sb.append("cdrseparator = ");
+            sb.append(ussdPropertiesManagement.getCdrSeparator());
+            sb.append("\n");
 
 			return sb.toString();
 		}

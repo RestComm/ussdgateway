@@ -61,6 +61,7 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
     protected static final String HR_HLR_GT = "hrhlrgt";
     protected static final String CDR_LOGGING_TO = "cdrloggingto";
     protected static final String MAX_ACTIVITY_COUNT = "maxactivitycount";
+    protected static final String CDR_SEPARATOR = "cdrSeparator";
 
 	private static final String TAB_INDENT = "\t";
 	private static final String CLASS_ATTRIBUTE = "type";
@@ -98,6 +99,8 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
     private String hrHlrGt = null;
 
     private CdrLoggedType cdrLoggingTo = CdrLoggedType.Textfile;
+    // Separator between fields in a CDR text file
+    private String cdrSeparator = ":";
 
     // max count of TCAP Dialogs that are possible at the same time
     private int maxActivityCount = 5000;
@@ -291,6 +294,19 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
     }
 
     @Override
+    public String getCdrSeparator() {
+        return cdrSeparator;
+    }
+
+    @Override
+    public void setCdrSeparator(String cdrSeparator) {
+        if (cdrSeparator != null && cdrSeparator.length() > 0) {
+            this.cdrSeparator = cdrSeparator;
+            this.store();
+        }
+    }
+
+    @Override
     public int getMaxActivityCount() {
         return maxActivityCount;
     }
@@ -362,6 +378,7 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
 			writer.write(this.dialogTimeout, DIALOG_TIMEOUT, Long.class);
             writer.write(this.hrHlrGt, HR_HLR_GT, String.class);
             writer.write(this.cdrLoggingTo.toString(), CDR_LOGGING_TO, String.class);
+            writer.write(this.cdrSeparator, CDR_SEPARATOR, String.class);
 
             writer.write(this.maxActivityCount, MAX_ACTIVITY_COUNT, Integer.class);
 
@@ -428,6 +445,9 @@ public class UssdPropertiesManagement implements UssdPropertiesManagementMBean {
             vals = reader.read("cdrLoggingTo", String.class);
             if (vals != null)
                 this.cdrLoggingTo = Enum.valueOf(CdrLoggedType.class, vals);
+            vals = reader.read(CDR_SEPARATOR, String.class);
+            if (vals != null && vals.length() > 0)
+                this.cdrSeparator = vals;
 
             Integer val = reader.read(MAX_ACTIVITY_COUNT, Integer.class);
             if (val != null)

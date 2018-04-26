@@ -386,6 +386,9 @@ maxactivitycount::
 cdrloggingto::
   If CDR should be logged to Database or Textfile		
 
+cdrSeparator::
+  CDR TextFile logging fields separator		
+
 If the USSD Gateway will be used for network push as well, the following parameters should also be configured: 
 
 
@@ -778,6 +781,40 @@ DESCRIPTION
   You can switch between Database and plain Textfile by setting this parameter appropriately. 
 . You must click on the button 'Apply Changes' to save your settings.
   If there is an error in setting the value, then you will find the details of the error in the Management Console Log section below. 
+
+
+[[_set_cdrseparator]]
+=== CDR TextFile logging fields separator
+
+[[_set_cdrseparator_cli]]
+==== Using CLI
+
+You can select a CDR TextFile logging fields separator character, by setting the 'cdrseparator' value issuing the command `ussd set cdrseparator` with appropriate parameters as described below: 
+
+----
+
+Name
+	ussd set cdrseparator
+
+SYNOPSIS
+	ussd set cdrseparator <cdr separator>
+
+DESCRIPTION
+	This command is used to set a CDR TextFile logging fields separator.
+	Default value is ":".
+----
+
+[[_set_cdrseparator_gui]]
+==== Using GUI
+
+.Procedure: Set CDR logging using the GUI
+. In the GUI Management Console for USSD Gateway, click on 'Server Settings' in the left panel. 
+. The main panel will display the existing Server Settings (if any), segregated into three tabs: Error Messages, SS7 Settings, Various.
+  Switch to the 'Various' tab in the GUI. 
+. You can set the 'CDR fields separator' value as required.
+. You must click on the button 'Apply Changes' to save your settings.
+  If there is an error in setting the value, then you will find the details of the error in the Management Console Log section below. 
+
 
 [[_setting_ussd_gt]]
 === USSD Global Title

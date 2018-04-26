@@ -33,6 +33,8 @@ import org.mobicents.protocols.ss7.map.api.primitives.IMSI;
 import org.mobicents.protocols.ss7.map.api.primitives.ISDNAddressString;
 import org.mobicents.protocols.ss7.sccp.parameter.GlobalTitle;
 import org.mobicents.protocols.ss7.sccp.parameter.SccpAddress;
+import org.mobicents.ussdgateway.UssdPropertiesManagement;
+import org.mobicents.ussdgateway.UssdPropertiesManagementMBean;
 import org.mobicents.ussdgateway.slee.USSDBaseSbb;
 import org.mobicents.ussdgateway.slee.cdr.ChargeInterface;
 import org.mobicents.ussdgateway.slee.cdr.RecordStatus;
@@ -47,6 +49,8 @@ public abstract class CDRGeneratorSbb extends USSDBaseSbb implements ChargeInter
 	private static final Logger cdrTracer = Logger.getLogger(CDRGeneratorSbb.class);
 	
 	private static final String CDR_GENERATED_TO = "Textfile";
+
+	protected UssdPropertiesManagementMBean ussdPropertiesManagement = null;
 
 
     public CDRGeneratorSbb() {
@@ -148,6 +152,7 @@ public abstract class CDRGeneratorSbb extends USSDBaseSbb implements ChargeInter
     public void setSbbContext(SbbContext ctx) {
         super.setSbbContext(ctx);
         super.logger = super.sbbContext.getTracer(TRACER_NAME);
+        this.ussdPropertiesManagement = UssdPropertiesManagement.getInstance();
     }
 
     /*
@@ -161,12 +166,13 @@ public abstract class CDRGeneratorSbb extends USSDBaseSbb implements ChargeInter
     }
 
     // -------- helper methods
-    private static final String SEPARATOR = ":";
     /**
      * @param state
      * @return
      */
     protected String toString(USSDCDRState state) {
+        String SEPARATOR = ussdPropertiesManagement.getCdrSeparator();
+
         //StringBuilder is faster than StringBuffer
         final StringBuilder sb = new StringBuilder();
         final Timestamp tstamp = new Timestamp(System.currentTimeMillis());
