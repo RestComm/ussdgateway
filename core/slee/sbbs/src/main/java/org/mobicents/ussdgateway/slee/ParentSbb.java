@@ -24,15 +24,15 @@ import javax.slee.ChildRelation;
 import javax.slee.SbbContext;
 import javax.slee.SbbLocalObject;
 
-import org.mobicents.protocols.ss7.map.api.MAPDialog;
-import org.mobicents.protocols.ss7.map.api.MAPException;
-import org.mobicents.protocols.ss7.map.api.MAPProvider;
-import org.mobicents.protocols.ss7.map.api.datacoding.CBSDataCodingScheme;
-import org.mobicents.protocols.ss7.map.api.primitives.USSDString;
-import org.mobicents.protocols.ss7.map.api.service.supplementary.MAPDialogSupplementary;
-import org.mobicents.protocols.ss7.map.api.service.supplementary.ProcessUnstructuredSSRequest;
-import org.mobicents.protocols.ss7.map.datacoding.CBSDataCodingSchemeImpl;
-import org.mobicents.slee.resource.map.MAPContextInterfaceFactory;
+import org.restcomm.protocols.ss7.map.api.MAPDialog;
+import org.restcomm.protocols.ss7.map.api.MAPException;
+import org.restcomm.protocols.ss7.map.api.MAPProvider;
+import org.restcomm.protocols.ss7.map.api.datacoding.CBSDataCodingScheme;
+import org.restcomm.protocols.ss7.map.api.primitives.USSDString;
+import org.restcomm.protocols.ss7.map.api.service.supplementary.MAPDialogSupplementary;
+import org.restcomm.protocols.ss7.map.api.service.supplementary.ProcessUnstructuredSSRequest;
+import org.restcomm.protocols.ss7.map.datacoding.CBSDataCodingSchemeImpl;
+import org.restcomm.slee.resource.map.MAPContextInterfaceFactory;
 import org.mobicents.ussdgateway.ShortCodeRoutingRuleManagement;
 import org.mobicents.ussdgateway.UssdPropertiesManagement;
 import org.mobicents.ussdgateway.UssdStatAggregator;
@@ -56,7 +56,7 @@ public abstract class ParentSbb extends USSDBaseSbb {
 		super("ParentSbb");
 	}
 
-	public void onDialogRequest(org.mobicents.slee.resource.map.events.DialogRequest evt, ActivityContextInterface aci) {
+	public void onDialogRequest(org.restcomm.slee.resource.map.events.DialogRequest evt, ActivityContextInterface aci) {
 		if (logger.isFineEnabled()) {
 			this.logger.fine("New MAP Dialog. Received event MAPOpenInfo " + evt);
 		}
@@ -73,7 +73,7 @@ public abstract class ParentSbb extends USSDBaseSbb {
 		this.setDialog(dialog);
 	}
 
-	public void onDialogTimeout(org.mobicents.slee.resource.map.events.DialogTimeout evt, ActivityContextInterface aci) {
+	public void onDialogTimeout(org.restcomm.slee.resource.map.events.DialogTimeout evt, ActivityContextInterface aci) {
 		if (logger.isWarningEnabled()) {
 			this.logger.warning("Rx :  onDialogTimeout" + evt);
 		}

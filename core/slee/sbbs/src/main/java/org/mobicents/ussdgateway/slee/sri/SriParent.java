@@ -19,8 +19,8 @@
 
 package org.mobicents.ussdgateway.slee.sri;
 
-import org.mobicents.protocols.ss7.map.api.primitives.IMSI;
-import org.mobicents.protocols.ss7.map.api.service.sms.LocationInfoWithLMSI;
+import org.restcomm.protocols.ss7.map.api.primitives.IMSI;
+import org.restcomm.protocols.ss7.map.api.service.sms.LocationInfoWithLMSI;
 import org.mobicents.ussdgateway.XmlMAPDialog;
 import org.mobicents.ussdgateway.slee.cdr.RecordStatus;
 

@@ -28,7 +28,7 @@ import javolution.xml.XMLBinding;
 import javolution.xml.XMLObjectReader;
 import javolution.xml.XMLObjectWriter;
 
-import org.mobicents.protocols.ss7.map.api.MAPMessageType;
+import org.restcomm.protocols.ss7.map.api.MAPMessageType;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;

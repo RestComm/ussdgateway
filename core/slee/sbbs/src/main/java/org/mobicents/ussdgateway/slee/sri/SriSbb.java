@@ -23,39 +23,39 @@ import javax.slee.ActivityContextInterface;
 import javax.slee.CreateException;
 import javax.slee.SbbContext;
 
-import org.mobicents.protocols.ss7.indicator.NatureOfAddress;
-import org.mobicents.protocols.ss7.indicator.NumberingPlan;
-import org.mobicents.protocols.ss7.indicator.RoutingIndicator;
-import org.mobicents.protocols.ss7.map.api.MAPApplicationContext;
-import org.mobicents.protocols.ss7.map.api.MAPApplicationContextName;
-import org.mobicents.protocols.ss7.map.api.MAPApplicationContextVersion;
-import org.mobicents.protocols.ss7.map.api.MAPException;
-import org.mobicents.protocols.ss7.map.api.MAPProvider;
-import org.mobicents.protocols.ss7.map.api.dialog.MAPRefuseReason;
-import org.mobicents.protocols.ss7.map.api.errors.MAPErrorCode;
-import org.mobicents.protocols.ss7.map.api.errors.MAPErrorMessage;
-import org.mobicents.protocols.ss7.map.api.primitives.AddressNature;
-import org.mobicents.protocols.ss7.map.api.primitives.AddressString;
-import org.mobicents.protocols.ss7.map.api.primitives.ISDNAddressString;
-import org.mobicents.protocols.ss7.map.api.service.sms.MAPDialogSms;
-import org.mobicents.protocols.ss7.map.api.service.sms.SendRoutingInfoForSMResponse;
-import org.mobicents.protocols.ss7.sccp.impl.parameter.ParameterFactoryImpl;
-import org.mobicents.protocols.ss7.sccp.parameter.GlobalTitle;
-import org.mobicents.protocols.ss7.sccp.parameter.ParameterFactory;
-import org.mobicents.protocols.ss7.sccp.parameter.SccpAddress;
-import org.mobicents.protocols.ss7.tcap.api.MessageType;
-import org.mobicents.protocols.ss7.tcap.asn.ApplicationContextName;
-import org.mobicents.protocols.ss7.tcap.asn.comp.Problem;
-import org.mobicents.slee.resource.map.MAPContextInterfaceFactory;
-import org.mobicents.slee.resource.map.events.DialogClose;
-import org.mobicents.slee.resource.map.events.DialogDelimiter;
-import org.mobicents.slee.resource.map.events.DialogProviderAbort;
-import org.mobicents.slee.resource.map.events.DialogReject;
-import org.mobicents.slee.resource.map.events.DialogTimeout;
-import org.mobicents.slee.resource.map.events.DialogUserAbort;
-import org.mobicents.slee.resource.map.events.ErrorComponent;
-import org.mobicents.slee.resource.map.events.InvokeTimeout;
-import org.mobicents.slee.resource.map.events.RejectComponent;
+import org.restcomm.protocols.ss7.indicator.NatureOfAddress;
+import org.restcomm.protocols.ss7.indicator.NumberingPlan;
+import org.restcomm.protocols.ss7.indicator.RoutingIndicator;
+import org.restcomm.protocols.ss7.map.api.MAPApplicationContext;
+import org.restcomm.protocols.ss7.map.api.MAPApplicationContextName;
+import org.restcomm.protocols.ss7.map.api.MAPApplicationContextVersion;
+import org.restcomm.protocols.ss7.map.api.MAPException;
+import org.restcomm.protocols.ss7.map.api.MAPProvider;
+import org.restcomm.protocols.ss7.map.api.dialog.MAPRefuseReason;
+import org.restcomm.protocols.ss7.map.api.errors.MAPErrorCode;
+import org.restcomm.protocols.ss7.map.api.errors.MAPErrorMessage;
+import org.restcomm.protocols.ss7.map.api.primitives.AddressNature;
+import org.restcomm.protocols.ss7.map.api.primitives.AddressString;
+import org.restcomm.protocols.ss7.map.api.primitives.ISDNAddressString;
+import org.restcomm.protocols.ss7.map.api.service.sms.MAPDialogSms;
+import org.restcomm.protocols.ss7.map.api.service.sms.SendRoutingInfoForSMResponse;
+import org.restcomm.protocols.ss7.sccp.impl.parameter.ParameterFactoryImpl;
+import org.restcomm.protocols.ss7.sccp.parameter.GlobalTitle;
+import org.restcomm.protocols.ss7.sccp.parameter.ParameterFactory;
+import org.restcomm.protocols.ss7.sccp.parameter.SccpAddress;
+import org.restcomm.protocols.ss7.tcap.api.MessageType;
+import org.restcomm.protocols.ss7.tcap.asn.ApplicationContextName;
+import org.restcomm.protocols.ss7.tcap.asn.comp.Problem;
+import org.restcomm.slee.resource.map.MAPContextInterfaceFactory;
+import org.restcomm.slee.resource.map.events.DialogClose;
+import org.restcomm.slee.resource.map.events.DialogDelimiter;
+import org.restcomm.slee.resource.map.events.DialogProviderAbort;
+import org.restcomm.slee.resource.map.events.DialogReject;
+import org.restcomm.slee.resource.map.events.DialogTimeout;
+import org.restcomm.slee.resource.map.events.DialogUserAbort;
+import org.restcomm.slee.resource.map.events.ErrorComponent;
+import org.restcomm.slee.resource.map.events.InvokeTimeout;
+import org.restcomm.slee.resource.map.events.RejectComponent;
 import org.mobicents.ussdgateway.UssdPropertiesManagement;
 import org.mobicents.ussdgateway.UssdPropertiesManagementMBean;
 import org.mobicents.ussdgateway.UssdStatAggregator;
@@ -128,7 +128,7 @@ public abstract class SriSbb extends USSDBaseSbb implements SriChild {
 			mapDialogSms.setNetworkId(networkId);
 
 			mapDialogSms.addSendRoutingInfoForSMRequest(this.getCalledPartyISDNAddressString(msisdn), true,
-					this.getUssdGwAddress(networkId), null, false, null, null, null);
+					this.getUssdGwAddress(networkId), null, false, null, null, null, false, null, false, false, null, null);
 
 			// 2. Create the ACI and attach this SBB
 			ActivityContextInterface sriDialogACI = this.mapAcif.getActivityContextInterface(mapDialogSms);
@@ -446,7 +446,7 @@ public abstract class SriSbb extends USSDBaseSbb implements SriChild {
 
 	protected ISDNAddressString getCalledPartyISDNAddressString(String destinationAddress) {
 		return super.mapParameterFactory.createISDNAddressString(AddressNature.international_number,
-				org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, destinationAddress);
+				org.restcomm.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, destinationAddress);
 	}
 
 	protected SccpAddress convertAddressFieldToSCCPAddress(String address) {
@@ -476,7 +476,7 @@ public abstract class SriSbb extends USSDBaseSbb implements SriChild {
 		if (address == null) {
 			address = this.mapParameterFactory.createAddressString(AddressNature.international_number,
 					// TODO: getUssdGWGt seems wrong here?
-					org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN,
+					org.restcomm.protocols.ss7.map.api.primitives.NumberingPlan.ISDN,
 					ussdPropertiesManagement.getUssdGt(networkId));
 			this.setUssdGwAddressCMP(address);
 		}

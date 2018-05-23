@@ -76,7 +76,7 @@ public class CDRTableCreateTask extends CDRTaskBase {
     /*
      * (non-Javadoc)
      * 
-     * @see org.mobicents.slee.resource.jdbc.task.simple.SimpleJdbcTask#executeSimple(org.mobicents.slee.resource.jdbc.task.
+     * @see org.restcomm.slee.resource.jdbc.task.simple.SimpleJdbcTask#executeSimple(org.restcomm.slee.resource.jdbc.task.
      * JdbcTaskContext)
      */
     @Override

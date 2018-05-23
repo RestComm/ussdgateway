@@ -35,7 +35,7 @@ import javolution.xml.XMLObjectWriter;
 import javolution.xml.stream.XMLStreamException;
 
 import org.apache.log4j.Logger;
-import org.mobicents.protocols.ss7.map.primitives.ArrayListSerializingBase;
+import org.restcomm.protocols.ss7.map.primitives.ArrayListSerializingBase;
 
 /**
  * @author amit bhayani

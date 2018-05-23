@@ -19,7 +19,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.mobicents.protocols.ss7.tcap</groupId>
+			<groupId>org.restcomm.protocols.ss7.tcap</groupId>
 			<artifactId>tcap-api</artifactId>
 			<version>${jss7.restcomm.version}</version>
 			<scope>compile</scope>
@@ -42,40 +42,40 @@
 				<!-- <exclusion> <groupId>org.mobicents.protocols.asn</groupId> <artifactId>asn</artifactId> </exclusion> -->
 
 				<exclusion>
-					<groupId>org.mobicents.protocols.ss7.congestion</groupId>
+					<groupId>org.restcomm.protocols.ss7.congestion</groupId>
 					<artifactId>congestion</artifactId>
 				</exclusion>
 				<exclusion>
-					<groupId>org.mobicents.protocols.ss7.isup</groupId>
+					<groupId>org.restcomm.protocols.ss7.isup</groupId>
 					<artifactId>isup-api</artifactId>
 				</exclusion>
 				<exclusion>
-					<groupId>org.mobicents.protocols.ss7.isup</groupId>
+					<groupId>org.restcomm.protocols.ss7.isup</groupId>
 					<artifactId>isup-impl</artifactId>
 				</exclusion>
 				<exclusion>
-					<groupId>org.mobicents.protocols.ss7.mtp</groupId>
+					<groupId>org.restcomm.protocols.ss7.mtp</groupId>
 					<artifactId>mtp-api</artifactId>
 				</exclusion>
 				<exclusion>
-					<groupId>org.mobicents.protocols.ss7.mtp</groupId>
+					<groupId>org.restcomm.protocols.ss7.mtp</groupId>
 					<artifactId>mtp</artifactId>
 				</exclusion>
 				<exclusion>
-					<groupId>org.mobicents.protocols.ss7.sccp</groupId>
+					<groupId>org.restcomm.protocols.ss7.sccp</groupId>
 					<artifactId>sccp-api</artifactId>
 				</exclusion>
 				<exclusion>
-					<groupId>org.mobicents.protocols.ss7.sccp</groupId>
+					<groupId>org.restcomm.protocols.ss7.sccp</groupId>
 					<artifactId>sccp-impl</artifactId>
 				</exclusion>
 
 				<exclusion>
-					<groupId>org.mobicents.protocols.ss7.tcap</groupId>
+					<groupId>org.restcomm.protocols.ss7.tcap</groupId>
 					<artifactId>tcap-api</artifactId>
 				</exclusion>
 				<exclusion>
-					<groupId>org.mobicents.protocols.ss7.tcap</groupId>
+					<groupId>org.restcomm.protocols.ss7.tcap</groupId>
 					<artifactId>tcap-impl</artifactId>
 				</exclusion>
 

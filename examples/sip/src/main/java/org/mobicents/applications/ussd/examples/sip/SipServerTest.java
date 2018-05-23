@@ -24,7 +24,7 @@ import javax.sip.address.*;
 import javax.sip.header.*;
 import javax.sip.message.*;
 
-import org.mobicents.protocols.ss7.map.api.MAPMessageType;
+import org.restcomm.protocols.ss7.map.api.MAPMessageType;
 import org.mobicents.ussdgateway.AnyExt;
 import org.mobicents.ussdgateway.EventsSerializeFactory;
 import org.mobicents.ussdgateway.SipUssdMessage;

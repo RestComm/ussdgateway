@@ -88,13 +88,13 @@
 
 		<!-- M3UA CLI -->
 		<dependency>
-			<groupId>org.mobicents.protocols.ss7.m3ua</groupId>
+			<groupId>org.restcomm.protocols.ss7.m3ua</groupId>
 			<artifactId>m3ua-cli-sctp</artifactId>
 			<version>${jss7.restcomm.version}</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.mobicents.protocols.ss7.m3ua</groupId>
+			<groupId>org.restcomm.protocols.ss7.m3ua</groupId>
 			<artifactId>m3ua-cli-m3ua</artifactId>
 			<version>${jss7.restcomm.version}</version>
 			<scope>runtime</scope>
@@ -102,7 +102,7 @@
 
 		<!-- SCCP CLI -->
 		<dependency>
-			<groupId>org.mobicents.protocols.ss7.sccp</groupId>
+			<groupId>org.restcomm.protocols.ss7.sccp</groupId>
 			<artifactId>sccp-cli</artifactId>
 			<version>${jss7.restcomm.version}</version>
 			<scope>runtime</scope>
@@ -110,13 +110,13 @@
 
         <dependency>
             <artifactId>statistics-api</artifactId>
-            <groupId>org.mobicents.protocols.ss7.statistics</groupId>
+            <groupId>org.restcomm.protocols.ss7.statistics</groupId>
             <version>${jss7.restcomm.version}</version>
 			<scope>runtime</scope>
         </dependency>
         <dependency>
             <artifactId>statistics-impl</artifactId>
-            <groupId>org.mobicents.protocols.ss7.statistics</groupId>
+            <groupId>org.restcomm.protocols.ss7.statistics</groupId>
             <version>${jss7.restcomm.version}</version>
 			<scope>runtime</scope>
         </dependency>

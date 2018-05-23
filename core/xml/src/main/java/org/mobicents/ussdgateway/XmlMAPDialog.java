@@ -28,40 +28,40 @@ import javolution.xml.XMLFormat;
 import javolution.xml.XMLSerializable;
 import javolution.xml.stream.XMLStreamException;
 
-import org.mobicents.protocols.ss7.map.api.MAPApplicationContext;
-import org.mobicents.protocols.ss7.map.api.MAPApplicationContextName;
-import org.mobicents.protocols.ss7.map.api.MAPApplicationContextVersion;
-import org.mobicents.protocols.ss7.map.api.MAPDialog;
-import org.mobicents.protocols.ss7.map.api.MAPException;
-import org.mobicents.protocols.ss7.map.api.MAPMessage;
-import org.mobicents.protocols.ss7.map.api.MAPMessageType;
-import org.mobicents.protocols.ss7.map.api.MAPServiceBase;
-import org.mobicents.protocols.ss7.map.api.dialog.MAPAbortProviderReason;
-import org.mobicents.protocols.ss7.map.api.dialog.MAPDialogState;
-import org.mobicents.protocols.ss7.map.api.dialog.MAPRefuseReason;
-import org.mobicents.protocols.ss7.map.api.dialog.MAPUserAbortChoice;
-import org.mobicents.protocols.ss7.map.api.dialog.ProcedureCancellationReason;
-import org.mobicents.protocols.ss7.map.api.dialog.Reason;
-import org.mobicents.protocols.ss7.map.api.dialog.ResourceUnavailableReason;
-import org.mobicents.protocols.ss7.map.api.errors.MAPErrorMessage;
-import org.mobicents.protocols.ss7.map.api.primitives.AddressString;
-import org.mobicents.protocols.ss7.map.api.primitives.MAPExtensionContainer;
-import org.mobicents.protocols.ss7.map.api.service.supplementary.MAPDialogSupplementary;
-import org.mobicents.protocols.ss7.map.dialog.MAPUserAbortChoiceImpl;
-import org.mobicents.protocols.ss7.map.primitives.AddressStringImpl;
-import org.mobicents.protocols.ss7.map.service.supplementary.ProcessUnstructuredSSRequestImpl;
-import org.mobicents.protocols.ss7.map.service.supplementary.ProcessUnstructuredSSResponseImpl;
-import org.mobicents.protocols.ss7.map.service.supplementary.UnstructuredSSNotifyRequestImpl;
-import org.mobicents.protocols.ss7.map.service.supplementary.UnstructuredSSNotifyResponseImpl;
-import org.mobicents.protocols.ss7.map.service.supplementary.UnstructuredSSRequestImpl;
-import org.mobicents.protocols.ss7.map.service.supplementary.UnstructuredSSResponseImpl;
-import org.mobicents.protocols.ss7.sccp.impl.parameter.SccpAddressImpl;
-import org.mobicents.protocols.ss7.sccp.parameter.SccpAddress;
-import org.mobicents.protocols.ss7.tcap.api.MessageType;
-import org.mobicents.protocols.ss7.tcap.asn.comp.Invoke;
-import org.mobicents.protocols.ss7.tcap.asn.comp.Problem;
-import org.mobicents.protocols.ss7.tcap.asn.comp.ReturnResult;
-import org.mobicents.protocols.ss7.tcap.asn.comp.ReturnResultLast;
+import org.restcomm.protocols.ss7.map.api.MAPApplicationContext;
+import org.restcomm.protocols.ss7.map.api.MAPApplicationContextName;
+import org.restcomm.protocols.ss7.map.api.MAPApplicationContextVersion;
+import org.restcomm.protocols.ss7.map.api.MAPDialog;
+import org.restcomm.protocols.ss7.map.api.MAPException;
+import org.restcomm.protocols.ss7.map.api.MAPMessage;
+import org.restcomm.protocols.ss7.map.api.MAPMessageType;
+import org.restcomm.protocols.ss7.map.api.MAPServiceBase;
+import org.restcomm.protocols.ss7.map.api.dialog.MAPAbortProviderReason;
+import org.restcomm.protocols.ss7.map.api.dialog.MAPDialogState;
+import org.restcomm.protocols.ss7.map.api.dialog.MAPRefuseReason;
+import org.restcomm.protocols.ss7.map.api.dialog.MAPUserAbortChoice;
+import org.restcomm.protocols.ss7.map.api.dialog.ProcedureCancellationReason;
+import org.restcomm.protocols.ss7.map.api.dialog.Reason;
+import org.restcomm.protocols.ss7.map.api.dialog.ResourceUnavailableReason;
+import org.restcomm.protocols.ss7.map.api.errors.MAPErrorMessage;
+import org.restcomm.protocols.ss7.map.api.primitives.AddressString;
+import org.restcomm.protocols.ss7.map.api.primitives.MAPExtensionContainer;
+import org.restcomm.protocols.ss7.map.api.service.supplementary.MAPDialogSupplementary;
+import org.restcomm.protocols.ss7.map.dialog.MAPUserAbortChoiceImpl;
+import org.restcomm.protocols.ss7.map.primitives.AddressStringImpl;
+import org.restcomm.protocols.ss7.map.service.supplementary.ProcessUnstructuredSSRequestImpl;
+import org.restcomm.protocols.ss7.map.service.supplementary.ProcessUnstructuredSSResponseImpl;
+import org.restcomm.protocols.ss7.map.service.supplementary.UnstructuredSSNotifyRequestImpl;
+import org.restcomm.protocols.ss7.map.service.supplementary.UnstructuredSSNotifyResponseImpl;
+import org.restcomm.protocols.ss7.map.service.supplementary.UnstructuredSSRequestImpl;
+import org.restcomm.protocols.ss7.map.service.supplementary.UnstructuredSSResponseImpl;
+import org.restcomm.protocols.ss7.sccp.impl.parameter.SccpAddressImpl;
+import org.restcomm.protocols.ss7.sccp.parameter.SccpAddress;
+import org.restcomm.protocols.ss7.tcap.api.MessageType;
+import org.restcomm.protocols.ss7.tcap.asn.comp.Invoke;
+import org.restcomm.protocols.ss7.tcap.asn.comp.Problem;
+import org.restcomm.protocols.ss7.tcap.asn.comp.ReturnResult;
+import org.restcomm.protocols.ss7.tcap.asn.comp.ReturnResultLast;
 
 /**
  * <p>
@@ -396,6 +396,34 @@ public class XmlMAPDialog implements MAPDialog, XMLSerializable {
 	@Override
 	public void setNetworkId(int networkId) {
         this.networkId = networkId;
+	}
+	
+	@Override
+	public long getStartTimeDialog() {
+		//method stub
+		return -1;
+	}
+	
+	@Override
+	public long getIdleTaskTimeout() {
+		//method stub
+		return -1;
+	}
+
+	@Override
+	public void setIdleTaskTimeout(long idleTaskTimeoutMs) {
+		//method stub
+	}
+	
+	@Override
+	public void setDoNotSendProtocolVersion(Boolean doNotSendProtocolVersion) {
+		//method stub 
+	}
+	
+	@Override
+	public Boolean isDoNotSendProtcolVersion() {
+		//method stub
+		return null;
 	}
 
 	/**

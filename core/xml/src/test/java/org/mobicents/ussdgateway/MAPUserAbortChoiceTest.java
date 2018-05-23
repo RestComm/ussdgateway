@@ -22,10 +22,10 @@ package org.mobicents.ussdgateway;
 import static org.testng.Assert.assertEquals;
 import javolution.xml.stream.XMLStreamException;
 
-import org.mobicents.protocols.ss7.map.api.dialog.MAPUserAbortChoice;
-import org.mobicents.protocols.ss7.map.api.dialog.ProcedureCancellationReason;
-import org.mobicents.protocols.ss7.map.api.dialog.ResourceUnavailableReason;
-import org.mobicents.protocols.ss7.map.dialog.MAPUserAbortChoiceImpl;
+import org.restcomm.protocols.ss7.map.api.dialog.MAPUserAbortChoice;
+import org.restcomm.protocols.ss7.map.api.dialog.ProcedureCancellationReason;
+import org.restcomm.protocols.ss7.map.api.dialog.ResourceUnavailableReason;
+import org.restcomm.protocols.ss7.map.dialog.MAPUserAbortChoiceImpl;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;

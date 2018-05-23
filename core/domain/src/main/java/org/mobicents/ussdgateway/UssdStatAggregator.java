@@ -23,11 +23,11 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.mobicents.protocols.ss7.statistics.StatDataCollectionImpl;
-import org.mobicents.protocols.ss7.statistics.api.LongValue;
-import org.mobicents.protocols.ss7.statistics.api.StatDataCollection;
-import org.mobicents.protocols.ss7.statistics.api.StatDataCollectorType;
-import org.mobicents.protocols.ss7.statistics.api.StatResult;
+import org.restcomm.protocols.ss7.statistics.StatDataCollectionImpl;
+import org.restcomm.protocols.ss7.statistics.api.LongValue;
+import org.restcomm.protocols.ss7.statistics.api.StatDataCollection;
+import org.restcomm.protocols.ss7.statistics.api.StatDataCollectorType;
+import org.restcomm.protocols.ss7.statistics.api.StatResult;
 
 import com.codahale.metrics.Counter;
 

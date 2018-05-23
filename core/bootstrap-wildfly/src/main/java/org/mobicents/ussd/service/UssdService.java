@@ -7,12 +7,12 @@ import org.jboss.dmr.ModelNode;
 import org.jboss.logging.Logger;
 import org.jboss.msc.service.*;
 import org.jboss.msc.value.InjectedValue;
-import org.mobicents.protocols.ss7.scheduler.DefaultClock;
-import org.mobicents.protocols.ss7.scheduler.Scheduler;
-import org.mobicents.ss7.management.console.ShellExecutor;
-import org.mobicents.ss7.management.console.ShellServer;
-import org.mobicents.ss7.management.console.ShellServerWildFly;
-import org.mobicents.ss7.service.SS7ServiceInterface;
+import org.restcomm.protocols.ss7.scheduler.DefaultClock;
+import org.restcomm.protocols.ss7.scheduler.Scheduler;
+import org.restcomm.ss7.management.console.ShellExecutor;
+import org.restcomm.ss7.management.console.ShellServer;
+import org.restcomm.ss7.management.console.ShellServerWildFly;
+import org.restcomm.ss7.service.SS7ServiceInterface;
 import org.mobicents.ussdgateway.UssdManagement;
 import org.mobicents.ussdgateway.UssdShellExecutor;
 import org.mobicents.ussdgateway.UssdStatProviderJmx;
@@ -55,7 +55,9 @@ public class UssdService implements Service<UssdService> {
     private Scheduler schedulerMBean = null;
     private UssdManagement ussdManagementMBean = null;
     private UssdShellExecutor ussdShellExecutor = null;
-    private UssdStatProviderJmx statsProviderJmx=null;
+    
+    //not available in community version
+//    private UssdStatProviderJmx statsProviderJmx=null;
     
    private ShellServer shellExecutorMBean = null;
 
@@ -102,7 +104,7 @@ public class UssdService implements Service<UssdService> {
         log.info("Starting UssdService");
 
         this.ussdManagementMBean = initManagementMBean();
-        this.statsProviderJmx=new UssdStatProviderJmx(ss7Service.getValue().getSs7Management());
+//        this.statsProviderJmx=new UssdStatProviderJmx(ss7Service.getValue().getSs7Management());
 
         if (shellExecutorExists()) {
 
@@ -138,11 +140,11 @@ public class UssdService implements Service<UssdService> {
             }
         }
         
-        try {
-            statsProviderJmx.start();
-        } catch(Exception e) {
-            throw new StartException("Failed to start ussd statistics privider: " + e.getMessage(), e);
-        }
+//        try {
+//            statsProviderJmx.start();
+//        } catch(Exception e) {
+//            throw new StartException("Failed to start ussd statistics privider: " + e.getMessage(), e);
+//        }
     }
 
     private Scheduler initSchedulerMBean() {
@@ -204,8 +206,8 @@ public class UssdService implements Service<UssdService> {
                 shellExecutorMBean.stop();
             if (schedulerMBean != null)
                 schedulerMBean.stop();
-            if(statsProviderJmx != null)
-                statsProviderJmx.stop();
+//            if(statsProviderJmx != null)
+//                statsProviderJmx.stop();
         } catch (Exception e) {
             log.warn("MBean stopping is failed: " + e);
         }

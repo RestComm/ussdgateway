@@ -21,23 +21,23 @@
 	<dependencies>
        <dependency>
 			<artifactId>jmxss7</artifactId>
-			<groupId>org.mobicents.protocols.ss7.oam.common</groupId>
-			<version>${jss7.restcomm.version}</version>
+			<groupId>org.restcomm.protocols.ss7.oam.common</groupId>
+			<version>${common.oam.jss7.restcomm.version}</version>
 		</dependency>
 
         <dependency>
             <artifactId>statistics-api</artifactId>
-            <groupId>org.mobicents.protocols.ss7.statistics</groupId>
+            <groupId>org.restcomm.protocols.ss7.statistics</groupId>
             <version>${jss7.restcomm.version}</version>
         </dependency>
         <dependency>
             <artifactId>statistics-impl</artifactId>
-            <groupId>org.mobicents.protocols.ss7.statistics</groupId>
+            <groupId>org.restcomm.protocols.ss7.statistics</groupId>
             <version>${jss7.restcomm.version}</version>
         </dependency>
         
 		<dependency>
-			<groupId>org.mobicents.protocols.ss7.map</groupId>
+			<groupId>org.restcomm.protocols.ss7.map</groupId>
 			<artifactId>map-impl</artifactId>
 			<version>${jss7.restcomm.version}</version>
 		</dependency>        

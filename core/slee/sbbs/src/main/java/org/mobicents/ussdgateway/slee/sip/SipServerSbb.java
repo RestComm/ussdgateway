@@ -52,59 +52,59 @@ import net.java.slee.resource.sip.SipActivityContextInterfaceFactory;
 import net.java.slee.resource.sip.SleeSipProvider;
 
 import org.joda.time.DateTime;
-import org.mobicents.protocols.ss7.indicator.NatureOfAddress;
-import org.mobicents.protocols.ss7.indicator.RoutingIndicator;
-import org.mobicents.protocols.ss7.map.api.MAPApplicationContext;
-import org.mobicents.protocols.ss7.map.api.MAPApplicationContextName;
-import org.mobicents.protocols.ss7.map.api.MAPApplicationContextVersion;
-import org.mobicents.protocols.ss7.map.api.MAPDialog;
-import org.mobicents.protocols.ss7.map.api.MAPException;
-import org.mobicents.protocols.ss7.map.api.MAPMessage;
-import org.mobicents.protocols.ss7.map.api.MAPMessageType;
-import org.mobicents.protocols.ss7.map.api.MAPProvider;
-import org.mobicents.protocols.ss7.map.api.datacoding.CBSDataCodingScheme;
-import org.mobicents.protocols.ss7.map.api.dialog.MAPDialogState;
-import org.mobicents.protocols.ss7.map.api.dialog.MAPUserAbortChoice;
-import org.mobicents.protocols.ss7.map.api.dialog.ProcedureCancellationReason;
-import org.mobicents.protocols.ss7.map.api.errors.MAPErrorCode;
-import org.mobicents.protocols.ss7.map.api.primitives.AddressNature;
-import org.mobicents.protocols.ss7.map.api.primitives.AddressString;
-import org.mobicents.protocols.ss7.map.api.primitives.AlertingLevel;
-import org.mobicents.protocols.ss7.map.api.primitives.AlertingPattern;
-import org.mobicents.protocols.ss7.map.api.primitives.IMSI;
-import org.mobicents.protocols.ss7.map.api.primitives.ISDNAddressString;
-import org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan;
-import org.mobicents.protocols.ss7.map.api.primitives.USSDString;
-import org.mobicents.protocols.ss7.map.api.service.sms.LocationInfoWithLMSI;
-import org.mobicents.protocols.ss7.map.api.service.supplementary.MAPDialogSupplementary;
-import org.mobicents.protocols.ss7.map.api.service.supplementary.ProcessUnstructuredSSResponse;
-import org.mobicents.protocols.ss7.map.api.service.supplementary.UnstructuredSSNotifyRequest;
-import org.mobicents.protocols.ss7.map.api.service.supplementary.UnstructuredSSNotifyResponse;
-import org.mobicents.protocols.ss7.map.api.service.supplementary.UnstructuredSSRequest;
-import org.mobicents.protocols.ss7.map.api.service.supplementary.UnstructuredSSResponse;
-import org.mobicents.protocols.ss7.map.dialog.MAPUserAbortChoiceImpl;
-import org.mobicents.protocols.ss7.map.primitives.AlertingPatternImpl;
-import org.mobicents.protocols.ss7.map.primitives.ISDNAddressStringImpl;
-import org.mobicents.protocols.ss7.map.primitives.USSDStringImpl;
-import org.mobicents.protocols.ss7.map.service.supplementary.UnstructuredSSNotifyRequestImpl;
-import org.mobicents.protocols.ss7.map.service.supplementary.UnstructuredSSRequestImpl;
-import org.mobicents.protocols.ss7.sccp.impl.parameter.ParameterFactoryImpl;
-import org.mobicents.protocols.ss7.sccp.parameter.GlobalTitle;
-import org.mobicents.protocols.ss7.sccp.parameter.ParameterFactory;
-import org.mobicents.protocols.ss7.sccp.parameter.SccpAddress;
-import org.mobicents.protocols.ss7.tcap.api.MessageType;
+import org.restcomm.protocols.ss7.indicator.NatureOfAddress;
+import org.restcomm.protocols.ss7.indicator.RoutingIndicator;
+import org.restcomm.protocols.ss7.map.api.MAPApplicationContext;
+import org.restcomm.protocols.ss7.map.api.MAPApplicationContextName;
+import org.restcomm.protocols.ss7.map.api.MAPApplicationContextVersion;
+import org.restcomm.protocols.ss7.map.api.MAPDialog;
+import org.restcomm.protocols.ss7.map.api.MAPException;
+import org.restcomm.protocols.ss7.map.api.MAPMessage;
+import org.restcomm.protocols.ss7.map.api.MAPMessageType;
+import org.restcomm.protocols.ss7.map.api.MAPProvider;
+import org.restcomm.protocols.ss7.map.api.datacoding.CBSDataCodingScheme;
+import org.restcomm.protocols.ss7.map.api.dialog.MAPDialogState;
+import org.restcomm.protocols.ss7.map.api.dialog.MAPUserAbortChoice;
+import org.restcomm.protocols.ss7.map.api.dialog.ProcedureCancellationReason;
+import org.restcomm.protocols.ss7.map.api.errors.MAPErrorCode;
+import org.restcomm.protocols.ss7.map.api.primitives.AddressNature;
+import org.restcomm.protocols.ss7.map.api.primitives.AddressString;
+import org.restcomm.protocols.ss7.map.api.primitives.AlertingLevel;
+import org.restcomm.protocols.ss7.map.api.primitives.AlertingPattern;
+import org.restcomm.protocols.ss7.map.api.primitives.IMSI;
+import org.restcomm.protocols.ss7.map.api.primitives.ISDNAddressString;
+import org.restcomm.protocols.ss7.map.api.primitives.NumberingPlan;
+import org.restcomm.protocols.ss7.map.api.primitives.USSDString;
+import org.restcomm.protocols.ss7.map.api.service.sms.LocationInfoWithLMSI;
+import org.restcomm.protocols.ss7.map.api.service.supplementary.MAPDialogSupplementary;
+import org.restcomm.protocols.ss7.map.api.service.supplementary.ProcessUnstructuredSSResponse;
+import org.restcomm.protocols.ss7.map.api.service.supplementary.UnstructuredSSNotifyRequest;
+import org.restcomm.protocols.ss7.map.api.service.supplementary.UnstructuredSSNotifyResponse;
+import org.restcomm.protocols.ss7.map.api.service.supplementary.UnstructuredSSRequest;
+import org.restcomm.protocols.ss7.map.api.service.supplementary.UnstructuredSSResponse;
+import org.restcomm.protocols.ss7.map.dialog.MAPUserAbortChoiceImpl;
+import org.restcomm.protocols.ss7.map.primitives.AlertingPatternImpl;
+import org.restcomm.protocols.ss7.map.primitives.ISDNAddressStringImpl;
+import org.restcomm.protocols.ss7.map.primitives.USSDStringImpl;
+import org.restcomm.protocols.ss7.map.service.supplementary.UnstructuredSSNotifyRequestImpl;
+import org.restcomm.protocols.ss7.map.service.supplementary.UnstructuredSSRequestImpl;
+import org.restcomm.protocols.ss7.sccp.impl.parameter.ParameterFactoryImpl;
+import org.restcomm.protocols.ss7.sccp.parameter.GlobalTitle;
+import org.restcomm.protocols.ss7.sccp.parameter.ParameterFactory;
+import org.restcomm.protocols.ss7.sccp.parameter.SccpAddress;
+import org.restcomm.protocols.ss7.tcap.api.MessageType;
 import org.mobicents.slee.ChildRelationExt;
-import org.mobicents.slee.resource.map.MAPContextInterfaceFactory;
-import org.mobicents.slee.resource.map.events.DialogAccept;
-import org.mobicents.slee.resource.map.events.DialogProviderAbort;
-import org.mobicents.slee.resource.map.events.DialogReject;
-import org.mobicents.slee.resource.map.events.DialogRelease;
-import org.mobicents.slee.resource.map.events.DialogTimeout;
-import org.mobicents.slee.resource.map.events.DialogUserAbort;
-import org.mobicents.slee.resource.map.events.ErrorComponent;
-import org.mobicents.slee.resource.map.events.InvokeTimeout;
-import org.mobicents.slee.resource.map.events.MAPEvent;
-import org.mobicents.slee.resource.map.events.RejectComponent;
+import org.restcomm.slee.resource.map.MAPContextInterfaceFactory;
+import org.restcomm.slee.resource.map.events.DialogAccept;
+import org.restcomm.slee.resource.map.events.DialogProviderAbort;
+import org.restcomm.slee.resource.map.events.DialogReject;
+import org.restcomm.slee.resource.map.events.DialogRelease;
+import org.restcomm.slee.resource.map.events.DialogTimeout;
+import org.restcomm.slee.resource.map.events.DialogUserAbort;
+import org.restcomm.slee.resource.map.events.ErrorComponent;
+import org.restcomm.slee.resource.map.events.InvokeTimeout;
+import org.restcomm.slee.resource.map.events.MAPEvent;
+import org.restcomm.slee.resource.map.events.RejectComponent;
 import org.mobicents.ussdgateway.AnyExt;
 import org.mobicents.ussdgateway.EventsSerializeFactory;
 import org.mobicents.ussdgateway.SipUssdErrorCode;
@@ -879,8 +879,8 @@ public abstract class SipServerSbb extends ChildServerSbb implements SriParent {
 	 * @see
 	 * org.mobicents.ussdgateway.slee.sri.SriParent#onSRIResult(org.mobicents
 	 * .ussdgateway.slee.sri.SriSbbLocalObject,
-	 * org.mobicents.protocols.ss7.map.api.primitives.IMSI,
-	 * org.mobicents.protocols.ss7.map.api.service.sms.LocationInfoWithLMSI)
+	 * org.restcomm.protocols.ss7.map.api.primitives.IMSI,
+	 * org.restcomm.protocols.ss7.map.api.service.sms.LocationInfoWithLMSI)
 	 */
 	@Override
 	public void onSRIResult(SriSbbLocalObject sriSbb, IMSI imsi, LocationInfoWithLMSI locationInfo) {
@@ -1058,7 +1058,7 @@ public abstract class SipServerSbb extends ChildServerSbb implements SriParent {
 		SccpAddress address = this.getUssdGwSCCPAddressCMP();
 		if (address == null) {
             GlobalTitle gt = sccpParameterFact.createGlobalTitle(ussdPropertiesManagement.getUssdGt(), 0,
-                    org.mobicents.protocols.ss7.indicator.NumberingPlan.ISDN_TELEPHONY, null, NatureOfAddress.INTERNATIONAL);
+                    org.restcomm.protocols.ss7.indicator.NumberingPlan.ISDN_TELEPHONY, null, NatureOfAddress.INTERNATIONAL);
             address = sccpParameterFact.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, gt, 0, ussdPropertiesManagement.getUssdSsn());
 			this.setUssdGwSCCPAddressCMP(address);
 		}
@@ -1069,7 +1069,7 @@ public abstract class SipServerSbb extends ChildServerSbb implements SriParent {
         AddressString address = this.getUssdGwAddressCMP();
         if (address == null) {
             address = this.mapParameterFactory.createAddressString(AddressNature.international_number,
-                    org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, ussdPropertiesManagement.getUssdGt());
+                    org.restcomm.protocols.ss7.map.api.primitives.NumberingPlan.ISDN, ussdPropertiesManagement.getUssdGt());
             this.setUssdGwAddressCMP(address);
         }
         return address;
@@ -1080,13 +1080,13 @@ public abstract class SipServerSbb extends ChildServerSbb implements SriParent {
 		// TODO : use the networkNodeNumber also to derive if its
 		// International / ISDN?
         GlobalTitle gt = sccpParameterFact.createGlobalTitle(getLocationInfoCMP().getNetworkNodeNumber().getAddress(), 0,
-                org.mobicents.protocols.ss7.indicator.NumberingPlan.ISDN_TELEPHONY, null, NatureOfAddress.INTERNATIONAL);
+                org.restcomm.protocols.ss7.indicator.NumberingPlan.ISDN_TELEPHONY, null, NatureOfAddress.INTERNATIONAL);
         return sccpParameterFact.createSccpAddress(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, gt, 0, ussdPropertiesManagement.getMscSsn());
 	}
 
 	private AddressString getTargetReference() {
 		return this.mapParameterFactory.createAddressString(AddressNature.international_number,
-				org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan.land_mobile, getImsiCMP().getData());
+				org.restcomm.protocols.ss7.map.api.primitives.NumberingPlan.land_mobile, getImsiCMP().getData());
 	}
 
 	private MAPApplicationContext getUSSDMAPApplicationContext() throws MAPException {

@@ -13,8 +13,8 @@ import org.jboss.dmr.ModelNode;
 import org.jboss.logging.Logger;
 import org.jboss.msc.service.ServiceController;
 import org.jboss.msc.service.ServiceName;
-import org.mobicents.ss7.service.SS7ExtensionService;
-import org.mobicents.ss7.service.SS7ServiceInterface;
+import org.restcomm.ss7.service.SS7ExtensionService;
+import org.restcomm.ss7.service.SS7ServiceInterface;
 import org.mobicents.ussd.service.UssdService;
 
 import javax.management.MBeanServer;

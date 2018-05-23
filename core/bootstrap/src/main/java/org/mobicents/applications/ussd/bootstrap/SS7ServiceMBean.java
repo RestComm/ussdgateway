@@ -24,7 +24,7 @@ package org.mobicents.applications.ussd.bootstrap;
  * @author kulikov
  */
 public interface SS7ServiceMBean {
-	public static final String ONAME = "org.mobicents.ss7:service=SS7Service";
+	public static final String ONAME = "org.restcomm.ss7:service=SS7Service";
 
 	public void start() throws Exception;
 

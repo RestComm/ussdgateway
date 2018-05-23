@@ -23,7 +23,7 @@ import javolution.text.CharArray;
 import javolution.xml.XMLFormat;
 import javolution.xml.stream.XMLStreamException;
 
-import org.mobicents.protocols.ss7.map.api.MAPMessageType;
+import org.restcomm.protocols.ss7.map.api.MAPMessageType;
 
 /**
  * @author Amit Bhayani

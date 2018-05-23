@@ -47,11 +47,13 @@
 		<restcomm.resources.http-client.version>7.2.0-113</restcomm.resources.http-client.version>
 		<restcomm.resources.http-servlet.version>7.2.0-113</restcomm.resources.http-servlet.version>
 		<restcomm.core.ext.version>2.8.10</restcomm.core.ext.version>
-		<restcomm.resources.map.version>7.4.0-17</restcomm.resources.map.version>
+		<restcomm.resources.map.version>8.0.0-135</restcomm.resources.map.version>
 		<restcomm.resources.jdbc.version>7.2.0-113</restcomm.resources.jdbc.version> <!-- Old: 2.8.7, Wildly: 7.2.0-113 2.9.0-SNAPSHOT,2.10.0-111 -->
 		<restcomm.resources.http-servlet.version>2.8.8</restcomm.resources.http-servlet.version>
 
-		<jss7.restcomm.version>7.4.0-102</jss7.restcomm.version>
+		<jss7.restcomm.version>8.0.0-153</jss7.restcomm.version>
+		<!-- commercial libs --> 
+		<common.oam.jss7.restcomm.version>8.0.0-140</common.oam.jss7.restcomm.version>
 
 		<!-- restcomm but not strictly ss7 -->
 		<asn.version>2.2.0-22</asn.version>

@@ -19,9 +19,9 @@
 
 package org.mobicents.ussd.ihub;
 
-import org.mobicents.protocols.ss7.map.MAPStackImpl;
-import org.mobicents.protocols.ss7.map.api.MAPProvider;
-import org.mobicents.protocols.ss7.sccp.impl.SccpStackImpl;
+import org.restcomm.protocols.ss7.map.MAPStackImpl;
+import org.restcomm.protocols.ss7.map.api.MAPProvider;
+import org.restcomm.protocols.ss7.sccp.impl.SccpStackImpl;
 
 /**
  * 

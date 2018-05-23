@@ -21,8 +21,8 @@ package org.mobicents.ussdgateway;
 
 import java.util.Map;
 
-import org.mobicents.protocols.ss7.tcap.asn.ProblemImpl;
-import org.mobicents.protocols.ss7.tcap.asn.comp.Problem;
+import org.restcomm.protocols.ss7.tcap.asn.ProblemImpl;
+import org.restcomm.protocols.ss7.tcap.asn.comp.Problem;
 
 import javolution.util.FastMap;
 import javolution.util.FastMap.Entry;

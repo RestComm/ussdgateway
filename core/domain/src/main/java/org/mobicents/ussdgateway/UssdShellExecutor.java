@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.mobicents.ss7.management.console.ShellExecutor;
+import org.restcomm.ss7.management.console.ShellExecutor;
 import org.mobicents.ussdgateway.rules.ScRoutingRule;
 import org.mobicents.ussdgateway.rules.ScRoutingRuleType;
 
@@ -59,7 +59,7 @@ public class UssdShellExecutor implements ShellExecutor {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.mobicents.ss7.management.console.ShellExecutor#execute(java.lang.
+	 * org.restcomm.ss7.management.console.ShellExecutor#execute(java.lang.
 	 * String[])
 	 */
 	@Override
@@ -89,7 +89,7 @@ public class UssdShellExecutor implements ShellExecutor {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.mobicents.ss7.management.console.ShellExecutor#handles(java.lang.
+	 * org.restcomm.ss7.management.console.ShellExecutor#handles(java.lang.
 	 * String)
 	 */
 	@Override

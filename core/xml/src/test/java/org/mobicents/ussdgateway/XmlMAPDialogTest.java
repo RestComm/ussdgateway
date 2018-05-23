@@ -22,60 +22,60 @@ package org.mobicents.ussdgateway;
 import static org.testng.Assert.*;
 import javolution.xml.stream.XMLStreamException;
 
-import org.mobicents.protocols.ss7.indicator.NatureOfAddress;
-import org.mobicents.protocols.ss7.indicator.RoutingIndicator;
-import org.mobicents.protocols.ss7.map.api.MAPApplicationContext;
-import org.mobicents.protocols.ss7.map.api.MAPApplicationContextName;
-import org.mobicents.protocols.ss7.map.api.MAPApplicationContextVersion;
-import org.mobicents.protocols.ss7.map.api.MAPException;
-import org.mobicents.protocols.ss7.map.api.datacoding.CBSDataCodingScheme;
-import org.mobicents.protocols.ss7.map.api.dialog.MAPAbortProviderReason;
-import org.mobicents.protocols.ss7.map.api.dialog.MAPRefuseReason;
-import org.mobicents.protocols.ss7.map.api.errors.AbsentSubscriberDiagnosticSM;
-import org.mobicents.protocols.ss7.map.api.errors.AbsentSubscriberReason;
-import org.mobicents.protocols.ss7.map.api.errors.CallBarringCause;
-import org.mobicents.protocols.ss7.map.api.errors.MAPErrorCode;
-import org.mobicents.protocols.ss7.map.api.errors.MAPErrorMessage;
-import org.mobicents.protocols.ss7.map.api.errors.MAPErrorMessageAbsentSubscriber;
-import org.mobicents.protocols.ss7.map.api.errors.MAPErrorMessageAbsentSubscriberSM;
-import org.mobicents.protocols.ss7.map.api.errors.MAPErrorMessageBusySubscriber;
-import org.mobicents.protocols.ss7.map.api.errors.MAPErrorMessageCallBarred;
-import org.mobicents.protocols.ss7.map.api.errors.MAPErrorMessageExtensionContainer;
-import org.mobicents.protocols.ss7.map.api.primitives.AddressNature;
-import org.mobicents.protocols.ss7.map.api.primitives.AddressString;
-import org.mobicents.protocols.ss7.map.api.primitives.AlertingCategory;
-import org.mobicents.protocols.ss7.map.api.primitives.NumberingPlan;
-import org.mobicents.protocols.ss7.map.api.primitives.USSDString;
-import org.mobicents.protocols.ss7.map.api.service.supplementary.ProcessUnstructuredSSResponse;
-import org.mobicents.protocols.ss7.map.api.service.supplementary.UnstructuredSSNotifyRequest;
-import org.mobicents.protocols.ss7.map.api.service.supplementary.UnstructuredSSNotifyResponse;
-import org.mobicents.protocols.ss7.map.api.service.supplementary.UnstructuredSSResponse;
-import org.mobicents.protocols.ss7.map.datacoding.CBSDataCodingSchemeImpl;
-import org.mobicents.protocols.ss7.map.dialog.MAPUserAbortChoiceImpl;
-import org.mobicents.protocols.ss7.map.errors.MAPErrorMessageAbsentSubscriberImpl;
-import org.mobicents.protocols.ss7.map.errors.MAPErrorMessageAbsentSubscriberSMImpl;
-import org.mobicents.protocols.ss7.map.errors.MAPErrorMessageBusySubscriberImpl;
-import org.mobicents.protocols.ss7.map.errors.MAPErrorMessageCallBarredImpl;
-import org.mobicents.protocols.ss7.map.errors.MAPErrorMessageExtensionContainerImpl;
-import org.mobicents.protocols.ss7.map.primitives.AddressStringImpl;
-import org.mobicents.protocols.ss7.map.primitives.AlertingPatternImpl;
-import org.mobicents.protocols.ss7.map.primitives.ISDNAddressStringImpl;
-import org.mobicents.protocols.ss7.map.primitives.USSDStringImpl;
-import org.mobicents.protocols.ss7.map.service.supplementary.ProcessUnstructuredSSRequestImpl;
-import org.mobicents.protocols.ss7.map.service.supplementary.ProcessUnstructuredSSResponseImpl;
-import org.mobicents.protocols.ss7.map.service.supplementary.UnstructuredSSNotifyRequestImpl;
-import org.mobicents.protocols.ss7.map.service.supplementary.UnstructuredSSNotifyResponseImpl;
-import org.mobicents.protocols.ss7.map.service.supplementary.UnstructuredSSRequestImpl;
-import org.mobicents.protocols.ss7.map.service.supplementary.UnstructuredSSResponseImpl;
-import org.mobicents.protocols.ss7.sccp.impl.parameter.DefaultEncodingScheme;
-import org.mobicents.protocols.ss7.sccp.impl.parameter.GlobalTitle0100Impl;
-import org.mobicents.protocols.ss7.sccp.impl.parameter.SccpAddressImpl;
-import org.mobicents.protocols.ss7.sccp.parameter.GlobalTitle;
-import org.mobicents.protocols.ss7.sccp.parameter.SccpAddress;
-import org.mobicents.protocols.ss7.tcap.api.MessageType;
-import org.mobicents.protocols.ss7.tcap.asn.ProblemImpl;
-import org.mobicents.protocols.ss7.tcap.asn.comp.InvokeProblemType;
-import org.mobicents.protocols.ss7.tcap.asn.comp.Problem;
+import org.restcomm.protocols.ss7.indicator.NatureOfAddress;
+import org.restcomm.protocols.ss7.indicator.RoutingIndicator;
+import org.restcomm.protocols.ss7.map.api.MAPApplicationContext;
+import org.restcomm.protocols.ss7.map.api.MAPApplicationContextName;
+import org.restcomm.protocols.ss7.map.api.MAPApplicationContextVersion;
+import org.restcomm.protocols.ss7.map.api.MAPException;
+import org.restcomm.protocols.ss7.map.api.datacoding.CBSDataCodingScheme;
+import org.restcomm.protocols.ss7.map.api.dialog.MAPAbortProviderReason;
+import org.restcomm.protocols.ss7.map.api.dialog.MAPRefuseReason;
+import org.restcomm.protocols.ss7.map.api.errors.AbsentSubscriberDiagnosticSM;
+import org.restcomm.protocols.ss7.map.api.errors.AbsentSubscriberReason;
+import org.restcomm.protocols.ss7.map.api.errors.CallBarringCause;
+import org.restcomm.protocols.ss7.map.api.errors.MAPErrorCode;
+import org.restcomm.protocols.ss7.map.api.errors.MAPErrorMessage;
+import org.restcomm.protocols.ss7.map.api.errors.MAPErrorMessageAbsentSubscriber;
+import org.restcomm.protocols.ss7.map.api.errors.MAPErrorMessageAbsentSubscriberSM;
+import org.restcomm.protocols.ss7.map.api.errors.MAPErrorMessageBusySubscriber;
+import org.restcomm.protocols.ss7.map.api.errors.MAPErrorMessageCallBarred;
+import org.restcomm.protocols.ss7.map.api.errors.MAPErrorMessageExtensionContainer;
+import org.restcomm.protocols.ss7.map.api.primitives.AddressNature;
+import org.restcomm.protocols.ss7.map.api.primitives.AddressString;
+import org.restcomm.protocols.ss7.map.api.primitives.AlertingCategory;
+import org.restcomm.protocols.ss7.map.api.primitives.NumberingPlan;
+import org.restcomm.protocols.ss7.map.api.primitives.USSDString;
+import org.restcomm.protocols.ss7.map.api.service.supplementary.ProcessUnstructuredSSResponse;
+import org.restcomm.protocols.ss7.map.api.service.supplementary.UnstructuredSSNotifyRequest;
+import org.restcomm.protocols.ss7.map.api.service.supplementary.UnstructuredSSNotifyResponse;
+import org.restcomm.protocols.ss7.map.api.service.supplementary.UnstructuredSSResponse;
+import org.restcomm.protocols.ss7.map.datacoding.CBSDataCodingSchemeImpl;
+import org.restcomm.protocols.ss7.map.dialog.MAPUserAbortChoiceImpl;
+import org.restcomm.protocols.ss7.map.errors.MAPErrorMessageAbsentSubscriberImpl;
+import org.restcomm.protocols.ss7.map.errors.MAPErrorMessageAbsentSubscriberSMImpl;
+import org.restcomm.protocols.ss7.map.errors.MAPErrorMessageBusySubscriberImpl;
+import org.restcomm.protocols.ss7.map.errors.MAPErrorMessageCallBarredImpl;
+import org.restcomm.protocols.ss7.map.errors.MAPErrorMessageExtensionContainerImpl;
+import org.restcomm.protocols.ss7.map.primitives.AddressStringImpl;
+import org.restcomm.protocols.ss7.map.primitives.AlertingPatternImpl;
+import org.restcomm.protocols.ss7.map.primitives.ISDNAddressStringImpl;
+import org.restcomm.protocols.ss7.map.primitives.USSDStringImpl;
+import org.restcomm.protocols.ss7.map.service.supplementary.ProcessUnstructuredSSRequestImpl;
+import org.restcomm.protocols.ss7.map.service.supplementary.ProcessUnstructuredSSResponseImpl;
+import org.restcomm.protocols.ss7.map.service.supplementary.UnstructuredSSNotifyRequestImpl;
+import org.restcomm.protocols.ss7.map.service.supplementary.UnstructuredSSNotifyResponseImpl;
+import org.restcomm.protocols.ss7.map.service.supplementary.UnstructuredSSRequestImpl;
+import org.restcomm.protocols.ss7.map.service.supplementary.UnstructuredSSResponseImpl;
+import org.restcomm.protocols.ss7.sccp.impl.parameter.DefaultEncodingScheme;
+import org.restcomm.protocols.ss7.sccp.impl.parameter.GlobalTitle0100Impl;
+import org.restcomm.protocols.ss7.sccp.impl.parameter.SccpAddressImpl;
+import org.restcomm.protocols.ss7.sccp.parameter.GlobalTitle;
+import org.restcomm.protocols.ss7.sccp.parameter.SccpAddress;
+import org.restcomm.protocols.ss7.tcap.api.MessageType;
+import org.restcomm.protocols.ss7.tcap.asn.ProblemImpl;
+import org.restcomm.protocols.ss7.tcap.asn.comp.InvokeProblemType;
+import org.restcomm.protocols.ss7.tcap.asn.comp.Problem;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
@@ -105,16 +105,16 @@ public class XmlMAPDialogTest {
 
 	@Test
 	public void testProcessUnstructuredSSRequestSerialization() throws XMLStreamException, MAPException {
-//		GlobalTitle gt = GlobalTitle.getInstance(0, org.mobicents.protocols.ss7.indicator.NumberingPlan.ISDN_TELEPHONY, NatureOfAddress.INTERNATIONAL, "79023700299");
+//		GlobalTitle gt = GlobalTitle.getInstance(0, org.restcomm.protocols.ss7.indicator.NumberingPlan.ISDN_TELEPHONY, NatureOfAddress.INTERNATIONAL, "79023700299");
         GlobalTitle gt = new GlobalTitle0100Impl("79023700299", 0, DefaultEncodingScheme.INSTANCE,
-                org.mobicents.protocols.ss7.indicator.NumberingPlan.ISDN_TELEPHONY, NatureOfAddress.INTERNATIONAL);
+                org.restcomm.protocols.ss7.indicator.NumberingPlan.ISDN_TELEPHONY, NatureOfAddress.INTERNATIONAL);
         // final String digits,final int translationType, final EncodingScheme encodingScheme,final NumberingPlan numberingPlan, final NatureOfAddress natureOfAddress
 
 		SccpAddress orgAddress = new SccpAddressImpl(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, gt, 0, 146);
 		
-//		GlobalTitle gt1 = GlobalTitle.getInstance(0, org.mobicents.protocols.ss7.indicator.NumberingPlan.ISDN_TELEPHONY, NatureOfAddress.INTERNATIONAL, "79023700111");
+//		GlobalTitle gt1 = GlobalTitle.getInstance(0, org.restcomm.protocols.ss7.indicator.NumberingPlan.ISDN_TELEPHONY, NatureOfAddress.INTERNATIONAL, "79023700111");
         GlobalTitle gt1 = new GlobalTitle0100Impl("79023700111", 0, DefaultEncodingScheme.INSTANCE,
-                org.mobicents.protocols.ss7.indicator.NumberingPlan.ISDN_TELEPHONY, NatureOfAddress.INTERNATIONAL);
+                org.restcomm.protocols.ss7.indicator.NumberingPlan.ISDN_TELEPHONY, NatureOfAddress.INTERNATIONAL);
 		SccpAddress dstAddress = new SccpAddressImpl(RoutingIndicator.ROUTING_BASED_ON_GLOBAL_TITLE, gt1, 0, 146);
 
 		AddressString destReference = new AddressStringImpl(AddressNature.international_number,
@@ -286,7 +286,7 @@ public class XmlMAPDialogTest {
 
         CBSDataCodingScheme cbsDataCodingScheme = new CBSDataCodingSchemeImpl(72);
 
-        USSDString ussdStr = new USSDStringImpl("Нажмите 1 для оплаты или 2 для отмены",
+        USSDString ussdStr = new USSDStringImpl("пїЅпїЅпїЅпїЅпїЅпїЅпїЅ 1 пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ 2 пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ",
                 cbsDataCodingScheme, null);
         UnstructuredSSRequestImpl unstructuredSSRequestIndication = new UnstructuredSSRequestImpl(cbsDataCodingScheme,
                 ussdStr, null, null);
@@ -573,11 +573,11 @@ public class XmlMAPDialogTest {
 //                + "<dialog type=\"Begin\" mapMessagesSize=\"1\" redirectRequest=\"true\">\n"
 //                + "<localAddress pc=\"0\" ssn=\"146\">\n"
 //                + "<ai value=\"18\"/>\n"
-//                + "<gt type=\"org.mobicents.protocols.ss7.sccp.impl.parameter.GlobalTitle0100Impl\" tt=\"0\" es=\"0\" np=\"1\" nai=\"4\" digits=\"222222222\"/>\n"
+//                + "<gt type=\"org.restcomm.protocols.ss7.sccp.impl.parameter.GlobalTitle0100Impl\" tt=\"0\" es=\"0\" np=\"1\" nai=\"4\" digits=\"222222222\"/>\n"
 //                + "</localAddress>\n"
 //                + "<remoteAddress pc=\"0\" ssn=\"146\">\n"
 //                + "<ai value=\"18\"/>\n"
-//                + "<gt type=\"org.mobicents.protocols.ss7.sccp.impl.parameter.GlobalTitle0100Impl\" tt=\"0\" es=\"0\" np=\"1\" nai=\"4\" digits=\"3333333333\"/>\n"
+//                + "<gt type=\"org.restcomm.protocols.ss7.sccp.impl.parameter.GlobalTitle0100Impl\" tt=\"0\" es=\"0\" np=\"1\" nai=\"4\" digits=\"3333333333\"/>\n"
 //                + "</remoteAddress>\n"
 //                + "<destinationReference number=\"33333300000000\" nai=\"international_number\" npi=\"land_mobile\"/>\n"
 //                + "<originationReference number=\"22222000000\" nai=\"international_number\" npi=\"ISDN\"/>\n"

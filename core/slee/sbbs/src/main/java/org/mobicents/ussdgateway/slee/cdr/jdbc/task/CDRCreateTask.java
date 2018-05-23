@@ -26,12 +26,12 @@ import java.sql.Types;
 
 import javax.slee.facilities.Tracer;
 
-import org.mobicents.protocols.ss7.indicator.AddressIndicator;
-import org.mobicents.protocols.ss7.map.api.primitives.AddressString;
-import org.mobicents.protocols.ss7.map.api.primitives.IMSI;
-import org.mobicents.protocols.ss7.map.api.primitives.ISDNAddressString;
-import org.mobicents.protocols.ss7.sccp.parameter.GlobalTitle;
-import org.mobicents.protocols.ss7.sccp.parameter.SccpAddress;
+import org.restcomm.protocols.ss7.indicator.AddressIndicator;
+import org.restcomm.protocols.ss7.map.api.primitives.AddressString;
+import org.restcomm.protocols.ss7.map.api.primitives.IMSI;
+import org.restcomm.protocols.ss7.map.api.primitives.ISDNAddressString;
+import org.restcomm.protocols.ss7.sccp.parameter.GlobalTitle;
+import org.restcomm.protocols.ss7.sccp.parameter.SccpAddress;
 import org.restcomm.slee.resource.jdbc.task.JdbcTaskContext;
 import org.mobicents.ussdgateway.slee.cdr.CDRCreateException;
 import org.mobicents.ussdgateway.slee.cdr.USSDCDRState;
@@ -91,8 +91,8 @@ public class CDRCreateTask extends CDRTaskBase {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.mobicents.slee.resource.jdbc.task.simple.SimpleJdbcTask#executeSimple
-	 * (org.mobicents.slee.resource.jdbc.task. JdbcTaskContext)
+	 * org.restcomm.slee.resource.jdbc.task.simple.SimpleJdbcTask#executeSimple
+	 * (org.restcomm.slee.resource.jdbc.task. JdbcTaskContext)
 	 */
 	@Override
 	public Object executeSimple(JdbcTaskContext ctx) {
