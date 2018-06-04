@@ -19,30 +19,10 @@
 
 package org.mobicents.ussdgateway;
 
-import java.util.Date;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
-import javolution.util.FastMap;
 
 import org.apache.log4j.Logger;
 import org.mobicents.applications.ussd.bootstrap.Version;
-import org.restcomm.protocols.ss7.statistics.api.LongValue;
-import org.restcomm.protocols.ss7.oam.common.jmx.MBeanHost;
-import org.restcomm.protocols.ss7.oam.common.jmx.MBeanType;
-import org.restcomm.protocols.ss7.oam.common.jmxss7.Ss7Layer;
-import org.restcomm.protocols.ss7.oam.common.statistics.ComplexValueImpl;
-import org.restcomm.protocols.ss7.oam.common.statistics.CounterDefImpl;
-import org.restcomm.protocols.ss7.oam.common.statistics.CounterDefSetImpl;
-import org.restcomm.protocols.ss7.oam.common.statistics.SourceValueCounterImpl;
-import org.restcomm.protocols.ss7.oam.common.statistics.SourceValueObjectImpl;
-import org.restcomm.protocols.ss7.oam.common.statistics.SourceValueSetImpl;
-import org.restcomm.protocols.ss7.oam.common.statistics.api.ComplexValue;
-import org.restcomm.protocols.ss7.oam.common.statistics.api.CounterDef;
-import org.restcomm.protocols.ss7.oam.common.statistics.api.CounterDefSet;
-import org.restcomm.protocols.ss7.oam.common.statistics.api.CounterMediator;
-import org.restcomm.protocols.ss7.oam.common.statistics.api.CounterType;
-import org.restcomm.protocols.ss7.oam.common.statistics.api.SourceValueSet;
 import org.restcomm.commons.statistics.reporter.RestcommStatsReporter;
 
 import com.codahale.metrics.Counter;
@@ -53,14 +33,11 @@ import com.codahale.metrics.MetricRegistry;
 * @author sergey vetyutnev
 *
 */
-public class UssdStatProviderJmx implements UssdStatProviderJmxMBean, CounterMediator {
+public class UssdStatProviderJmx implements UssdStatProviderJmxMBean {
 
     protected final Logger logger;
 
-    private final MBeanHost ss7Management;
     private final UssdStatAggregator ussdStatAggregator = UssdStatAggregator.getInstance();
-
-    private FastMap<String, CounterDefSet> lstCounters = new FastMap<String, CounterDefSet>();
 
     protected static final String DEFAULT_STATISTICS_SERVER = "https://statistics.restcomm.com/rest/";
 
@@ -69,9 +46,7 @@ public class UssdStatProviderJmx implements UssdStatProviderJmxMBean, CounterMed
     private Counter counterDialogs = metrics.counter("ussd_dialogs");
     private Counter counterMessages = metrics.counter("messages");
 
-    public UssdStatProviderJmx(MBeanHost ss7Management) {
-        this.ss7Management = ss7Management;
-
+    public UssdStatProviderJmx() {
         this.logger = Logger.getLogger(UssdStatProviderJmx.class.getCanonicalName() + "-" + getName());
     }
 
@@ -81,10 +56,6 @@ public class UssdStatProviderJmx implements UssdStatProviderJmxMBean, CounterMed
 
     public void start() throws Exception {
         logger.info("UssdStatProviderJmx Starting ...");
-
-        setupCounterList();
-
-        this.ss7Management.registerMBean(Ss7Layer.USSD_GW, UssdManagementType.MANAGEMENT, this.getName(), this);
 
         String statisticsServer = Version.instance.getStatisticsServer();
         if (statisticsServer == null || !statisticsServer.contains("http")) {
@@ -121,306 +92,8 @@ public class UssdStatProviderJmx implements UssdStatProviderJmxMBean, CounterMed
         return "USSD";
     }
 
-    private void setupCounterList() {
-        FastMap<String, CounterDefSet> lst = new FastMap<String, CounterDefSet>();
 
-        CounterDefSetImpl cds = new CounterDefSetImpl(this.getCounterMediatorName() + "-Main");
-        lst.put(cds.getName(), cds);
-
-        CounterDef cd = new CounterDefImpl(CounterType.Minimal, "MinDialogsInProcess", "A min count of dialogs that are in progress during a period");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Maximal, "MaxDialogsInProcess", "A max count of dialogs that are in progress during a period");
-        cds.addCounterDef(cd);
-
-        cd = new CounterDefImpl(CounterType.Summary, "DialogsAllEstablished", "Dialogs successfully established all");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary, "DialogsAllFailed", "Dialogs failed at establishing or established phases all");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary, "DialogsPullEstablished", "Dialogs successfully established - pull case");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary, "DialogsPullFailed", "Dialogs failed at establishing or established phases - pull case");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary, "DialogsPushEstablished", "Dialogs successfully established - push case");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary, "DialogsPushFailed", "Dialogs failed at establishing or established phases - push case");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary, "DialogsHttpEstablished", "Dialogs successfully established - Http case");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary, "DialogsHttpFailed", "Dialogs failed at establishing or established phases - Http case");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary, "DialogsSipEstablished", "Dialogs successfully established - Sip case");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary, "DialogsSipFailed", "Dialogs failed at establishing or established phases - Sip case");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary_Cumulative, "DialogsAllEstablishedCumulative", "Dialogs successfully established all cumulative");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary_Cumulative, "DialogsAllFailedCumulative", "Dialogs failed at establishing or established phases all cumulative");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Average, "DialogsAllEstablishedPerSec", "Dialogs successfully established all per second");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Average, "DialogsAllFailedPerSec", "Dialogs failed at establishing or established phases all per second");
-        cds.addCounterDef(cd);
-
-        cd = new CounterDefImpl(CounterType.Summary, "MessagesRecieved", "SS7 payload Messages received by USSD GW for both PULL / PULL cases");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary, "MessagesSent", "SS7 payload Messages sent by USSD GW for both PULL / PULL cases");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary, "MessagesAll", "SS7 payload Messages received and sent by USSD GW for both PULL / PULL cases");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary_Cumulative, "MessagesAllCumulative", "SS7 payload Messages received and sent by USSD GW for both PULL / PULL cases cumulative");
-        cds.addCounterDef(cd);
-
-        cd = new CounterDefImpl(CounterType.Summary, "ProcessUssdRequestOperations", "ProcessUssdRequest operations count");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary_Cumulative, "ProcessUssdRequestOperationsCumulative", "ProcessUssdRequest operations count cumulative");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary, "UssdRequestOperations", "UssdRequest operations count");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary_Cumulative, "UssdRequestOperationsCumulative", "UssdRequest operations count cumulative");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary, "UssdNotifyOperations", "UssdNotify operations count");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary_Cumulative, "UssdNotifyOperationsCumulative", "UssdNotify operations count cumulative");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary, "UssdPullNoRoutingRule", "Ussd pull requests with no configured routing rule count");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary_Cumulative, "UssdPullNoRoutingRuleCumulative", "Ussd pull requests with no configured routing rule count cumulative");
-        cds.addCounterDef(cd);
-
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary, "MapErrorAbsentSubscribers", "AbsentSubscribers MAP errors count");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary_Cumulative, "MapErrorAbsentSubscribersCumulative", "AbsentSubscribers MAP errors count cumulative");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary, "MapErrorCallBarred", "CallBarred MAP errors count");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary_Cumulative, "MapErrorCallBarredCumulative", "CallBarred MAP errors count cumulative");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary, "MapErrorTeleserviceNotProvisioned", "TeleserviceNotProvisioned MAP errors count");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary_Cumulative, "MapErrorTeleserviceNotProvisionedCumulative", "TeleserviceNotProvisioned MAP errors count cumulative");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary, "MapErrorUnknownSubscriber", "UnknownSubscriber MAP errors count");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary_Cumulative, "MapErrorUnknownSubscriberCumulative", "UnknownSubscriber MAP errors count cumulative");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary, "MapErrorUssdBusy", "UssdBusy MAP errors count");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary_Cumulative, "MapErrorUssdBusyCumulative", "UssdBusy MAP errors count cumulative");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary, "MapErrorComponentOther", "ComponentOther MAP errors count");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary_Cumulative, "MapErrorComponentOtherCumulative", "ComponentOther MAP errors count cumulative");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary, "MapDialogTimeouts", "MAP DialogTimeouts count");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary_Cumulative, "MapDialogTimeoutsCumulative", "MAP DialogTimeouts count cumulative");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary, "MapInvokeTimeouts", "MAP InvokeTimeouts count");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary_Cumulative, "MapInvokeTimeoutsCumulative", "MAP InvokeTimeouts count cumulative");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary, "AppTimeouts", "Application Timeouts count");
-        cds.addCounterDef(cd);
-        cd = new CounterDefImpl(CounterType.Summary_Cumulative, "AppTimeoutsCumulative", "Application Timeouts count cumulative");
-        cds.addCounterDef(cd);
-
-        cd = new CounterDefImpl(CounterType.ComplexValue, "RequestsPerUssdCode", "USSD PULL requests count per USSD code");
-        cds.addCounterDef(cd);
-
-        lstCounters = lst;
-    }
-
-    @Override
-    public CounterDefSet getCounterDefSet(String counterDefSetName) {
-        return lstCounters.get(counterDefSetName);
-    }
-
-    @Override
-    public String[] getCounterDefSetList() {
-        String[] res = new String[lstCounters.size()];
-        lstCounters.keySet().toArray(res);
-        return res;
-    }
-
-    @Override
-    public String getCounterMediatorName() {
-        return "USSD GW-" + this.getName();
-    }
-
-    @Override
-    public SourceValueSet getSourceValueSet(String counterDefSetName, String campaignName, int durationInSeconds) {
-
-        if (durationInSeconds >= 60)
-            logger.info("getSourceValueSet() - starting - campaignName=" + campaignName);
-        else
-            logger.debug("getSourceValueSet() - starting - campaignName=" + campaignName);
-
-        long curTimeSeconds = new Date().getTime() / 1000;
-
-        SourceValueSetImpl svs;
-        try {
-            String[] csl = this.getCounterDefSetList();
-            if (!csl[0].equals(counterDefSetName))
-                return null;
-
-            svs = new SourceValueSetImpl(ussdStatAggregator.getSessionId());
-
-            CounterDefSet cds = getCounterDefSet(counterDefSetName);
-            for (CounterDef cd : cds.getCounterDefs()) {
-                SourceValueCounterImpl scs = new SourceValueCounterImpl(cd);
-
-                SourceValueObjectImpl svo = null;
-                if (cd.getCounterName().equals("MinDialogsInProcess")) {
-                    Long res = ussdStatAggregator.getMinDialogsInProcess(campaignName);
-                    if (res != null)
-                        svo = new SourceValueObjectImpl(this.getName(), res);
-                } else if (cd.getCounterName().equals("MaxDialogsInProcess")) {
-                    Long res = ussdStatAggregator.getMaxDialogsInProcess(campaignName);
-                    if (res != null)
-                        svo = new SourceValueObjectImpl(this.getName(), res);
-
-                } else if (cd.getCounterName().equals("DialogsAllEstablished")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getDialogsAllEstablished());
-                } else if (cd.getCounterName().equals("DialogsAllFailed")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getDialogsAllFailed());
-                } else if (cd.getCounterName().equals("DialogsPullEstablished")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getDialogsPullEstablished());
-                } else if (cd.getCounterName().equals("DialogsPullFailed")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getDialogsPullFailed());
-                } else if (cd.getCounterName().equals("DialogsPushEstablished")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getDialogsPushEstablished());
-                } else if (cd.getCounterName().equals("DialogsPushFailed")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getDialogsPushFailed());
-                } else if (cd.getCounterName().equals("DialogsHttpEstablished")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getDialogsHttpEstablished());
-                } else if (cd.getCounterName().equals("DialogsHttpFailed")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getDialogsHttpFailed());
-                } else if (cd.getCounterName().equals("DialogsSipEstablished")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getDialogsSipEstablished());
-                } else if (cd.getCounterName().equals("DialogsSipFailed")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getDialogsSipFailed());
-
-                } else if (cd.getCounterName().equals("MessagesRecieved")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getMessagesRecieved());
-                } else if (cd.getCounterName().equals("MessagesSent")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getMessagesSent());
-                } else if (cd.getCounterName().equals("MessagesAll")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getMessagesAll());
-                } else if (cd.getCounterName().equals("MessagesAllCumulative")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getMessagesAllCumulative());
-
-                } else if (cd.getCounterName().equals("DialogsAllEstablishedCumulative")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getDialogsAllEstablishedCumulative());
-                } else if (cd.getCounterName().equals("DialogsAllFailedCumulative")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getDialogsAllFailedCumulative());
-
-                } else if (cd.getCounterName().equals("DialogsAllEstablishedPerSec")) {
-                    long cnt = ussdStatAggregator.getDialogsAllEstablished();
-                    svo = new SourceValueObjectImpl(this.getName(), 0);
-                    svo.setValueA(cnt);
-                    svo.setValueB(curTimeSeconds);
-                } else if (cd.getCounterName().equals("DialogsAllFailedPerSec")) {
-                    long cnt = ussdStatAggregator.getDialogsAllFailed();
-                    svo = new SourceValueObjectImpl(this.getName(), 0);
-                    svo.setValueA(cnt);
-                    svo.setValueB(curTimeSeconds);
-
-
-                } else if (cd.getCounterName().equals("ProcessUssdRequestOperations")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getProcessUssdRequestOperations());
-                } else if (cd.getCounterName().equals("ProcessUssdRequestOperationsCumulative")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getProcessUssdRequestOperations());
-                } else if (cd.getCounterName().equals("UssdRequestOperations")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getUssdRequestOperations());
-                } else if (cd.getCounterName().equals("UssdRequestOperationsCumulative")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getUssdRequestOperations());
-                } else if (cd.getCounterName().equals("UssdNotifyOperations")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getUssdNotifyOperations());
-                } else if (cd.getCounterName().equals("UssdNotifyOperationsCumulative")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getUssdNotifyOperations());
-                } else if (cd.getCounterName().equals("UssdPullNoRoutingRule")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getUssdPullNoRoutingRule());
-                } else if (cd.getCounterName().equals("UssdPullNoRoutingRuleCumulative")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getUssdPullNoRoutingRule());
-
-                } else if (cd.getCounterName().equals("MapErrorAbsentSubscribers")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getMapErrorAbsentSubscribers());
-                } else if (cd.getCounterName().equals("MapErrorAbsentSubscribersCumulative")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getMapErrorAbsentSubscribers());
-                } else if (cd.getCounterName().equals("MapErrorCallBarred")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getMapErrorCallBarred());
-                } else if (cd.getCounterName().equals("MapErrorCallBarredCumulative")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getMapErrorCallBarred());
-                } else if (cd.getCounterName().equals("MapErrorTeleserviceNotProvisioned")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getMapErrorTeleserviceNotProvisioned());
-                } else if (cd.getCounterName().equals("MapErrorTeleserviceNotProvisionedCumulative")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getMapErrorTeleserviceNotProvisioned());
-                } else if (cd.getCounterName().equals("MapErrorUnknownSubscriber")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getMapErrorUnknownSubscriber());
-                } else if (cd.getCounterName().equals("MapErrorUnknownSubscriberCumulative")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getMapErrorUnknownSubscriber());
-                } else if (cd.getCounterName().equals("MapErrorUssdBusy")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getMapErrorUssdBusy());
-                } else if (cd.getCounterName().equals("MapErrorUssdBusyCumulative")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getMapErrorUssdBusy());
-                } else if (cd.getCounterName().equals("MapErrorComponentOther")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getMapErrorComponentOther());
-                } else if (cd.getCounterName().equals("MapErrorComponentOtherCumulative")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getMapErrorComponentOther());
-                } else if (cd.getCounterName().equals("MapDialogTimeouts")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getMapDialogTimeouts());
-                } else if (cd.getCounterName().equals("MapDialogTimeoutsCumulative")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getMapDialogTimeouts());
-                } else if (cd.getCounterName().equals("MapInvokeTimeouts")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getMapInvokeTimeouts());
-                } else if (cd.getCounterName().equals("MapInvokeTimeoutsCumulative")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getMapInvokeTimeouts());
-                } else if (cd.getCounterName().equals("AppTimeouts")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getAppTimeouts());
-                } else if (cd.getCounterName().equals("AppTimeoutsCumulative")) {
-                    svo = new SourceValueObjectImpl(this.getName(), ussdStatAggregator.getAppTimeouts());
-
-                } else if (cd.getCounterName().equals("RequestsPerUssdCode")) {
-                    svo = createComplexValue(ussdStatAggregator.getRequestsPerUssdCode(campaignName));
-
-                }
-
-                if (svo != null)
-                    scs.addObject(svo);
-
-                svs.addCounter(scs);
-            }
-        } catch (Throwable e) {
-            logger.info("Exception when getSourceValueSet() - campaignName=" + campaignName + " - " + e.getMessage(), e);
-            return null;
-        }
-
-        if (durationInSeconds >= 60)
-            logger.info("getSourceValueSet() - return value - campaignName=" + campaignName);
-        else
-            logger.debug("getSourceValueSet() - return value - campaignName=" + campaignName);
-
-        return svs;
-    }
-
-    private SourceValueObjectImpl createComplexValue(Map<String, LongValue> vv) {
-        SourceValueObjectImpl svo = null;
-        if (vv != null) {
-            svo = new SourceValueObjectImpl(this.getName(), 0);
-            ComplexValue[] vvv = new ComplexValue[vv.size()];
-            int i1 = 0;
-            for (String s : vv.keySet()) {
-                LongValue lv = vv.get(s);
-                vvv[i1++] = new ComplexValueImpl(s, lv.getValue());
-            }
-            svo.setComplexValue(vvv);
-        }
-        return svo;
-    }
-
-
-    public enum UssdManagementType implements MBeanType {
+    public enum UssdManagementType {
         MANAGEMENT("Management");
 
         private final String name;

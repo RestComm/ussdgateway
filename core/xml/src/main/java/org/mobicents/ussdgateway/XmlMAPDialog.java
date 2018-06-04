@@ -901,4 +901,19 @@ public class XmlMAPDialog implements MAPDialog, XMLSerializable {
 		}
 	};
 
+	public int getLongTimer() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public int getMediumTimer() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public int getShortTimer() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }
